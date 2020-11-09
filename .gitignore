@@ -1,0 +1,5 @@
+
+~$*.xlsm
+*.log
+BK_Library.xlam
+SourceExport.bat

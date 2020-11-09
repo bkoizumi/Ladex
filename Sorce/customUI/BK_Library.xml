@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui"  onLoad="ctlRibbon.onLoad">
+   <ribbon startFromScratch="false">
+ <tabs>
+      <tab idMso="TabView">
+        <group id="dispGroup" label="BK_Libraryタブ表示">
+          <checkBox id="BK_Library"  label="BK_Library"  onAction="ctlRibbon.setDispTab"  />
+        </group>
+      </tab>
+
+
+    <tab id="BK_LibraryTab" label="カスタムメニュー" insertBeforeMso="TabHome" getVisible="ctlRibbon.getVisible">
+      <group          id="G0_01" label="カスタマイズ">
+        <button       id="オプション"         label="オプション"        onAction="ctlRibbon.dispOption"    supertip="オプション設定画面を表示します" imageMso="AnimationCustomAddActionVerbDialog" />
+        <button       id="標準画面"           label="標準画面"          onAction="ctlRibbon.setDefaultDisplay"  imageMso="ViewNormalViewExcel"/>
+        <menu         id="メニュー"           label="メニュー"     imageMso="BulletListDefault" >
+          <button     id="リボンタブ非表示"   label="リボンタブ非表示"  onAction="ctlRibbon.noDispTab"       imageMso="AppointmentColor8" />
+          <button     id="スタイル削除"       label="スタイル削除"      onAction="ctlRibbon.delStyle"        imageMso="AppointmentColorDialog"/>
+          <button     id="名前定義削除"       label="名前定義削除"      onAction="ctlRibbon.delVisibleNames" image="delVisibleNames" />
+          <button     id="画像設定"           label="画像設定"          onAction="ctlRibbon.setShapeSize"    imageMso="ControlImage" />
+        </menu>
+        <button       id="R1C1表記"           label="R1C1表記" onAction="ctlRibbon.dispR1C1" image="dispR1C1" />
+        <button       id="シート一覧更新"     label="シート一覧更新" imageMso="DataRefreshAll"  screentip="シート一覧更新" supertip="シート一覧更新" onAction="ctlRibbon.dMenuRefresh" />
+        <dynamicMenu  id="シート一覧"         label="シート一覧"     imageMso="HeaderFooterSheetNameInsert" getContent="ctlRibbon.dMenu" />
+
+        <menu         id="罫線_メニュー"      label="罫線"     imageMso="BorderDrawGrid" >
+          <button     id="罫線_クリア"        label="罫線_クリア"       onAction="ctlRibbon.lineSyle" imageMso="BorderInside"/>
+
+          <menuSeparator id="破線" title="破線　　　　　　　　" />
+          <button     id="罫線_破線_水平"     label="破線_水平"    onAction="ctlRibbon.lineSyle" imageMso="BorderInsideHorizontal" />
+          <button     id="罫線_破線_垂直"     label="破線_垂直"    onAction="ctlRibbon.lineSyle" imageMso="BorderInsideVertical" />
+          <button     id="罫線_破線_左右"     label="破線_左右"    onAction="ctlRibbon.lineSyle" image="BorderLeftAndRight" />
+          <button     id="罫線_破線_上下"     label="破線_上下"    onAction="ctlRibbon.lineSyle" imageMso="BordersGallery" />
+          <button     id="罫線_破線_囲み"     label="破線_囲み"    onAction="ctlRibbon.lineSyle" imageMso="BorderOutside" />
+          <button     id="罫線_破線_格子"     label="破線_格子"    onAction="ctlRibbon.lineSyle" imageMso="BordersAll" />
+
+          <menuSeparator id="二重線" title="二重線　　　　　　　"/>
+          <button     id="罫線_二重線_左右"   label="二重線_左右"  onAction="ctlRibbon.lineSyle" image="BorderDoubleLeftAndRight" />
+          <button     id="罫線_二重線_上下"   label="二重線_上下"  onAction="ctlRibbon.lineSyle" image="BorderDoubleTopAndBottom" />
+          <button     id="罫線_二重線_囲み"   label="二重線_囲み"  onAction="ctlRibbon.lineSyle" image="BorderDouble" />
+        </menu>
+        <button       id="G0_13" label="ハイライト" onAction="ctlRibbon.HighLight" supertip="行・列のハイライト" image="HighLight" />
+      </group >
+
+      <group id="Group2" label="標準機能">
+        <control idMso="PasteValues"               visible="true" label="値貼付" />               <!--値の貼り付け-->
+        <menu id="MyMenu01" label="スタイル"  imageMso="AppointmentColorDialog" >
+          <control idMso="CellStylesGallery"       visible="true" />                              <!--セルのスタイル-->
+          <control idMso="FormatAsTableGallery"    visible="true" />                              <!--テーブルのスタイル-->
+        </menu>
+        <control idMso="WindowNew"                 visible="true" label="新ウインドウ"/>          <!--新しいウインドウ-->
+        <control idMso="WindowsArrangeAll"         visible="true" label="整列"/>                  <!--整列-->
+        <control idMso="ViewFreezePanesGallery"    visible="true" label="枠固定" />               <!--ウインドウ枠の固定-->
+        <control idMso="ViewGridlinesToggleExcel"  visible="true" label="枠線表示" />             <!--枠線の表示-->
+        <control idMso="TextBoxInsertMenu"         visible="true" label="テキスト" />             <!--テキスト ボックス-->
+        <control idMso="PictureInsertFromFile"     visible="true" label="図挿入" />               <!--図をファイルから挿入-->
+        <control idMso="ShapesInsertGallery"       visible="true" label="図形" />                 <!--図形-->
+        <control idMso="MergeCellsAcross"          visible="true" label="横結合" />               <!--横方向に結合-->
+        <control idMso="ClearAll"                  visible="true" label="全クリア" />             <!--すべてクリア-->
+        <button id="PersonalButton7" imageMso="MergeCenter" label="選択範囲中央" onAction="ctlRibbon.setCenter" />
+        <menu id="MyMenu02" label="メニュー"  imageMso="BlogHomePage" >
+          <control idMso="FileSaveAsOtherFormats"  visible="true" label="別名保存" />             <!--他の形式で保存-->
+          <control idMso="FilePrintPreview"        visible="true" />                              <!--印刷プレビュー-->
+          <control idMso="FileSaveAsPdfOrXps"      visible="true" />                              <!--PDF生成-->
+          <control idMso="FileOpen"                visible="true" />                              <!--開く-->
+          <control idMso="FilePrepareMenu"         visible="true" />                              <!--配布準備-->
+          <control idMso="ClearContents"           visible="true" />                              <!--数式と値のクリア-->
+          <control idMso="RefreshAllMenu"          visible="true" />                              <!--すべて更新-->
+          <control idMso="DataValidation"          visible="true" />                              <!--入力規則-->
+          <control idMso="NameManager"             visible="true" />                              <!--名前の管理-->
+        </menu>
+    </group>
+    <group idMso="GroupFont"                       visible="true"/>                               <!--フォント-->
+    <group idMso="GroupAlignmentExcel"             visible="true"/>                               <!--配置-->
+    <group idMso="GroupNumber"                     visible="true"/>                               <!--数値-->
+    <group id="Group_GroupSortFilter" label="並べ替えとフィルタ">
+      <box id="bSortFilter01" >
+        <control idMso="SortAscendingExcel"          visible="true" />
+        <control idMso="SortDescendingExcel"         visible="true" />
+        <control idMso="SortDialog"     label=" "     visible="true" />
+      </box>
+      <box id="bSortFilter02" >
+        <control idMso="Filter"           label=" "     visible="true" />
+        <control idMso="SortClear"        label=" "     visible="true" />
+        <control idMso="RemoveDuplicates" label=" "     visible="true" />
+      </box>
+    </group>
+    <group idMso="GroupOutline"                    visible="true"/>                               <!--アウトラインー-->
+    </tab>
+  </tabs>
+  </ribbon>
+  <backstage>
+    <tab id="tab1" label="BK_Library" visible="true">
+      <firstColumn>
+        <group id="grp1" label="更新情報" visible="true">
+          <topItems>
+        <labelControl id="v5001" label="Ver.5.00.01　各モジュールの統合" />
+        <labelControl id="v5002" label="Ver.5.00.02　Selenium用テストケース作成" />
+    <labelControl id="v5003" label="Ver.5.00.03　Oracle用DB設計書作成" />
+    <labelControl id="v5004" label="Ver.5.00.04　Oracleサーバーへの接続方法変更" />
+          </topItems>
+        </group>
+      </firstColumn>
+
+      <secondColumn>
+        <group id="grp2" label="著作権について" visible="true">
+          <topItems>
+            <labelControl id="cp0100" label="免責事項" />
+            <labelControl id="cp0101" label="　・当コンテンツの利用に際し、いかなるトラブルが発生しても、作者は一切の責任を負いません。" />
+            <labelControl id="cp0102" label="　・当コンテンツは予告無しに変更・削除されることがあります。" />
+            <labelControl id="cp0103" label="　・このライセンスは予告なく改定される場合があります。" />
+            <labelControl id="cp0900" label="　" />
+            <labelControl id="cp0901" label="　" />
+            <labelControl id="cp0902" label="　" />
+            <labelControl id="cp0903" label="　" />
+            <labelControl id="cp0904" label="　" />
+            <labelControl id="cp0905" label="　" />
+            <labelControl id="cp0906" label="　" />
+            <labelControl id="cp0907" label="　" />
+            <labelControl id="cp0908" label="　" />
+            <labelControl id="cp0909" label="　" />
+            <labelControl id="cp0910" label="　" />
+            <labelControl id="cp0911" label="Copyright (C) 2015 B.Koizumi All Rights Reserved." />
+            <labelControl id="cp0912" label="最新ファイルは以下からダウンロードしてください" />
+            <hyperlink    id="cp0913" label="Excel-VBA" target="https://lbc.whitebear.tk/svn/excel/trunk" />
+
+          </topItems>
+        </group>
+      </secondColumn>
+
+    </tab>
+  </backstage>
+</customUI>
