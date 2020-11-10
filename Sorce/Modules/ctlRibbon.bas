@@ -49,40 +49,23 @@ Function dynamicMenu()
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
-  count = 0
-  maxCount = 30
-  menuCount = 1
   For Each SheetName In ActiveWorkbook.Sheets
     If Sheets(SheetName.Name).Visible = True Then
-      If count = 0 Or count = maxCount Or count = ActiveWorkbook.Sheets.count Then
-        Set subMenu = Nothing
-        Set subMenu = DOMDoc.createElement("menu")
-        With subMenu
-          .SetAttribute "id", "dynamicMenu_" & Format(menuCount, "000")
-          .SetAttribute "label", "Sheet_" & Format(menuCount, "000")
-          .SetAttribute "imageMso", "SheetBackground"
-        End With
-        Menu.AppendChild subMenu
-        count = 0
-        menuCount = menuCount + 1
-      End If
-      
       Set Button = DOMDoc.createElement("button")
       With Button
         .SetAttribute "id", "BK_LibraryID_" & SheetName.Name
         .SetAttribute "label", SheetName.Name
-        .SetAttribute "imageMso", "SheetBackground"
+        .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
         .SetAttribute "onAction", "activeSheet"
       End With
-      subMenu.AppendChild Button
-      count = count + 1
+      Menu.AppendChild Button
       Set Button = Nothing
     End If
   Next
 
   DOMDoc.AppendChild Menu
   dynamicMenu = DOMDoc.XML
-
+'  Debug.Print DOMDoc.XML
   
   Set Menu = Nothing
   Set DOMDoc = Nothing
@@ -92,7 +75,12 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function activeSheet(control As IRibbonControl)
+  Call Library.startScript
+  
   Sheets(Replace(control.id, "BK_LibraryID_", "")).Select
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  
+  Call Library.endScript
 End Function
 
 

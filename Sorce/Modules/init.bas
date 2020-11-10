@@ -7,6 +7,7 @@ Public targetBook As Workbook
 'ワークシート用変数------------------------------
 Public sheetNotice As Worksheet
 Public sheetStyle As Worksheet
+Public sheetStyle2 As Worksheet
 Public sheetRibbon As Worksheet
 
 
@@ -40,6 +41,7 @@ Function setting(Optional reCheckFlg As Boolean)
   'ワークシート名の設定
 '  Set sheetNotice = ThisBook.Worksheets("Notice")
   Set sheetStyle = ThisBook.Worksheets("Style")
+  Set sheetStyle2 = ThisBook.Worksheets("Style2")
   Set sheetRibbon = ThisBook.Worksheets("Ribbon")
 
   

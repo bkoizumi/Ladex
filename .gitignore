@@ -1,5 +1,6 @@
 
 ~$*.xlsm
 *.log
-BK_Library.xlam
 SourceExport.bat
+~$BK_Library.xlam
+BK_Library.xlsm

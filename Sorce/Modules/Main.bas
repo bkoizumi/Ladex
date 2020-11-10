@@ -11,7 +11,7 @@ Attribute VB_Name = "Main"
 '**************************************************************************************************
 Function オプション画面表示()
   
-  On Error GoTo catchError
+'  On Error GoTo catchError
   
   With OptionForm
     .StartUpPosition = 0
