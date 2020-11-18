@@ -20,7 +20,7 @@ Public InputTableName As String
 Public InputTableIDa As String
 Public BeforeCloseFlg As Boolean
 
-Public DebugFlg As Boolean
+Public debugFlg As Boolean
 Public ConnectionString As String
 Public LineBreakCode As String
 Public LineSeparator As Integer
@@ -47,7 +47,7 @@ Public DBCon As ADODB.Connection
 '***************************************************************************************************************************************************
 Function DataBase_Init()
 
-  DebugFlg = True
+  debugFlg = True
   
   ODBCDriver = Worksheets("設定").Range("B3").Value
   DBMS = Application.WorksheetFunction.VLookup(ODBCDriver, Range("ODBCDriverList"), 2, False)
@@ -170,14 +170,14 @@ Function DataBase_Reset()
   ActiveWorkbook.Names.Add Name:="改定版", RefersTo:=Range("B6:B100")
 
   '拡大画面表示用の名称設定
-  Dim SheetName As String
+  Dim sheetName As String
   Dim endLine As Integer
   
   For Each objSheet In ActiveWorkbook.Sheets
-    SheetName = objSheet.Name
+    sheetName = objSheet.Name
     
-    If Library_CheckExcludeSheet(SheetName, 9) Then
-      endLine = Worksheets(SheetName).Cells(Rows.count, 2).End(xlUp).Row
+    If Library_CheckExcludeSheet(sheetName, 9) Then
+      endLine = Worksheets(sheetName).Cells(Rows.count, 2).End(xlUp).Row
     
       'セットステートメント
 '      ActiveWorkbook.Worksheets(SheetName).Names.Add Name:="SetStatement", RefersToR1C1:=Worksheets(SheetName).Range("D7")
@@ -196,7 +196,7 @@ Function DataBase_Reset()
 '      ActiveWorkbook.Worksheets(SheetName).Names.Add Name:="Trigger4", RefersToR1C1:=Worksheets(SheetName).Range("H" & Endline)
 '      ActiveWorkbook.Worksheets(SheetName).Names("Trigger4").Comment = "拡大画面表示用の名称設定"
       
-      ActiveWorkbook.Worksheets(SheetName).Select
+      ActiveWorkbook.Worksheets(sheetName).Select
       ActiveWindow.DisplayGridlines = False
       ActiveWindow.FreezePanes = True
       
@@ -205,8 +205,8 @@ Function DataBase_Reset()
       Selection.OnAction = ActiveWorkbook.Name & "!DisplayTableList"
       
       ActiveWorkbook.activeSheet.Select
-      If SheetName <> Worksheets(SheetName).Range("H5") Then
-        Worksheets(SheetName).Name = Worksheets(SheetName).Range("H5")
+      If sheetName <> Worksheets(sheetName).Range("H5") Then
+        Worksheets(sheetName).Name = Worksheets(sheetName).Range("H5")
       End If
       
       Range("A9").Select
@@ -229,15 +229,15 @@ End Function
 '***************************************************************************************************************************************************
 Sub DataBase_MakeAllSheetSQL()
 
-  Dim SheetName As String
+  Dim sheetName As String
   
   
   For Each objSheet In ActiveWorkbook.Sheets
 
-    SheetName = objSheet.Name
+    sheetName = objSheet.Name
     
-    If Library_CheckExcludeSheet(SheetName, 9) Then
-      Worksheets(SheetName).Select
+    If Library_CheckExcludeSheet(sheetName, 9) Then
+      Worksheets(sheetName).Select
       Range("C9").Select
       SetDisplyAlertFlg = False
       DataBase_MakeSQL (False)
@@ -1192,7 +1192,7 @@ Function DataBase_GetColumn(SetDisplyProgressBarFlg As Boolean)
   Dim DBRecordset As ADODB.Recordset
 '  Dim DBRecordsetCount As Integer
   
-  Dim ColumnName As String
+  Dim columnName As String
   Dim dataType As String
   Dim maxLength As String
   Dim PrimaryKeyIndex As String
@@ -1390,7 +1390,7 @@ Function DataBase_GetColumn(SetDisplyProgressBarFlg As Boolean)
       End If
     End If
     ' プログレスバーのカウント変更（現在のカウント、全カウント数、メッセージ）
-    ProgressBar_ProgShowCount TableName & " 接続中・・・", NowLine - 9, RowCount, " カラム情報取得：" & ColumnName
+    ProgressBar_ProgShowCount TableName & " 接続中・・・", NowLine - 9, RowCount, " カラム情報取得：" & columnName
     
     '既存設定値をクリア
     If DBMode <> "Diff" Then
@@ -1408,9 +1408,9 @@ Function DataBase_GetColumn(SetDisplyProgressBarFlg As Boolean)
     End If
     
     'カラム名
-    ColumnName = DBRecordset.Fields("ColumName").Value
+    columnName = DBRecordset.Fields("ColumName").Value
     If DBMode = "Diff" Then
-      If Range("E" & NowLine).Value <> ColumnName Then
+      If Range("E" & NowLine).Value <> columnName Then
         If Range("E" & NowLine).Value = "" Then
           Range("E" & NowLine).Style = "カラム追加"
         Else
@@ -1421,7 +1421,7 @@ Function DataBase_GetColumn(SetDisplyProgressBarFlg As Boolean)
         End If
       End If
     End If
-    Range("E" & NowLine).Value = ColumnName
+    Range("E" & NowLine).Value = columnName
     
     '型
     dataType = DBRecordset.Fields("DataType").Value
@@ -2213,13 +2213,13 @@ End Function
 '***************************************************************************************************************************************************
 Sub DataBase_MakeAllSheetFlameworkSQL()
 
-  Dim SheetName As String
+  Dim sheetName As String
   For Each objSheet In ActiveWorkbook.Sheets
 
-    SheetName = objSheet.Name
+    sheetName = objSheet.Name
     
-    If Library_CheckExcludeSheet(SheetName, 9) Then
-      Worksheets(SheetName).Select
+    If Library_CheckExcludeSheet(sheetName, 9) Then
+      Worksheets(sheetName).Select
       Range("C9").Select
       SetDisplyAlertFlg = False
       DataBase_MakeFlameworkSQL (False)

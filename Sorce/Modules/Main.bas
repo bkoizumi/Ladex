@@ -35,7 +35,7 @@ End Function
 '**************************************************************************************************
 Function 標準画面()
   Dim objSheet As Object
-  Dim SheetName As String, SetActiveSheet As String
+  Dim sheetName As String, SetActiveSheet As String
   
   
   'On Error Resume Next
@@ -47,10 +47,10 @@ Function 標準画面()
   SelectAddress = Selection.Address
   
   For Each objSheet In ActiveWorkbook.Sheets
-    SheetName = objSheet.Name
-    Call ProgressBar.showCount("標準画面設定", 1, 100, SheetName)
-    If Worksheets(SheetName).Visible = True Then
-      Worksheets(SheetName).Select
+    sheetName = objSheet.Name
+    Call ProgressBar.showCount("標準画面設定", 1, 100, sheetName)
+    If Worksheets(sheetName).Visible = True Then
+      Worksheets(sheetName).Select
       
       '標準画面に設定
       ActiveWindow.View = xlNormalView
@@ -76,7 +76,7 @@ Function 標準画面()
         End With
         Cells.Replace What:="", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=True, ReplaceFormat:=True
       End If
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Application.Goto Reference:=Range("A1"), Scroll:=True
     End If
   Next
   

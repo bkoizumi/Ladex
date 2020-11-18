@@ -164,15 +164,15 @@ End Sub
 '***********************************************************************************************************************************************
 Function TestSpecification_AddSheet()
 
-  Dim SheetName As String
+  Dim sheetName As String
   
   ' 入力用ボックスの表示
-  SheetName = InputBox("機能名？", "機能名（シート名）入力", "")
+  sheetName = InputBox("機能名？", "機能名（シート名）入力", "")
   
-  If SheetName <> "" Then
+  If sheetName <> "" Then
     Sheets("コピー用").Copy After:=Worksheets(Worksheets.count)
     ActiveWorkbook.Sheets(Worksheets.count).Tab.ColorIndex = -4142
-    ActiveWorkbook.Sheets(Worksheets.count).Name = SheetName
+    ActiveWorkbook.Sheets(Worksheets.count).Name = sheetName
     
     
   End If
@@ -196,9 +196,9 @@ Function TestSpecification_SetNumber()
   Dim ColumnLoopCount As Long
  
   ' ======================= 処理開始 ======================
-  Dim Result As Boolean
-   Result = Library_CheckExcludeSheet(activeSheet.Name, 8)
-  If Result = False Then
+  Dim result As Boolean
+   result = Library_CheckExcludeSheet(activeSheet.Name, 8)
+  If result = False Then
     Exit Function
   End If
   
@@ -836,9 +836,9 @@ Function TestSpecification_SetResult()
   Dim TestCaseNo As Long
  
   ' ======================= 処理開始 ======================
-  Dim Result As Boolean
-   Result = Library_CheckExcludeSheet(activeSheet.Name, 9)
-  If Result = False Then
+  Dim result As Boolean
+   result = Library_CheckExcludeSheet(activeSheet.Name, 9)
+  If result = False Then
     Exit Function
   End If
   
@@ -1199,8 +1199,8 @@ End Function
 Function TestSpecification_MakeGompertzCurve()
 
   Dim endLine As Long
-  Dim SheetName As Object
-  Dim Result As Boolean
+  Dim sheetName As Object
+  Dim result As Boolean
   Dim GrafCount As Long
 
   Dim SheetCount As Long
@@ -1236,21 +1236,21 @@ Function TestSpecification_MakeGompertzCurve()
     CheckRecal = vbYes
   End If
   
-  For Each SheetName In ActiveWorkbook.Sheets
+  For Each sheetName In ActiveWorkbook.Sheets
     
     ' 結果計算の再実行
-    Result = Library_CheckExcludeSheet(SheetName.Name, 9)
+    result = Library_CheckExcludeSheet(sheetName.Name, 9)
     
-    If Result = True Then
-      Worksheets(SheetName.Name).Activate
+    If result = True Then
+      Worksheets(sheetName.Name).Activate
       Range("A1") = activeSheet.Name
       
       ' ======================= テスター情報抽出 ======================
       Worksheets("総合結果").Activate
       With Worksheets("総合結果").Range("H" & TesterLineCount)
-        .Value = SheetName.Name
+        .Value = sheetName.Name
         .Select
-        .Hyperlinks.Add Anchor:=Selection, Address:="", SubAddress:=SheetName.Name & "!" & "A9"
+        .Hyperlinks.Add Anchor:=Selection, Address:="", SubAddress:=sheetName.Name & "!" & "A9"
         .Font.color = RGB(0, 0, 0)
         .Font.Underline = False
         .Font.Size = 10
@@ -1258,7 +1258,7 @@ Function TestSpecification_MakeGompertzCurve()
       End With
 
 
-      Worksheets(SheetName.Name).Activate
+      Worksheets(sheetName.Name).Activate
       For ColumLoopCount = 13 To Worksheets("総合結果").Cells(32, Columns.count).End(xlToLeft).Column Step 1
         ColumnLoopName = Library_getColumnName(ColumLoopCount)
         If Worksheets("総合結果").Range(ColumnLoopName & "32").Value <> "" Then
@@ -1574,24 +1574,24 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '***********************************************************************************************************************************************
-Function TestSpecification_SetCellActive(TargetCell As String)
+Function TestSpecification_SetCellActive(targetCell As String)
 
-  Dim SheetName As Object
-  Dim Result As Boolean
+  Dim sheetName As Object
+  Dim result As Boolean
 
   
   ' ======================= 処理開始 ======================
   
   TestSpecification_Init
   
-  For Each SheetName In ActiveWorkbook.Sheets
+  For Each sheetName In ActiveWorkbook.Sheets
 
-    Worksheets(SheetName.Name).Select
+    Worksheets(sheetName.Name).Select
   
     ' テストケース用のシートかどうかチェック
-    Result = Library_CheckExcludeSheet(SheetName.Name, 9)
-    If Result = True Then
-      Application.GoTo Reference:=Range(TargetCell), Scroll:=True
+    result = Library_CheckExcludeSheet(sheetName.Name, 9)
+    If result = True Then
+      Application.Goto Reference:=Range(targetCell), Scroll:=True
     End If
   Next
   
@@ -1737,7 +1737,7 @@ End Sub
 Function TestSpecification_DisplayStatusBar()
 
   Dim MsgString As String
-  Dim Result As Boolean
+  Dim result As Boolean
   
   Dim SheetCount As Long
   Dim SheetCountOK As Long
@@ -1747,10 +1747,10 @@ Function TestSpecification_DisplayStatusBar()
   
   Application.StatusBar = False
   
-  Result = Library_CheckExcludeSheet(activeSheet.Name, 8)
+  result = Library_CheckExcludeSheet(activeSheet.Name, 8)
   
   
-  If Result = False Then
+  If result = False Then
     Exit Function
   End If
    Exit Function

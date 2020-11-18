@@ -13,11 +13,16 @@ Public sheetRibbon As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName = "BK_Library"
-Public Const thisAppVersion = "0.0.3.0"
+Public Const thisAppVersion = "0.0.4.0"
 
 'レジストリ登録用サブキー
 Public Const RegistryKey As String = "B.Koizumi"
 Public Const RegistrySubKey As String = "BK_Library"
+
+Public setVal As Collection
+
+'ファイル関連
+Public logFile As String
 
 
 '**************************************************************************************************
@@ -39,11 +44,18 @@ Function setting(Optional reCheckFlg As Boolean)
   Set ThisBook = ThisWorkbook
   
   'ワークシート名の設定
-'  Set sheetNotice = ThisBook.Worksheets("Notice")
+  Set sheetNotice = ThisBook.Worksheets("Notice")
   Set sheetStyle = ThisBook.Worksheets("Style")
   Set sheetStyle2 = ThisBook.Worksheets("Style2")
   Set sheetRibbon = ThisBook.Worksheets("Ribbon")
 
+  Set setVal = New Collection
+  With setVal
+    .Add Item:="develop", Key:="debugMode"
+  End With
+  
+  logFile = ThisWorkbook.Path & "\ExcelMacro.log"
+  
   
   Exit Function
   

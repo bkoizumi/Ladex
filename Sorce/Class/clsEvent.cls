@@ -56,7 +56,7 @@ End Sub
 Public Function AddBookSheet(ByRef argAry) As Boolean
     Dim i1 As Long
     Dim i2 As Long
-    Dim ix As Integer
+    Dim IX As Integer
     Dim myArray() As String
   
     'îzóÒÇÃéüå≥êîÇ…ÇÊÇËï™äÚ
@@ -65,13 +65,13 @@ Public Function AddBookSheet(ByRef argAry) As Boolean
         Case 1 '1éüå≥îzóÒ
             ReDim Preserve pBookSheets(pCntBS)
             pBookSheets(pCntBS).Book = argAry(LBound(argAry))
-            ix = 0
-            ReDim myArray(ix)
+            IX = 0
+            ReDim myArray(IX)
             For i1 = LBound(argAry) + 1 To UBound(argAry)
                 If argAry(i1) <> "" Then
-                    ReDim Preserve myArray(ix)
-                    myArray(ix) = argAry(i1)
-                    ix = ix + 1
+                    ReDim Preserve myArray(IX)
+                    myArray(IX) = argAry(i1)
+                    IX = IX + 1
                 End If
             Next
             pBookSheets(pCntBS).Sheets = myArray
@@ -82,13 +82,13 @@ Public Function AddBookSheet(ByRef argAry) As Boolean
             For i1 = LBound(argAry, 1) To UBound(argAry, 1)
                 ReDim Preserve pBookSheets(pCntBS)
                 pBookSheets(pCntBS).Book = argAry(i1, LBound(argAry, 2))
-                ix = 0
-                ReDim myArray(ix)
+                IX = 0
+                ReDim myArray(IX)
                 For i2 = LBound(argAry, 2) + 1 To UBound(argAry, 2)
                     If argAry(i1, i2) <> "" Then
-                        ReDim Preserve myArray(ix)
-                        myArray(ix) = argAry(i1, i2)
-                        ix = ix + 1
+                        ReDim Preserve myArray(IX)
+                        myArray(IX) = argAry(i1, i2)
+                        IX = IX + 1
                     End If
                 Next
                 pBookSheets(pCntBS).Sheets = myArray

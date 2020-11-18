@@ -20,7 +20,7 @@ Public SetSelectTargetRows As String
 Public InputTableID As String
 Public BeforeCloseFlg As Boolean
 
-Public DebugFlg As Boolean
+Public debugFlg As Boolean
 Public ConnectionString As String
 Public LineBreakCode As String
 Public LineSeparator As Integer
@@ -34,7 +34,7 @@ Public DBMode As String
 '***********************************************************************************************************************************************
 Function MakeDML_Init()
 
-  DebugFlg = True
+  debugFlg = True
   
   ODBCDriver = Worksheets("設定").Range("B3").Value
   DBMS = Application.WorksheetFunction.VLookup(ODBCDriver, Range("ODBCDriverList"), 2, False)
@@ -146,7 +146,7 @@ Function MakeDML_reGetColumn()
   Dim DBCon As ADODB.Connection
   Dim DBRecordset As ADODB.Recordset
   
-  Dim ColumnName As String
+  Dim columnName As String
   Dim dataType As String
   Dim maxLength As String
   Dim PrimaryKeyIndex As String
@@ -245,7 +245,7 @@ Function MakeDML_reGetColumn()
   
   Do Until DBRecordset.EOF
     ' プログレスバーのカウント変更（現在のカウント、全カウント数、メッセージ）
-    ProgressBar_ProgShowCount "処理中", NowLine, RowCount, "カラム情報取得：" & ColumnName
+    ProgressBar_ProgShowCount "処理中", NowLine, RowCount, "カラム情報取得：" & columnName
         
     'コメント(項目名として利用)
     If IsNull(DBRecordset.Fields("Comments").Value) Then
@@ -255,7 +255,7 @@ Function MakeDML_reGetColumn()
     End If
     
     'カラム名
-    ColumnName = DBRecordset.Fields("ColumName").Value
+    columnName = DBRecordset.Fields("ColumName").Value
     
     '型
     dataType = DBRecordset.Fields("DataType").Value
@@ -337,7 +337,7 @@ Function MakeDML_reGetColumn()
         'Selection.ClearContents
         
         Cells(3, NowLine) = dataType
-        Cells(4, NowLine) = ColumnName
+        Cells(4, NowLine) = columnName
         Cells(5, NowLine) = Comments
         
         
@@ -363,7 +363,7 @@ Function MakeDML_reGetColumn()
         Selection.ClearContents
         
         Cells(3, NowLine) = dataType
-        Cells(6, NowLine) = ColumnName
+        Cells(6, NowLine) = columnName
         Cells(7, NowLine) = Comments
         
         
@@ -388,7 +388,7 @@ Function MakeDML_reGetColumn()
         Selection.ClearContents
         
         Cells(3, NowLine) = dataType
-        Cells(5, NowLine) = ColumnName
+        Cells(5, NowLine) = columnName
         Cells(6, NowLine) = Comments
         
         

@@ -18,7 +18,7 @@ Dim myBarSize As Long            'プログレスバーサイズ
 ' * プログレスバー表示開始
 ' *
 '**************************************************************************************************
-Public Sub showStart()
+Public Function showStart()
   Dim myMsg1 As String
   
   myMsg1 = " 待機中"
@@ -84,51 +84,67 @@ Public Sub showStart()
   End With
 
   FProgress.Show vbModeless
-End Sub
+End Function
 
 
 '**************************************************************************************************
 ' * プログレスバー表示更新
 ' *
 '**************************************************************************************************
-Public Sub showCount(ProgressBarTitle As String, mypbProgCnt As Long, mypbSCount As Long, myMsg1 As String)
+Public Function showCount(ProgressBarTitle As String, mypbProgCnt As Long, mypbSCount As Long, myMsg1 As String, Optional debugFlg As Boolean = True)
   Dim myMsg2 As String
   
   If mypbProgCnt > 0 Then
-    myJobCnt = mypbProgCnt / mypbSCount * 100
+    myJobCnt = Int(mypbProgCnt / mypbSCount * 100)
     myMsg2 = mypbProgCnt & "/" & mypbSCount & " (" & Int(myJobCnt) & "%)"
     
     With FProgress
       .Caption = ProgressBarTitle
-      .Label2.Width = myBarSize * myJobCnt / 100
+      .Label2.Width = Int(myBarSize * myJobCnt / 100)
       .Label3.Caption = myMsg2
-      .Label4.Caption = myMsg1 & " 処理中・・・"
+      
+      If myMsg1 = "" Then
+        .Label4.Caption = "処理中…　" & myMsg1
+      Else
+        .Label4.Caption = myMsg1
+      End If
     End With
   ElseIf mypbProgCnt = 0 Then
-    myJobCnt = mypbProgCnt / mypbSCount * 100
+    myJobCnt = Int(mypbProgCnt / mypbSCount * 100)
     myMsg2 = ""
     
     With FProgress
       .Caption = ProgressBarTitle
-      .Label2.Width = myBarSize * myJobCnt / 100
+      .Label2.Width = Int(myBarSize * myJobCnt / 100)
       .Label3.Caption = myMsg2
-      .Label4.Caption = myMsg1 & " 取得準備中・・・"
+      If myMsg1 = "" Then
+        .Label4.Caption = "準備中…"
+      Else
+        .Label4.Caption = myMsg1
+      End If
     End With
   
   End If
   
   DoEvents
-End Sub
+  
+  If debugFlg And myMsg1 <> "" Then
+    Call Library.showDebugForm(ProgressBarTitle & "：" & myMsg1)
+  End If
+  
+  
+End Function
 
 
 '**************************************************************************************************
 ' * プログレスバー表示終了
 ' *
 '**************************************************************************************************
-Public Sub showEnd()
+Public Function showEnd()
   
   'ダイアログを閉じる
   Unload FProgress
   
-End Sub
+End Function
+
 

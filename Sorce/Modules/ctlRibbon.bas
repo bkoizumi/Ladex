@@ -31,7 +31,29 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function dMenu(control As IRibbonControl, ByRef returnedVal) ' 動的にメニューを作成する
+   If ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("RibbonPointer")))
+    #Else
+      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("RibbonPointer")))
+    #End If
+  End If
+  ribbonUI.InvalidateControl "シート一覧"
+  
   returnedVal = dynamicMenu()
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function dMenuRefresh(control As IRibbonControl)
+  
+   If ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("RibbonPointer")))
+    #Else
+      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("RibbonPointer")))
+    #End If
+  End If
+  ribbonUI.InvalidateControl "シート一覧"
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -39,7 +61,7 @@ Function dynamicMenu()
   Dim DOMDoc As Object ' Msxml2.DOMDocument
   Dim Menu As Object
   Dim Button As Object, subMenu As Object
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   Dim count As Long, maxCount As Long, menuCount As Long
   
   Set DOMDoc = CreateObject("Msxml2.DOMDocument")
@@ -49,18 +71,25 @@ Function dynamicMenu()
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
-  For Each SheetName In ActiveWorkbook.Sheets
-    If Sheets(SheetName.Name).Visible = True Then
+  For Each sheetName In ActiveWorkbook.Sheets
       Set Button = DOMDoc.createElement("button")
       With Button
-        .SetAttribute "id", "BK_LibraryID_" & SheetName.Name
-        .SetAttribute "label", SheetName.Name
+        .SetAttribute "id", thisAppName & "_" & sheetName.Name
+        .SetAttribute "label", sheetName.Name
+        
+      If Sheets(sheetName.Name).Visible = True Then
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+      ElseIf Sheets(sheetName.Name).Visible <> True Then
+        .SetAttribute "imageMso", "SheetProtect"
+      
+      End If
+      If ActiveWorkbook.activeSheet.Name = sheetName.Name Then
+        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+      End If
         .SetAttribute "onAction", "activeSheet"
       End With
       Menu.AppendChild Button
       Set Button = Nothing
-    End If
   Next
 
   DOMDoc.AppendChild Menu
@@ -75,11 +104,18 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function activeSheet(control As IRibbonControl)
+  Dim sheetName As String
+  
   Call Library.startScript
+  sheetName = Replace(control.id, thisAppName & "_", "")
   
-  Sheets(Replace(control.id, "BK_LibraryID_", "")).Select
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  If Sheets(sheetName).Visible <> True Then
+    Sheets(sheetName).Visible = True
+  End If
+  Sheets(sheetName).Select
+  Application.Goto Reference:=Range("A1"), Scroll:=True
   
+  Call dynamicMenu
   Call Library.endScript
 End Function
 
@@ -253,19 +289,7 @@ Function setCenter(control As IRibbonControl)
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
-Function dMenuRefresh(control As IRibbonControl)
-  
-   If ribbonUI Is Nothing Then
-    #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("RibbonPointer")))
-    #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("RibbonPointer")))
-    #End If
-  End If
-  ribbonUI.InvalidateControl "dynamicMenu1"
-'  ribbonUI.Invalidate
-End Function
+
 
 
 '--------------------------------------------------------------------------------------------------

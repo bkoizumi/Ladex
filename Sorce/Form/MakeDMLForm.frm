@@ -17,7 +17,7 @@ Attribute VB_Exposed = False
 
 Private Sub MakeDeleteDML_Click()
   Dim TabelName As String
-  Dim SheetName As String
+  Dim sheetName As String
   
   Sheets("Delete•¶").Copy After:=Worksheets(Worksheets.count)
   ActiveWorkbook.Sheets(Worksheets.count).Tab.ColorIndex = -4142
@@ -43,7 +43,7 @@ End Sub
 Private Sub MakeInsertDML_Click()
 
   Dim TabelName As String
-  Dim SheetName As String
+  Dim sheetName As String
   
   Sheets("Insert•¶").Copy After:=Worksheets(Worksheets.count)
   ActiveWorkbook.Sheets(Worksheets.count).Tab.ColorIndex = -4142
@@ -63,7 +63,7 @@ End Sub
 Private Sub MakeUpdateDML_Click()
 
   Dim TabelName As String
-  Dim SheetName As String
+  Dim sheetName As String
   
   Sheets("Update•¶").Copy After:=Worksheets(Worksheets.count)
   ActiveWorkbook.Sheets(Worksheets.count).Tab.ColorIndex = -4142
