@@ -13,10 +13,10 @@ Function オプション画面表示()
   
 '  On Error GoTo catchError
   
-  With OptionForm
+  With Frm_Option
     .StartUpPosition = 0
-    .Top = Application.Top + 30
-    .Left = Application.Left + 30
+    .Top = Application.Top + (ActiveWindow.Width / 4)
+    .Left = Application.Left + (ActiveWindow.Height / 2)
     .Show
   End With
 
@@ -41,14 +41,14 @@ Function 標準画面()
   'On Error Resume Next
   
   Call Library.startScript
-  Call ProgressBar.showStart
+  Call Ctl_ProgressBar.showStart
   
   SetActiveSheet = ActiveWorkbook.activeSheet.Name
   SelectAddress = Selection.Address
   
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
-    Call ProgressBar.showCount("標準画面設定", 1, 100, sheetName)
+    Call Ctl_ProgressBar.showCount("標準画面設定", 1, 100, sheetName)
     If Worksheets(sheetName).Visible = True Then
       Worksheets(sheetName).Select
       
@@ -82,7 +82,7 @@ Function 標準画面()
   
   Worksheets(SetActiveSheet).Select
   Range(SelectAddress).Select
-  Call ProgressBar.showEnd
+  Call Ctl_ProgressBar.showEnd
   Call Library.endScript
   
 End Function
@@ -104,16 +104,16 @@ Function スタイル削除()
   Call init.setting
   
   count = 1
-  Call ProgressBar.showStart
+  Call Ctl_ProgressBar.showStart
   endCount = ActiveWorkbook.Styles.count
   
   For Each s In ActiveWorkbook.Styles
-    Call ProgressBar.showCount("定義済スタイル削除", count, endCount, s.Name)
+    Call Ctl_ProgressBar.showCount("定義済スタイル削除", count, endCount, s.Name)
     
     Select Case s.Name
       Case "Normal"
       Case Else
-        s.Delete
+        s.delete
     End Select
     count = count + 1
   Next
@@ -122,10 +122,10 @@ Function スタイル削除()
   endLine = sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
   For line = 2 To endLine
     If sheetStyle.Range("A" & line) <> "無効" Then
-      Call ProgressBar.showCount("スタイル初期化", line, endLine, sheetStyle.Range("B" & line))
+      Call Ctl_ProgressBar.showCount("スタイル初期化", line, endLine, sheetStyle.Range("B" & line))
       
       If sheetStyle.Range("B" & line) <> "Normal" Then
-        ActiveWorkbook.Styles.Add Name:=sheetStyle.Range("B" & line).Value
+        ActiveWorkbook.Styles.add Name:=sheetStyle.Range("B" & line).Value
       End If
       
       With ActiveWorkbook.Styles(sheetStyle.Range("B" & line).Value)
@@ -157,7 +157,7 @@ Function スタイル削除()
     End If
   Next
   
-  Call ProgressBar.showEnd
+  Call Ctl_ProgressBar.showEnd
   Call Library.endScript
 
 End Function
@@ -271,6 +271,8 @@ End Function
 
 
 Function 罫線_破線_水平()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   
   With Selection
@@ -284,6 +286,7 @@ End Function
 
 
 Function 罫線_破線_垂直()
+  Dim Red As Long, Green As Long, Blue As Long
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlInsideVertical).LineStyle = xlNone
@@ -294,6 +297,8 @@ Function 罫線_破線_垂直()
 End Function
 
 Function 罫線_破線_左右()
+  Dim Red As Long, Green As Long, Blue As Long
+
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlEdgeLeft).LineStyle = xlNone
@@ -312,6 +317,8 @@ End Function
 
 
 Function 罫線_破線_上下()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlEdgeTop).LineStyle = xlNone
@@ -330,6 +337,8 @@ End Function
 
 
 Function 罫線_破線_囲み()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlEdgeLeft).LineStyle = xlDash
@@ -349,6 +358,8 @@ Function 罫線_破線_囲み()
 End Function
 
 Function 罫線_破線_格子()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlEdgeLeft).LineStyle = xlDash
@@ -373,6 +384,8 @@ End Function
 
 
 Function 罫線_実線_囲み()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   
   With Selection
@@ -395,6 +408,8 @@ End Function
 
 
 Function 罫線_二重線_左右()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlEdgeLeft).LineStyle = xlDouble
@@ -406,6 +421,8 @@ Function 罫線_二重線_左右()
 End Function
 
 Function 罫線_二重線_上下()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
     .Borders(xlEdgeTop).LineStyle = xlDouble
@@ -417,6 +434,8 @@ Function 罫線_二重線_上下()
 End Function
 
 Function 罫線_二重線_囲み()
+  Dim Red As Long, Green As Long, Blue As Long
+  
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   
   With Selection
@@ -436,6 +455,13 @@ Function 罫線_二重線_囲み()
     .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
   End With
 End Function
+
+
+
+
+
+
+
 
 
 

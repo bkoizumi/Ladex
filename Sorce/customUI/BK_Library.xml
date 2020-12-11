@@ -1,45 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui"  onLoad="BK_Library.xlam!ctlRibbon.onLoad">
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui"  onLoad="BK_Library.xlam!Ctl_Ribbon.onLoad">
    <ribbon startFromScratch="false">
  <tabs>
       <tab idMso="TabView">
         <group id="dispGroup" label="BK_Libraryタブ表示">
-          <checkBox id="BK_Library"  label="BK_Library"  onAction="BK_Library.xlam!ctlRibbon.setDispTab"  />
+          <checkBox id="BK_Library"  label="BK_Library"  onAction="BK_Library.xlam!Ctl_Ribbon.setDispTab"  />
         </group>
       </tab>
 
 
-    <tab id="BK_LibraryTab" label="カスタムメニュー" insertBeforeMso="TabHome" getVisible="BK_Library.xlam!ctlRibbon.getVisible">
-      <group          id="G0_01" label="カスタマイズ">
-        <button       id="オプション"         label="オプション"        onAction="BK_Library.xlam!ctlRibbon.dispOption"    supertip="オプション設定画面を表示します" imageMso="AnimationCustomAddActionVerbDialog" />
-        <button       id="標準画面"           label="標準画面"          onAction="BK_Library.xlam!ctlRibbon.setDefaultDisplay"  imageMso="ViewNormalViewExcel"/>
-        <menu         id="メニュー"           label="メニュー"     imageMso="BulletListDefault" >
-          <button     id="リボンタブ非表示"   label="リボンタブ非表示"  onAction="BK_Library.xlam!ctlRibbon.noDispTab"       imageMso="AppointmentColor8" />
-          <button     id="スタイル削除"       label="スタイル削除"      onAction="BK_Library.xlam!ctlRibbon.delStyle"        imageMso="AppointmentColorDialog"/>
-          <button     id="名前定義削除"       label="名前定義削除"      onAction="BK_Library.xlam!ctlRibbon.delVisibleNames" image="delVisibleNames" />
-          <button     id="画像設定"           label="画像設定"          onAction="BK_Library.xlam!ctlRibbon.setShapeSize"    imageMso="ControlImage" />
-        </menu>
-        <button       id="R1C1表記"           label="R1C1表記" onAction="BK_Library.xlam!ctlRibbon.dispR1C1" image="dispR1C1" />
-        <button       id="シート一覧更新"     label="シート一覧更新" imageMso="DataRefreshAll"  screentip="シート一覧更新" supertip="シート一覧更新" onAction="BK_Library.xlam!ctlRibbon.dMenuRefresh" />
-        <dynamicMenu  id="シート一覧"         label="シート一覧"     imageMso="HeaderFooterSheetNameInsert" getContent="BK_Library.xlam!ctlRibbon.dMenu" />
+    <tab id="BK_LibraryTab" label="カスタムメニュー" insertBeforeMso="TabHome" getVisible="BK_Library.xlam!Ctl_Ribbon.getVisible">
+      <group          id="カスタマイズ" label="カスタマイズ">
+        <button       id="Option"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
 
-        <menu         id="罫線_メニュー"      label="罫線"     imageMso="BorderDrawGrid" >
-          <button     id="罫線_クリア"        label="罫線_クリア"       onAction="BK_Library.xlam!ctlRibbon.lineSyle" imageMso="BorderInside"/>
+      <splitButton id="splitBtn01" size="large">
+        <button id="Favorite_detail" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <menu           id="Favorite_Menu"  itemSize="large" getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" >
+          <button       id="Favorite_Add"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <dynamicMenu  id="Favorite_List"  imageMso="Favorites"                            getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getContent="BK_Library.xlam!Ctl_Ribbon.FavoriteMenu" />
+        </menu>
+      </splitButton>
+
+        <separator id="Sprt01" />
+
+        <button       id="DefaultDisplay"   getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <menu         id="CustomMenu"       getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled"  itemSize="large" getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" >
+          <button     id="Invisible_RibbonTab"  getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="del_Style"            getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="del_CellNames"        image="del_CellNames"                           getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="set_Images"           getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        </menu>
+
+        <button       id="HighLight"          getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" image="HighLight"  getSize="BK_Library.xlam!Ctl_Ribbon.getSize"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <button       id="Notation_R1C1"      getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" image="dispR1C1"   getSize="BK_Library.xlam!Ctl_Ribbon.getSize"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <dynamicMenu  id="SheetList"          getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" imageMso="HeaderFooterSheetNameInsert"                           getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getContent="BK_Library.xlam!Ctl_Ribbon.dMenu" />
+
+        <menu         id="罫線_メニュー"      getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" itemSize="large"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel">
+          <button     id="罫線_クリア"        getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
 
           <menuSeparator id="破線" title="破線　　　　　　　　" />
-          <button     id="罫線_破線_水平"     label="破線_水平"    onAction="BK_Library.xlam!ctlRibbon.lineSyle" imageMso="BorderInsideHorizontal" />
-          <button     id="罫線_破線_垂直"     label="破線_垂直"    onAction="BK_Library.xlam!ctlRibbon.lineSyle" imageMso="BorderInsideVertical" />
-          <button     id="罫線_破線_左右"     label="破線_左右"    onAction="BK_Library.xlam!ctlRibbon.lineSyle" image="BorderLeftAndRight" />
-          <button     id="罫線_破線_上下"     label="破線_上下"    onAction="BK_Library.xlam!ctlRibbon.lineSyle" imageMso="BordersGallery" />
-          <button     id="罫線_破線_囲み"     label="破線_囲み"    onAction="BK_Library.xlam!ctlRibbon.lineSyle" imageMso="BorderOutside" />
-          <button     id="罫線_破線_格子"     label="破線_格子"    onAction="BK_Library.xlam!ctlRibbon.lineSyle" imageMso="BordersAll" />
+          <button     id="罫線_破線_水平"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_破線_垂直"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_破線_左右"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_破線_上下"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_破線_囲み"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_破線_格子"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
 
           <menuSeparator id="二重線" title="二重線　　　　　　　"/>
-          <button     id="罫線_二重線_左右"   label="二重線_左右"  onAction="BK_Library.xlam!ctlRibbon.lineSyle" image="BorderDoubleLeftAndRight" />
-          <button     id="罫線_二重線_上下"   label="二重線_上下"  onAction="BK_Library.xlam!ctlRibbon.lineSyle" image="BorderDoubleTopAndBottom" />
-          <button     id="罫線_二重線_囲み"   label="二重線_囲み"  onAction="BK_Library.xlam!ctlRibbon.lineSyle" image="BorderDouble" />
+          <button     id="罫線_二重線_左右"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_二重線_上下"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_二重線_囲み"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
         </menu>
-        <button       id="G0_13" label="ハイライト" onAction="BK_Library.xlam!ctlRibbon.HighLight" supertip="行・列のハイライト" image="HighLight" />
+
+        <menu         id="Dummy_Menu" itemSize="large" imageMso="BorderDrawGrid" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" >
+          <button     id="Dummy_Make" getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        </menu>
+      </group >
+
+      <group id="Maintenance" label="メンテナンス">
+        <button     id="SheetList_Refresh"     getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <button     id="SheetValCopy"         getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
       </group >
 
       <group id="Group2" label="標準機能">
@@ -57,7 +77,7 @@
         <control idMso="ShapesInsertGallery"       visible="true" label="図形" />                 <!--図形-->
         <control idMso="MergeCellsAcross"          visible="true" label="横結合" />               <!--横方向に結合-->
         <control idMso="ClearAll"                  visible="true" label="全クリア" />             <!--すべてクリア-->
-        <button id="PersonalButton7" imageMso="MergeCenter" label="中央揃え" onAction="BK_Library.xlam!ctlRibbon.setCenter" />
+        <button id="PersonalButton7" imageMso="MergeCenter" label="中央揃え" onAction="BK_Library.xlam!Ctl_Ribbon.setCenter" />
         <menu id="MyMenu02" label="メニュー"  imageMso="BlogHomePage" >
           <control idMso="FileSaveAsOtherFormats"  visible="true" label="別名保存" />             <!--他の形式で保存-->
           <control idMso="FilePrintPreview"        visible="true" />                              <!--印刷プレビュー-->
@@ -117,7 +137,7 @@
             <labelControl id="cp0910" label="　" />
             <labelControl id="cp0911" label="Copyright (C) 2015 B.Koizumi All Rights Reserved." />
             <labelControl id="cp0912" label="最新ファイルは以下からダウンロードしてください" />
-            <hyperlink    id="cp0913" label="Excel-VBA" target="https://lbc.whitebear.tk/svn/excel/trunk" />
+            <hyperlink    id="cp0913" label="Excel-VBA" target="https://github.com/bkoizumi/BK_Library" />
 
           </topItems>
         </group>

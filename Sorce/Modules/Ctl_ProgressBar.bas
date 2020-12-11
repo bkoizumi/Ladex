@@ -1,4 +1,4 @@
-Attribute VB_Name = "ProgressBar"
+Attribute VB_Name = "Ctl_ProgressBar"
 
 '**************************************************************************************************
 ' * プログレスバー表示制御
@@ -24,10 +24,10 @@ Public Function showStart()
   myMsg1 = " 待機中"
 
   'ダイアログへ表示
-  With FProgress
+  With Frm_Progress
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.Width / 4)
-    .Left = Application.Left + (ActiveWindow.Height / 2)
+    .Top = Application.Top + 10
+    .Left = Application.Left + 120
     .Caption = myMsg1
     
     'プログレスバーの枠の部分
@@ -83,7 +83,7 @@ Public Function showStart()
     myBarSize = .Label3.Width
   End With
 
-  FProgress.Show vbModeless
+  Frm_Progress.Show vbModeless
 End Function
 
 
@@ -98,7 +98,7 @@ Public Function showCount(ProgressBarTitle As String, mypbProgCnt As Long, mypbS
     myJobCnt = Int(mypbProgCnt / mypbSCount * 100)
     myMsg2 = mypbProgCnt & "/" & mypbSCount & " (" & Int(myJobCnt) & "%)"
     
-    With FProgress
+    With Frm_Progress
       .Caption = ProgressBarTitle
       .Label2.Width = Int(myBarSize * myJobCnt / 100)
       .Label3.Caption = myMsg2
@@ -113,7 +113,7 @@ Public Function showCount(ProgressBarTitle As String, mypbProgCnt As Long, mypbS
     myJobCnt = Int(mypbProgCnt / mypbSCount * 100)
     myMsg2 = ""
     
-    With FProgress
+    With Frm_Progress
       .Caption = ProgressBarTitle
       .Label2.Width = Int(myBarSize * myJobCnt / 100)
       .Label3.Caption = myMsg2
@@ -143,7 +143,7 @@ End Function
 Public Function showEnd()
   
   'ダイアログを閉じる
-  Unload FProgress
+  Unload Frm_Progress
   
 End Function
 

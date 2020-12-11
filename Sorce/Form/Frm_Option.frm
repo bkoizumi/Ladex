@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} OptionForm 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
    ClientHeight    =   8640
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11265
-   OleObjectBlob   =   "OptionForm.frx":0000
+   OleObjectBlob   =   "Frm_Option.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
-Attribute VB_Name = "OptionForm"
+Attribute VB_Name = "Frm_Option"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -33,15 +33,9 @@ Private Sub UserForm_Initialize()
   Application.Cursor = xlDefault
   indexCnt = 0
   
-  'スタイルシートをスタイル2シートへコピー
-'  endLine = sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
-'  sheetStyle.Range("A1:J" & endLine).Copy Destination:=sheetStyle2.Range("A1")
-
-
-
   setZoomLevel = Library.getRegistry("zoomLevel")
   
-  With OptionForm
+  With Frm_Option
     For Each zoomLevelVal In Split("25,50,75,85,100", ",")
       .zoomLevel.AddItem zoomLevelVal
       
@@ -52,14 +46,20 @@ Private Sub UserForm_Initialize()
     Next
     .gridLine.Value = Library.getRegistry("gridLine")
     .bgColor.Value = Library.getRegistry("bgColor")
-    .highLightColor.BackColor = Library.getRegistry("highLightColor")
-    .LineColor.BackColor = Library.getRegistry("LineColor")
+      
+    If Library.getRegistry("highLightColor") = "" Then
+      .highLightColor.BackColor = 10222585
+    Else
+      .highLightColor.BackColor = Library.getRegistry("highLightColor")
+    End If
+    
+    If Library.getRegistry("LineColor") = "" Then
+      .LineColor.BackColor = 0
+    Else
+      .LineColor.BackColor = Library.getRegistry("LineColor")
+    End If
   End With
 End Sub
-
-
-
-
 
 '**************************************************************************************************
 ' * スタイル設定

@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ExpansionForm 
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Expansion 
    Caption         =   "Šg‘å"
    ClientHeight    =   6795
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   10335
-   OleObjectBlob   =   "ExpansionForm.frx":0000
+   OleObjectBlob   =   "Frm_Expansion.frx":0000
    StartUpPosition =   2  '‰æ–Ê‚Ì’†‰›
 End
-Attribute VB_Name = "ExpansionForm"
+Attribute VB_Name = "Frm_Expansion"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -21,6 +21,6 @@ Private Sub CancelButton_Click()
 End Sub
 
 Private Sub OK_Button_Click()
-  Call Library.ExpansionFormEnd(TextBox, ExpansionForm.Caption)
+  Call Library.showExpansionFormClose(TextBox, ExpansionForm.Caption)
   Unload ExpansionForm
 End Sub

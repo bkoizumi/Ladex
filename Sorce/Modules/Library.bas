@@ -21,12 +21,12 @@ Attribute VB_Name = "Library"
 
   'Sleep関数の利用
   Private Declare PtrSafe Function Sleep Lib "kernel32" (ByVal ms As LongPtr)
-  
+
   'クリップボード関連
   Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hWnd As LongPtr) As Long
   Private Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
   Private Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
-  
+
 #Else
   'ディスプレイの解像度取得用
   Private Declare Function getSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
@@ -95,22 +95,22 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function errorHandle(funcName As String, ByRef objErr As Object)
-  
+
   Dim Message As String
   Dim runTime As Date
   Dim endLine As Long
-  
+
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
   Message = funcName & vbCrLf & objErr.Description
 
   '音声認識発話
   Application.Speech.Speak Text:="エラーが発生しました", SpeakAsync:=True
   Message = Application.WorksheetFunction.VLookup(objErr.Number, noticeCodeSheet.Range("A2:B" & endLine), 2, False)
-  
+
   Call MsgBox(Message, vbCritical)
   Call endScript
-  Call ProgressBar.showEnd
-  
+  Call Ctl_ProgressBar.showEnd
+
   Call outputLog(runTime & vbTab & objErr.Number & vbTab & objErr.Description)
 End Function
 
@@ -123,7 +123,7 @@ End Function
 Function startScript()
 
 '  Call Library.showDebugForm("startScript", "")
-  
+
   'アクティブセルの取得
   If TypeName(Selection) = "Range" Then
     SelectionCell = Selection.Address
@@ -158,7 +158,7 @@ End Function
 '**************************************************************************************************
 Function endScript(Optional flg As Boolean = False)
   On Error Resume Next
-  
+
   '強制的に再計算させる
   Application.CalculateFull
 
@@ -168,7 +168,7 @@ Function endScript(Optional flg As Boolean = False)
     ActiveWorkbook.Range(SelectionCell).Select
   End If
   Call unsetClipboard
-  
+
   'マクロ動作でシートやウィンドウが切り替わるのを見せないようにします
   Application.ScreenUpdating = True
 
@@ -222,7 +222,7 @@ Function chkShellEnd(ProcessID As Long)
   Dim hProcess As Long
   Dim EndCode As Long
   Dim EndRet   As Long
-   
+
   hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, 1, ProcessID)
   Do
     EndRet = GetExitCodeProcess(hProcess, EndCode)
@@ -284,22 +284,22 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
  Function chkArrayEmpty(arrayTmp As Variant) As Boolean
-    
+
 On Error GoTo catchError
-  
+
   If UBound(arrayTmp) >= 0 Then
     chkArrayEmpty = False
   Else
     chkArrayEmpty = True
   End If
-  
+
   Exit Function
-  
+
 catchError:
-  
+
   'エラーが発生した場合
   chkArrayEmpty = True
-    
+
 End Function
 
 '**************************************************************************************************
@@ -330,10 +330,10 @@ End Function
 Function chkHeader(baseNameArray As Variant, chkNameArray As Variant)
   Dim errMeg As String
 
-  
+
 On Error GoTo catchError
   errMeg = ""
-  
+
   If UBound(baseNameArray) <> UBound(chkNameArray) Then
     errMeg = "個数が異なります。"
     errMeg = errMeg & vbNewLine & UBound(baseNameArray) & "<=>" & UBound(chkNameArray) & vbNewLine
@@ -344,19 +344,19 @@ On Error GoTo catchError
       End If
     Next
   End If
-  
+
   chkHeader = errMeg
-    
-    
-  
-  
+
+
+
+
   Exit Function
-  
+
 catchError:
-  
+
   'エラーが発生した場合
   chkHeader = "エラーが発生しました"
-    
+
 End Function
 
 '**************************************************************************************************
@@ -366,16 +366,16 @@ End Function
 '**************************************************************************************************
 Function chkFileExists(targetPath As String)
   Dim fso As Object
-  
+
   Set fso = CreateObject("Scripting.FileSystemObject")
-  
+
   If fso.FileExists(targetPath) Then
     chkFileExists = True
   Else
     chkFileExists = False
   End If
   Set fso = Nothing
- 
+
 End Function
 
 
@@ -386,16 +386,16 @@ End Function
 '**************************************************************************************************
 Function chkDirExists(targetPath As String)
   Dim fso As Object
-  
+
   Set fso = CreateObject("Scripting.FileSystemObject")
-  
+
   If fso.FolderExists(targetPath) Then
     chkDirExists = True
   Else
     chkDirExists = False
   End If
   Set fso = Nothing
- 
+
 End Function
 
 '**************************************************************************************************
@@ -406,7 +406,7 @@ End Function
 Function covCamelToSnake(ByVal val As String, Optional ByVal isUpper As Boolean = False) As String
   Dim ret As String
   Dim i      As Long, Length As Long
-  
+
   Length = Len(val)
 
   For i = 1 To Length
@@ -422,7 +422,7 @@ Function covCamelToSnake(ByVal val As String, Optional ByVal isUpper As Boolean 
       ret = ret & Mid(val, i, 1)
     End If
   Next
-  
+
   If isUpper Then
     covCamelToSnake = UCase(ret)
   Else
@@ -682,15 +682,15 @@ End Function
 '**************************************************************************************************
 Function delRegistry(registryName As String)
   Dim regVal As String
-  
+
   On Error Resume Next
-  
+
   If registryName = "" Then
     DeleteSetting RegistryKey, RegistryfunctionKey
   Else
     DeleteSetting RegistryKey, RegistryfunctionKey, registryName
   End If
-  
+
 End Function
 '**************************************************************************************************
 ' * シート削除
@@ -700,12 +700,12 @@ End Function
 Function delSheetData(Optional line As Long)
 
   If line <> 0 Then
-    Rows(line & ":" & Rows.count).Delete Shift:=xlUp
+    Rows(line & ":" & Rows.count).delete Shift:=xlUp
     Rows(line & ":" & Rows.count).Select
     Rows(line & ":" & Rows.count).NumberFormatLocal = "G/標準"
     Rows(line & ":" & Rows.count).Style = "Normal"
   Else
-    Cells.Delete Shift:=xlUp
+    Cells.delete Shift:=xlUp
     Cells.NumberFormatLocal = "G/標準"
     Cells.Style = "Normal"
   End If
@@ -723,7 +723,7 @@ Function delCellLinefeed(val As String)
   Dim stringVal As Variant
   Dim retVal As String
   Dim count As Integer
-  
+
   retVal = ""
   count = 0
   For Each stringVal In Split(val, vbLf)
@@ -754,7 +754,7 @@ Function delImage()
     Set rng = Range(shp.TopLeftCell, shp.BottomRightCell)
 
     If Not (Intersect(rng, Selection) Is Nothing) Then
-      shp.Delete
+      shp.delete
     End If
   Next
 End Function
@@ -775,7 +775,7 @@ Function delVisibleNames()
       Name.Visible = True
     End If
     If Not Name.Name Like "*!Print_Area" And Not Name.Name Like "*!Print_Titles" Then
-      Name.Delete
+      Name.delete
     End If
   Next
 
@@ -794,7 +794,7 @@ Function delTableData()
 
   endLine = Cells(Rows.count, 1).End(xlUp).Row
   Rows("3:" & endLine).Select
-  Selection.Delete Shift:=xlUp
+  Selection.delete Shift:=xlUp
 
   Rows("2:3").Select
   Selection.SpecialCells(xlCellTypeConstants, 23).ClearContents
@@ -823,43 +823,43 @@ Function getMachineInfo() As Object
   Select Case Application.OperatingSystem
 
     Case "Windows (64-bit) NT 6.01"
-        MachineInfo.Add "OS", "Windows7-64"
+        MachineInfo.add "OS", "Windows7-64"
 
     Case "Windows (32-bit) NT 6.01"
-        MachineInfo.Add "OS", "Windows7-32"
+        MachineInfo.add "OS", "Windows7-32"
 
     Case "Windows (32-bit) NT 5.01"
-        MachineInfo.Add "OS", "WindowsXP-32"
+        MachineInfo.add "OS", "WindowsXP-32"
 
     Case "Windows (64-bit) NT 5.01"
-        MachineInfo.Add "OS", "WindowsXP-64"
+        MachineInfo.add "OS", "WindowsXP-64"
 
     Case Else
-       MachineInfo.Add "OS", Application.OperatingSystem
+       MachineInfo.add "OS", Application.OperatingSystem
   End Select
 
   ' Excelのバージョン取得--------------------------------------------------------------------------
   Select Case Application.Version
     Case "16.0"
-        MachineInfo.Add "Excel", "2016"
+        MachineInfo.add "Excel", "2016"
     Case "14.0"
-        MachineInfo.Add "Excel", "2010"
+        MachineInfo.add "Excel", "2010"
     Case "12.0"
-        MachineInfo.Add "Excel", "2007"
+        MachineInfo.add "Excel", "2007"
     Case "11.0"
-        MachineInfo.Add "Excel", "2003"
+        MachineInfo.add "Excel", "2003"
     Case "10.0"
-        MachineInfo.Add "Excel", "2002"
+        MachineInfo.add "Excel", "2002"
     Case "9.0"
-        MachineInfo.Add "Excel", "2000"
+        MachineInfo.add "Excel", "2000"
     Case Else
-       MachineInfo.Add "Excel", Application.Version
+       MachineInfo.add "Excel", Application.Version
   End Select
 
   'PCの情報----------------------------------------------------------------------------------------
-  MachineInfo.Add "UserName", WshNetworkObject.UserName
-  MachineInfo.Add "ComputerName", WshNetworkObject.ComputerName
-  MachineInfo.Add "UserDomain", WshNetworkObject.UserDomain
+  MachineInfo.add "UserName", WshNetworkObject.UserName
+  MachineInfo.add "ComputerName", WshNetworkObject.ComputerName
+  MachineInfo.add "UserDomain", WshNetworkObject.UserDomain
 
   '画面の解像度等取得------------------------------------------------------------------------------
 '  MachineInfo.Add "monitors", getSystemMetrics(80)
@@ -882,7 +882,7 @@ End Function
 Function getByteString(arryColumn As String, Optional line As Long) As Long
   Dim colLineName As Variant
   Dim count As Long
-  
+
   count = 0
   For Each colLineName In Split(arryColumn, ",")
     If line > 0 Then
@@ -925,7 +925,7 @@ End Function
 Function getColor(colorValue As Long)
   Dim Red As Long, Green As Long, Blue As Long
   Dim setColorValue As Long
-  
+
   Call getRGB(colorValue, Red, Green, Blue)
   setColorValue = Application.Dialogs(xlDialogEditColor).Show(10, Red, Green, Blue)
   If setColorValue = False Then
@@ -933,7 +933,7 @@ Function getColor(colorValue As Long)
   Else
     setColorValue = ThisWorkbook.Colors(10)
   End If
-  
+
   getColor = setColorValue
 
 End Function
@@ -946,7 +946,7 @@ End Function
 '**************************************************************************************************
 Function getIndentLevel(targetRange As Range)
   Dim thisTargetSheet As Worksheet
-  
+
   Application.Volatile
 
   If targetRange = "" Then
@@ -974,10 +974,16 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getRegistry(registryName As String)
+Function getRegistry(registryName As String, Optional SubKey As String)
   Dim regVal As String
 
-  regVal = GetSetting(RegistryKey, RegistrySubKey, registryName)
+  If SubKey = "" Then
+    SubKey = RegistrySubKey
+  End If
+  
+  If registryName <> "" Then
+    regVal = GetSetting(RegistryKey, SubKey, registryName)
+  End If
   getRegistry = regVal
 End Function
 
@@ -992,13 +998,13 @@ Function getDirPath(CurrentDirectory As String, Optional title As String)
   With Application.FileDialog(msoFileDialogFolderPicker)
     .InitialFileName = CurrentDirectory & "\"
     .AllowMultiSelect = False
-    
+
     If title <> "" Then
       .title = title & "の場所を選択してください"
     Else
       .title = "フォルダーを選択してください"
     End If
-    
+
     If .Show = True Then
       getDirPath = .SelectedItems(1)
     Else
@@ -1041,13 +1047,13 @@ Function getFilePath(CurrentDirectory As String, saveFileName As String, title A
 
     ' ファイルの種類を設定
     .Filters.Clear
-    .Filters.Add "Excelブック", "*.xls; *.xlsx; *.xlsm"
-    .Filters.Add "CSVファイル", "*.csv"
-    .Filters.Add "SQLファイル", "*.sql"
-    .Filters.Add "テキストファイル", "*.txt"
-    .Filters.Add "JSONファイル", "*.json"
-    .Filters.Add "Accesssデータベース", "*.mdb"
-    .Filters.Add "すべてのファイル", "*.*"
+    .Filters.add "Excelブック", "*.xls; *.xlsx; *.xlsm"
+    .Filters.add "CSVファイル", "*.csv"
+    .Filters.add "SQLファイル", "*.sql"
+    .Filters.add "テキストファイル", "*.txt"
+    .Filters.add "JSONファイル", "*.json"
+    .Filters.add "Accesssデータベース", "*.mdb"
+    .Filters.add "すべてのファイル", "*.*"
 
     .FilterIndex = FileTypeNo
 
@@ -1059,8 +1065,8 @@ Function getFilePath(CurrentDirectory As String, saveFileName As String, title A
 
     'ダイアログ ボックスのタイトル設定
     .title = title
-    
-    
+
+
     If .Show = -1 Then
       filePath = .SelectedItems(1)
     Else
@@ -1086,16 +1092,16 @@ Function getFilesPath(CurrentDirectory As String, saveFileName As String, title 
   With Application.FileDialog(msoFileDialogFilePicker)
     '複数選択を許可
     .AllowMultiSelect = True
-    
+
     ' ファイルの種類を設定
     .Filters.Clear
-    .Filters.Add "Excelブック", "*.xls; *.xlsx; *.xlsm"
-    .Filters.Add "CSVファイル", "*.csv"
-    .Filters.Add "SQLファイル", "*.sql"
-    .Filters.Add "テキストファイル", "*.txt"
-    .Filters.Add "JSONファイル", "*.json"
-    .Filters.Add "Accesssデータベース", "*.mdb"
-    .Filters.Add "すべてのファイル", "*.*"
+    .Filters.add "Excelブック", "*.xls; *.xlsx; *.xlsm"
+    .Filters.add "CSVファイル", "*.csv"
+    .Filters.add "SQLファイル", "*.sql"
+    .Filters.add "テキストファイル", "*.txt"
+    .Filters.add "JSONファイル", "*.json"
+    .Filters.add "Accesssデータベース", "*.mdb"
+    .Filters.add "すべてのファイル", "*.*"
 
     .FilterIndex = FileTypeNo
 
@@ -1104,7 +1110,7 @@ Function getFilesPath(CurrentDirectory As String, saveFileName As String, title 
 
     '表示形式の設定
     .InitialView = msoFileDialogViewWebView
-    
+
     'ダイアログ ボックスのタイトル設定
     .title = title
 
@@ -1132,7 +1138,7 @@ End Function
 Function getFileList(Path As String, fileName As String)
   Dim f As Object, cnt As Long
   Dim list() As String
-  
+
   cnt = 0
   With CreateObject("Scripting.FileSystemObject")
     For Each f In .GetFolder(Path).Files
@@ -1143,7 +1149,7 @@ Function getFileList(Path As String, fileName As String)
       End If
     Next f
   End With
-  
+
   getFileList = list
 End Function
 
@@ -1336,11 +1342,11 @@ End Function
 Function showDebugForm(meg1 As String, Optional meg2 As String)
   Dim runTime As Date
   Dim StartUpPosition As Long
-  
+
   On Error GoTo catchError
-  
+
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
-  
+
   If setVal("debugMode") = "none" Then
     Exit Function
   End If
@@ -1350,63 +1356,64 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
 '  End If
   meg1 = Replace(meg1, vbNewLine, " ")
 
-  
+
   Select Case setVal("debugMode")
     Case "file"
       If meg1 <> "" Then
         Call outputLog(runTime & vbTab & meg1)
       End If
       GoTo label_end
-    
+
     Case "form"
       GoTo label_showForm
-    
+
     Case "all"
       If meg1 <> "" Then
         Call outputLog(runTime & vbTab & meg1)
       End If
       GoTo label_showForm
-    
+
     Case "develop"
       If meg1 <> "" Then
         Call outputLog(runTime & vbTab & meg1)
         Debug.Print runTime & vbTab & meg1
       End If
-      GoTo label_showForm
-      
+      'GoTo label_showForm
+      GoTo label_end
+
     Case Else
       Exit Function
   End Select
 
 label_showForm:
   If meg1 Like "処理開始：*" Then
-   
-    With debugForm
+
+    With Frm_debug
       .Caption = "処理情報"
       .ListBox1.Clear
       .ListBox1.AddItem runTime & vbTab & meg1
     End With
   Else
-    With debugForm
+    With Frm_debug
       .Caption = "処理情報"
       .ListBox1.AddItem runTime & vbTab & meg1
       .ListBox1.ListIndex = .ListBox1.ListCount - 1
     End With
   End If
-  
-  If (debugForm.Visible = True) Then
-    debugForm.StartUpPosition = 0
+
+  If (Frm_debug.Visible = True) Then
+    Frm_debug.StartUpPosition = 0
   Else
-    debugForm.StartUpPosition = 1
+    Frm_debug.StartUpPosition = 1
   End If
-  debugForm.Show vbModeless
+  Frm_debug.Show vbModeless
 
 
 label_end:
 
   DoEvents
   Exit Function
-  
+
 'エラー発生時=====================================================================================
 catchError:
   Exit Function
@@ -1420,16 +1427,16 @@ End Function
 '**************************************************************************************************
 Function showNotice(Code As Long, Optional process As String, Optional runEndflg As Boolean)
 
-  
+
   Dim Message As String
   Dim runTime As Date
   Dim endLine As Long
-  
+
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
- 
+
   endLine = sheetNotice.Cells(Rows.count, 1).End(xlUp).Row
   Message = Application.WorksheetFunction.VLookup(Code, sheetNotice.Range("A2:B" & endLine), 2, False)
-  
+
   If process <> "" Then
     Message = Replace(Message, "%%", process)
   End If
@@ -1440,22 +1447,22 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   If StopTime <> 0 Then
     Message = Message & vbNewLine & "<処理時間：" & StopTime & ">"
   End If
-  
+
   If setVal("debugMode") = "speak" Or setVal("debugMode") = "develop" Or setVal("debugMode") = "all" Then
     Application.Speech.Speak Text:=Message, SpeakAsync:=True, SpeakXML:=True
   Else
-    Call outputLog(runTime & vbTab & Message)
+'    Call outputLog(runTime & vbTab & Message)
   End If
-  
 
-  
+
+
   Select Case Code
     Case 0 To 399
       Call MsgBox(Message, vbInformation, thisAppName)
-    
+
     Case 400 To 499
       Call MsgBox(Message, vbCritical, thisAppName)
-    
+
     Case 500 To 599
       Call MsgBox(Message, vbExclamation, thisAppName)
 
@@ -1467,7 +1474,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   '画面描写制御終了処理
   If runEndflg = True Then
     Call endScript
-    Call ProgressBar.showEnd
+    Call Ctl_ProgressBar.showEnd
     End
   Else
     Call Library.showDebugForm(Message)
@@ -1508,23 +1515,23 @@ End Function
 '**************************************************************************************************
 Function outputLog(Message As String)
   Dim fileTimestamp As Date
-  
+
   If chkFileExists(logFile) Then
     fileTimestamp = FileDateTime(logFile)
   Else
       fileTimestamp = DateAdd("d", -1, Date)
   End If
-  
+
   If Format(Date, "yyyymmdd") = Format(fileTimestamp, "yyyymmdd") Then
     Open logFile For Append As #1
   Else
     Open logFile For Output As #1
   End If
-  
-  
+
+
   'Print #1, "[" & Format(Now, "YYYY/MM/DD hh:mm:ss") & "] " & Replace(Message, vbLf, " ")
   Print #1, Replace(Message, vbLf, " ")
-  
+
   Close #1
 End Function
 
@@ -1554,13 +1561,13 @@ Function importCsv(filePath As String, Optional readLine As Long, Optional TextF
   Else
     endLine = endLine + 1
   End If
-  
+
   If readLine < 1 Then
     readLine = 1
   End If
-  
+
   Set ws = activeSheet
-  Set qt = ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A" & endLine))
+  Set qt = ws.QueryTables.add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A" & endLine))
   With qt
     .TextFilePlatform = 932          ' Shift-JIS を開く
     .TextFileParseType = xlDelimited ' 文字で区切った形式
@@ -1569,18 +1576,18 @@ Function importCsv(filePath As String, Optional readLine As Long, Optional TextF
     .AdjustColumnWidth = False       ' 列幅を自動調整しない
     .RefreshStyle = xlOverwriteCells '上書きを指定
     .TextFileTextQualifier = xlTextQualifierDoubleQuote ' 引用符の指定
-    
+
     If IsArray(TextFormat) Then
       .TextFileColumnDataTypes = TextFormat
     End If
-    
+
     .Refresh
     DoEvents
-    .Delete
+    .delete
   End With
   Set qt = Nothing
   Set ws = Nothing
-  
+
   Call Library.startScript
 End Function
 
@@ -1597,7 +1604,7 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
   Else
     Workbooks.Open fileName:=filePath, ReadOnly:=True
   End If
-  
+
   If Worksheets(targeSheet).Visible = False Then
     Worksheets(targeSheet).Visible = True
   End If
@@ -1605,12 +1612,12 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
 
   ActiveWorkbook.Sheets(targeSheet).Rows.Hidden = False
   ActiveWorkbook.Sheets(targeSheet).Columns.Hidden = False
-  
+
   If activeSheet.FilterMode Then activeSheet.ShowAllData
-  
+
   ActiveWorkbook.Sheets(targeSheet).Range(targeArea).Copy
   dictSheet.Range("A1").PasteSpecial xlPasteValues
-  
+
   Application.CutCopyMode = False
   ActiveWorkbook.Close SaveChanges:=False
   dictSheet.Range("A1").Select
@@ -1633,7 +1640,7 @@ Function makeDir(fullPath As String)
   If chkDirExists(fullPath) Then
     Exit Function
   End If
-  
+
   arr = Split(fullPath, "\")
   tmpPath = arr(0)  ' ドライブ名の代入
 
@@ -1691,10 +1698,10 @@ End Function
 '**************************************************************************************************
 Function setArrayPush(arrName As Variant, str As Variant)
   Dim i As Long
-  
+
   i = UBound(arrName)
   If i = 0 Then
-  
+
   Else
     i = i + 1
     ReDim Preserve arrName(i)
@@ -1739,10 +1746,14 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setRegistry(registryName As String, setVal As Variant)
-  
-  If getRegistry(registryName) <> setVal Then
-    SaveSetting RegistryKey, RegistrySubKey, registryName, setVal
+Function setRegistry(registryName As String, setVal As Variant, Optional SubKey As String)
+
+  If SubKey = "" Then
+    SubKey = RegistrySubKey
+  End If
+
+  If getRegistry(registryName, SubKey) <> setVal And registryName <> "" Then
+    SaveSetting RegistryKey, SubKey, registryName, setVal
   End If
 End Function
 
@@ -1763,7 +1774,7 @@ Function setReferences(BookType As String)
     Else
       MsgBox ("Microsoft Scripting Runtimeを利用できません。" & vbLf & "利用できない機能があります")
     End If
-    
+
   'Microsoft ActiveX Data Objects Library 6.1 (ADO)------------------------------------------------
   If BookType = "DataBase" Then
     LibADO = "C:\Program Files\Common Files\System\Ado\msado15.dll"
@@ -1804,7 +1815,7 @@ Function setReferences(BookType As String)
 
 
 Func_Exit:
-  Set ref = Nothing
+  Set Ref = Nothing
   Exit Function
 
 Err_SetReferences:
@@ -1824,19 +1835,19 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setLineColor(SetArea As String, DisType As Boolean, SetColor As String)
+Function setLineColor(setArea As String, DisType As Boolean, SetColor As String)
 
-  Range(SetArea).Select
+  Range(setArea).Select
 
   '条件付き書式をクリア
-  Selection.FormatConditions.Delete
+  Selection.FormatConditions.delete
 
   If DisType = False Then
     '行だけ設定
-    Selection.FormatConditions.Add Type:=xlExpression, Formula1:="=CELL(""row"")=ROW()"
+    Selection.FormatConditions.add Type:=xlExpression, Formula1:="=CELL(""row"")=ROW()"
   Else
     '行と列に設定
-    Selection.FormatConditions.Add Type:=xlExpression, Formula1:="=OR(CELL(""row"")=ROW(), CELL(""col"")=COLUMN())"
+    Selection.FormatConditions.add Type:=xlExpression, Formula1:="=OR(CELL(""row"")=ROW(), CELL(""col"")=COLUMN())"
   End If
 
   Selection.FormatConditions(Selection.FormatConditions.count).SetFirstPriority
@@ -1973,11 +1984,11 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function unsetLineColor(SetArea As String)
-  ActiveWorkbook.activeSheet.Range(SetArea).Select
+Function unsetLineColor(setArea As String)
+  ActiveWorkbook.activeSheet.Range(setArea).Select
 
   '条件付き書式をクリア
-  Selection.FormatConditions.Delete
+  Selection.FormatConditions.delete
 '  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
@@ -2010,7 +2021,9 @@ End Function
 '**************************************************************************************************
 Function waitTime(timeVal As Long)
   DoEvents
-  Sleep timeVal
+  'Sleep timeVal
+  
+  Application.Wait [Now()] + timeVal / 86400000
   DoEvents
 End Function
 
@@ -2045,47 +2058,6 @@ End Function
 
 
 '**************************************************************************************************
-' * リボンタブの選択
-' *
-' * @link https://www.ka-net.org/blog/?p=4624
-'**************************************************************************************************
-Function selectRibbonTab(ByVal TabName As String)
-
-  Dim uiAuto As UIAutomationClient.CUIAutomation
-  Dim elmRibbon As UIAutomationClient.IUIAutomationElement
-  Dim elmRibbonTab As UIAutomationClient.IUIAutomationElement
-  Dim cndProperty As UIAutomationClient.IUIAutomationCondition
-  Dim aryRibbonTab As UIAutomationClient.IUIAutomationElementArray
-  Dim ptnAcc As UIAutomationClient.IUIAutomationLegacyIAccessiblePattern
-  Dim accRibbon As Office.IAccessible
-  Dim i As Long
-
-  Set elmRibbonTab = Nothing '初期化
-  Set uiAuto = New UIAutomationClient.CUIAutomation
-  Set accRibbon = Application.CommandBars("Ribbon")
-  Set elmRibbon = uiAuto.ElementFromIAccessible(accRibbon, 0)
-  Set cndProperty = uiAuto.CreatePropertyCondition(UIA_ClassNamePropertyId, "NetUIRibbonTab")
-  Set aryRibbonTab = elmRibbon.FindAll(TreeScope_functiontree, cndProperty)
-  
-  Sleep 500
-  
-  For i = 0 To aryRibbonTab.Length
-    Debug.Print aryRibbonTab.GetElement(i).CurrentName
-    If aryRibbonTab.GetElement(i).CurrentName = TabName Then
-      Set elmRibbonTab = aryRibbonTab.GetElement(i)
-      Exit For
-    End If
-  Next
-  If elmRibbonTab Is Nothing Then Exit Function
-  Set ptnAcc = elmRibbonTab.GetCurrentPattern(UIA_LegacyIAccessiblePatternId)
-  ptnAcc.DoDefaultAction
-End Function
-
-
-
-
-
-'**************************************************************************************************
 ' * 選択セルの拡大表示呼出
 ' *
 ' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
@@ -2093,7 +2065,7 @@ End Function
 Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String)
   Dim colLineName As Variant
   Dim count As Integer
-  
+
   With KOETOL_ExpansionForm
     .StartUpPosition = 2
 '    .Top = Application.Top + (ActiveWindow.Width / 4)
@@ -2104,7 +2076,7 @@ Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String
     .TextBox.MultiLine = True
     .TextBox.EnterKeyBehavior = True
     .Caption = SetSelectTargetRows
-    
+
     'ニーズのチェックボックスの設定
     .needs01.Caption = Range("J3").Value
     .needs02.Caption = Range("K3").Value
@@ -2116,7 +2088,7 @@ Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String
     .needs08.Caption = Range("Q3").Value
     .needs09.Caption = Range("R3").Value
     .needs10.Caption = Range("S3").Value
-   
+
     'ポジティブのチェックボックスの設定
     .positive01.Caption = Range("T3").Value
     .positive02.Caption = Range("U3").Value
@@ -2150,7 +2122,7 @@ Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String
     .negative13.Caption = Range("AU3").Value
     .negative14.Caption = Range("AV3").Value
     .negative15.Caption = Range("AW3").Value
-    
+
     'ニーズのチェックボックスの値
     .needs01.Value = IIf(Range("J" & SetSelectTargetRows).Value, True, False)
     .needs02.Value = IIf(Range("K" & SetSelectTargetRows).Value, True, False)
@@ -2162,7 +2134,7 @@ Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String
     .needs08.Value = IIf(Range("Q" & SetSelectTargetRows).Value, True, False)
     .needs09.Value = IIf(Range("R" & SetSelectTargetRows).Value, True, False)
     .needs10.Value = IIf(Range("S" & SetSelectTargetRows).Value, True, False)
-    
+
     'ポジティブのチェックボックスの値
     .positive01.Value = IIf(Range("T" & SetSelectTargetRows).Value, True, False)
     .positive02.Value = IIf(Range("U" & SetSelectTargetRows).Value, True, False)
@@ -2179,7 +2151,7 @@ Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String
     .positive13.Value = IIf(Range("AF" & SetSelectTargetRows).Value, True, False)
     .positive14.Value = IIf(Range("AG" & SetSelectTargetRows).Value, True, False)
     .positive15.Value = IIf(Range("AH" & SetSelectTargetRows).Value, True, False)
-    
+
     'ネガティブのチェックボックスの値
     .negative01.Value = IIf(Range("AI" & SetSelectTargetRows).Value, True, False)
     .negative02.Value = IIf(Range("AJ" & SetSelectTargetRows).Value, True, False)
@@ -2196,15 +2168,15 @@ Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String
     .negative13.Value = IIf(Range("AU" & SetSelectTargetRows).Value, True, False)
     .negative14.Value = IIf(Range("AV" & SetSelectTargetRows).Value, True, False)
     .negative15.Value = IIf(Range("AW" & SetSelectTargetRows).Value, True, False)
-  
+
   End With
-  
+
   If (KOETOL_ExpansionForm.Visible = True) Then
     KOETOL_ExpansionForm.StartUpPosition = 0
   Else
     KOETOL_ExpansionForm.StartUpPosition = 2
   End If
-  
+
   KOETOL_ExpansionForm.Show vbModeless
 
 End Function
@@ -2217,31 +2189,655 @@ End Function
 '**************************************************************************************************
 Function KOETOL_ExpansionFormEnd()
   Call init.setting
-  
-  
+
+
   If setVal("HighLightFlg") = False Then
     SetActiveCell = Selection.Address
     endRowLine = sheetKoetol.Cells(Rows.count, 3).End(xlUp).Row
-    
+
     Call Library.startScript
     Call Library.unsetLineColor("C5:AZ" & endRowLine)
     Call Library.endScript
-    
+
     Range(SetActiveCell).Select
   End If
-  
+
 End Function
 
 
 
 
-Sub シート一覧取得()
-Dim sheetName As Object
+'**************************************************************************************************
+' * 罫線
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'--------------------------------------------------------------------------------------------------
+Function 罫線_クリア(Optional setArea As Range)
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideVertical).LineStyle = xlNone
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+      .Borders(xlEdgeLeft).LineStyle = xlNone
+      .Borders(xlEdgeRight).LineStyle = xlNone
+      .Borders(xlEdgeTop).LineStyle = xlNone
+      .Borders(xlEdgeBottom).LineStyle = xlNone
+      .Borders(xlInsideVertical).LineStyle = xlNone
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideVertical).LineStyle = xlNone
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+      .Borders(xlEdgeLeft).LineStyle = xlNone
+      .Borders(xlEdgeRight).LineStyle = xlNone
+      .Borders(xlEdgeTop).LineStyle = xlNone
+      .Borders(xlEdgeBottom).LineStyle = xlNone
+      .Borders(xlInsideVertical).LineStyle = xlNone
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
 
 
-For Each sheetName In ActiveWorkbook.Sheets
-  Debug.Print sheetName.Name
- Next
-End Sub
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_格子(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+      End If
+     End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_垂直(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideVertical).Weight = WeightVal
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideVertical).Weight = WeightVal
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_水平(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+
+    With Selection
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+      End If
+    End With
+
+  End If
+End Function
+
+
+
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_実線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_実線_格子(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+      End If
+     End With
+
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_実線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+      .Borders(xlInsideVertical).Weight = WeightVal
+      
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideVertical).Weight = WeightVal
+      
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+
+    With Selection
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+      End If
+    End With
+
+  End If
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_左(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDouble
+      
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDouble
+      .Borders(xlEdgeRight).LineStyle = xlDouble
+      
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDouble
+      .Borders(xlEdgeRight).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+
+
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_逆L字(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+  
+  Call 罫線_破線_囲み(setArea, LineColor, WeightVal)
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    Set setArea = setArea.Offset(1, 1).Resize(setArea.Rows.count - 1, setArea.Columns.count - 1)
+    Call 罫線_破線_水平(setArea, LineColor, WeightVal)
+    Call 罫線_破線_囲み(setArea, LineColor, WeightVal)
+  Else
+    setArea.Offset(1, 1).Resize(setArea.Rows.count - 1, setArea.Columns.count - 1).Select
+    Call 罫線_破線_水平(setArea, LineColor, WeightVal)
+    Call 罫線_破線_囲み(setArea, LineColor, WeightVal)
+  
+  End If
+End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

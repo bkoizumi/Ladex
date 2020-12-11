@@ -1,14 +1,16 @@
 Attribute VB_Name = "init"
 'ワークブック用変数------------------------------
-Public ThisBook As Workbook
+Public ThisBook   As Workbook
 Public targetBook As Workbook
 
 
 'ワークシート用変数------------------------------
-Public sheetNotice As Worksheet
-Public sheetStyle As Worksheet
-Public sheetStyle2 As Worksheet
-Public sheetRibbon As Worksheet
+Public sheetsetting   As Worksheet
+Public sheetNotice    As Worksheet
+Public sheetStyle     As Worksheet
+Public sheetTestData  As Worksheet
+Public sheetRibbon    As Worksheet
+Public sheetFavorite  As Worksheet
 
 
 'グローバル変数----------------------------------
@@ -16,14 +18,20 @@ Public Const thisAppName = "BK_Library"
 Public Const thisAppVersion = "0.0.4.0"
 
 'レジストリ登録用サブキー
-Public Const RegistryKey As String = "B.Koizumi"
-Public Const RegistrySubKey As String = "BK_Library"
+Public Const RegistryKey  As String = "BK_Library"
+Public RegistrySubKey     As String
+Public RegistryRibbonName As String
 
-Public setVal As Collection
+
 
 'ファイル関連
 Public logFile As String
 
+
+'リボン関連--------------------------------------
+Public ribbonUI       As Office.IRibbonUI
+Public setVal         As Object
+Public ribbonVal      As Object
 
 '**************************************************************************************************
 ' * 設定
@@ -32,8 +40,8 @@ Public logFile As String
 '**************************************************************************************************
 Function setting(Optional reCheckFlg As Boolean)
   
-'  On Error GoTo catchError
-  ThisWorkbook.Save
+  On Error GoTo catchError
+'  ThisWorkbook.Save
 
   If ThisBook Is Nothing Or reCheckFlg = True Then
   Else
@@ -44,19 +52,39 @@ Function setting(Optional reCheckFlg As Boolean)
   Set ThisBook = ThisWorkbook
   
   'ワークシート名の設定
+  Set sheetsetting = ThisBook.Worksheets("設定")
   Set sheetNotice = ThisBook.Worksheets("Notice")
   Set sheetStyle = ThisBook.Worksheets("Style")
-  Set sheetStyle2 = ThisBook.Worksheets("Style2")
+  Set sheetTestData = ThisBook.Worksheets("testData")
   Set sheetRibbon = ThisBook.Worksheets("Ribbon")
+  Set sheetFavorite = ThisBook.Worksheets("Favorite")
 
-  Set setVal = New Collection
-  With setVal
-    .Add Item:="develop", Key:="debugMode"
-  End With
+  
   
   logFile = ThisWorkbook.Path & "\ExcelMacro.log"
+        
+  '設定値読み込み----------------------------------------------------------------------------------
+  Set setVal = Nothing
+  Set setVal = CreateObject("Scripting.Dictionary")
+  setVal.add "debugMode", "develop"
+  
+  Set ribbonVal = Nothing
+  Set ribbonVal = CreateObject("Scripting.Dictionary")
+  For line = 2 To sheetRibbon.Cells(Rows.count, 1).End(xlUp).Row
+    If sheetRibbon.Range("A" & line) <> "" Then
+      ribbonVal.add "Lbl_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("B" & line).Text
+      ribbonVal.add "Act_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("C" & line).Text
+      ribbonVal.add "Sup_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("D" & line).Text
+      ribbonVal.add "Dec_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("E" & line).Text
+      ribbonVal.add "Siz_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("F" & line).Text
+      ribbonVal.add "Img_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("G" & line).Text
+    End If
+  Next
   
   
+  'レジストリ関連設定------------------------------------------------------------------------------
+  RegistrySubKey = "Main"
+  RegistryRibbonName = "RP_" & ActiveWorkbook.Name
   Exit Function
   
 'エラー発生時=====================================================================================

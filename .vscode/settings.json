@@ -1,11 +1,8 @@
 {
 
-  "update.showReleaseNotes": false,
-  "workbench.startupEditor": "none",
-
   // ファイル設定----------------------------------------------------------------------------------------
-  "files.autoGuessEncoding": true,
-  // "files.encoding": "shiftjis"  ,
+  "files.autoGuessEncoding": false,
+  "files.encoding": "shiftjis"  ,
   "files.eol": "\r\n",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,

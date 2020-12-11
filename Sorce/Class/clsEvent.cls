@@ -7,6 +7,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+'https://excel-ubara.com/vba_class/VBA_CLASS_02.html
+
 Option Explicit
 
 '対象のExcelアプリケーション
