@@ -22,16 +22,23 @@ Public Const RegistryKey  As String = "BK_Library"
 Public RegistrySubKey     As String
 Public RegistryRibbonName As String
 
+'設定値保持
+Public setVal         As Object
 
 
 'ファイル関連
 Public logFile As String
 
+'処理時間計測用
+Public StartTime          As Date
+Public StopTime           As Date
+
+
 
 'リボン関連--------------------------------------
 Public ribbonUI       As Office.IRibbonUI
-Public setVal         As Object
 Public ribbonVal      As Object
+
 
 '**************************************************************************************************
 ' * 設定

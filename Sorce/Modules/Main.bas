@@ -76,7 +76,7 @@ Function ïWèÄâÊñ ()
         End With
         Cells.Replace What:="", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=True, ReplaceFormat:=True
       End If
-      Application.Goto Reference:=Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
     End If
   Next
   

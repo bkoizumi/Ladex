@@ -365,16 +365,16 @@ End Function
 ' * @Link http://officetanaka.net/excel/vba/filesystemobject/filesystemobject10.htm
 '**************************************************************************************************
 Function chkFileExists(targetPath As String)
-  Dim fso As Object
+  Dim FSO As Object
 
-  Set fso = CreateObject("Scripting.FileSystemObject")
+  Set FSO = CreateObject("Scripting.FileSystemObject")
 
-  If fso.FileExists(targetPath) Then
+  If FSO.FileExists(targetPath) Then
     chkFileExists = True
   Else
     chkFileExists = False
   End If
-  Set fso = Nothing
+  Set FSO = Nothing
 
 End Function
 
@@ -385,16 +385,16 @@ End Function
 ' * @Link http://officetanaka.net/excel/vba/filesystemobject/filesystemobject10.htm
 '**************************************************************************************************
 Function chkDirExists(targetPath As String)
-  Dim fso As Object
+  Dim FSO As Object
 
-  Set fso = CreateObject("Scripting.FileSystemObject")
+  Set FSO = CreateObject("Scripting.FileSystemObject")
 
-  If fso.FolderExists(targetPath) Then
+  If FSO.FolderExists(targetPath) Then
     chkDirExists = True
   Else
     chkDirExists = False
   End If
-  Set fso = Nothing
+  Set FSO = Nothing
 
 End Function
 
@@ -711,7 +711,7 @@ Function delSheetData(Optional line As Long)
   End If
   DoEvents
 
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 '**************************************************************************************************
@@ -802,7 +802,7 @@ Function delTableData()
   Cells.Select
   Selection.NumberFormatLocal = "G/標準"
 
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 
@@ -1030,7 +1030,11 @@ Function getSaveFilePath(CurrentDirectory As String, saveFileName As String, Fil
       FileFilter:="Excelファイル,*.xlsx,Excel2003以前,*.xls,Excelマクロブック,*.xlsm", _
       FilterIndex:=FileTypeNo)
 
-  getSaveFilePath = fileName
+  If fileName <> "False" Then
+    getSaveFilePath = fileName
+  Else
+    getSaveFilePath = ""
+  End If
 End Function
 
 '**************************************************************************************************
@@ -1885,15 +1889,15 @@ End Function
 '**************************************************************************************************
 Function replaceFromFile(fileName As String, TargetText As String, Optional NewText As String = "")
 
- Dim fso         As FileSystemObject 'ファイルシステムオブジェクト
+ Dim FSO         As FileSystemObject 'ファイルシステムオブジェクト
  Dim Txt         As TextStream       'テキストストリームオブジェクト
  Dim buf_strTxt  As String           '読み込みバッファ
 
  On Error GoTo Func_Err:
 
  'オブジェクト作成
- Set fso = CreateObject("Scripting.FileSystemObject")
- Set Txt = fso.OpenTextFile(fileName, ForReading)
+ Set FSO = CreateObject("Scripting.FileSystemObject")
+ Set Txt = FSO.OpenTextFile(fileName, ForReading)
 
  '全文読み込み
   buf_strTxt = Txt.ReadAll
@@ -1906,18 +1910,18 @@ Function replaceFromFile(fileName As String, TargetText As String, Optional NewT
    buf_strTxt = Replace(buf_strTxt, TargetText, NewText, , , vbBinaryCompare)
 
   '書込み用テキストファイル作成
-   Set Txt = fso.CreateTextFile(fileName, True)
+   Set Txt = FSO.CreateTextFile(fileName, True)
   '書込み
   Txt.Write buf_strTxt
   Txt.Close
 
   'テンポラリファイルを削除
-  fso.DeleteFile fileName & "_"
+  FSO.DeleteFile fileName & "_"
 
 '終了処理
 Func_Exit:
     Set Txt = Nothing
-    Set fso = Nothing
+    Set FSO = Nothing
     Exit Function
 
 Func_Err:
@@ -1962,7 +1966,7 @@ Function resetComment()
         End With
       End If
     Next cl
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 

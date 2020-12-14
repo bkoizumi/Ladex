@@ -22,14 +22,16 @@ Sub データコピー()
   targetBook.Sheets("testData").Columns("A:P").Copy ThisWorkbook.Worksheets("testData").Range("A1")
 
   
-
-  'targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
-  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  If MsgBox("インポート", vbYesNo + vbExclamation) = vbYes Then
+    targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
+  Else
+    ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  End If
   
   ThisWorkbook.Save
   
   Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
-  Call Library.showNotice(200, "データコピー")
+'  Call Library.showNotice(200, "データコピー")
   
 
 End Sub

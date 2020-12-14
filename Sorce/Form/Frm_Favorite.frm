@@ -1,6 +1,6 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Favorite 
-   Caption         =   "お気に入り"
+   Caption         =   "お気に入り一覧"
    ClientHeight    =   6285
    ClientLeft      =   120
    ClientTop       =   465
@@ -14,6 +14,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim myMenu As Variant
+
+
 
 
 '**************************************************************************************************
@@ -53,9 +55,16 @@ Private Sub UserForm_Initialize()
       .OnAction = "Ctl_Favorite.delete"
       .FaceId = 293
     End With
-  
+    With .Controls.add
+      .BeginGroup = True
+      .Caption = "更新"
+      .OnAction = "Ctl_Favorite.RefreshListBox"
+      .FaceId = 293
+    End With
+    
   End With
 End Sub
+
 
 '==================================================================================================
 Private Sub Lst_Favorite_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
@@ -63,51 +72,76 @@ Private Sub Lst_Favorite_MouseDown(ByVal Button As Integer, ByVal Shift As Integ
 End Sub
 
 
+
+
 '**************************************************************************************************
-' * 処理キャンセル
+' * ボタン押下時処理
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+'キャンセル
 Private Sub Cancel_Click()
   Unload Me
 End Sub
 
 
-
-
-'**************************************************************************************************
-' * 処理実行
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
+'==================================================================================================
+'実行
 Private Sub run_Click()
   Unload Me
 End Sub
 
 
-'**************************************************************************************************
-' * リストボックス
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
 '==================================================================================================
+'追加
+Private Sub add_Click()
+  'Dim wsh As Object
+  Dim filePath As String
+  
+  'Set wsh = CreateObject("Wscript.Shell")
+  'filePath = Library.getFilePath(wsh.SpecialFolders("Desktop"), "", "お気に入りに追加するファイル", 1)
+  filePath = Library.getFilePath("C:", "", "お気に入りに追加するファイル", 1)
+  If filePath = "" Then
+    End
+  End If
+  Call Ctl_Favorite.add(filePath)
+  Call Ctl_Favorite.RefreshListBox
+  
+  Set wsh = Nothing
+  
+End Sub
+
+
+'==================================================================================================
+'リストボックス
 Private Sub Lst_Favorite_Click()
   Dim DetailMeg As String
   Dim line As Long
   Dim filePath As String
   
+  Dim FSO As Object, fileInfo As Object
   On Error GoTo catchError
   
   Call init.setting
+  
   line = Lst_Favorite.ListIndex + 2
   filePath = sheetFavorite.Range("A" & line)
   
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  Set fileInfo = FSO.GetFile(filePath)
+  
+
   DetailMeg = "<<ファイル情報>>" & vbNewLine
-  DetailMeg = DetailMeg & "パス　：" & filePath & vbNewLine
-  DetailMeg = DetailMeg & "更新日：" & FileDateTime(filePath) & vbNewLine
+  DetailMeg = DetailMeg & "パ　ス：" & filePath & vbNewLine
+  DetailMeg = DetailMeg & "作成日：" & Format(fileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
+  DetailMeg = DetailMeg & "更新日：" & Format(fileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
+  DetailMeg = DetailMeg & "サイズ：" & Format(fileInfo.Size, "#,##0") & " Byte" & vbNewLine
+  DetailMeg = DetailMeg & "種　類：" & fileInfo.Type
  
  
   Frm_Favorite.DetailMeg.Value = DetailMeg
+  Set FSO = Nothing
   
   Exit Sub
 'エラー発生時--------------------------------------------------------------------------------------

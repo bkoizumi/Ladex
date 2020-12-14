@@ -33,7 +33,6 @@
 
         <button       id="HighLight"          getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" image="HighLight"  getSize="BK_Library.xlam!Ctl_Ribbon.getSize"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
         <button       id="Notation_R1C1"      getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" image="dispR1C1"   getSize="BK_Library.xlam!Ctl_Ribbon.getSize"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
-        <dynamicMenu  id="SheetList"          getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" imageMso="HeaderFooterSheetNameInsert"                           getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getContent="BK_Library.xlam!Ctl_Ribbon.dMenu" />
 
         <menu         id="罫線_メニュー"      getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" itemSize="large"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel">
           <button     id="罫線_クリア"        getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
@@ -51,6 +50,7 @@
           <button     id="罫線_二重線_上下"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
           <button     id="罫線_二重線_囲み"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
         </menu>
+        <dynamicMenu  id="SheetList"          getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" imageMso="HeaderFooterSheetNameInsert"                           getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getContent="BK_Library.xlam!Ctl_Ribbon.dMenu" />
 
         <menu         id="Dummy_Menu" itemSize="large" imageMso="BorderDrawGrid" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" >
           <button     id="Dummy_Make" getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />

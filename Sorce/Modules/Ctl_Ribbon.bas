@@ -135,7 +135,7 @@ Function selectActiveSheet(control As IRibbonControl)
     Sheets(sheetNameID).Visible = True
   End If
   Sheets(sheetNameID).Select
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   
   Call dynamicMenu
   Call Library.endScript
@@ -251,7 +251,7 @@ Function OpenFavoriteList(control As IRibbonControl)
   If Library.chkFileExists(fileNamePath) Then
     Workbooks.Open fileName:=fileNamePath
   End If
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 
@@ -340,6 +340,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Sub getVisible(control As IRibbonControl, ByRef returnedVal)
+  Call init.setting
   returnedVal = Library.getRegistry("CustomRibbon")
 End Sub
 
