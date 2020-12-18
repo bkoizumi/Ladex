@@ -50,6 +50,10 @@ Function setting(Optional reCheckFlg As Boolean)
   On Error GoTo catchError
 '  ThisWorkbook.Save
 
+  'レジストリ関連設定------------------------------------------------------------------------------
+  RegistrySubKey = "Main"
+  RegistryRibbonName = "RP_" & ActiveWorkbook.Name
+  
   If ThisBook Is Nothing Or reCheckFlg = True Then
   Else
     Exit Function
@@ -89,9 +93,6 @@ Function setting(Optional reCheckFlg As Boolean)
   Next
   
   
-  'レジストリ関連設定------------------------------------------------------------------------------
-  RegistrySubKey = "Main"
-  RegistryRibbonName = "RP_" & ActiveWorkbook.Name
   Exit Function
   
 'エラー発生時=====================================================================================

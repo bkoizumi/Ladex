@@ -11,11 +11,14 @@ Attribute VB_Name = "Ctl_Ribbon"
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'読み込み時処理------------------------------------------------------------------------------------
+'==================================================================================================
+'読み込み時処理
 Function onLoad(ribbon As IRibbonUI)
   Set ribbonUI = ribbon
   
   Call init.setting(True)
+  
+  Call Library.showDebugForm(RegistryRibbonName & "," & CStr(ObjPtr(ribbonUI)))
   Call Library.setRegistry(RegistryRibbonName, CStr(ObjPtr(ribbonUI)), "Ribbon")
   
   ribbonUI.ActivateTab ("BK_Library")
@@ -24,36 +27,71 @@ Function onLoad(ribbon As IRibbonUI)
 End Function
 
 
-'更新--------------------------------------------------------------------------------------------------
+'==================================================================================================
+'更新
 Function Refresh()
-  
   Call init.setting
-  If ribbonUI Is Nothing Then
-   #If VBA7 And Win64 Then
-     Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-   #Else
-     Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-   #End If
-  End If
+  
+  #If VBA7 And Win64 Then
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #Else
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #End If
   
   ribbonUI.ActivateTab ("BK_Library")
   ribbonUI.Invalidate
 End Function
   
   
-' 動的メニュー作成---------------------------------------------------------------------------------
-Function dMenu(control As IRibbonControl, ByRef returnedVal)
-   Call init.setting
+'==================================================================================================
+'シート一覧メニュー
+Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
+  Dim DOMDoc As Object, Menu As Object, Button As Object, subMenu As Object
+  Dim sheetName As Worksheet
+  
+  Call init.setting
    
-   If ribbonUI Is Nothing Then
-    #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-    #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-    #End If
-  End If
-  returnedVal = dynamicMenu()
-  ribbonUI.InvalidateControl "シート一覧"
+  #If VBA7 And Win64 Then
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #Else
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #End If
+  
+  Set DOMDoc = CreateObject("Msxml2.DOMDocument")
+  Set Menu = DOMDoc.createElement("menu")
+
+  Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
+  Menu.SetAttribute "itemSize", "normal"
+
+  For Each sheetName In ActiveWorkbook.Sheets
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      sheetNameID = sheetName.Name
+      .SetAttribute "id", encode(sheetName.Name)
+      .SetAttribute "label", sheetName.Name
+    
+    If Sheets(sheetName.Name).Visible = True Then
+      .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+    ElseIf Sheets(sheetName.Name).Visible <> True Then
+      .SetAttribute "imageMso", "SheetProtect"
+    
+    End If
+    If ActiveWorkbook.activeSheet.Name = sheetName.Name Then
+      .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+    End If
+      .SetAttribute "onAction", "selectActiveSheet"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+  Next
+
+  DOMDoc.AppendChild Menu
+  
+  'Call Library.showDebugForm(DOMDoc.XML)
+  
+  returnedVal = DOMDoc.XML
+  Set Menu = Nothing
+  Set DOMDoc = Nothing
   
 End Function
 
@@ -61,64 +99,12 @@ End Function
 Function dMenuRefresh(control As IRibbonControl)
   
   Call init.setting(True)
-  If ribbonUI Is Nothing Then
-   #If VBA7 And Win64 Then
-     Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-   #Else
-     Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-   #End If
-  End If
+  #If VBA7 And Win64 Then
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #Else
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #End If
   ribbonUI.Invalidate
-End Function
-
-
-'--------------------------------------------------------------------------------------------------
-Function dynamicMenu()
-  Dim DOMDoc As Object ' Msxml2.DOMDocument
-  Dim Menu As Object
-  Dim Button As Object, subMenu As Object
-  Dim sheetName As Worksheet
-  Dim sheetNameID As String
-  Dim count As Long, maxCount As Long, menuCount As Long
-  
-  Set DOMDoc = CreateObject("Msxml2.DOMDocument")
-  
-  Set Menu = DOMDoc.createElement("menu") ' menuの作成
-
-  Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
-  Menu.SetAttribute "itemSize", "normal"
-
-  For Each sheetName In ActiveWorkbook.Sheets
-      Set Button = DOMDoc.createElement("button")
-      With Button
-        sheetNameID = sheetName.Name
-        Call レジストリ登録用変換(sheetNameID)
-        
-        .SetAttribute "id", sheetNameID
-        .SetAttribute "label", sheetName.Name
-        
-      If Sheets(sheetName.Name).Visible = True Then
-        .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-      ElseIf Sheets(sheetName.Name).Visible <> True Then
-        .SetAttribute "imageMso", "SheetProtect"
-      
-      End If
-      If ActiveWorkbook.activeSheet.Name = sheetName.Name Then
-        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
-      End If
-        .SetAttribute "onAction", "selectActiveSheet"
-      End With
-      Menu.AppendChild Button
-      Set Button = Nothing
-  Next
-
-  DOMDoc.AppendChild Menu
-  dynamicMenu = DOMDoc.XML
-'  Debug.Print DOMDoc.XML
-  
-  Set Menu = Nothing
-  Set DOMDoc = Nothing
-  
 End Function
 
 
@@ -127,10 +113,8 @@ Function selectActiveSheet(control As IRibbonControl)
   Dim sheetNameID As String
   
   Call Library.startScript
-  sheetNameID = control.ID
+  sheetNameID = decode(control.ID)
   
-  Call レジストリ読込用変換(sheetNameID)
-
   If Sheets(sheetNameID).Visible <> True Then
     Sheets(sheetNameID).Visible = True
   End If
@@ -142,7 +126,7 @@ Function selectActiveSheet(control As IRibbonControl)
 End Function
 
 '--------------------------------------------------------------------------------------------------
-Function レジストリ登録用変換(strVal As String)
+Function encode(strVal As String)
 
   strVal = Replace(strVal, "(", "bk-1-lib")
   strVal = Replace(strVal, ")", "bk-2-lib")
@@ -150,13 +134,15 @@ Function レジストリ登録用変換(strVal As String)
   strVal = Replace(strVal, "　", "bk-4-lib")
   strVal = Replace(strVal, "【", "bk-5-lib")
   strVal = Replace(strVal, "】", "bk-6-lib")
-
+  
+  strVal = "bk-0-lib" & strVal
+  encode = strVal
 End Function
 
-
 '--------------------------------------------------------------------------------------------------
-Function レジストリ読込用変換(strVal As String)
+Function decode(strVal As String)
 
+  strVal = Replace(strVal, "bk-0-lib", "")
   strVal = Replace(strVal, "bk-1-lib", "(")
   strVal = Replace(strVal, "bk-2-lib", ")")
   strVal = Replace(strVal, "bk-3-lib", " ")
@@ -164,6 +150,7 @@ Function レジストリ読込用変換(strVal As String)
   strVal = Replace(strVal, "bk-5-lib", "【")
   strVal = Replace(strVal, "bk-6-lib", "】")
   
+  decode = strVal
 End Function
 
 
@@ -188,29 +175,18 @@ End Function
 
 ' お気に入りメニュー作成---------------------------------------------------------------------------
 Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
-   Call init.setting
-   
-   If ribbonUI Is Nothing Then
-    #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-    #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-    #End If
-  End If
-  returnedVal = getFavoriteList()
-  ribbonUI.InvalidateControl "Favorite_List"
-  
-End Function
-
-'--------------------------------------------------------------------------------------------------
-Function getFavoriteList()
-  Dim DOMDoc As Object ' Msxml2.DOMDocument
-  Dim Menu As Object
-  Dim Button As Object, subMenu As Object
-  
+  Dim DOMDoc As Object, Menu As Object, Button As Object, subMenu As Object
   Dim regLists As Variant, i As Long
   Dim line As Long, endLine As Long
-    
+  Dim objFSO As New FileSystemObject
+   
+  Call init.setting
+   
+  #If VBA7 And Win64 Then
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #Else
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #End If
   Set DOMDoc = CreateObject("Msxml2.DOMDocument")
   Set Menu = DOMDoc.createElement("menu") ' menuの作成
 
@@ -222,7 +198,7 @@ Function getFavoriteList()
     Set Button = DOMDoc.createElement("button")
     With Button
       .SetAttribute "id", "Favorite_" & line
-      .SetAttribute "label", Dir(sheetFavorite.Range("A" & line))
+      .SetAttribute "label", objFSO.GetFileName(sheetFavorite.Range("A" & line))
       .SetAttribute "imageMso", "Favorites"
       .SetAttribute "onAction", "OpenFavoriteList"
     End With
@@ -231,12 +207,11 @@ Function getFavoriteList()
   
   Next
   DOMDoc.AppendChild Menu
-  getFavoriteList = DOMDoc.XML
-  'Debug.Print DOMDoc.XML
+  returnedVal = DOMDoc.XML
+  Call Library.showDebugForm(DOMDoc.XML)
   
   Set Menu = Nothing
   Set DOMDoc = Nothing
-  
 End Function
 
 
@@ -359,14 +334,11 @@ End Sub
 
 '--------------------------------------------------------------------------------------------------
 Function RefreshRibbon()
-   If ribbonUI Is Nothing Then
-    #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-    #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-    #End If
-  End If
-  
+  #If VBA7 And Win64 Then
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #Else
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+  #End If
   ribbonUI.Invalidate
 
 End Function
