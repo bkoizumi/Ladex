@@ -14,12 +14,12 @@ Attribute VB_Name = "Ctl_Ribbon"
 '==================================================================================================
 'ì«Ç›çûÇ›éûèàóù
 Function onLoad(ribbon As IRibbonUI)
+  Call init.setting
+  
   Set ribbonUI = ribbon
   
-  Call init.setting(True)
-  
-  Call Library.showDebugForm(RegistryRibbonName & "," & CStr(ObjPtr(ribbonUI)))
-  Call Library.setRegistry(RegistryRibbonName, CStr(ObjPtr(ribbonUI)), "Ribbon")
+'  Call Library.showDebugForm("ribbonUI" & "," & CStr(ObjPtr(ribbonUI)))
+  Call Library.setRegistry("ribbonUI", CStr(ObjPtr(ribbonUI)))
   
   ribbonUI.ActivateTab ("BK_Library")
   ribbonUI.Invalidate
@@ -33,9 +33,9 @@ Function Refresh()
   Call init.setting
   
   #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
   #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
   #End If
   
   ribbonUI.ActivateTab ("BK_Library")
@@ -51,11 +51,13 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   Call init.setting
    
-  #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-  #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-  #End If
+  If ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+    #Else
+      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+    #End If
+  End If
   
   Set DOMDoc = CreateObject("Msxml2.DOMDocument")
   Set Menu = DOMDoc.createElement("menu")
@@ -98,12 +100,13 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function dMenuRefresh(control As IRibbonControl)
   
-  Call init.setting(True)
-  #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-  #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-  #End If
+  If ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+    #Else
+      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+    #End If
+  End If
   ribbonUI.Invalidate
 End Function
 
@@ -182,11 +185,14 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
    
   Call init.setting
    
-  #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-  #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
-  #End If
+  If ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+    #Else
+      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+    #End If
+  End If
+  
   Set DOMDoc = CreateObject("Msxml2.DOMDocument")
   Set Menu = DOMDoc.createElement("menu") ' menuÇÃçÏê¨
 
@@ -208,7 +214,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Next
   DOMDoc.AppendChild Menu
   returnedVal = DOMDoc.XML
-  Call Library.showDebugForm(DOMDoc.XML)
+'  Call Library.showDebugForm(DOMDoc.XML)
   
   Set Menu = Nothing
   Set DOMDoc = Nothing
@@ -335,9 +341,9 @@ End Sub
 '--------------------------------------------------------------------------------------------------
 Function RefreshRibbon()
   #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
   #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry(RegistryRibbonName, "Ribbon")))
+    Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
   #End If
   ribbonUI.Invalidate
 

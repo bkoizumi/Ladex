@@ -1757,7 +1757,7 @@ Function setRegistry(registryName As String, setVal As Variant, Optional SubKey 
   End If
 
   If getRegistry(registryName, SubKey) <> setVal And registryName <> "" Then
-    SaveSetting RegistryKey, SubKey, registryName, setVal
+    Call SaveSetting(RegistryKey, SubKey, registryName, setVal)
   End If
 End Function
 

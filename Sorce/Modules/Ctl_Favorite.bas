@@ -21,8 +21,8 @@ Function add(Optional filePath As String)
   End If
   sheetFavorite.Range("A" & line) = filePath
   
-  Set targetBook = Workbooks("メンテナンス用.xlsx")
-  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+'  Set targetBook = Workbooks("メンテナンス用.xlsx")
+'  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
 
 End Function
 
