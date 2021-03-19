@@ -35,7 +35,7 @@
         <button       id="Notation_R1C1"      getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" image="dispR1C1"   getSize="BK_Library.xlam!Ctl_Ribbon.getSize"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
 
         <menu         id="罫線_メニュー"      getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" itemSize="large"   getImage="BK_Library.xlam!Ctl_Ribbon.getImage" getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel">
-          <button     id="罫線_クリア"        getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+          <button     id="罫線_削除"          getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
 
           <menuSeparator id="破線" title="破線　　　　　　　　" />
           <button     id="罫線_破線_水平"     getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
@@ -59,7 +59,8 @@
 
       <group id="Maintenance" label="メンテナンス">
         <button     id="SheetList_Refresh"  getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
-        <button     id="SheetValCopy"       getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <button     id="SheetImport"       getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
+        <button     id="SheetExport"       getEnabled="BK_Library.xlam!Ctl_Ribbon.getEnabled" getSize="BK_Library.xlam!Ctl_Ribbon.getSize" getImage="BK_Library.xlam!Ctl_Ribbon.getImage"  getLabel="BK_Library.xlam!Ctl_Ribbon.getLabel" getSupertip="BK_Library.xlam!Ctl_Ribbon.getSupertip"  getDescription="BK_Library.xlam!Ctl_Ribbon.getDescription"  onAction="BK_Library.xlam!Ctl_Ribbon.getAction" />
       </group >
 
       <group id="Group2" label="標準機能">
