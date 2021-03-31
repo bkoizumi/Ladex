@@ -27,7 +27,7 @@ Function サンプルデータ()
   getMaxCount = 100
   If setName01 = True Then
     colLine = 1
-    endLine = sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+    endLine = sheetTestData.Cells(Rows.count, 1).End(xlUp).row
     
     newBook.Sheets("Sheet1").Cells(1, colLine) = "姓"
     newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "セイ"
@@ -41,7 +41,7 @@ Function サンプルデータ()
   
   If setName02 = True Then
     colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    endLine = sheetTestData.Cells(Rows.count, 4).End(xlUp).Row
+    endLine = sheetTestData.Cells(Rows.count, 4).End(xlUp).row
     
     newBook.Sheets("Sheet1").Cells(1, colLine) = "名"
     newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "メイ"
@@ -70,7 +70,7 @@ Function サンプルデータ()
   
   If setPref = True Then
     colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    endLine = sheetTestData.Cells(Rows.count, 8).End(xlUp).Row
+    endLine = sheetTestData.Cells(Rows.count, 8).End(xlUp).row
     
     newBook.Sheets("Sheet1").Cells(1, colLine) = "都道府県"
     newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "都道府県コード"
@@ -84,7 +84,7 @@ Function サンプルデータ()
     
    If setMail = True Then
     colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    endLine = sheetTestData.Cells(Rows.count, 11).End(xlUp).Row
+    endLine = sheetTestData.Cells(Rows.count, 11).End(xlUp).row
     
     newBook.Sheets("Sheet1").Cells(1, colLine) = "メールアドレス"
     For count = 1 To getMaxCount

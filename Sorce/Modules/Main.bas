@@ -43,7 +43,7 @@ Function ïWèÄâÊñ ()
   Call Library.startScript
   Call Ctl_ProgressBar.showStart
   
-  SetActiveSheet = ActiveWorkbook.activeSheet.Name
+  SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
   SelectAddress = Selection.Address
   
   For Each objSheet In ActiveWorkbook.Sheets
@@ -119,7 +119,7 @@ Function ÉXÉ^ÉCÉãçÌèú()
   Next
   
   'ÉXÉ^ÉCÉãèâä˙âª
-  endLine = sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
+  endLine = sheetStyle.Cells(Rows.count, 2).End(xlUp).row
   For line = 2 To endLine
     If sheetStyle.Range("A" & line) <> "ñ≥å¯" Then
       Call Ctl_ProgressBar.showCount("ÉXÉ^ÉCÉãèâä˙âª", line, endLine, sheetStyle.Range("B" & line))
@@ -143,13 +143,13 @@ Function ÉXÉ^ÉCÉãçÌèú()
         If sheetStyle.Range("E" & line) = "TRUE" Then
           .Font.Name = sheetStyle.Range("J" & line).Font.Name
           .Font.Size = sheetStyle.Range("J" & line).Font.Size
-          .Font.color = sheetStyle.Range("J" & line).Font.color
+          .Font.Color = sheetStyle.Range("J" & line).Font.Color
           .Font.Bold = sheetStyle.Range("J" & line).Font.Bold
         End If
         
         'îwåiêF
         If sheetStyle.Range("H" & line) = "TRUE" Then
-          .Interior.color = sheetStyle.Range("J" & line).Interior.color
+          .Interior.Color = sheetStyle.Range("J" & line).Interior.Color
         End If
         
         
@@ -190,7 +190,7 @@ End Function
 '**************************************************************************************************
 Function âÊëúê›íË()
 
-  With ActiveWorkbook.activeSheet
+  With ActiveWorkbook.ActiveSheet
     Dim AllShapes As Shapes
     Dim CurShape As Shape
     Set AllShapes = .Shapes
@@ -229,21 +229,27 @@ End Function
 Function ÉnÉCÉâÉCÉg()
   Dim highLightFlg As Boolean
   Dim highLightArea As String
-  
+
   Call Library.startScript
-  highLightFlg = Library.getRegistry("highLightFlg")
+  highLightFlg = Library.getRegistry("HighLightFlg")
   
   If highLightFlg = False Then
-    Call Library.setLineColor(Selection.Address, True, Library.getRegistry("highLightColor"))
+    Call Library.setLineColor(Selection.Address, True, Library.getRegistry("HighLightColor"))
     
-    Call Library.setRegistry("highLightFlg", True)
-    Call Library.setRegistry("highLightArea", Selection.Address)
+    Call Library.setRegistry("HighLightFlg", True)
+    
+    Call Library.setRegistry("HighLightBook", ActiveWorkbook.Name)
+    Call Library.setRegistry("HighLightSheet", ActiveSheet.Name)
+    Call Library.setRegistry("HighLightArea", Selection.Address)
+    
   Else
-    highLightArea = Library.getRegistry("highLightArea")
+    highLightArea = Library.getRegistry("HighLightArea")
     Call Library.unsetLineColor(highLightArea)
     
-    Call Library.setRegistry("highLightFlg", False)
-    Call Library.setRegistry("highLightArea", "")
+    Call Library.setRegistry("HighLightFlg", False)
+    Call Library.setRegistry("HighLightBook", "")
+    Call Library.setRegistry("HighLightSheet", "")
+    Call Library.setRegistry("HighLightArea", "")
   End If
   
   Call Library.endScript(True)
@@ -269,6 +275,11 @@ Function årê¸_çÌèú()
   End With
 End Function
 
+Function årê¸_ï\()
+  Call Library.årê¸_ï\
+  
+End Function
+
 
 Function årê¸_îjê¸_êÖïΩ()
   Dim Red As Long, Green As Long, Blue As Long
@@ -279,7 +290,7 @@ Function årê¸_îjê¸_êÖïΩ()
     .Borders(xlInsideHorizontal).LineStyle = xlNone
     .Borders(xlInsideHorizontal).LineStyle = xlDash
     .Borders(xlInsideHorizontal).Weight = xlHairline
-    .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+    .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
     
     End With
 End Function
@@ -292,7 +303,7 @@ Function årê¸_îjê¸_êÇíº()
     .Borders(xlInsideVertical).LineStyle = xlNone
     .Borders(xlInsideVertical).LineStyle = xlDash
     .Borders(xlInsideVertical).Weight = xlHairline
-    .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+    .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -310,8 +321,8 @@ Function årê¸_îjê¸_ç∂âE()
     .Borders(xlEdgeLeft).Weight = xlHairline
     .Borders(xlEdgeRight).Weight = xlHairline
     
-    .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -330,8 +341,8 @@ Function årê¸_îjê¸_è„â∫()
     .Borders(xlEdgeBottom).LineStyle = xlDash
     .Borders(xlEdgeBottom).Weight = xlHairline
     
-    .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -350,10 +361,10 @@ Function årê¸_îjê¸_àÕÇ›()
     .Borders(xlEdgeBottom).LineStyle = xlDash
     .Borders(xlEdgeBottom).Weight = xlHairline
   
-    .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -375,10 +386,10 @@ Function årê¸_îjê¸_äiéq()
     .Borders(xlInsideHorizontal).LineStyle = xlDash
     .Borders(xlInsideHorizontal).Weight = xlHairline
   
-    .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -399,10 +410,10 @@ Function årê¸_é¿ê¸_àÕÇ›()
     .Borders(xlEdgeTop).Weight = xlThin
     .Borders(xlEdgeBottom).Weight = xlThin
     
-    .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -415,8 +426,8 @@ Function årê¸_ìÒèdê¸_ç∂âE()
     .Borders(xlEdgeLeft).LineStyle = xlDouble
     .Borders(xlEdgeRight).LineStyle = xlDouble
     
-    .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -428,8 +439,8 @@ Function årê¸_ìÒèdê¸_è„â∫()
     .Borders(xlEdgeTop).LineStyle = xlDouble
     .Borders(xlEdgeBottom).LineStyle = xlDouble
     
-    .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
   End With
 End Function
 
@@ -444,15 +455,10 @@ Function årê¸_ìÒèdê¸_àÕÇ›()
     .Borders(xlEdgeTop).LineStyle = xlDouble
     .Borders(xlEdgeBottom).LineStyle = xlDouble
     
-    .Borders(xlEdgeLeft).Weight = xlThin
-    .Borders(xlEdgeRight).Weight = xlThin
-    .Borders(xlEdgeTop).Weight = xlThin
-    .Borders(xlEdgeBottom).Weight = xlThin
-    
-    .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
   End With
 End Function
 

@@ -1,8 +1,8 @@
 Attribute VB_Name = "Ctl_Ribbon"
 #If VBA7 And Win64 Then
-  Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
+  Private Declare PtrSafe Function MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
 #Else
-  Private Declare Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As Long)
+  Private Declare Function MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As Long)
 #End If
 
 
@@ -46,7 +46,7 @@ End Function
 '==================================================================================================
 'シート一覧メニュー
 Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
-  Dim DOMDoc As Object, Menu As Object, Button As Object, subMenu As Object
+  Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
   Dim sheetName As Worksheet
   
   Call init.setting
@@ -69,19 +69,18 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
     Set Button = DOMDoc.createElement("button")
     With Button
       sheetNameID = sheetName.Name
-      .SetAttribute "id", encode(sheetName.Name)
+      .SetAttribute "id", "sheetID_" & sheetName.Index
       .SetAttribute "label", sheetName.Name
     
-    If Sheets(sheetName.Name).Visible = True Then
-      .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-    ElseIf Sheets(sheetName.Name).Visible <> True Then
-      .SetAttribute "imageMso", "SheetProtect"
-    
-    End If
-    If ActiveWorkbook.activeSheet.Name = sheetName.Name Then
-      .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
-    End If
-      .SetAttribute "onAction", "selectActiveSheet"
+      If Sheets(sheetName.Name).Visible = True Then
+        .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+      ElseIf Sheets(sheetName.Name).Visible <> True Then
+        .SetAttribute "imageMso", "SheetProtect"
+      ElseIf ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+      End If
+      
+      .SetAttribute "onAction", "BK_Library.xlam!Ctl_Ribbon.selectActiveSheet"
     End With
     Menu.AppendChild Button
     Set Button = Nothing
@@ -113,45 +112,64 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function selectActiveSheet(control As IRibbonControl)
-  Dim sheetNameID As String
+  Dim sheetNameID As Integer
+  Dim sheetCount As Integer
+  Dim sheetName As Worksheet
   
   Call Library.startScript
-  sheetNameID = decode(control.ID)
+  sheetNameID = Replace(control.ID, "sheetID_", "")
   
   If Sheets(sheetNameID).Visible <> True Then
     Sheets(sheetNameID).Visible = True
   End If
+  
+  sheetCount = 1
+  For Each sheetName In ActiveWorkbook.Sheets
+    If Sheets(sheetName.Name).Visible = True And sheetName.Name = Sheets(sheetNameID).Name Then
+      Exit For
+    Else
+      sheetCount = sheetCount + 1
+    End If
+  Next
+  ActiveWindow.ScrollWorkbookTabs Position:=xlFirst
+  ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
+  
   Application.GoTo Reference:=Range("A1"), Scroll:=True
   
-  Call dynamicMenu
   Call Library.endScript
 End Function
+
 
 '--------------------------------------------------------------------------------------------------
 Function encode(strVal As String)
 
-  strVal = Replace(strVal, "(", "bk-1-lib")
-  strVal = Replace(strVal, ")", "bk-2-lib")
-  strVal = Replace(strVal, " ", "bk-3-lib")
-  strVal = Replace(strVal, "　", "bk-4-lib")
-  strVal = Replace(strVal, "【", "bk-5-lib")
-  strVal = Replace(strVal, "】", "bk-6-lib")
+  strVal = Replace(strVal, "(", "BK1_")
+  strVal = Replace(strVal, ")", "BK2_")
+  strVal = Replace(strVal, " ", "BK3_")
+  strVal = Replace(strVal, "　", "BK4_")
+  strVal = Replace(strVal, "【", "BK5_")
+  strVal = Replace(strVal, "】", "BK6_")
+  strVal = Replace(strVal, "（", "BK7_")
+  strVal = Replace(strVal, "）", "BK8_")
   
-  strVal = "bk-0-lib" & strVal
+  strVal = "BK0_" & strVal
   encode = strVal
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function decode(strVal As String)
 
-  strVal = Replace(strVal, "bk-0-lib", "")
-  strVal = Replace(strVal, "bk-1-lib", "(")
-  strVal = Replace(strVal, "bk-2-lib", ")")
-  strVal = Replace(strVal, "bk-3-lib", " ")
-  strVal = Replace(strVal, "bk-4-lib", "　")
-  strVal = Replace(strVal, "bk-5-lib", "【")
-  strVal = Replace(strVal, "bk-6-lib", "】")
+  strVal = Replace(strVal, "BK0_", "")
+  strVal = Replace(strVal, "BK1_", "(")
+  strVal = Replace(strVal, "BK2_", ")")
+  strVal = Replace(strVal, "BK3_", " ")
+  strVal = Replace(strVal, "BK4_", "　")
+  strVal = Replace(strVal, "BK5_", "【")
+  strVal = Replace(strVal, "BK6_", "】")
+  strVal = Replace(strVal, "BK7_", "（")
+  strVal = Replace(strVal, "BK8_", "）")
+  
   
   decode = strVal
 End Function
@@ -169,7 +187,7 @@ Private Function GetRibbon(ByVal lRibbonPointer As Long) As Object
   
   MoveMemory ribbonObj, lRibbonPointer, LenB(lRibbonPointer)
   Set GetRibbon = ribbonObj
-  p = 0: MoveMemory ribbonObj, p, LenB(p) '後始末
+  p = 0: MoveMemory ribbonObj, p, LenB(p)
 End Function
 
 
@@ -178,11 +196,12 @@ End Function
 
 ' お気に入りメニュー作成---------------------------------------------------------------------------
 Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
-  Dim DOMDoc As Object, Menu As Object, Button As Object, subMenu As Object
+  Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
   Dim regLists As Variant, i As Long
   Dim line As Long, endLine As Long
   Dim objFSO As New FileSystemObject
    
+'  On Error GoTo catchError
   Call init.setting
    
   If ribbonUI Is Nothing Then
@@ -199,18 +218,24 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
-  For line = 2 To endLine
-    Set Button = DOMDoc.createElement("button")
-    With Button
-      .SetAttribute "id", "Favorite_" & line
-      .SetAttribute "label", objFSO.GetFileName(sheetFavorite.Range("A" & line))
-      .SetAttribute "imageMso", "Favorites"
-      .SetAttribute "onAction", "OpenFavoriteList"
-    End With
-    Menu.AppendChild Button
-    Set Button = Nothing
+  If Workbooks.count = 0 Then
+    endLine = 100
+  Else
+    endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
+  End If
   
+  For line = 2 To endLine
+    If sheetFavorite.Range("A" & line) <> "" Then
+      Set Button = DOMDoc.createElement("button")
+      With Button
+        .SetAttribute "id", "Favorite_" & line
+        .SetAttribute "label", objFSO.GetFileName(sheetFavorite.Range("A" & line))
+        .SetAttribute "imageMso", "Favorites"
+        .SetAttribute "onAction", "BK_Library.xlam!Ctl_Ribbon.OpenFavoriteList"
+      End With
+      Menu.AppendChild Button
+      Set Button = Nothing
+    End If
   Next
   DOMDoc.AppendChild Menu
   returnedVal = DOMDoc.XML
@@ -218,6 +243,14 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   
   Set Menu = Nothing
   Set DOMDoc = Nothing
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  
+  Set Menu = Nothing
+  Set DOMDoc = Nothing
+  Call Library.showNotice(400, Err.Description, True)
 End Function
 
 
@@ -240,55 +273,74 @@ End Function
 
 
 'Label 設定----------------------------------------------------------------------------------------
-Public Sub getLabel(control As IRibbonControl, ByRef setRibbonVal)
+Public Function getLabel(control As IRibbonControl, ByRef setRibbonVal)
+  On Error GoTo catchError
   
   Call init.setting
   setRibbonVal = Replace(ribbonVal("Lbl_" & control.ID), "<BR>", vbNewLine)
-End Sub
-
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.endScript
+End Function
 
 'Action 設定---------------------------------------------------------------------------------------
-Sub getAction(control As IRibbonControl)
+Function getAction(control As IRibbonControl)
   Dim setRibbonVal As Variant
+  On Error GoTo catchError
   
   Call init.setting
   setRibbonVal = ribbonVal("Act_" & control.ID)
   
-  If setRibbonVal Like "*Ctl_Ribbon*" Then
-    Call Application.run(setRibbonVal, control)
+  If setRibbonVal Like "*Ctl_Ribbon.*" Then
+    Call Application.Run(setRibbonVal, control)
   
   ElseIf setRibbonVal = "" Then
     Call Library.showDebugForm("Act_" & control.ID)
   Else
-    Call Application.run(setRibbonVal)
+    Call Application.Run(setRibbonVal)
   End If
-End Sub
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, Err.Description, True)
+  Call Library.endScript
+End Function
 
 
 'Supertip 設定-------------------------------------------------------------------------------------
-Public Sub getSupertip(control As IRibbonControl, ByRef setRibbonVal)
+Public Function getSupertip(control As IRibbonControl, ByRef setRibbonVal)
   Call init.setting
   setRibbonVal = ribbonVal("Sup_" & control.ID)
-End Sub
+End Function
 
 
 'Description 設定----------------------------------------------------------------------------------
-Public Sub getDescription(control As IRibbonControl, ByRef setRibbonVal)
+Public Function getDescription(control As IRibbonControl, ByRef setRibbonVal)
   Call init.setting
   setRibbonVal = Replace(ribbonVal("Dec_" & control.ID), "<BR>", vbNewLine)
 
-End Sub
+End Function
 
 'getImageMso 設定----------------------------------------------------------------------------------
-Public Sub getImage(control As IRibbonControl, ByRef image)
+Public Function getImage(control As IRibbonControl, ByRef image)
+  On Error GoTo catchError
+  
   Call init.setting
   image = ribbonVal("Img_" & control.ID)
-End Sub
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.endScript
+End Function
 
 
 'size 設定-----------------------------------------------------------------------------------------
-Public Sub getSize(control As IRibbonControl, ByRef setRibbonVal)
+Public Function getSize(control As IRibbonControl, ByRef setRibbonVal)
   Dim getVal As String
+  
+  On Error GoTo catchError
   
   Call init.setting
   setRibbonVal = ribbonVal("Siz_" & control.ID)
@@ -300,7 +352,11 @@ Public Sub getSize(control As IRibbonControl, ByRef setRibbonVal)
     Case Else
       setRibbonVal = 0
   End Select
-End Sub
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.endScript
+End Function
 
 '--------------------------------------------------------------------------------------------------
 '有効/無効切り替え
@@ -320,22 +376,22 @@ End Function
 
 
 '--------------------------------------------------------------------------------------------------
-Sub getVisible(control As IRibbonControl, ByRef returnedVal)
+Function getVisible(control As IRibbonControl, ByRef returnedVal)
   Call init.setting
   returnedVal = Library.getRegistry("CustomRibbon")
-End Sub
+End Function
 
 '--------------------------------------------------------------------------------------------------
-Sub noDispTab(control As IRibbonControl)
+Function noDispTab(control As IRibbonControl)
   Call Library.setRegistry("CustomRibbon", False)
   Call RefreshRibbon
-End Sub
+End Function
 
 '--------------------------------------------------------------------------------------------------
-Sub setDispTab(control As IRibbonControl, pressed As Boolean)
+Function setDispTab(control As IRibbonControl, pressed As Boolean)
   Call Library.setRegistry("CustomRibbon", pressed)
   Call RefreshRibbon
-End Sub
+End Function
 
 
 '--------------------------------------------------------------------------------------------------

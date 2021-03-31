@@ -111,7 +111,7 @@ Function errorHandle(funcName As String, ByRef objErr As Object)
   Call endScript
   Call Ctl_ProgressBar.showEnd
 
-  Call outputLog(runTime & vbTab & objErr.Number & vbTab & objErr.Description)
+  Call outputLog(runTime, objErr.Number & vbTab & objErr.Description)
 End Function
 
 
@@ -127,7 +127,7 @@ Function startScript()
   'ÉAÉNÉeÉBÉuÉZÉãÇÃéÊìæ
   If TypeName(Selection) = "Range" Then
     SelectionCell = Selection.Address
-    SelectionSheet = ActiveWorkbook.activeSheet.Name
+    SelectionSheet = ActiveWorkbook.ActiveSheet.Name
   End If
 
   'É}ÉNÉçìÆçÏÇ≈ÉVÅ[ÉgÇ‚ÉEÉBÉìÉhÉEÇ™êÿÇËë÷ÇÌÇÈÇÃÇå©ÇπÇ»Ç¢ÇÊÇ§Ç…ÇµÇ‹Ç∑
@@ -156,11 +156,13 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function endScript(Optional flg As Boolean = False)
+Function endScript(Optional reCalflg As Boolean = False, Optional flg As Boolean = False)
   On Error Resume Next
 
   'ã≠êßìIÇ…çƒåvéZÇ≥ÇπÇÈ
-  Application.CalculateFull
+  If reCalflg = True Then
+    Application.CalculateFull
+  End If
 
  'ÉAÉNÉeÉBÉuÉZÉãÇÃëIë
   If SelectionCell <> "" And flg = True Then
@@ -197,7 +199,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function chkSheetName(sheetName) As Boolean
+Function chkSheetExists(sheetName) As Boolean
 
   Dim tempSheet As Object
   Dim result As Boolean
@@ -209,7 +211,7 @@ Function chkSheetName(sheetName) As Boolean
       Exit For
     End If
   Next
-  chkSheetName = result
+  chkSheetExists = result
 End Function
 
 
@@ -243,7 +245,7 @@ Function chkShapeName(ShapeName As String) As Boolean
   Dim result As Boolean
 
   result = False
-  For Each objShp In activeSheet.Shapes
+  For Each objShp In ActiveSheet.Shapes
     If objShp.Name = ShapeName Then
       result = True
       Exit For
@@ -258,23 +260,20 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function chkExcludeSheet(sheetName As String, colNo As Long)
+Function chkExcludeSheet(chkSheetName As String) As Boolean
 
-  Dim endBookRowLine As Long
-  Dim rowLine As Long
-  Dim result As Boolean
+ Dim result As Boolean
+  Dim sheetName As Variant
 
-  result = True
-
-  ' ç≈èIçséÊìæ
-  endBookRowLine = Sheets("ê›íË").Cells(Rows.count, colNo).End(xlUp).Row
-  For rowLine = 3 To endBookRowLine
-    If sheetName = Sheets("ê›íË").Cells(rowLine, colNo) Then
-      result = False
+  For Each sheetName In Range("ExcludeSheet")
+    If sheetName = chkSheetName Then
+      result = True
       Exit For
+    Else
+      result = False
     End If
   Next
-  CheckExcludeSheet = result
+  chkExcludeSheet = result
 End Function
 
 
@@ -398,6 +397,23 @@ Function chkDirExists(targetPath As String)
 
 End Function
 
+
+'**************************************************************************************************
+' * å≈íËí∑ï∂éöóÒÇ…ïœä∑
+' *
+' * @Link http://bekkou68.hatenablog.com/entry/20090414/1239685179
+'**************************************************************************************************
+Function convFixedLength(strTarget As String, lengs As Long, addString As String) As String
+  Dim strFirst As String
+  Dim strExceptFirst As String
+
+  Do While LenB(strTarget) <= lengs
+    strTarget = strTarget & addString
+  Loop
+  convFixedLength = strTarget
+End Function
+
+
 '**************************************************************************************************
 ' * ÉLÉÉÉÅÉãÉPÅ[ÉXÇÉXÉlÅ[ÉNÉPÅ[ÉXÇ…ïœä∑
 ' *
@@ -470,7 +486,7 @@ Function convHan2Zen(Text As String) As String
   For i = 1 To Len(Text)
     DoEvents
     rData = StrConv(Text, vbWide)
-    If Mid(rData, i, 1) Like "[Ç`-Çö]" Or Mid(rData, i, 1) Like "[ÇO-ÇX]" Or Mid(rData, i, 1) Like "Å|" Then
+    If Mid(rData, i, 1) Like "[Ç`-Çö]" Or Mid(rData, i, 1) Like "[ÇO-ÇX]" Or Mid(rData, i, 1) Like "[Å|ÅIÅiÅjÅ^]" Then
       ansData = ansData & StrConv(Mid(rData, i, 1), vbNarrow)
     Else
       ansData = ansData & Mid(rData, i, 1)
@@ -750,7 +766,7 @@ Function delImage()
     Exit Function
   End If
 
-  For Each shp In activeSheet.Shapes
+  For Each shp In ActiveSheet.Shapes
     Set rng = Range(shp.TopLeftCell, shp.BottomRightCell)
 
     If Not (Intersect(rng, Selection) Is Nothing) Then
@@ -792,7 +808,7 @@ Function delTableData()
 
   On Error Resume Next
 
-  endLine = Cells(Rows.count, 1).End(xlUp).Row
+  endLine = Cells(Rows.count, 1).End(xlUp).row
   Rows("3:" & endLine).Select
   Selection.delete Shift:=xlUp
 
@@ -976,7 +992,9 @@ End Function
 '**************************************************************************************************
 Function getRegistry(registryName As String, Optional SubKey As String)
   Dim regVal As String
-
+  
+  On Error GoTo catchError
+  
   If SubKey = "" Then
     SubKey = RegistrySubKey
   End If
@@ -985,6 +1003,11 @@ Function getRegistry(registryName As String, Optional SubKey As String)
     regVal = GetSetting(RegistryKey, SubKey, registryName)
   End If
   getRegistry = regVal
+  
+  Exit Function
+'ÉGÉâÅ[î≠ê∂éû--------------------------------------------------------------------------------------
+catchError:
+'  Call Library.showNotice(400, Err.Description, True)
 End Function
 
 
@@ -1234,7 +1257,7 @@ Function getSheetList(columnName As String)
   With Selection.Interior
     .Pattern = xlSolid
     .PatternColorIndex = xlAutomatic
-    .color = xlNone
+    .Color = xlNone
     .TintAndShade = 0
     .PatternTintAndShade = 0
   End With
@@ -1248,14 +1271,14 @@ Function getSheetList(columnName As String)
     ' ÉZÉãÇÃîwåiêFâèú
     With Worksheets("ê›íË").Range(columnName & i).Interior
       .Pattern = xlPatternNone
-      .color = xlNone
+      .Color = xlNone
     End With
 
     ' ÉVÅ[ÉgêFÇ∆ìØÇ∂êFÇÉZÉãÇ…ê›íË
-    If Worksheets(sheetName.Name).Tab.color Then
+    If Worksheets(sheetName.Name).Tab.Color Then
       With Worksheets("ê›íË").Range(columnName & i).Interior
         .Pattern = xlPatternNone
-        .color = Worksheets(sheetName.Name).Tab.color
+        .Color = Worksheets(sheetName.Name).Tab.Color
       End With
     End If
 
@@ -1364,7 +1387,7 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
   Select Case setVal("debugMode")
     Case "file"
       If meg1 <> "" Then
-        Call outputLog(runTime & vbTab & meg1)
+        Call outputLog(runTime, meg1)
       End If
       GoTo label_end
 
@@ -1373,13 +1396,13 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
 
     Case "all"
       If meg1 <> "" Then
-        Call outputLog(runTime & vbTab & meg1)
+        Call outputLog(runTime, meg1)
       End If
       GoTo label_showForm
 
     Case "develop"
       If meg1 <> "" Then
-        Call outputLog(runTime & vbTab & meg1)
+        Call outputLog(runTime, meg1)
         Debug.Print runTime & vbTab & meg1
       End If
       'GoTo label_showForm
@@ -1438,7 +1461,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
 
-  endLine = sheetNotice.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = sheetNotice.Cells(Rows.count, 1).End(xlUp).row
   Message = Application.WorksheetFunction.VLookup(Code, sheetNotice.Range("A2:B" & endLine), 2, False)
 
   If process <> "" Then
@@ -1451,11 +1474,13 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   If StopTime <> 0 Then
     Message = Message & vbNewLine & "<èàóùéûä‘ÅF" & StopTime & ">"
   End If
-
+  
+  If Message <> "" Then
+    Message = Replace(Message, "<BR>", vbNewLine)
+  End If
+  
   If setVal("debugMode") = "speak" Or setVal("debugMode") = "develop" Or setVal("debugMode") = "all" Then
     Application.Speech.Speak Text:=Message, SpeakAsync:=True, SpeakXML:=True
-  Else
-'    Call outputLog(runTime & vbTab & Message)
   End If
 
 
@@ -1517,7 +1542,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function outputLog(Message As String)
+Function outputLog(runTime As Date, Message As String)
   Dim fileTimestamp As Date
 
   If chkFileExists(logFile) Then
@@ -1526,19 +1551,21 @@ Function outputLog(Message As String)
       fileTimestamp = DateAdd("d", -1, Date)
   End If
 
-  If Format(Date, "yyyymmdd") = Format(fileTimestamp, "yyyymmdd") Then
-    Open logFile For Append As #1
-  Else
-    Open logFile For Output As #1
-  End If
+  With CreateObject("ADODB.Stream")
+    .Charset = "UTF-8"
+    .Open
+    If Format(Date, "yyyymmdd") = Format(fileTimestamp, "yyyymmdd") Then
+      .LoadFromFile logFile
+      .Position = .Size
+    End If
+    .WriteText "<p><span class='time'>" & runTime & "</span>Å@<span class='message'>" & Message & "</span></p>", 1
+    .SaveToFile logFile, 2
+    .Close
+  End With
 
-
-  'Print #1, "[" & Format(Now, "YYYY/MM/DD hh:mm:ss") & "] " & Replace(Message, vbLf, " ")
-  Print #1, Replace(Message, vbLf, " ")
-
-  Close #1
 End Function
 
+'==================================================================================================
 Function outputText(Message As String, outputFilePath)
 
   Open outputFilePath For Output As #1
@@ -1559,7 +1586,7 @@ Function importCsv(filePath As String, Optional readLine As Long, Optional TextF
   Dim qt As QueryTable
   Dim count As Long, line As Long, endLine As Long
 
-  endLine = Cells(Rows.count, 1).End(xlUp).Row
+  endLine = Cells(Rows.count, 1).End(xlUp).row
   If endLine = 1 Then
     endLine = 1
   Else
@@ -1570,7 +1597,7 @@ Function importCsv(filePath As String, Optional readLine As Long, Optional TextF
     readLine = 1
   End If
 
-  Set ws = activeSheet
+  Set ws = ActiveSheet
   Set qt = ws.QueryTables.add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A" & endLine))
   With qt
     .TextFilePlatform = 932          ' Shift-JIS ÇäJÇ≠
@@ -1617,7 +1644,7 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
   ActiveWorkbook.Sheets(targeSheet).Rows.Hidden = False
   ActiveWorkbook.Sheets(targeSheet).Columns.Hidden = False
 
-  If activeSheet.FilterMode Then activeSheet.ShowAllData
+  If ActiveSheet.FilterMode Then ActiveSheet.ShowAllData
 
   ActiveWorkbook.Sheets(targeSheet).Range(targeArea).Copy
   dictSheet.Range("A1").PasteSpecial xlPasteValues
@@ -1737,7 +1764,7 @@ Function setFontClor(a_sSearch, a_lColor, a_bBold)
         Exit Do
       End If
       Set f = R.Characters(i, iLen).Font
-      f.color = a_lColor
+      f.Color = a_lColor
       f.Bold = a_bBold
       i = i + 1
     Loop
@@ -1857,7 +1884,7 @@ Function setLineColor(setArea As String, DisType As Boolean, SetColor As String)
   Selection.FormatConditions(Selection.FormatConditions.count).SetFirstPriority
   With Selection.FormatConditions(1)
     .Interior.PatternColorIndex = xlAutomatic
-    .Interior.color = SetColor
+    .Interior.Color = SetColor
 '    .Interior.TintAndShade = 0
 '    .Font.ColorIndex = 1
   End With
@@ -1989,7 +2016,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function unsetLineColor(setArea As String)
-  ActiveWorkbook.activeSheet.Range(setArea).Select
+  ActiveWorkbook.ActiveSheet.Range(setArea).Select
 
   'èåèïtÇ´èëéÆÇÉNÉäÉA
   Selection.FormatConditions.delete
@@ -2197,7 +2224,7 @@ Function KOETOL_ExpansionFormEnd()
 
   If setVal("HighLightFlg") = False Then
     SetActiveCell = Selection.Address
-    endRowLine = sheetKoetol.Cells(Rows.count, 3).End(xlUp).Row
+    endRowLine = sheetKoetol.Cells(Rows.count, 3).End(xlUp).row
 
     Call Library.startScript
     Call Library.unsetLineColor("C5:AZ" & endRowLine)
@@ -2244,6 +2271,71 @@ Function årê¸_ÉNÉäÉA(Optional setArea As Range)
 End Function
 
 '--------------------------------------------------------------------------------------------------
+Function årê¸_ï\(Optional setArea As Range, Optional LineColor As Long)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+
+      .Borders(xlEdgeLeft).Weight = xlThin
+      .Borders(xlEdgeRight).Weight = xlThin
+      .Borders(xlEdgeTop).Weight = xlThin
+      .Borders(xlEdgeBottom).Weight = xlThin
+      
+      .Borders(xlInsideVertical).Weight = xlThin
+      .Borders(xlInsideHorizontal).Weight = xlHairline
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+        
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+
+      .Borders(xlEdgeLeft).Weight = xlThin
+      .Borders(xlEdgeRight).Weight = xlThin
+      .Borders(xlEdgeTop).Weight = xlThin
+      .Borders(xlEdgeBottom).Weight = xlThin
+      
+      .Borders(xlInsideVertical).Weight = xlThin
+      .Borders(xlInsideHorizontal).Weight = xlHairline
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+        
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+
+'--------------------------------------------------------------------------------------------------
 Function årê¸_îjê¸_àÕÇ›(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2261,10 +2353,10 @@ Function årê¸_îjê¸_àÕÇ›(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeTop).Weight = WeightVal
       .Borders(xlEdgeBottom).Weight = WeightVal
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2279,10 +2371,10 @@ Function årê¸_îjê¸_àÕÇ›(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeTop).Weight = WeightVal
       .Borders(xlEdgeBottom).Weight = WeightVal
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2312,10 +2404,10 @@ Function årê¸_îjê¸_äiéq(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2335,10 +2427,10 @@ Function årê¸_îjê¸_äiéq(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2360,8 +2452,8 @@ Function årê¸_îjê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
       End If
      End With
   Else
@@ -2374,8 +2466,8 @@ Function årê¸_îjê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
       End If
      End With
   End If
@@ -2396,8 +2488,8 @@ Function årê¸_îjê¸_è„â∫(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2409,8 +2501,8 @@ Function årê¸_îjê¸_è„â∫(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2428,7 +2520,7 @@ Function årê¸_îjê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideVertical).LineStyle = xlDash
       .Borders(xlInsideVertical).Weight = WeightVal
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2436,7 +2528,7 @@ Function årê¸_îjê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideVertical).LineStyle = xlDash
       .Borders(xlInsideVertical).Weight = WeightVal
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2455,7 +2547,7 @@ Function årê¸_îjê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
      End With
   Else
@@ -2465,7 +2557,7 @@ Function årê¸_îjê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
     End With
 
@@ -2495,10 +2587,10 @@ Function årê¸_é¿ê¸_àÕÇ›(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2514,10 +2606,10 @@ Function årê¸_é¿ê¸_àÕÇ›(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2546,12 +2638,12 @@ Function årê¸_é¿ê¸_äiéq(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
-        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
-        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2571,12 +2663,12 @@ Function årê¸_é¿ê¸_äiéq(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
-        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
-        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2597,8 +2689,8 @@ Function årê¸_é¿ê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
       End If
      End With
   Else
@@ -2610,8 +2702,8 @@ Function årê¸_é¿ê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
       End If
      End With
 
@@ -2633,8 +2725,8 @@ Function årê¸_é¿ê¸_è„â∫(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2646,8 +2738,8 @@ Function årê¸_é¿ê¸_è„â∫(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeTop).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2665,7 +2757,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideVertical).Weight = WeightVal
       
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2674,7 +2766,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideVertical).Weight = WeightVal
       
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideVertical).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2692,7 +2784,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
      End With
   Else
@@ -2702,7 +2794,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
-        .Borders(xlInsideHorizontal).color = RGB(Red, Green, Blue)
+        .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
     End With
 
@@ -2721,7 +2813,7 @@ Function årê¸_ìÒèdê¸_ç∂(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlDouble
       
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2729,7 +2821,7 @@ Function årê¸_ìÒèdê¸_ç∂(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlDouble
   
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2747,8 +2839,8 @@ Function årê¸_ìÒèdê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long,
       .Borders(xlEdgeRight).LineStyle = xlDouble
       
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2757,8 +2849,8 @@ Function årê¸_ìÒèdê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long,
       .Borders(xlEdgeRight).LineStyle = xlDouble
   
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2776,7 +2868,7 @@ Function årê¸_ìÒèdê¸_â∫(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).LineStyle = xlDouble
   
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   Else
@@ -2784,7 +2876,7 @@ Function årê¸_ìÒèdê¸_â∫(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeBottom).LineStyle = xlDouble
   
       If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeBottom).color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
   End If
@@ -2812,6 +2904,12 @@ Function årê¸_îjê¸_ãtLéö(Optional setArea As Range, Optional LineColor As Long, 
   
   End If
 End Function
+
+
+
+
+
+
 
 
 

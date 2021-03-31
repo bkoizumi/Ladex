@@ -14,13 +14,14 @@ Function add(Optional filePath As String)
   Dim line As Long, endLine As Long
   
   Call init.setting
-  line = sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row + 1
+  line = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row + 1
   
   If filePath = "" Then
     filePath = ActiveWorkbook.FullName
   End If
   sheetFavorite.Range("A" & line) = filePath
   
+  ThisWorkbook.Save
 '  Set targetBook = Workbooks("メンテナンス用.xlsx")
 '  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
 
@@ -59,13 +60,15 @@ Function RefreshListBox()
   Call init.setting
   Set FSO = CreateObject("Scripting.FileSystemObject")
   
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
   
   Frm_Favorite.Lst_Favorite.Clear
   For line = 2 To endLine
     Frm_Favorite.Lst_Favorite.AddItem FSO.GetBaseName(sheetFavorite.Range("A" & line))
   Next
   Set FSO = Nothing
+  
+  ThisWorkbook.Save
 End Function
 
 
@@ -116,7 +119,7 @@ Function moveDown()
   
   Call init.setting
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
   
   If line >= endLine Then
     Exit Function
@@ -135,7 +138,7 @@ Function moveBottom()
   
   Call init.setting
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
   
   If line >= endLine Then
     Exit Function

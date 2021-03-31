@@ -1,13 +1,19 @@
-Attribute VB_Name = "Ctl_Maint"
+Attribute VB_Name = "Ctl_RbnMaint"
 '**************************************************************************************************
 ' * Copy
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Sub データコピー()
-  
+Function シート追加()
   Call init.setting
-  
+  ThisWorkbook.Worksheets.add.Name = "Favorite"
+  ThisWorkbook.Save
+End Function
+
+
+'==================================================================================================
+Function SheetImport()
+  Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsx")
   
 '  ThisWorkbook.Sheets("Ribbon").Columns("A:G").Value = targetBook.Sheets("Ribbon").Columns("A:G").Value
@@ -20,30 +26,33 @@ Sub データコピー()
   targetBook.Sheets("Notice").Columns("A:B").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
   targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
   targetBook.Sheets("testData").Columns("A:P").Copy ThisWorkbook.Worksheets("testData").Range("A1")
-
-  
-  If MsgBox("インポート", vbYesNo + vbExclamation) = vbYes Then
-    targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
-  Else
-    ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
-  End If
+  targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
   
   ThisWorkbook.Save
   
   Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
-'  Call Library.showNotice(200, "データコピー")
   
 
-End Sub
+End Function
 
 
-Sub シート追加()
+'==================================================================================================
+Function SheetExport()
+
   Call init.setting
-
-
-  ThisWorkbook.Worksheets.add.Name = "Favorite"
+  Set targetBook = Workbooks("メンテナンス用.xlsx")
+  
+  ThisWorkbook.Sheets("設定").Columns("A:H").Copy targetBook.Worksheets("設定").Range("A1")
+  ThisWorkbook.Sheets("Ribbon").Columns("A:G").Copy targetBook.Worksheets("Ribbon").Range("A1")
+  ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
+  ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
+  ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
+  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  
+  
+  Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
   
 
-  
-  ThisWorkbook.Save
-End Sub
+End Function
+
+
