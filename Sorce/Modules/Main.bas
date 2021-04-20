@@ -276,8 +276,9 @@ Function Œrü_íœ()
 End Function
 
 Function Œrü_•\()
+  Call Library.startScript
   Call Library.Œrü_•\
-  
+  Call Library.endScript
 End Function
 
 
