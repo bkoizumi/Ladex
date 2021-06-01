@@ -692,23 +692,6 @@ Function delMultipleLine(targetValue As String)
 End Function
 
 '**************************************************************************************************
-' *レジストリから情報取得
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function delRegistry(registryName As String)
-  Dim regVal As String
-
-  On Error Resume Next
-
-  If registryName = "" Then
-    DeleteSetting RegistryKey, RegistryfunctionKey
-  Else
-    DeleteSetting RegistryKey, RegistryfunctionKey, registryName
-  End If
-
-End Function
-'**************************************************************************************************
 ' * シート削除
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
@@ -808,7 +791,7 @@ Function delTableData()
 
   On Error Resume Next
 
-  endLine = Cells(Rows.count, 1).End(xlUp).row
+  endLine = Cells(Rows.count, 1).End(xlUp).Row
   Rows("3:" & endLine).Select
   Selection.delete Shift:=xlUp
 
@@ -985,30 +968,7 @@ Function getRGB(colorValue As Long, Red As Long, Green As Long, Blue As Long)
 End Function
 
 
-'**************************************************************************************************
-' *レジストリから情報取得
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function getRegistry(registryName As String, Optional SubKey As String)
-  Dim regVal As String
-  
-  On Error GoTo catchError
-  
-  If SubKey = "" Then
-    SubKey = RegistrySubKey
-  End If
-  
-  If registryName <> "" Then
-    regVal = GetSetting(RegistryKey, SubKey, registryName)
-  End If
-  getRegistry = regVal
-  
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-'  Call Library.showNotice(400, Err.Description, True)
-End Function
+
 
 
 '**************************************************************************************************
@@ -1374,7 +1334,7 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
 
-  If setVal("debugMode") = "none" Then
+  If BK_setVal("debugMode") = "none" Then
     Exit Function
   End If
 
@@ -1384,7 +1344,7 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
   meg1 = Replace(meg1, vbNewLine, " ")
 
 
-  Select Case setVal("debugMode")
+  Select Case BK_setVal("debugMode")
     Case "file"
       If meg1 <> "" Then
         Call outputLog(runTime, meg1)
@@ -1461,8 +1421,8 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
 
-  endLine = sheetNotice.Cells(Rows.count, 1).End(xlUp).row
-  Message = Application.WorksheetFunction.VLookup(Code, sheetNotice.Range("A2:B" & endLine), 2, False)
+  endLine = BK_sheetNotice.Cells(Rows.count, 1).End(xlUp).Row
+  Message = Application.WorksheetFunction.VLookup(Code, BK_sheetNotice.Range("A2:B" & endLine), 2, False)
 
   If process <> "" Then
     Message = Replace(Message, "%%", process)
@@ -1479,7 +1439,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     Message = Replace(Message, "<BR>", vbNewLine)
   End If
   
-  If setVal("debugMode") = "speak" Or setVal("debugMode") = "develop" Or setVal("debugMode") = "all" Then
+  If BK_setVal("debugMode") = "speak" Or BK_setVal("debugMode") = "develop" Or BK_setVal("debugMode") = "all" Then
     Application.Speech.Speak Text:=Message, SpeakAsync:=True, SpeakXML:=True
   End If
 
@@ -1529,14 +1489,31 @@ Function makeRandomString(ByVal setString As String, ByVal setStringCnt As Integ
 
 End Function
 
+'==================================================================================================
 Function makeRandomNo(minNo As Long, maxNo As Long) As String
 
-  '乱数ジェネレータを初期化
   Randomize
   makeRandomNo = Int((maxNo - minNo + 1) * Rnd + minNo)
 
 End Function
 
+
+'==================================================================================================
+Function makeRandomDigits(maxCount As Long) As String
+  Dim makeVal As String
+  Dim tmpVal As String
+  
+  For count = 1 To maxCount
+    Randomize
+    tmpVal = CStr(Int(10 * Rnd))
+    makeVal = makeVal & tmpVal
+  Next
+  
+  Debug.Print makeVal
+  
+  makeRandomDigits = makeVal
+
+End Function
 '**************************************************************************************************
 ' * ログ出力
 ' *
@@ -1586,7 +1563,7 @@ Function importCsv(filePath As String, Optional readLine As Long, Optional TextF
   Dim qt As QueryTable
   Dim count As Long, line As Long, endLine As Long
 
-  endLine = Cells(Rows.count, 1).End(xlUp).row
+  endLine = Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 1 Then
     endLine = 1
   Else
@@ -1773,19 +1750,52 @@ End Function
 
 
 '**************************************************************************************************
-' * レジストリに情報登録
+' * レジストリ関連
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setRegistry(registryName As String, setVal As Variant, Optional SubKey As String)
+'==================================================================================================
+Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As Variant)
 
-  If SubKey = "" Then
-    SubKey = RegistrySubKey
+  If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
+    Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
+  End If
+End Function
+
+'==================================================================================================
+Function getRegistry(RegistrySubKey As String, RegistryKey As String)
+  Dim regVal As String
+  
+  On Error GoTo catchError
+  
+  If RegistryKey <> "" Then
+    regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
+  End If
+  getRegistry = regVal
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+'  Call Library.showNotice(400, Err.Description, True)
+End Function
+
+
+'==================================================================================================
+Function delRegistry(RegistrySubKey As String, RegistryKey As String)
+
+  Dim regVal As String
+
+  On Error GoTo catchError
+  If RegistryKey = "" Then
+    Call DeleteSetting(thisAppName, RegistrySubKey)
+  Else
+    Call DeleteSetting(thisAppName, RegistrySubKey, RegistryKey)
   End If
 
-  If getRegistry(registryName, SubKey) <> setVal And registryName <> "" Then
-    Call SaveSetting(RegistryKey, SubKey, registryName, setVal)
-  End If
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+'  Call Library.showNotice(400, Err.Description, True)
 End Function
 
 
@@ -2222,9 +2232,9 @@ Function KOETOL_ExpansionFormEnd()
   Call init.setting
 
 
-  If setVal("HighLightFlg") = False Then
+  If BK_setVal("HighLightFlg") = False Then
     SetActiveCell = Selection.Address
-    endRowLine = sheetKoetol.Cells(Rows.count, 3).End(xlUp).row
+    endRowLine = sheetKoetol.Cells(Rows.count, 3).End(xlUp).Row
 
     Call Library.startScript
     Call Library.unsetLineColor("C5:AZ" & endRowLine)

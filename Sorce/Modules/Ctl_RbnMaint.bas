@@ -12,7 +12,7 @@ End Function
 
 
 '==================================================================================================
-Function SheetImport()
+Function SheetImport(control As IRibbonControl)
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsx")
   
@@ -30,14 +30,14 @@ Function SheetImport()
   
   ThisWorkbook.Save
   
-  Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
+  'Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("C39"))
   
 
 End Function
 
 
 '==================================================================================================
-Function SheetExport()
+Function SheetExport(control As IRibbonControl)
 
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsx")

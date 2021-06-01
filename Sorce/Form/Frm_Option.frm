@@ -33,7 +33,7 @@ Private Sub UserForm_Initialize()
   Application.Cursor = xlDefault
   indexCnt = 0
   
-  setZoomLevel = Library.getRegistry("zoomLevel")
+  setZoomLevel = Library.getRegistry("Main", "zoomLevel")
   
   With Frm_Option
     For Each zoomLevelVal In Split("25,50,75,85,100", ",")
@@ -44,19 +44,19 @@ Private Sub UserForm_Initialize()
       End If
       indexCnt = indexCnt + 1
     Next
-    .gridLine.Value = Library.getRegistry("gridLine")
-    .bgColor.Value = Library.getRegistry("bgColor")
+    .gridLine.Value = Library.getRegistry("Main", "gridLine")
+    .bgColor.Value = Library.getRegistry("Main", "bgColor")
       
-    If Library.getRegistry("highLightColor") = "" Then
+    If Library.getRegistry("Main", "highLightColor") = "" Then
       .highLightColor.BackColor = 10222585
     Else
-      .highLightColor.BackColor = Library.getRegistry("highLightColor")
+      .highLightColor.BackColor = Library.getRegistry("Main", "highLightColor")
     End If
     
-    If Library.getRegistry("LineColor") = "" Then
+    If Library.getRegistry("Main", "LineColor") = "" Then
       .LineColor.BackColor = 0
     Else
-      .LineColor.BackColor = Library.getRegistry("LineColor")
+      .LineColor.BackColor = Library.getRegistry("Main", "LineColor")
     End If
   End With
 End Sub
@@ -130,6 +130,10 @@ End Sub
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Private Sub Cancel_Click()
+
+  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
+  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+  
   Unload Me
 End Sub
 
@@ -142,11 +146,15 @@ End Sub
 Private Sub run_Click()
   Dim execDay As Date
   
-  Call Library.setRegistry("zoomLevel", Me.zoomLevel.Text)
-  Call Library.setRegistry("gridLine", Me.gridLine.Value)
-  Call Library.setRegistry("bgColor", Me.bgColor.Value)
-  Call Library.setRegistry("highLightColor", Me.highLightColor.BackColor)
-  Call Library.setRegistry("LineColor", Me.LineColor.BackColor)
+  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
+  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+  
+  
+  Call Library.setRegistry("Main", "zoomLevel", Me.zoomLevel.Text)
+  Call Library.setRegistry("Main", "gridLine", Me.gridLine.Value)
+  Call Library.setRegistry("Main", "bgColor", Me.bgColor.Value)
+  Call Library.setRegistry("Main", "highLightColor", Me.highLightColor.BackColor)
+  Call Library.setRegistry("Main", "LineColor", Me.LineColor.BackColor)
   
   'スタイルシートをスタイル2シートへコピー
 '  endLine = sheetStyle2.Cells(Rows.count, 2).End(xlUp).Row

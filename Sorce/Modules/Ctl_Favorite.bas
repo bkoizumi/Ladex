@@ -14,12 +14,12 @@ Function add(Optional filePath As String)
   Dim line As Long, endLine As Long
   
   Call init.setting
-  line = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row + 1
+  line = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row + 1
   
   If filePath = "" Then
     filePath = ActiveWorkbook.FullName
   End If
-  sheetFavorite.Range("A" & line) = filePath
+  BK_sheetFavorite.Range("A" & line) = filePath
   
   ThisWorkbook.Save
 '  Set targetBook = Workbooks("メンテナンス用.xlsx")
@@ -30,16 +30,22 @@ End Function
 
 '==================================================================================================
 '詳細表示
-Function detail()
+Function detail(control As IRibbonControl)
   Dim line As Long, endLine As Long
   Dim regLists As Variant
   
 '  On Error GoTo catchError
-  
+  topPosition = Library.getRegistry("UserForm", "FavoriteTop")
+  leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
   With Frm_Favorite
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.Width / 4)
-    .Left = Application.Left + (ActiveWindow.Height / 2)
+    If topPosition = "" Then
+      .Top = 10
+      .Left = 120
+    Else
+      .Top = topPosition
+      .Left = leftPosition
+    End If
     .Show vbModeless
   End With
   Call RefreshListBox
@@ -60,11 +66,11 @@ Function RefreshListBox()
   Call init.setting
   Set FSO = CreateObject("Scripting.FileSystemObject")
   
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
+  endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   
   Frm_Favorite.Lst_Favorite.Clear
   For line = 2 To endLine
-    Frm_Favorite.Lst_Favorite.AddItem FSO.GetBaseName(sheetFavorite.Range("A" & line))
+    Frm_Favorite.Lst_Favorite.AddItem FSO.GetBaseName(BK_sheetFavorite.Range("A" & line))
   Next
   Set FSO = Nothing
   
@@ -90,8 +96,8 @@ Function moveTop()
   
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
   
-  sheetFavorite.Range("A" & line).Cut
-  sheetFavorite.Range("A" & 2).Insert Shift:=xlDown
+  BK_sheetFavorite.Range("A" & line).Cut
+  BK_sheetFavorite.Range("A" & 2).Insert Shift:=xlDown
   
   Call RefreshListBox
 End Function
@@ -105,8 +111,8 @@ Function moveUp()
   Call init.setting
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
   
-  sheetFavorite.Range("A" & line).Cut
-  sheetFavorite.Range("A" & line - 1).Insert Shift:=xlDown
+  BK_sheetFavorite.Range("A" & line).Cut
+  BK_sheetFavorite.Range("A" & line - 1).Insert Shift:=xlDown
   
   Call RefreshListBox
 End Function
@@ -119,13 +125,13 @@ Function moveDown()
   
   Call init.setting
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
+  endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   
   If line >= endLine Then
     Exit Function
   End If
-  sheetFavorite.Range("A" & line).Cut
-  sheetFavorite.Range("A" & line + 1).Insert Shift:=xlDown
+  BK_sheetFavorite.Range("A" & line).Cut
+  BK_sheetFavorite.Range("A" & line + 1).Insert Shift:=xlDown
   
   Call RefreshListBox
 End Function
@@ -138,13 +144,13 @@ Function moveBottom()
   
   Call init.setting
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
-  endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
+  endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   
   If line >= endLine Then
     Exit Function
   End If
-  sheetFavorite.Range("A" & line).Cut
-  sheetFavorite.Range("A" & endLine).Insert Shift:=xlDown
+  BK_sheetFavorite.Range("A" & line).Cut
+  BK_sheetFavorite.Range("A" & endLine).Insert Shift:=xlDown
   
   Call RefreshListBox
 End Function
@@ -158,7 +164,7 @@ Function delete()
   Call init.setting
   line = Frm_Favorite.Lst_Favorite.ListIndex + 2
   
-  sheetFavorite.Rows(line & ":" & line).delete Shift:=xlUp
+  BK_sheetFavorite.Rows(line & ":" & line).delete Shift:=xlUp
   
   Call RefreshListBox
 End Function

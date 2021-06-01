@@ -16,13 +16,13 @@ Attribute VB_Name = "Ctl_Ribbon"
 Function onLoad(ribbon As IRibbonUI)
   Call init.setting
   
-  Set ribbonUI = ribbon
+  Set BK_ribbonUI = ribbon
   
-'  Call Library.showDebugForm("ribbonUI" & "," & CStr(ObjPtr(ribbonUI)))
-  Call Library.setRegistry("ribbonUI", CStr(ObjPtr(ribbonUI)))
+'  Call Library.showDebugForm("BK_ribbonUI" & "," & CStr(ObjPtr(BK_ribbonUI)))
+  Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
   
-  ribbonUI.ActivateTab ("BK_Library")
-  ribbonUI.Invalidate
+  BK_ribbonUI.ActivateTab ("BK_Library")
+  BK_ribbonUI.Invalidate
   
 End Function
 
@@ -33,13 +33,13 @@ Function Refresh()
   Call init.setting
   
   #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+    Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("BK_ribbonUI")))
   #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+    Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("BK_ribbonUI")))
   #End If
   
-  ribbonUI.ActivateTab ("BK_Library")
-  ribbonUI.Invalidate
+  BK_ribbonUI.ActivateTab ("BK_Library")
+  BK_ribbonUI.Invalidate
 End Function
   
   
@@ -51,11 +51,11 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   Call init.setting
    
-  If ribbonUI Is Nothing Then
+  If BK_ribbonUI Is Nothing Then
     #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
     #End If
   End If
   
@@ -99,14 +99,14 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function dMenuRefresh(control As IRibbonControl)
   
-  If ribbonUI Is Nothing Then
+  If BK_ribbonUI Is Nothing Then
     #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("BK_ribbonUI")))
     #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("BK_ribbonUI")))
     #End If
   End If
-  ribbonUI.Invalidate
+  BK_ribbonUI.Invalidate
 End Function
 
 
@@ -201,14 +201,14 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Dim line As Long, endLine As Long
   Dim objFSO As New FileSystemObject
    
-'  On Error GoTo catchError
+  On Error GoTo catchError
   Call init.setting
    
-  If ribbonUI Is Nothing Then
+  If BK_ribbonUI Is Nothing Then
     #If VBA7 And Win64 Then
-      Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
-      Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
     #End If
   End If
   
@@ -221,15 +221,15 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   If Workbooks.count = 0 Then
     endLine = 100
   Else
-    endLine = sheetFavorite.Cells(Rows.count, 1).End(xlUp).row
+    endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   End If
   
   For line = 2 To endLine
-    If sheetFavorite.Range("A" & line) <> "" Then
+    If BK_sheetFavorite.Range("A" & line) <> "" Then
       Set Button = DOMDoc.createElement("button")
       With Button
         .SetAttribute "id", "Favorite_" & line
-        .SetAttribute "label", objFSO.GetFileName(sheetFavorite.Range("A" & line))
+        .SetAttribute "label", objFSO.GetFileName(BK_sheetFavorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
         .SetAttribute "onAction", "BK_Library.xlam!Ctl_Ribbon.OpenFavoriteList"
       End With
@@ -260,12 +260,13 @@ Function OpenFavoriteList(control As IRibbonControl)
   Dim line As Long
   
   line = Replace(control.ID, "Favorite_", "")
-  fileNamePath = sheetFavorite.Range("A" & line)
+  fileNamePath = BK_sheetFavorite.Range("A" & line)
   
   If Library.chkFileExists(fileNamePath) Then
     Workbooks.Open fileName:=fileNamePath
+  Else
+    MsgBox "ファイルが存在しません" & vbNewLine & fileNamePath, vbExclamation
   End If
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 
@@ -277,7 +278,7 @@ Public Function getLabel(control As IRibbonControl, ByRef setRibbonVal)
   On Error GoTo catchError
   
   Call init.setting
-  setRibbonVal = Replace(ribbonVal("Lbl_" & control.ID), "<BR>", vbNewLine)
+  setRibbonVal = Replace(BK_ribbonVal("Lbl_" & control.ID), "<BR>", vbNewLine)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
@@ -290,15 +291,15 @@ Function getAction(control As IRibbonControl)
   On Error GoTo catchError
   
   Call init.setting
-  setRibbonVal = ribbonVal("Act_" & control.ID)
+  setRibbonVal = BK_ribbonVal("Act_" & control.ID)
   
   If setRibbonVal Like "*Ctl_Ribbon.*" Then
-    Call Application.Run(setRibbonVal, control)
+    Call Application.run(setRibbonVal, control)
   
   ElseIf setRibbonVal = "" Then
     Call Library.showDebugForm("Act_" & control.ID)
   Else
-    Call Application.Run(setRibbonVal)
+    Call Application.run(setRibbonVal)
   End If
   
   Exit Function
@@ -312,14 +313,14 @@ End Function
 'Supertip 設定-------------------------------------------------------------------------------------
 Public Function getSupertip(control As IRibbonControl, ByRef setRibbonVal)
   Call init.setting
-  setRibbonVal = ribbonVal("Sup_" & control.ID)
+  setRibbonVal = BK_ribbonVal("Sup_" & control.ID)
 End Function
 
 
 'Description 設定----------------------------------------------------------------------------------
 Public Function getDescription(control As IRibbonControl, ByRef setRibbonVal)
   Call init.setting
-  setRibbonVal = Replace(ribbonVal("Dec_" & control.ID), "<BR>", vbNewLine)
+  setRibbonVal = Replace(BK_ribbonVal("Dec_" & control.ID), "<BR>", vbNewLine)
 
 End Function
 
@@ -328,7 +329,7 @@ Public Function getImage(control As IRibbonControl, ByRef image)
   On Error GoTo catchError
   
   Call init.setting
-  image = ribbonVal("Img_" & control.ID)
+  image = BK_ribbonVal("Img_" & control.ID)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
@@ -343,7 +344,7 @@ Public Function getSize(control As IRibbonControl, ByRef setRibbonVal)
   On Error GoTo catchError
   
   Call init.setting
-  setRibbonVal = ribbonVal("Siz_" & control.ID)
+  setRibbonVal = BK_ribbonVal("Siz_" & control.ID)
   Select Case setRibbonVal
     Case "large"
       setRibbonVal = 1
@@ -366,7 +367,7 @@ Function getEnabled(control As IRibbonControl, ByRef returnedVal)
   
   If Workbooks.count = 0 Then
     returnedVal = False
-  ElseIf setVal("debugMode") = "develop" Then
+  ElseIf BK_setVal("debugMode") = "develop" Then
     returnedVal = True
   Else
     returnedVal = False
@@ -378,18 +379,18 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function getVisible(control As IRibbonControl, ByRef returnedVal)
   Call init.setting
-  returnedVal = Library.getRegistry("CustomRibbon")
+  returnedVal = Library.getRegistry("Main", "CustomRibbon")
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function noDispTab(control As IRibbonControl)
-  Call Library.setRegistry("CustomRibbon", False)
+  Call Library.setRegistry("Main", "CustomRibbon", False)
   Call RefreshRibbon
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function setDispTab(control As IRibbonControl, pressed As Boolean)
-  Call Library.setRegistry("CustomRibbon", pressed)
+  Call Library.setRegistry("Main", "CustomRibbon", pressed)
   Call RefreshRibbon
 End Function
 
@@ -397,11 +398,11 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function RefreshRibbon()
   #If VBA7 And Win64 Then
-    Set ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("ribbonUI")))
+    Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
   #Else
-    Set ribbonUI = GetRibbon(CLng(Library.getRegistry("ribbonUI")))
+    Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
   #End If
-  ribbonUI.Invalidate
+  BK_ribbonUI.Invalidate
 
 End Function
 

@@ -128,9 +128,6 @@ Public Function showCount(ProgressBarTitle As String, mypbProgCnt As Long, mypbS
   
   DoEvents
   
-  If debugFlg And myMsg1 <> "" Then
-    Call Library.showDebugForm(ProgressBarTitle & "ÅF" & myMsg1)
-  End If
   
   
 End Function

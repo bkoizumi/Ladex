@@ -1,16 +1,16 @@
 Attribute VB_Name = "init"
 'ワークブック用変数------------------------------
-Public ThisBook   As Workbook
+Public BK_ThisBook   As Workbook
 Public targetBook As Workbook
 
 
 'ワークシート用変数------------------------------
-Public sheetsetting   As Worksheet
-Public sheetNotice    As Worksheet
-Public sheetStyle     As Worksheet
-Public sheetTestData  As Worksheet
-Public sheetRibbon    As Worksheet
-Public sheetFavorite  As Worksheet
+Public BK_sheetsetting   As Worksheet
+Public BK_sheetNotice    As Worksheet
+Public BK_sheetStyle     As Worksheet
+Public BK_sheetTestData  As Worksheet
+Public BK_sheetRibbon    As Worksheet
+Public BK_sheetFavorite  As Worksheet
 
 
 'グローバル変数----------------------------------
@@ -18,12 +18,12 @@ Public Const thisAppName = "BK_Library"
 Public Const thisAppVersion = "0.0.4.0"
 
 'レジストリ登録用サブキー
-Public Const RegistryKey  As String = "BK_Library"
+'Public Const RegistryKey  As String = "BK_Library"
 Public RegistrySubKey     As String
 'Public RegistryRibbonName As String
 
 '設定値保持
-Public setVal         As Object
+Public BK_setVal         As Object
 
 
 'ファイル関連
@@ -36,8 +36,8 @@ Public StopTime           As Date
 
 
 'リボン関連--------------------------------------
-Public ribbonUI       As Office.IRibbonUI
-Public ribbonVal      As Object
+Public BK_ribbonUI       As Office.IRibbonUI
+Public BK_ribbonVal      As Object
 
 
 '**************************************************************************************************
@@ -47,19 +47,19 @@ Public ribbonVal      As Object
 '**************************************************************************************************
 Function usetting()
 
-  Set ThisBook = Nothing
+  Set BK_ThisBook = Nothing
   
   'ワークシート名の設定
-  Set sheetsetting = Nothing
-  Set sheetNotice = Nothing
-  Set sheetStyle = Nothing
-  Set sheetTestData = Nothing
-  Set sheetRibbon = Nothing
-  Set sheetFavorite = Nothing
+  Set BK_sheetsetting = Nothing
+  Set BK_sheetNotice = Nothing
+  Set BK_sheetStyle = Nothing
+  Set BK_sheetTestData = Nothing
+  Set BK_sheetRibbon = Nothing
+  Set BK_sheetFavorite = Nothing
 
   '設定値読み込み
-  Set setVal = Nothing
-  Set ribbonVal = Nothing
+  Set BK_setVal = Nothing
+  Set BK_ribbonVal = Nothing
 End Function
 
 
@@ -76,42 +76,42 @@ Function setting(Optional reCheckFlg As Boolean)
   'レジストリ関連設定------------------------------------------------------------------------------
   RegistrySubKey = "Main"
   
-  If ThisBook Is Nothing Or reCheckFlg = True Then
+  If BK_ThisBook Is Nothing Or reCheckFlg = True Then
     Call usetting
   Else
     Exit Function
   End If
 
   'ブックの設定
-  Set ThisBook = ThisWorkbook
+  Set BK_ThisBook = ThisWorkbook
   
   'ワークシート名の設定
-  Set sheetsetting = ThisBook.Worksheets("設定")
-  Set sheetNotice = ThisBook.Worksheets("Notice")
-  Set sheetStyle = ThisBook.Worksheets("Style")
-  Set sheetTestData = ThisBook.Worksheets("testData")
-  Set sheetRibbon = ThisBook.Worksheets("Ribbon")
-  Set sheetFavorite = ThisBook.Worksheets("Favorite")
+  Set BK_sheetsetting = BK_ThisBook.Worksheets("設定")
+  Set BK_sheetNotice = BK_ThisBook.Worksheets("Notice")
+  Set BK_sheetStyle = BK_ThisBook.Worksheets("Style")
+  Set BK_sheetTestData = BK_ThisBook.Worksheets("testData")
+  Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
+  Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
 
   
   
   logFile = ThisWorkbook.Path & "\ExcelMacro.log"
         
   '設定値読み込み----------------------------------------------------------------------------------
-  Set setVal = Nothing
-  Set setVal = CreateObject("Scripting.Dictionary")
-  setVal.add "debugMode", "develop"
+  Set BK_setVal = Nothing
+  Set BK_setVal = CreateObject("Scripting.Dictionary")
+  BK_setVal.add "debugMode", "develop"
   
-  Set ribbonVal = Nothing
-  Set ribbonVal = CreateObject("Scripting.Dictionary")
-  For line = 2 To sheetRibbon.Cells(Rows.count, 1).End(xlUp).row
-    If sheetRibbon.Range("A" & line) <> "" Then
-      ribbonVal.add "Lbl_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("B" & line).Text
-      ribbonVal.add "Act_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("C" & line).Text
-      ribbonVal.add "Sup_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("D" & line).Text
-      ribbonVal.add "Dec_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("E" & line).Text
-      ribbonVal.add "Siz_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("F" & line).Text
-      ribbonVal.add "Img_" & sheetRibbon.Range("A" & line).Text, sheetRibbon.Range("G" & line).Text
+  Set BK_ribbonVal = Nothing
+  Set BK_ribbonVal = CreateObject("Scripting.Dictionary")
+  For line = 2 To BK_sheetRibbon.Cells(Rows.count, 1).End(xlUp).Row
+    If BK_sheetRibbon.Range("A" & line) <> "" Then
+      BK_ribbonVal.add "Lbl_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("B" & line).Text
+      BK_ribbonVal.add "Act_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("C" & line).Text
+      BK_ribbonVal.add "Sup_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("D" & line).Text
+      BK_ribbonVal.add "Dec_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("E" & line).Text
+      BK_ribbonVal.add "Siz_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("F" & line).Text
+      BK_ribbonVal.add "Img_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("G" & line).Text
     End If
   Next
   
@@ -147,14 +147,14 @@ Function 名前定義()
   Next
   
   'VBA用の設定
-  For line = 3 To sheetsetting.Cells(Rows.count, 1).End(xlUp).row
-    If sheetsetting.Range("A" & line) <> "" Then
-      sheetsetting.Range("B" & line).Name = sheetsetting.Range("A" & line)
+  For line = 3 To BK_sheetsetting.Cells(Rows.count, 1).End(xlUp).Row
+    If BK_sheetsetting.Range("A" & line) <> "" Then
+      BK_sheetsetting.Range("B" & line).Name = BK_sheetsetting.Range("A" & line)
     End If
   Next
   
   'Book用の設定
-  sheetsetting.Range("D3:D" & sheetsetting.Cells(Rows.count, 6).End(xlUp).row).Name = sheetsetting.Range("D2")
+  BK_sheetsetting.Range("D3:D" & BK_sheetsetting.Cells(Rows.count, 6).End(xlUp).Row).Name = BK_sheetsetting.Range("D2")
   
 
   Exit Function

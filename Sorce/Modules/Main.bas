@@ -9,14 +9,21 @@ Attribute VB_Name = "Main"
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function オプション画面表示()
+Function オプション画面表示(control As IRibbonControl)
   
 '  On Error GoTo catchError
   
+  topPosition = Library.getRegistry("UserForm", "OptionTop")
+  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
   With Frm_Option
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.Width / 4)
-    .Left = Application.Left + (ActiveWindow.Height / 2)
+    If topPosition = "" Then
+      .Top = 10
+      .Left = 120
+    Else
+      .Top = topPosition
+      .Left = leftPosition
+    End If
     .Show
   End With
 
@@ -33,7 +40,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 標準画面()
+Function 標準画面(control As IRibbonControl)
   Dim objSheet As Object
   Dim sheetName As String, SetActiveSheet As String
   
@@ -93,12 +100,12 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function スタイル削除()
+Function スタイル削除(control As IRibbonControl)
   Dim s
   Dim count As Long, endCount As Long
   Dim line As Long, endLine As Long
   
-  On Error Resume Next
+'  On Error Resume Next
   
   Call Library.startScript
   Call init.setting
@@ -109,6 +116,7 @@ Function スタイル削除()
   
   For Each s In ActiveWorkbook.Styles
     Call Ctl_ProgressBar.showCount("定義済スタイル削除", count, endCount, s.Name)
+    Call Library.showDebugForm("定義済スタイル削除：" & s.Name)
     
     Select Case s.Name
       Case "Normal"
@@ -119,37 +127,44 @@ Function スタイル削除()
   Next
   
   'スタイル初期化
-  endLine = sheetStyle.Cells(Rows.count, 2).End(xlUp).row
+  endLine = BK_sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
   For line = 2 To endLine
-    If sheetStyle.Range("A" & line) <> "無効" Then
-      Call Ctl_ProgressBar.showCount("スタイル初期化", line, endLine, sheetStyle.Range("B" & line))
+    If BK_sheetStyle.Range("A" & line) <> "無効" Then
+      Call Ctl_ProgressBar.showCount("スタイル初期化", line, endLine, BK_sheetStyle.Range("B" & line))
+      Call Library.showDebugForm("スタイル初期化：" & BK_sheetStyle.Range("B" & line))
       
-      If sheetStyle.Range("B" & line) <> "Normal" Then
-        ActiveWorkbook.Styles.add Name:=sheetStyle.Range("B" & line).Value
+      If BK_sheetStyle.Range("B" & line) <> "Normal" Then
+        ActiveWorkbook.Styles.add Name:=BK_sheetStyle.Range("B" & line).Value
       End If
       
-      With ActiveWorkbook.Styles(sheetStyle.Range("B" & line).Value)
+      With ActiveWorkbook.Styles(BK_sheetStyle.Range("B" & line).Value)
         
-        If sheetStyle.Range("C" & line) <> "" Then
-          .NumberFormatLocal = sheetStyle.Range("C" & line)
+        If BK_sheetStyle.Range("C" & line) <> "" Then
+          .NumberFormatLocal = BK_sheetStyle.Range("C" & line)
         End If
-        .IncludeNumber = sheetStyle.Range("D" & line)
-        .IncludeFont = sheetStyle.Range("E" & line)
-        .IncludeAlignment = sheetStyle.Range("F" & line)
-        .IncludeBorder = sheetStyle.Range("G" & line)
-        .IncludePatterns = sheetStyle.Range("H" & line)
-        .IncludeProtection = sheetStyle.Range("I" & line)
+        .IncludeNumber = BK_sheetStyle.Range("D" & line)
+        .IncludeFont = BK_sheetStyle.Range("E" & line)
+        .IncludeAlignment = BK_sheetStyle.Range("F" & line)
+        .IncludeBorder = BK_sheetStyle.Range("G" & line)
+        .IncludePatterns = BK_sheetStyle.Range("H" & line)
+        .IncludeProtection = BK_sheetStyle.Range("I" & line)
         
-        If sheetStyle.Range("E" & line) = "TRUE" Then
-          .Font.Name = sheetStyle.Range("J" & line).Font.Name
-          .Font.Size = sheetStyle.Range("J" & line).Font.Size
-          .Font.Color = sheetStyle.Range("J" & line).Font.Color
-          .Font.Bold = sheetStyle.Range("J" & line).Font.Bold
+        If BK_sheetStyle.Range("E" & line) = "TRUE" Then
+          .Font.Name = BK_sheetStyle.Range("J" & line).Font.Name
+          .Font.Size = BK_sheetStyle.Range("J" & line).Font.Size
+          .Font.Color = BK_sheetStyle.Range("J" & line).Font.Color
+          .Font.Bold = BK_sheetStyle.Range("J" & line).Font.Bold
         End If
+        
+        '配置
+        If BK_sheetStyle.Range("F" & line) = "TRUE" Then
+          .HorizontalAlignment = BK_sheetStyle.Range("J" & line).HorizontalAlignment
+        End If
+        
         
         '背景色
-        If sheetStyle.Range("H" & line) = "TRUE" Then
-          .Interior.Color = sheetStyle.Range("J" & line).Interior.Color
+        If BK_sheetStyle.Range("H" & line) = "TRUE" Then
+          .Interior.Color = BK_sheetStyle.Range("J" & line).Interior.Color
         End If
         
         
@@ -168,7 +183,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 名前定義削除()
+Function 名前定義削除(control As IRibbonControl)
   Dim wb As Workbook, tmp As String
   
   Call Library.startScript
@@ -188,7 +203,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 画像設定()
+Function 画像設定(control As IRibbonControl)
 
   With ActiveWorkbook.ActiveSheet
     Dim AllShapes As Shapes
@@ -208,7 +223,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function R1C1表記()
+Function R1C1表記(control As IRibbonControl)
 
   On Error Resume Next
   
@@ -226,30 +241,31 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function ハイライト()
-  Dim highLightFlg As Boolean
+Function ハイライト(control As IRibbonControl)
+  Dim highLightFlg As String
   Dim highLightArea As String
 
   Call Library.startScript
-  highLightFlg = Library.getRegistry("HighLightFlg")
+  highLightFlg = Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg")
   
-  If highLightFlg = False Then
+  If highLightFlg = "" Then
     Call Library.setLineColor(Selection.Address, True, Library.getRegistry("HighLightColor"))
     
-    Call Library.setRegistry("HighLightFlg", True)
-    
-    Call Library.setRegistry("HighLightBook", ActiveWorkbook.Name)
-    Call Library.setRegistry("HighLightSheet", ActiveSheet.Name)
-    Call Library.setRegistry("HighLightArea", Selection.Address)
+    Call Library.setRegistry(ActiveWorkbook.Name, True, "HighLightFlg")
+    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightSheet", ActiveSheet.Name, "HighLightFlg")
+    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightArea", Selection.Address, "HighLightFlg")
     
   Else
-    highLightArea = Library.getRegistry("HighLightArea")
+    highLightArea = Library.getRegistry(ActiveWorkbook.Name & "_HighLightArea")
+    
+    If highLightArea = "" Then
+      highLightArea = Selection.Address
+    End If
     Call Library.unsetLineColor(highLightArea)
     
-    Call Library.setRegistry("HighLightFlg", False)
-    Call Library.setRegistry("HighLightBook", "")
-    Call Library.setRegistry("HighLightSheet", "")
-    Call Library.setRegistry("HighLightArea", "")
+    Call Library.delRegistry(ActiveWorkbook.Name, "HighLightFlg")
+    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightSheet")
+    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightArea")
   End If
   
   Call Library.endScript(True)
@@ -262,7 +278,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 罫線_削除()
+Function 罫線_削除(control As IRibbonControl)
   With Selection
     .Borders(xlInsideVertical).LineStyle = xlNone
     .Borders(xlInsideHorizontal).LineStyle = xlNone
@@ -275,14 +291,14 @@ Function 罫線_削除()
   End With
 End Function
 
-Function 罫線_表()
+Function 罫線_表(control As IRibbonControl)
   Call Library.startScript
   Call Library.罫線_表
   Call Library.endScript
 End Function
 
 
-Function 罫線_破線_水平()
+Function 罫線_破線_水平(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -297,7 +313,7 @@ Function 罫線_破線_水平()
 End Function
 
 
-Function 罫線_破線_垂直()
+Function 罫線_破線_垂直(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
   With Selection
@@ -308,7 +324,7 @@ Function 罫線_破線_垂直()
   End With
 End Function
 
-Function 罫線_破線_左右()
+Function 罫線_破線_左右(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -328,7 +344,7 @@ Function 罫線_破線_左右()
 End Function
 
 
-Function 罫線_破線_上下()
+Function 罫線_破線_上下(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -348,7 +364,7 @@ Function 罫線_破線_上下()
 End Function
 
 
-Function 罫線_破線_囲み()
+Function 罫線_破線_囲み(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -369,7 +385,7 @@ Function 罫線_破線_囲み()
   End With
 End Function
 
-Function 罫線_破線_格子()
+Function 罫線_破線_格子(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -395,7 +411,7 @@ Function 罫線_破線_格子()
 End Function
 
 
-Function 罫線_実線_囲み()
+Function 罫線_実線_囲み(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -419,7 +435,7 @@ Function 罫線_実線_囲み()
 End Function
 
 
-Function 罫線_二重線_左右()
+Function 罫線_二重線_左右(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -432,7 +448,7 @@ Function 罫線_二重線_左右()
   End With
 End Function
 
-Function 罫線_二重線_上下()
+Function 罫線_二重線_上下(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
@@ -445,7 +461,7 @@ Function 罫線_二重線_上下()
   End With
 End Function
 
-Function 罫線_二重線_囲み()
+Function 罫線_二重線_囲み(control As IRibbonControl)
   Dim Red As Long, Green As Long, Blue As Long
   
   Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)

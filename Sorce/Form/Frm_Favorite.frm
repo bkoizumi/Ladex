@@ -82,6 +82,10 @@ End Sub
 '==================================================================================================
 'ÉLÉÉÉìÉZÉã
 Private Sub Cancel_Click()
+
+  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
+  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
+  
   Unload Me
 End Sub
 
@@ -89,6 +93,10 @@ End Sub
 '==================================================================================================
 'é¿çs
 Private Sub run_Click()
+  
+  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
+  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
+
   Unload Me
 End Sub
 
