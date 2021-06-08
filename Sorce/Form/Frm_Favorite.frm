@@ -134,19 +134,24 @@ Private Sub Lst_Favorite_Click()
   Call init.setting
   
   line = Lst_Favorite.ListIndex + 2
-  filePath = sheetFavorite.Range("A" & line)
+  filePath = BK_sheetFavorite.Range("A" & line)
   
-  Set FSO = CreateObject("Scripting.FileSystemObject")
-  Set fileInfo = FSO.GetFile(filePath)
+  If Library.chkFileExists(filePath) Then
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    Set fileInfo = FSO.GetFile(filePath)
+    
   
+    DetailMeg = "<<ファイル情報>>" & vbNewLine
+    DetailMeg = DetailMeg & "パ　ス：" & filePath & vbNewLine
+    DetailMeg = DetailMeg & "作成日：" & Format(fileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
+    DetailMeg = DetailMeg & "更新日：" & Format(fileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
+    DetailMeg = DetailMeg & "サイズ：" & Format(fileInfo.Size, "#,##0") & " Byte" & vbNewLine
+    DetailMeg = DetailMeg & "種　類：" & fileInfo.Type
+  Else
+    DetailMeg = "<<ファイル情報>>" & vbNewLine
+    DetailMeg = DetailMeg & "ファイルが存在しません"
 
-  DetailMeg = "<<ファイル情報>>" & vbNewLine
-  DetailMeg = DetailMeg & "パ　ス：" & filePath & vbNewLine
-  DetailMeg = DetailMeg & "作成日：" & Format(fileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
-  DetailMeg = DetailMeg & "更新日：" & Format(fileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
-  DetailMeg = DetailMeg & "サイズ：" & Format(fileInfo.Size, "#,##0") & " Byte" & vbNewLine
-  DetailMeg = DetailMeg & "種　類：" & fileInfo.Type
- 
+  End If
  
   Frm_Favorite.DetailMeg.Value = DetailMeg
   Set FSO = Nothing

@@ -1,8 +1,8 @@
 Attribute VB_Name = "Ctl_Ribbon"
 #If VBA7 And Win64 Then
-  Private Declare PtrSafe Function MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
+  Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
 #Else
-  Private Declare Function MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As Long)
+  Private Declare Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As Long)
 #End If
 
 
@@ -33,9 +33,9 @@ Function Refresh()
   Call init.setting
   
   #If VBA7 And Win64 Then
-    Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("BK_ribbonUI")))
+    Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
   #Else
-    Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("BK_ribbonUI")))
+    Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
   #End If
   
   BK_ribbonUI.ActivateTab ("BK_Library")
@@ -49,9 +49,11 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
   Dim sheetName As Worksheet
   
+  On Error GoTo catchError
   Call init.setting
-   
+  
   If BK_ribbonUI Is Nothing Then
+    Stop
     #If VBA7 And Win64 Then
       Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
@@ -94,6 +96,10 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Set Menu = Nothing
   Set DOMDoc = Nothing
   
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, Err.Description, True)
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -101,9 +107,9 @@ Function dMenuRefresh(control As IRibbonControl)
   
   If BK_ribbonUI Is Nothing Then
     #If VBA7 And Win64 Then
-      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("BK_ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
-      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("BK_ribbonUI")))
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
     #End If
   End If
   BK_ribbonUI.Invalidate
@@ -183,8 +189,10 @@ Private Function GetRibbon(ByVal lRibbonPointer As LongPtr) As Object
 Private Function GetRibbon(ByVal lRibbonPointer As Long) As Object
   Dim p As Long
 #End If
+
   Dim ribbonObj As Object
   
+  Stop
   MoveMemory ribbonObj, lRibbonPointer, LenB(lRibbonPointer)
   Set GetRibbon = ribbonObj
   p = 0: MoveMemory ribbonObj, p, LenB(p)
@@ -203,8 +211,9 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
    
   On Error GoTo catchError
   Call init.setting
-   
+  
   If BK_ribbonUI Is Nothing Then
+    Stop
     #If VBA7 And Win64 Then
       Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
@@ -406,10 +415,177 @@ Function RefreshRibbon()
 
 End Function
 
+
+
+
+
+'**************************************************************************************************
+' * リボンメニュー[お気に入り]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'--------------------------------------------------------------------------------------------------
+Function disOption(control As IRibbonControl)
+
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function FavoriteAdd(control As IRibbonControl)
+
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function FavoriteDetail(control As IRibbonControl)
+
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function FavoriteList(control As IRibbonControl)
+
+End Function
+
+
+
+'**************************************************************************************************
+' * リボンメニュー[罫線]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'--------------------------------------------------------------------------------------------------
+Function 罫線_削除(control As IRibbonControl)
+  Call Library.罫線_クリア
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_表_破線(control As IRibbonControl)
+  Call Library.罫線_表
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_表_実線(control As IRibbonControl)
+  Call Library.罫線_実線_格子
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_水平(control As IRibbonControl)
+  Call Library.罫線_破線_水平
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_垂直(control As IRibbonControl)
+  Call Library.罫線_破線_垂直
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_左右(control As IRibbonControl)
+  Call Library.罫線_破線_左右
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_上下(control As IRibbonControl)
+  Call Library.罫線_破線_上下
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_囲み(control As IRibbonControl)
+  Call Library.罫線_破線_囲み
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_格子(control As IRibbonControl)
+  Call Library.罫線_破線_格子
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_左右(control As IRibbonControl)
+  Call Library.罫線_二重線_左右
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_上下(control As IRibbonControl)
+  Call Library.罫線_実線_上下
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_囲み(control As IRibbonControl)
+  Call Library.罫線_二重線_囲み
+End Function
+
+
+
+
+'**************************************************************************************************
+' * リボンメニュー[サンプルデータ生成]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_SelectPattern(control As IRibbonControl)
+  Call sampleData.パターン選択
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_DigitsInt(control As IRibbonControl)
+  Call sampleData.数値_桁数固定
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_RangeInt(control As IRibbonControl)
+  Call sampleData.数値_範囲
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_FamilyName(control As IRibbonControl)
+  Call sampleData.名前_姓
+End Function
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_Name(control As IRibbonControl)
+  Call sampleData.名前_名
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_FullName(control As IRibbonControl)
+  Call sampleData.名前_フルネーム
+End Function
+
+'**************************************************************************************************
+' * リボンメニュー[オプション]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'設定Import------------------------------------------------------------------------------------
+Function settingImport(control As IRibbonControl)
+  Call Main.設定_取込
+End Function
+
+'設定Export------------------------------------------------------------------------------------
+Function settingExport(control As IRibbonControl)
+  Call Main.設定_抽出
+End Function
+
+
+
+
+'**************************************************************************************************
+' * リボンメニュー[その他]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '中央揃え------------------------------------------------------------------------------------------
 Function setCenter(control As IRibbonControl)
   If TypeName(Selection) = "Range" Then
     Selection.HorizontalAlignment = xlCenterAcrossSelection
   End If
+End Function
+
+'ハイライト----------------------------------------------------------------------------------------
+Function highLight(control As IRibbonControl)
+  Call Main.ハイライト
+End Function
+
+
+'スタイル削除--------------------------------------------------------------------------------------
+Function delStyle(control As IRibbonControl)
+  Call Main.スタイル削除
 End Function
 

@@ -37,6 +37,7 @@ Function detail(control As IRibbonControl)
 '  On Error GoTo catchError
   topPosition = Library.getRegistry("UserForm", "FavoriteTop")
   leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
+  
   With Frm_Favorite
     .StartUpPosition = 0
     If topPosition = "" Then

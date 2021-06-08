@@ -3,131 +3,75 @@ Dim newBook As Workbook
 Dim count As Long, getLine As Long
 Dim fstDate As Date, lstDate As Date
 
-Public Const maxCount  As Long = 132
-
-Function ExcelHelp142()
-  
-  Call Library.delSheetData(2)
-  Call sampleData.乱数
-  Call sampleData.氏名
-  Call sampleData.帳票名
-  Call sampleData.フェーズ
-  Call sampleData.結果
-  Call sampleData.日時
-
-  Range("B2:B22").Copy
-  For line = 23 To maxCount Step 20
-    Range("B" & line).Select
-    ActiveSheet.Paste
-  Next
-  Application.CutCopyMode = False
-  Range("A2:G" & maxCount + 1).Select
-
-End Function
-
+Public maxCount  As Long
 
 '**************************************************************************************************
 ' * xxxxxxxxxx
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function サンプルデータ()
-  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
-  Dim getLine As Long, count As Long, getMaxCount As Long
+'==================================================================================================
+Function showFrm_sampleData(showType As String)
   
-  Dim newBook As Workbook
-'  On Error GoTo catchError
-  setName01 = True   '姓
-  setName02 = True    '名
-  setName = True      '姓名
-  setPref = True      '都道府県
-  setMail = True      'メールアドレス
-  
-  
-  Call init.setting
-  Set newBook = Workbooks.add
-  ThisWorkbook.Activate
-  sheetTestData.Activate
-  
-  
-  getMaxCount = 100
-  If setName01 = True Then
-    colLine = 1
-    endLine = sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+  topPosition = Library.getRegistry("UserForm", "mkSmpDtTop")
+  leftPosition = Library.getRegistry("UserForm", "mkSmpDtLeft")
+  With Frm_smplData
+    .StartUpPosition = 0
+    If topPosition = "" Then
+      .Top = 10
+      .Left = 120
+    Else
+      .Top = topPosition
+      .Left = leftPosition
+    End If
+    .Caption = showType
     
-    newBook.Sheets("Sheet1").Cells(1, colLine) = "姓"
-    newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "セイ"
-    For count = 1 To getMaxCount
-      getLine = Library.makeRandomNo(2, endLine)
+    '各ページ、パーツの有効/無効切り替え
+    Select Case showType
+      Case "パターン選択"
+        .MultiPage1.Pages.Item(1).Visible = False
+        .MultiPage1.Pages.Item(2).Visible = False
+        .MultiPage1.Pages.Item(3).Visible = False
+        .MultiPage1.Pages.Item(4).Visible = False
       
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine) = sheetTestData.Range("A" & getLine)
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine + 1) = sheetTestData.Range("B" & getLine)
-    Next
-  End If
-  
-  If setName02 = True Then
-    colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    endLine = sheetTestData.Cells(Rows.count, 4).End(xlUp).Row
-    
-    newBook.Sheets("Sheet1").Cells(1, colLine) = "名"
-    newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "メイ"
-    newBook.Sheets("Sheet1").Cells(1, colLine + 2) = "性別"
-    
-    For count = 1 To getMaxCount
-      getLine = Library.makeRandomNo(2, endLine)
+      Case "【数値】桁数固定"
+        .MultiPage1.Pages.Item(0).Visible = False
+        .MultiPage1.Pages.Item(2).Visible = False
+        .MultiPage1.Pages.Item(3).Visible = False
+        .MultiPage1.Pages.Item(4).Visible = False
+        
+        .Frame1.Caption = showType
       
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine) = sheetTestData.Range("D" & getLine)
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine + 1) = sheetTestData.Range("E" & getLine)
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine + 2) = sheetTestData.Range("F" & getLine)
-    Next
-  End If
-  
-  If setName = True Then
-    colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    
-    newBook.Sheets("Sheet1").Cells(1, colLine) = "姓名"
-    newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "セイメイ"
-    For count = 1 To getMaxCount
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine) = newBook.Sheets("Sheet1").Range("A" & count + 1) & " " & newBook.Sheets("Sheet1").Range("C" & count + 1)
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine + 1) = newBook.Sheets("Sheet1").Range("B" & count + 1) & " " & newBook.Sheets("Sheet1").Range("D" & count + 1)
-    Next
-  End If
-  
-  
-  If setPref = True Then
-    colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    endLine = sheetTestData.Cells(Rows.count, 8).End(xlUp).Row
-    
-    newBook.Sheets("Sheet1").Cells(1, colLine) = "都道府県"
-    newBook.Sheets("Sheet1").Cells(1, colLine + 1) = "都道府県コード"
-    For count = 1 To getMaxCount
-      getLine = Library.makeRandomNo(2, endLine)
+      Case "【数値】範囲指定"
+        .MultiPage1.Pages.Item(0).Visible = False
+        .MultiPage1.Pages.Item(1).Visible = False
+        .MultiPage1.Pages.Item(3).Visible = False
+        .MultiPage1.Pages.Item(4).Visible = False
+        
+        .Frame2.Caption = showType
       
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine) = sheetTestData.Range("I" & getLine)
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine + 1) = sheetTestData.Range("H" & getLine)
-    Next
-  End If
+      Case "【名前】姓", "【名前】名", "【名前】フルネーム"
+        .MultiPage1.Pages.Item(0).Visible = False
+        .MultiPage1.Pages.Item(1).Visible = False
+        .MultiPage1.Pages.Item(2).Visible = False
+        .MultiPage1.Pages.Item(4).Visible = False
+        
+        .Frame3.Caption = showType
+        
+      Case "【日付】日", "【日付】時間", "【日付】日時"
+        .MultiPage1.Pages.Item(0).Visible = False
+        .MultiPage1.Pages.Item(1).Visible = False
+        .MultiPage1.Pages.Item(2).Visible = False
+        .MultiPage1.Pages.Item(3).Visible = False
+        
+        .Frame4.Caption = showType
+      Case Else
+    End Select
     
-   If setMail = True Then
-    colLine = newBook.Sheets("Sheet1").Cells(1, Columns.count).End(xlToLeft).Column + 1
-    endLine = sheetTestData.Cells(Rows.count, 11).End(xlUp).Row
-    
-    newBook.Sheets("Sheet1").Cells(1, colLine) = "メールアドレス"
-    For count = 1 To getMaxCount
-      getLine = Library.makeRandomNo(2, endLine)
-      
-      newBook.Sheets("Sheet1").Cells(count + 1, colLine) = "testMail" & sheetTestData.Range("K" & getLine)
-    Next
-  End If
+    .Show
+  End With
   
   
-  
-  
-  
-  
-  
-  
-
   Exit Function
 'エラー発生時====================================
 catchError:
@@ -136,15 +80,67 @@ End Function
 
 
 '==================================================================================================
-Function 乱数()
+Function パターン選択()
+  Dim line As Long, endLine As Long
+  Dim count As Long
+
+'  On Error GoTo catchError
+  Call init.setting
+  
+  Sheets("Sheet1").Columns("A:Z").Clear
+  Sheets("Sheet1").Range("A1").Select
+  
+  
+  Call showFrm_sampleData("パターン選択")
+  maxCount = BK_setVal("maxCount")
+  line = Selection(1).Row
+
+  For Each varDic In sampleDataList
+    Debug.Print sampleDataList.Item(varDic)
+    
+    Select Case sampleDataList.Item(varDic)
+      Case "0.氏名(姓)"
+        Call 名前_姓(maxCount)
+      
+      Case "1.氏名(名)"
+        Call 名前_名(maxCount)
+        
+      Case "1.氏名(フルネーム)"
+        Call 名前_フルネーム(maxCount)
+        
+        
+      Case Else
+    End Select
+    '次のセルに移動
+    ActiveCell.Offset(0, 1).Select
+    
+  Next
+    
+  
+  
+  
+  Exit Function
+'エラー発生時====================================
+catchError:
+  Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+
+
+'==================================================================================================
+Function 数値_桁数固定()
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
   Call init.setting
-  Range("A2").Select
-  line = ActiveCell.Row
-  For count = 0 To maxCount - 1
-    Cells(line + count, ActiveCell.Column) = 11111 & Library.makeRandomDigits(6)
+  Sheets("Sheet1").Columns("A:A").Clear
+  Sheets("Sheet1").Range("A1").Select
+  
+  Call showFrm_sampleData("【数値】桁数固定")
+  maxCount = BK_setVal("maxCount")
+  line = Selection(1).Row
+  
+  For count = 0 To (maxCount - 1)
+    Cells(line + count, ActiveCell.Column) = Library.makeRandomDigits(BK_setVal("digits"))
   Next
 
 
@@ -154,9 +150,34 @@ catchError:
   Call Library.showNotice(Err.Number, Err.Description, True)
 End Function
 
+'==================================================================================================
+Function 数値_範囲()
+  Dim line As Long, endLine As Long
+
+'  On Error GoTo catchError
+  Call init.setting
+  
+  Sheets("Sheet1").Columns("B:B").Clear
+  Sheets("Sheet1").Range("B1").Select
+  
+  
+  Call showFrm_sampleData("【数値】範囲指定")
+  line = Selection(1).Row
+  maxCount = BK_setVal("maxCount")
+  
+  For count = 0 To (maxCount - 1)
+    Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
+  Next
+
+
+  Exit Function
+'エラー発生時====================================
+catchError:
+  Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
 
 '==================================================================================================
-Function 氏名()
+Function 名前_姓(Optional maxCount As Long)
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
@@ -164,10 +185,76 @@ Function 氏名()
   Call init.setting
   endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
   
-  Range("B2").Select
+'  Sheets("Sheet1").Columns("C:C").Clear
+'  Sheets("Sheet1").Range("C1").Select
   
-  line = ActiveCell.Row
-  For count = 0 To maxCount - 1
+  If maxCount = 0 Then
+    Call showFrm_sampleData("【名前】姓")
+    maxCount = BK_setVal("maxCount")
+  End If
+  
+  line = Selection(1).Row
+  
+  For count = 0 To (maxCount - 1)
+    getLine = Library.makeRandomNo(2, endLine)
+    Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("A" & getLine)
+  Next
+
+  Exit Function
+'エラー発生時====================================
+catchError:
+  Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+
+'==================================================================================================
+Function 名前_名(Optional maxCount As Long)
+  Dim line As Long, endLine As Long
+
+'  On Error GoTo catchError
+  
+  Call init.setting
+  endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+  
+'  Sheets("Sheet1").Columns("D:D").Clear
+'  Sheets("Sheet1").Range("D1").Select
+  
+  If maxCount = 0 Then
+    Call showFrm_sampleData("【名前】名")
+    maxCount = BK_setVal("maxCount")
+  End If
+  
+  line = Selection(1).Row
+  For count = 0 To (maxCount - 1)
+    getLine = Library.makeRandomNo(2, endLine)
+    Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("D" & getLine)
+  Next
+
+  Exit Function
+'エラー発生時====================================
+catchError:
+  Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+
+'==================================================================================================
+Function 名前_フルネーム(Optional maxCount As Long)
+  Dim line As Long, endLine As Long
+
+'  On Error GoTo catchError
+  
+  Call init.setting
+  endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+  
+'  Sheets("Sheet1").Columns("E:E").Clear
+'  Sheets("Sheet1").Range("E1").Select
+  
+  If maxCount = 0 Then
+    Call showFrm_sampleData("【名前】フルネーム")
+    maxCount = BK_setVal("maxCount")
+  End If
+  
+  line = Selection(1).Row
+  
+  For count = 0 To (maxCount - 1)
     getLine = Library.makeRandomNo(2, endLine)
     Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("A" & getLine) & "　" & BK_sheetTestData.Range("D" & getLine)
   Next
@@ -180,7 +267,7 @@ End Function
 
 
 '==================================================================================================
-Function 日付()
+Function 日付_日()
   Dim line As Long, endLine As Long
   
   
@@ -188,16 +275,24 @@ Function 日付()
   
   Call init.setting
   
-  fstDate = #4/1/2011# 'ランダムに作成する最初の日
-  lstDate = #9/30/2011# 'ランダムに作成する最後の日
-
-  Range("F2").Select
+  Sheets("Sheet1").Columns("F:F").Clear
+  Sheets("Sheet1").Range("F1").Select
   
-  line = ActiveCell.Row
-  For count = 0 To maxCount - 1
+  Call showFrm_sampleData("【日付】日")
+  line = Selection(1).Row
+  'maxCount = BK_setVal("maxCount")
+    
+'  fstDate = BK_setVal("minVal")
+'  lstDate = BK_setVal("maxVal")
+  
+  maxCount = 20
+  fstDate = #4/1/2021#
+  lstDate = #5/1/2020#
+  
+  For count = 0 To (maxCount - 1)
     Randomize
-    Cells(line + count, ActiveCell.Column) = Int((lstDate - fstDate + 1) * Rnd + fstDate)
-    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "yyyy/mm/dd hh:mm:ss"
+    Cells(line + count, ActiveCell.Column) = Format(Int((lstDate - fstDate + 1) * Rnd + fstDate), "yyyy/mm/dd")
+    
   Next
   
   Exit Function
@@ -205,6 +300,40 @@ Function 日付()
 catchError:
   Call Library.showNotice(Err.Number, Err.Description, True)
 End Function
+
+
+'==================================================================================================
+Function 日付_時間()
+  Dim line As Long, endLine As Long
+  Dim val As Double
+  
+'  On Error GoTo catchError
+  Call init.setting
+  
+  Sheets("Sheet1").Columns("G:G").Clear
+  Sheets("Sheet1").Range("G1").Select
+  
+  Call showFrm_sampleData("【日付】時間")
+  line = Selection(1).Row
+  maxCount = BK_setVal("maxCount")
+    
+'  fstDate = BK_setVal("minVal")
+'  lstDate = BK_setVal("maxVal")
+  
+  For count = 0 To (maxCount - 1)
+    Randomize
+    val = WorksheetFunction.RandBetween(TimeValue("09:00:00") * 100000, TimeValue("18:00:00") * 100000) / 100000
+    val = Int((lstDate - fstDate + 1) * Rnd + fstDate) + val
+
+    Cells(line + count, ActiveCell.Column) = Format(val, "hh:nn:ss")
+  Next
+  
+  Exit Function
+'エラー発生時====================================
+catchError:
+  Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+
 
 
 '==================================================================================================
@@ -239,86 +368,10 @@ catchError:
   Call Library.showNotice(Err.Number, Err.Description, True)
 End Function
 
-'==================================================================================================
-Function 帳票名()
-  Dim line As Long, endLine As Long
-  Dim val As Double
-  
-'  On Error GoTo catchError
-  Call init.setting
-  
-  targetString = Array("源泉徴収票", "給与明細票", "確定申告書", "納税・課税通知書", "納税証明書", "所得証明書", "青色申告書", "収支内訳書", "支払調書", "年金証書", "年金通知書")
-
-  
-  Range("C2").Select
-  
-  line = ActiveCell.Row
-  For count = 0 To maxCount - 1
-    getRand = Library.makeRandomNo(0, 10)
-    
-    Cells(line + count, ActiveCell.Column) = targetString(getRand)
-  Next
-  
-  Exit Function
-'エラー発生時====================================
-catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
-End Function
-
-'==================================================================================================
-Function フェーズ()
-  Dim line As Long, endLine As Long
-  Dim val As Double
-  
-'  On Error GoTo catchError
-  Call init.setting
-  
-'  targetString = Array("エスカレ", "1_1", "1_2", "1_3", "1_4", "2_1", "2_2", "2_3", "2_4")
-  targetString = Array("1_1", "2_1")
-
-  
-  Range("D2").Select
-  
-  line = ActiveCell.Row
-  For count = 0 To maxCount - 1
-    getRand = Library.makeRandomNo(0, 1)
-    
-    Cells(line + count, ActiveCell.Column) = targetString(getRand)
-  Next
-  
-  Exit Function
-'エラー発生時====================================
-catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
-End Function
 
 
-'==================================================================================================
-Function 結果()
-  Dim line As Long, endLine As Long
-  Dim val As Double
-  
-'  On Error GoTo catchError
-  Call init.setting
-  
-'  targetString = Array("ｴｽｶﾚ依頼", "ｴｽｶﾚ済", "確認完了", "差し戻し")
-  targetString = Array("確認完了")
 
-  
-  Range("E2").Select
-  
-  line = ActiveCell.Row
-  For count = 0 To maxCount - 1
-    getRand = Library.makeRandomNo(0, 0)
-    
-    Cells(line + count, ActiveCell.Column) = targetString(getRand)
-  Next
-  
-  Exit Function
-'エラー発生時====================================
-catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
-End Function
+
 
 
 

@@ -63,13 +63,13 @@ Function ïWèÄâÊñ (control As IRibbonControl)
       ActiveWindow.View = xlNormalView
       
       'ï\é¶î{ó¶ÇÃéwíË
-      ActiveWindow.Zoom = Library.getRegistry("zoomLevel")
+      ActiveWindow.Zoom = Library.getRegistry("Main", "zoomLevel")
       
       'ÉKÉCÉhÉâÉCÉìÇÃï\é¶/îÒï\é¶
-      ActiveWindow.DisplayGridlines = Library.getRegistry("gridLine")
+      ActiveWindow.DisplayGridlines = Library.getRegistry("Main", "gridLine")
   
       'îwåiîíÇÇ»ÇµÇ…Ç∑ÇÈ
-      If Library.getRegistry("gridLine") = True Then
+      If Library.getRegistry("Main", "gridLine") = True Then
         With Application.FindFormat.Interior
           .PatternColorIndex = xlAutomatic
           .ThemeColor = xlThemeColorDark1
@@ -100,7 +100,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function ÉXÉ^ÉCÉãçÌèú(control As IRibbonControl)
+Function ÉXÉ^ÉCÉãçÌèú()
   Dim s
   Dim count As Long, endCount As Long
   Dim line As Long, endLine As Long
@@ -241,7 +241,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function ÉnÉCÉâÉCÉg(control As IRibbonControl)
+Function ÉnÉCÉâÉCÉg()
   Dim highLightFlg As String
   Dim highLightArea As String
 
@@ -274,211 +274,49 @@ End Function
 
 
 '**************************************************************************************************
-' * årê¸ê›íË
+' * ê›íËImport / Export
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function årê¸_çÌèú(control As IRibbonControl)
-  With Selection
-    .Borders(xlInsideVertical).LineStyle = xlNone
-    .Borders(xlInsideHorizontal).LineStyle = xlNone
-    .Borders(xlEdgeLeft).LineStyle = xlNone
-    .Borders(xlEdgeRight).LineStyle = xlNone
-    .Borders(xlEdgeTop).LineStyle = xlNone
-    .Borders(xlEdgeBottom).LineStyle = xlNone
-    .Borders(xlInsideVertical).LineStyle = xlNone
-    .Borders(xlInsideHorizontal).LineStyle = xlNone
-  End With
+'==================================================================================================
+Function ê›íË_íäèo()
+  
+  Dim FSO As Object, TempName As String
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call Library.startScript
+  Call init.setting
+  
+  TempName = FSO.GetSpecialFolder(2) & "\BK_Style.xlsx"
+  
+  BK_sheetStyle.Copy
+  ActiveWorkbook.SaveAs fileName:=TempName, FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
+  
+  Call Library.endScript
+  
+  MsgBox ("èCê≥äÆóπå„ÅAï€ë∂Çµï¬Ç∂ÇƒÇ≠ÇæÇ≥Ç¢")
 End Function
 
-Function årê¸_ï\(control As IRibbonControl)
+'==================================================================================================
+Function ê›íË_éÊçû()
+  
+  Dim FSO As Object, TempName As String
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
   Call Library.startScript
-  Call Library.årê¸_ï\
+  Call init.setting
+
+  TempName = FSO.GetSpecialFolder(2) & "\BK_Style.xlsx"
+  
+  Set targetBook = Workbooks.Open(TempName)
+  targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
+  targetBook.Close
+  
+  Call FSO.DeleteFile(TempName, True)
+  
+  Call Main.ÉXÉ^ÉCÉãçÌèú
   Call Library.endScript
 End Function
-
-
-Function årê¸_îjê¸_êÖïΩ(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  
-  With Selection
-    .Borders(xlInsideHorizontal).LineStyle = xlNone
-    .Borders(xlInsideHorizontal).LineStyle = xlDash
-    .Borders(xlInsideHorizontal).Weight = xlHairline
-    .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
-    
-    End With
-End Function
-
-
-Function årê¸_îjê¸_êÇíº(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlInsideVertical).LineStyle = xlNone
-    .Borders(xlInsideVertical).LineStyle = xlDash
-    .Borders(xlInsideVertical).Weight = xlHairline
-    .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-Function årê¸_îjê¸_ç∂âE(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlEdgeLeft).LineStyle = xlNone
-    .Borders(xlEdgeRight).LineStyle = xlNone
-    
-    .Borders(xlEdgeLeft).LineStyle = xlDash
-    .Borders(xlEdgeRight).LineStyle = xlDash
-    
-    .Borders(xlEdgeLeft).Weight = xlHairline
-    .Borders(xlEdgeRight).Weight = xlHairline
-    
-    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-
-Function årê¸_îjê¸_è„â∫(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlEdgeTop).LineStyle = xlNone
-    .Borders(xlEdgeBottom).LineStyle = xlNone
-    
-    .Borders(xlEdgeTop).LineStyle = xlDash
-    .Borders(xlEdgeTop).Weight = xlHairline
-    
-    .Borders(xlEdgeBottom).LineStyle = xlDash
-    .Borders(xlEdgeBottom).Weight = xlHairline
-    
-    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-
-Function årê¸_îjê¸_àÕÇ›(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlEdgeLeft).LineStyle = xlDash
-    .Borders(xlEdgeLeft).Weight = xlHairline
-    .Borders(xlEdgeRight).LineStyle = xlDash
-    .Borders(xlEdgeRight).Weight = xlHairline
-    .Borders(xlEdgeTop).LineStyle = xlDash
-    .Borders(xlEdgeTop).Weight = xlHairline
-    .Borders(xlEdgeBottom).LineStyle = xlDash
-    .Borders(xlEdgeBottom).Weight = xlHairline
-  
-    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-Function årê¸_îjê¸_äiéq(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlEdgeLeft).LineStyle = xlDash
-    .Borders(xlEdgeLeft).Weight = xlHairline
-    .Borders(xlEdgeTop).LineStyle = xlDash
-    .Borders(xlEdgeTop).Weight = xlHairline
-    .Borders(xlEdgeBottom).LineStyle = xlDash
-    .Borders(xlEdgeBottom).Weight = xlHairline
-    .Borders(xlEdgeRight).LineStyle = xlDash
-    .Borders(xlEdgeRight).Weight = xlHairline
-    .Borders(xlInsideVertical).LineStyle = xlDash
-    .Borders(xlInsideVertical).Weight = xlHairline
-    .Borders(xlInsideHorizontal).LineStyle = xlDash
-    .Borders(xlInsideHorizontal).Weight = xlHairline
-  
-    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-
-Function årê¸_é¿ê¸_àÕÇ›(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  
-  With Selection
-    .Borders(xlEdgeLeft).LineStyle = xlContinuous
-    .Borders(xlEdgeRight).LineStyle = xlContinuous
-    .Borders(xlEdgeTop).LineStyle = xlContinuous
-    .Borders(xlEdgeBottom).LineStyle = xlContinuous
-    
-    .Borders(xlEdgeLeft).Weight = xlThin
-    .Borders(xlEdgeRight).Weight = xlThin
-    .Borders(xlEdgeTop).Weight = xlThin
-    .Borders(xlEdgeBottom).Weight = xlThin
-    
-    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-
-Function årê¸_ìÒèdê¸_ç∂âE(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlEdgeLeft).LineStyle = xlDouble
-    .Borders(xlEdgeRight).LineStyle = xlDouble
-    
-    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-Function årê¸_ìÒèdê¸_è„â∫(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  With Selection
-    .Borders(xlEdgeTop).LineStyle = xlDouble
-    .Borders(xlEdgeBottom).LineStyle = xlDouble
-    
-    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
-Function årê¸_ìÒèdê¸_àÕÇ›(control As IRibbonControl)
-  Dim Red As Long, Green As Long, Blue As Long
-  
-  Call Library.getRGB(Library.getRegistry("LineColor"), Red, Green, Blue)
-  
-  With Selection
-    .Borders(xlEdgeLeft).LineStyle = xlDouble
-    .Borders(xlEdgeRight).LineStyle = xlDouble
-    .Borders(xlEdgeTop).LineStyle = xlDouble
-    .Borders(xlEdgeBottom).LineStyle = xlDouble
-    
-    .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-    .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-  End With
-End Function
-
 
 
 

@@ -7,125 +7,186 @@ Attribute VB_Name = "Ctl_ProgressBar"
 '**************************************************************************************************
 'Option Explicit
 
-Public mypbProgCnt As Long       'Progress カウンター変数
-Public mypbSCount As Long        '処理回数
-
-Dim myJobCnt As Long             '現在進行中の回数
-Dim myBarSize As Long            'プログレスバーサイズ
+Public PrgP_Barsize As Long
+Public PrgC_Barsize As Long
 
 
-'**************************************************************************************************
-' * プログレスバー表示開始
-' *
-'**************************************************************************************************
+Public PrgP_Meg As String
+Public PrgC_Meg As String
+Public PrgMeg   As String
+
+
+
+
+
+
+'==================================================================================================
 Public Function showStart()
-  Dim myMsg1 As String
   
-  myMsg1 = " 待機中"
-
-  'ダイアログへ表示
   With Frm_Progress
     .StartUpPosition = 0
     .Top = Application.Top + 10
     .Left = Application.Left + 120
     .Caption = myMsg1
     
+    
+    '親進捗バー------------------------------------------------------------------------------------
     'プログレスバーの枠の部分
-    With .Label1
-      .BorderStyle = fmBorderStyleSingle       '枠あり
+    With .PrgP_Area
+      .BorderStyle = fmBorderStyleSingle
       .SpecialEffect = fmSpecialEffectSunken
-      .Height = 15
+      .Caption = ""
+      .Top = 15
       .Left = 12
+      .Height = 15
       .Width = 250
-      .Top = 30
     End With
 
     'プログレスバーのバーの部分
-    With .Label2
+    With .PrgP_Bar
       .BackColor = RGB(90, 248, 82)
-'        .BorderStyle = fmBorderStyleSingle       '枠あり
       .SpecialEffect = fmSpecialEffectRaised
-      .Height = 13
+      .Caption = ""
+      .Top = 16
       .Left = 13
+      .Height = 13
       .Width = 0
-      .Top = 31
     End With
 
     '進捗状況表示の部分 ( % )
-    With .Label3
+    With .PrgP_Progress
       .TextAlign = fmTextAlignCenter
       .Caption = "0%"
       .BackStyle = 0
-      .Height = 14
+      .Caption = ""
+      .Top = 17
       .Left = 12
+      .Height = 14
       .Width = 250
-      .Top = 32
+      .Font.Size = 10
+      .Font.Bold = False
+    End With
+    
+    '子進捗バー------------------------------------------------------------------------------------
+    'プログレスバーの枠の部分
+    With .PrgC_Area
+      .BorderStyle = fmBorderStyleSingle
+      .SpecialEffect = fmSpecialEffectSunken
+      .Caption = ""
+      .Top = 45
+      .Left = 12
+      .Height = 15
+      .Width = 250
+    End With
+
+    'プログレスバーのバーの部分
+    With .PrgC_Bar
+      .BackColor = RGB(90, 248, 82)
+      .SpecialEffect = fmSpecialEffectRaised
+      .Caption = ""
+      .Top = 46
+      .Left = 13
+      .Height = 13
+      .Width = 0
+    End With
+
+    '進捗状況表示の部分 ( % )
+    With .PrgC_Progress
+      .TextAlign = fmTextAlignCenter
+      .Caption = "0%"
+      .BackStyle = 0
+      .Top = 47
+      .Left = 12
+      .Height = 14
+      .Width = 250
       .Font.Size = 10
       .Font.Bold = False
     End With
     
     
     'メッセージ表示の部分
-    With .Label4
-      '.TextAlign = fmTextAlignCenter
-      '.SpecialEffect = fmSpecialEffectEtched   '枠が沈む
-      '.SpecialEffect = fmSpecialEffectRaised   '浮き上がる
-      '.SpecialEffect = fmSpecialEffectBump
+    With .Prg_Message
       .Caption = "待機中"
-      .Height = 14
+      .Top = 70
       .Left = 12
-      .Width = 250
-      .Top = 9
+      .Height = 30
+      .Width = 270
       .Font.Size = 9
       .Font.Bold = False
     End With
 
-    myBarSize = .Label3.Width
+    PrgP_Barsize = .PrgP_Area.Width
+    PrgC_Barsize = .PrgP_Area.Width
   End With
 
   Frm_Progress.Show vbModeless
 End Function
 
 
-'**************************************************************************************************
-' * プログレスバー表示更新
-' *
-'**************************************************************************************************
-Public Function showCount(ProgressBarTitle As String, mypbProgCnt As Long, mypbSCount As Long, myMsg1 As String, Optional debugFlg As Boolean = True)
+'プログレスバー表示更新
+'==================================================================================================
+Public Function showCount( _
+                            Prg_Title As String _
+                          , PrgC_Cnt As Long, PrgC_Max As Long _
+                          , PrgMeg As String _
+                          , Optional flg As Boolean = False _
+                        )
+
+  Call showBar(Prg_Title, 0, 0, PrgC_Cnt, PrgC_Max, PrgMeg)
+                
+End Function
+'==================================================================================================
+Public Function showBar( _
+                            Prg_Title As String _
+                          , PrgP_Cnt As Long, PrgP_Max As Long _
+                          , PrgC_Cnt As Long, PrgC_Max As Long _
+                          , PrgMeg As String _
+                        )
+                        
+                        
+                        
   Dim myMsg2 As String
+  Dim PrgP_Prg As Long, PrgC_Prg As Long
   
-  If mypbProgCnt > 0 Then
-    myJobCnt = Int(mypbProgCnt / mypbSCount * 100)
-    myMsg2 = mypbProgCnt & "/" & mypbSCount & " (" & Int(myJobCnt) & "%)"
+  If PrgP_Cnt = 0 And PrgC_Cnt = 0 Then
+    PrgP_Prg = 0
+    PrgP_Meg = PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
     
-    With Frm_Progress
-      .Caption = ProgressBarTitle
-      .Label2.Width = Int(myBarSize * myJobCnt / 100)
-      .Label3.Caption = myMsg2
-      
-      If myMsg1 = "" Then
-        .Label4.Caption = "処理中…　" & myMsg1
-      Else
-        .Label4.Caption = myMsg1
-      End If
-    End With
-  ElseIf mypbProgCnt = 0 Then
-    myJobCnt = Int(mypbProgCnt / mypbSCount * 100)
-    myMsg2 = ""
+    PrgC_Prg = 0
+    PrgC_Meg = PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+  
+  ElseIf PrgP_Cnt <= 0 And PrgC_Cnt > 0 Then
+    PrgP_Prg = 0
+    PrgP_Meg = PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
     
-    With Frm_Progress
-      .Caption = ProgressBarTitle
-      .Label2.Width = Int(myBarSize * myJobCnt / 100)
-      .Label3.Caption = myMsg2
-      If myMsg1 = "" Then
-        .Label4.Caption = "準備中…"
-      Else
-        .Label4.Caption = myMsg1
-      End If
-    End With
+    PrgC_Prg = Int((PrgC_Cnt) / PrgC_Max * 100)
+    PrgC_Meg = PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+  
+  
+  
+  ElseIf PrgP_Cnt > 0 And PrgC_Cnt > 0 Then
+    PrgP_Prg = Int((PrgP_Cnt) / PrgP_Max * 100)
+    PrgP_Meg = PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    
+    PrgC_Prg = Int((PrgC_Cnt) / PrgC_Max * 100)
+    PrgC_Meg = PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
   
   End If
   
+  With Frm_Progress
+    .Caption = Prg_Title
+    .PrgP_Bar.Width = Int(PrgP_Barsize * PrgP_Prg / 100)
+    .PrgP_Progress.Caption = PrgP_Meg
+    
+    .PrgC_Bar.Width = Int(PrgC_Barsize * PrgC_Prg / 100)
+    .PrgC_Progress.Caption = PrgC_Meg
+    
+    If PrgMeg = "" Then
+      .Prg_Message.Caption = "処理中…"
+    Else
+      .Prg_Message.Caption = PrgMeg
+    End If
+  End With
   DoEvents
   
   
@@ -143,5 +204,9 @@ Public Function showEnd()
   Unload Frm_Progress
   
 End Function
+
+
+
+
 
 

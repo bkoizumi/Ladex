@@ -24,6 +24,7 @@ Public RegistrySubKey     As String
 
 '設定値保持
 Public BK_setVal         As Object
+Public sampleDataList    As Object
 
 
 'ファイル関連

@@ -284,7 +284,7 @@ End Function
 '**************************************************************************************************
  Function chkArrayEmpty(arrayTmp As Variant) As Boolean
 
-On Error GoTo catchError
+  On Error GoTo catchError
 
   If UBound(arrayTmp) >= 0 Then
     chkArrayEmpty = False
@@ -293,10 +293,8 @@ On Error GoTo catchError
   End If
 
   Exit Function
-
+'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-
-  'エラーが発生した場合
   chkArrayEmpty = True
 
 End Function
@@ -345,15 +343,10 @@ On Error GoTo catchError
   End If
 
   chkHeader = errMeg
-
-
-
-
+  
   Exit Function
-
+'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-
-  'エラーが発生した場合
   chkHeader = "エラーが発生しました"
 
 End Function
@@ -1506,10 +1499,12 @@ Function makeRandomDigits(maxCount As Long) As String
   For count = 1 To maxCount
     Randomize
     tmpVal = CStr(Int(10 * Rnd))
+    
+    If count = 1 And tmpVal = 0 Then
+      tmpVal = 1
+    End If
     makeVal = makeVal & tmpVal
   Next
-  
-  Debug.Print makeVal
   
   makeRandomDigits = makeVal
 
@@ -2811,6 +2806,53 @@ Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_二重線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDouble
+      .Borders(xlEdgeRight).LineStyle = xlDouble
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDouble
+      .Borders(xlEdgeRight).LineStyle = xlDouble
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
 
 '--------------------------------------------------------------------------------------------------
 Function 罫線_二重線_左(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
