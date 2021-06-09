@@ -8,7 +8,7 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "files.exclude": {
-    "**/~$*.xlsm": true
+    "~$*": true
   },
 
   // エディター設定---------------------------------------------------------------------------------------

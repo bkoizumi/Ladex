@@ -4,19 +4,25 @@
  <tabs>
     <tab id="DBTab" label="DB設計書" insertBeforeMso="TabHome">
     <group id="設定" label="設定">
-	    <button id="Option"     getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage" getSize="Ctl_Ribbon.getSize" getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
-      <button id="データ削除" getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage" getSize="Ctl_Ribbon.getSize" getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
-      <dynamicMenu  id="SheetList"          invalidateContentOnDrop="true" getEnabled="Ctl_Ribbon.getEnabled" imageMso="HeaderFooterSheetNameInsert" getLabel="Ctl_Ribbon.getLabel" getContent="Ctl_Ribbon.getSheetsList" />
+      <button id="Option"     label="Option"      imageMso="AnimationCustomAddActionVerbDialog" size="large" screentip="Option"  supertip="Option" onAction="Ctl_Ribbon.Option" />
+      <button id="データ削除" label="データ削除"  imageMso="ClearAll" screentip="データ削除"  supertip="データ削除" onAction="Ctl_Ribbon.Option" />
+      <dynamicMenu  id="SheetList"  invalidateContentOnDrop="true" getEnabled="Ctl_Ribbon.getEnabled" imageMso="HeaderFooterSheetNameInsert" getLabel="Ctl_Ribbon.getLabel" getContent="Ctl_Ribbon.getSheetsList" />
     </group >
 
     <group id="共通" label="共通">
-      <button id="シート追加"     getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage" getSize="Ctl_Ribbon.getSize" getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
-      <button id="TBLリスト更新"  getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage" getSize="Ctl_Ribbon.getSize" getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
+      <button id="シート追加"     label="シート追加"    imageMso="ClearAll" screentip="シート追加"    supertip="シート追加"     onAction="Ctl_Ribbon.Option" />
+      <button id="TBLリスト更新"  label="TBLリスト更新" imageMso="ClearAll" screentip="TBLリスト更新" supertip="TBLリスト更新"  onAction="Ctl_Ribbon.Option" />
     </group >
 
     <group id="DB操作" label="DB操作">
-      <button id="テーブル情報取得" getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage" getSize="Ctl_Ribbon.getSize" getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
-      <button id="カラム情報取得"   getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage" getSize="Ctl_Ribbon.getSize" getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
+      <button id="テーブル情報取得" label="データ削除" imageMso="ClearAll" screentip="テーブル情報を取得します" supertip="テーブル情報を取得します" onAction="Ctl_Ribbon.Option" />
+      <button id="カラム情報取得"   label="データ削除" imageMso="ClearAll" screentip="カラム情報を取得します"   supertip="カラム情報を取得します"   onAction="Ctl_Ribbon.Option" />
+
+      <menu id="MakeDDL" label="DDL生成"  itemSize="large" imageMso="SqlSpecificMenu2">
+        <menuSeparator id="DDL生成MS" title="DDLの生成" />
+        <button id="全DDL生成"  label="全DDL生成" description="DDLを作成します &#13;"  imageMso="SqlSpecificMenu2"  onAction="BK_Library.xlam!Ctl_Ribbon.罫線_表_実線" />
+        <button id="DDL生成"    label="DDL生成"   description="DDLを作成します &#13;"  imageMso="SqlSpecificMenu2"  onAction="BK_Library.xlam!Ctl_Ribbon.罫線_表_実線" />
+      </menu>
 
       <splitButton id="sb002" size="large">
         <button id="全DDL生成"    getEnabled="Ctl_Ribbon.getEnabled" getImage="Ctl_Ribbon.getImage"  getLabel="Ctl_Ribbon.getLabel" getSupertip="Ctl_Ribbon.getSupertip"  getDescription="Ctl_Ribbon.getDescription"  onAction="Ctl_Ribbon.getAction" />
@@ -25,6 +31,8 @@
         </menu>
       </splitButton>
     </group >
+
+
       <group id="Group2" label="標準機能">
         <control idMso="PasteValues"               visible="true" label="値貼付" />               <!--値の貼り付け-->
         <menu id="MyMenu01" label="スタイル"  imageMso="AppointmentColorDialog" >
