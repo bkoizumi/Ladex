@@ -6,7 +6,7 @@ Attribute VB_Name = "Ctl_RbnMaint"
 '**************************************************************************************************
 Function ÉVÅ[Égí«â¡()
   Call init.setting
-  ThisWorkbook.Worksheets.add.Name = "Favorite"
+  ThisWorkbook.Worksheets.add.Name = "HighLight"
   ThisWorkbook.Save
 End Function
 

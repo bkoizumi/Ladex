@@ -200,6 +200,7 @@ Private Sub xlApp_SheetChange(ByVal Sh As Object, ByVal Target As Range)
     If Not CheckSheet(Sh) Then Exit Sub
 
 
+
     'メッセージボックスでイベント補足を確認
 '    MsgBox "SheetChange : " & Target.Address(external:=True)
 End Sub
@@ -210,11 +211,20 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
 
     If Not CheckSheet(Sh) Then Exit Sub
     
-    If Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg") = "True" _
-      And Library.getRegistry(ActiveWorkbook.Name & "_HighLightSheet", "HighLightFlg") = ActiveSheet.Name Then
-      
-      Application.ScreenUpdating = True
-    End If
+'    If Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg") = "True" _
+'      And Library.getRegistry(ActiveWorkbook.Name & "_HighLightSheet", "HighLightFlg") = ActiveSheet.Name Then
+'
+'      Application.ScreenUpdating = True
+'    End If
+    
+    
+    
+  If Library.getRegistry("HighLight", ActiveWorkbook.Name) = True Then
+    'Call Library.setHighLight(Target)
+    Call Ctl_HighLight.showStart(Target)
+  End If
+  
+  
 End Sub
 
 
@@ -225,8 +235,15 @@ End Sub
 '==================================================================================================
 'セルがダブルクリックされたときに発生
 Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
-    If Me.StopEvent Then Exit Sub
-    If Not CheckSheet(Sh) Then Exit Sub
+  If Me.StopEvent Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
+
+  If Library.getRegistry("zoomIn", ActiveWorkbook.Name & "<|>" & ActiveSheet.Name) = True Then
+    Cancel = True
+    Call Library.ZoomIn
+  End If
+
+
 
     'メッセージボックスでイベント補足を確認
     'MsgBox "SheetBeforeDoubleClick : " & Target.Address(external:=True)

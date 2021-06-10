@@ -23,7 +23,7 @@ Attribute VB_Name = "Library"
   Private Declare PtrSafe Function Sleep Lib "kernel32" (ByVal ms As LongPtr)
 
   'クリップボード関連
-  Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hWnd As LongPtr) As Long
+  Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As LongPtr) As Long
   Private Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
   Private Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
 
@@ -35,7 +35,7 @@ Attribute VB_Name = "Library"
   Private Declare Function Sleep Lib "kernel32" (ByVal ms As Long)
 
   'クリップボード関連
-  Declare Function OpenClipboard Lib "user32" (ByVal hWnd As Long) As Long
+  Declare Function OpenClipboard Lib "user32" (ByVal hwnd As Long) As Long
   Declare Function CloseClipboard Lib "user32" () As Long
   Declare Function EmptyClipboard Lib "user32" () As Long
 
@@ -121,9 +121,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function startScript()
-
-'  Call Library.showDebugForm("startScript", "")
-
+  
   'アクティブセルの取得
   If TypeName(Selection) = "Range" Then
     SelectionCell = Selection.Address
@@ -143,7 +141,7 @@ Function startScript()
   'Application.Interactive = False
 
   'マクロ動作中はマウスカーソルを「砂時計」にする
-'  Application.Cursor = xlWait
+  'Application.Cursor = xlWait
 
   '確認メッセージを出さない
   Application.DisplayAlerts = False
@@ -695,11 +693,11 @@ Function delSheetData(Optional line As Long)
     Rows(line & ":" & Rows.count).delete Shift:=xlUp
     Rows(line & ":" & Rows.count).Select
     Rows(line & ":" & Rows.count).NumberFormatLocal = "G/標準"
-    Rows(line & ":" & Rows.count).Style = "Normal"
+    Rows(line & ":" & Rows.count).style = "Normal"
   Else
     Cells.delete Shift:=xlUp
     Cells.NumberFormatLocal = "G/標準"
-    Cells.Style = "Normal"
+    Cells.style = "Normal"
   End If
   DoEvents
 
@@ -735,7 +733,7 @@ End Function
 ' * @Link https://www.relief.jp/docs/018407.html
 '**************************************************************************************************
 Function delImage()
-  Dim rng As Range
+  Dim Rng As Range
   Dim shp As Shape
 
   If TypeName(Selection) <> "Range" Then
@@ -743,9 +741,9 @@ Function delImage()
   End If
 
   For Each shp In ActiveSheet.Shapes
-    Set rng = Range(shp.TopLeftCell, shp.BottomRightCell)
+    Set Rng = Range(shp.TopLeftCell, shp.BottomRightCell)
 
-    If Not (Intersect(rng, Selection) Is Nothing) Then
+    If Not (Intersect(Rng, Selection) Is Nothing) Then
       shp.delete
     End If
   Next
@@ -885,6 +883,45 @@ Function getByteString(arryColumn As String, Optional line As Long) As Long
   Next colLineName
 
   getByteString = count
+End Function
+
+
+'**************************************************************************************************
+' * セルの座標取得
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long)
+
+  Dim R1C1Top As Long, R1C1Left As Long
+  
+  
+
+  
+  R1C1Top = ActiveWindow.PointsToScreenPixelsY(0)
+  R1C1Left = ActiveWindow.PointsToScreenPixelsX(0)
+  
+'  ActvCellTop = ((R1C1Top * DPI / PPI) * (ActiveWindow.Zoom / 100)) + Rng.Top
+'  ActvCellLeft = ((R1C1Left * DPI / PPI) * (ActiveWindow.Zoom / 100)) + Rng.Left
+
+  ActvCellTop = (((Rng.Top * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Top) * (PPI / DPI)
+  ActvCellLeft = (((Rng.Left * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Left) * (PPI / DPI)
+
+
+
+
+
+'  If ActvCellLeft <= 0 Then
+'    ActvCellLeft = 20
+'  End If
+  
+  Call Library.showDebugForm("-------------------------")
+  Call Library.showDebugForm("R1C1Top ：" & R1C1Top)
+  Call Library.showDebugForm("R1C1Left ：" & R1C1Left)
+  Call Library.showDebugForm("-------------------------")
+  Call Library.showDebugForm("Rng.Address ：" & Rng.Address)
+  Call Library.showDebugForm("ActvCellTop ：" & ActvCellTop)
+  Call Library.showDebugForm("ActvCellLeft：" & ActvCellLeft)
 End Function
 
 
@@ -1271,9 +1308,9 @@ Function getSheetList(columnName As String)
   Worksheets("設定").Range(columnName & "3").Select
   Call endScript
   Exit Function
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 'エラー発生時の処理
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 GetSheetListError:
 
   ' 画面描写制御終了
@@ -1308,8 +1345,8 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function showExpansionFormClose(Text As String, SetSelectTargetRows As String)
-  Range(SetSelectTargetRows).Value = Text
+Function showExpansionFormClose(Text As String, SetSelectTargetaddress As String)
+  Range(SetSelectTargetaddress).Value = Text
   Call endScript
 End Function
 
@@ -1675,6 +1712,39 @@ Function makePasswd() As String
   Next i
   makePasswd = str1
 End Function
+
+
+'**************************************************************************************************
+' * ハイライト化
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function setHighLight(ByVal Target As Range)
+  
+
+
+End Function
+
+'==================================================================================================
+Function unsetHighLight()
+  Static xRow
+  Static xColumn
+  
+  pRow = Selection.Row
+  pColumn = Selection.Column
+  xRow = pRow
+  xColumn = pColumn
+  If xColumn <> "" Then
+    With Columns(xColumn).Interior
+      .ColorIndex = xlNone
+    End With
+    With Rows(xRow).Interior
+      .ColorIndex = xlNone
+    End With
+  End If
+  
+End Function
+
 
 
 '**************************************************************************************************
@@ -2240,7 +2310,40 @@ Function KOETOL_ExpansionFormEnd()
 
 End Function
 
+'**************************************************************************************************
+' * 選択セルの拡大表示終了
+' *
+' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
+'**************************************************************************************************
+Function ZoomIn()
+  topPosition = Library.getRegistry("UserForm", "ZoomInTop")
+  leftPosition = Library.getRegistry("UserForm", "ZoomInLeft")
+  
+  
+  With Frm_Expansion
+    .StartUpPosition = 0
+    If topPosition = "" Then
+      .Top = 10
+      .Left = 120
+    Else
+      .Top = topPosition
+      .Left = leftPosition
+    End If
+    .TextBox = ActiveCell.Text
+    .TextBox.MultiLine = True
+    .TextBox.MultiLine = True
+    .TextBox.EnterKeyBehavior = True
+    .Caption = ActiveCell.Address
+  End With
 
+  If (Frm_Expansion.Visible = True) Then
+    Frm_Expansion.StartUpPosition = 0
+  Else
+    Frm_Expansion.StartUpPosition = 2
+  End If
+
+  Frm_Expansion.Show vbModeless
+End Function
 
 
 '**************************************************************************************************
@@ -2248,7 +2351,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_クリア(Optional setArea As Range)
   If TypeName(setArea) = "Range" Then
     With setArea
@@ -2275,7 +2378,7 @@ Function 罫線_クリア(Optional setArea As Range)
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_表(Optional setArea As Range, Optional LineColor As Long)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2340,7 +2443,7 @@ End Function
 
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2386,7 +2489,7 @@ Function 罫線_破線_囲み(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_格子(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2442,7 +2545,7 @@ Function 罫線_破線_格子(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2478,7 +2581,7 @@ Function 罫線_破線_左右(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2514,7 +2617,7 @@ Function 罫線_破線_上下(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_垂直(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2540,7 +2643,7 @@ Function 罫線_破線_垂直(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_水平(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2573,7 +2676,7 @@ End Function
 
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_実線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2620,7 +2723,7 @@ Function 罫線_実線_囲み(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_実線_格子(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2679,7 +2782,7 @@ Function 罫線_実線_格子(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2715,7 +2818,7 @@ Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_実線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2750,7 +2853,7 @@ Function 罫線_実線_上下(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2777,7 +2880,7 @@ Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2807,7 +2910,7 @@ Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2854,7 +2957,7 @@ Function 罫線_二重線_囲み(Optional setArea As Range, Optional LineColor As Long,
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_左(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2879,7 +2982,7 @@ Function 罫線_二重線_左(Optional setArea As Range, Optional LineColor As Long, O
   End If
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2909,7 +3012,7 @@ Function 罫線_二重線_左右(Optional setArea As Range, Optional LineColor As Long,
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -2938,7 +3041,7 @@ End Function
 
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_逆L字(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
   
@@ -2960,38 +3063,34 @@ End Function
 
 
 
+'**************************************************************************************************
+' * カラム幅設定 / 取得
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function getColumnWidth()
+  Dim colLine As Long, endColLine As Long
+  Dim colName As String
+  endColLine = Cells(5, Columns.count).End(xlToLeft).Column
+  
+  For colLine = 1 To endColLine
+    Cells(1, colLine) = Cells(1, colLine).ColumnWidth
+  Next
+  
+End Function
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+'==================================================================================================
+Function setColumnWidth()
+  Dim colLine As Long, endColLine As Long
+  Dim colName As String
+  endColLine = Cells(1, Columns.count).End(xlToLeft).Column
+  
+  For colLine = 1 To endColLine
+    Cells(1, colLine).ColumnWidth = Cells(1, colLine)
+  Next
+  
+End Function
 
 
 

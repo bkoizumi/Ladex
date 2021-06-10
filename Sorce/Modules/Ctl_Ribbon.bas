@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Ribbon"
+Private ctlEvent As New clsEvent
+
 #If VBA7 And Win64 Then
   Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
 #Else
@@ -14,19 +16,39 @@ Attribute VB_Name = "Ctl_Ribbon"
 '==================================================================================================
 '読み込み時処理
 Function onLoad(ribbon As IRibbonUI)
+  On Error GoTo catchError
   Call init.setting
+  
+  BKh_rbPressed = Library.getRegistry("HighLight", ActiveWorkbook.Name)
+  BKz_rbPressed = Library.getRegistry("ZoomIn", ActiveWorkbook.Name)
   
   Set BK_ribbonUI = ribbon
   
-'  Call Library.showDebugForm("BK_ribbonUI" & "," & CStr(ObjPtr(BK_ribbonUI)))
+
   Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
   
-  BK_ribbonUI.ActivateTab ("BK_Library")
+  BK_ribbonUI.ActivateTab ("Liadex")
   BK_ribbonUI.Invalidate
   
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
 End Function
 
 
+'==================================================================================================
+' トグルボタンにチェックを設定する
+Function HighLightPressed(control As IRibbonControl, ByRef returnedVal)
+  returnedVal = BKh_rbPressed
+  
+End Function
+
+'==================================================================================================
+' トグルボタンにチェックを設定する
+Function ZoomInPressed(control As IRibbonControl, ByRef returnedVal)
+  returnedVal = BKz_rbPressed
+  
+End Function
 '==================================================================================================
 '更新
 Function Refresh()
@@ -82,7 +104,7 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
       End If
       
-      .SetAttribute "onAction", "BK_Library.xlam!Ctl_Ribbon.selectActiveSheet"
+      .SetAttribute "onAction", "Liadex.xlam!Ctl_Ribbon.selectActiveSheet"
     End With
     Menu.AppendChild Button
     Set Button = Nothing
@@ -99,10 +121,10 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, Err.Description, True)
+'  Call Library.showNotice(400, Err.Description, True)
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function dMenuRefresh(control As IRibbonControl)
   
   If BK_ribbonUI Is Nothing Then
@@ -116,7 +138,7 @@ Function dMenuRefresh(control As IRibbonControl)
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function selectActiveSheet(control As IRibbonControl)
   Dim sheetNameID As Integer
   Dim sheetCount As Integer
@@ -147,7 +169,7 @@ Function selectActiveSheet(control As IRibbonControl)
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function encode(strVal As String)
 
   strVal = Replace(strVal, "(", "BK1_")
@@ -163,7 +185,7 @@ Function encode(strVal As String)
   encode = strVal
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function decode(strVal As String)
 
   strVal = Replace(strVal, "BK0_", "")
@@ -181,7 +203,7 @@ Function decode(strVal As String)
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 #If VBA7 And Win64 Then
 Private Function GetRibbon(ByVal lRibbonPointer As LongPtr) As Object
   Dim p As LongPtr
@@ -240,7 +262,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
         .SetAttribute "id", "Favorite_" & line
         .SetAttribute "label", objFSO.GetFileName(BK_sheetFavorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
-        .SetAttribute "onAction", "BK_Library.xlam!Ctl_Ribbon.OpenFavoriteList"
+        .SetAttribute "onAction", "Liadex.xlam!Ctl_Ribbon.OpenFavoriteList"
       End With
       Menu.AppendChild Button
       Set Button = Nothing
@@ -263,7 +285,7 @@ catchError:
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function OpenFavoriteList(control As IRibbonControl)
   Dim fileNamePath As String
   Dim line As Long
@@ -368,7 +390,7 @@ catchError:
   Call Library.endScript
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 '有効/無効切り替え
 Function getEnabled(control As IRibbonControl, ByRef returnedVal)
   Dim wb As Workbook
@@ -385,26 +407,26 @@ Function getEnabled(control As IRibbonControl, ByRef returnedVal)
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function getVisible(control As IRibbonControl, ByRef returnedVal)
   Call init.setting
   returnedVal = Library.getRegistry("Main", "CustomRibbon")
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function noDispTab(control As IRibbonControl)
   Call Library.setRegistry("Main", "CustomRibbon", False)
   Call RefreshRibbon
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function setDispTab(control As IRibbonControl, pressed As Boolean)
   Call Library.setRegistry("Main", "CustomRibbon", pressed)
   Call RefreshRibbon
 End Function
 
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function RefreshRibbon()
   #If VBA7 And Win64 Then
     Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
@@ -420,29 +442,107 @@ End Function
 
 
 '**************************************************************************************************
+' * リボンメニュー[オプション]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function settingImport(control As IRibbonControl)
+  Call Main.設定_取込
+End Function
+
+
+'==================================================================================================
+Function settingExport(control As IRibbonControl)
+  Call Main.設定_抽出
+End Function
+
+
+'**************************************************************************************************
 ' * リボンメニュー[お気に入り]
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function disOption(control As IRibbonControl)
 
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function FavoriteAdd(control As IRibbonControl)
 
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function FavoriteDetail(control As IRibbonControl)
 
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function FavoriteList(control As IRibbonControl)
 
 End Function
+
+
+'**************************************************************************************************
+' * カスタマイズ
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function defaultView(control As IRibbonControl)
+  Call Main.標準画面
+End Function
+
+'==================================================================================================
+Function HighLight(control As IRibbonControl, pressed As Boolean)
+  Call Library.endScript
+  Set ctlEvent = New clsEvent
+  Set ctlEvent.ExcelApplication = Application
+  ctlEvent.InitializeBookSheets
+  
+  BKh_rbPressed = pressed
+  
+  Call init.setting
+  Call Library.setRegistry("HighLight", ActiveWorkbook.Name, pressed)
+  
+  Call Ctl_HighLight.showStart(ActiveCell)
+  If pressed = False Then
+    'Call Library.unsetHighLight
+    Call Ctl_HighLight.showEnd
+    Call Library.delRegistry("HighLight", ActiveWorkbook.Name)
+
+  End If
+End Function
+
+
+'==================================================================================================
+Function ZoomIn(control As IRibbonControl, pressed As Boolean)
+  Call Library.endScript
+  Set ctlEvent = New clsEvent
+  Set ctlEvent.ExcelApplication = Application
+  ctlEvent.InitializeBookSheets
+  
+  BKz_rbPressed = pressed
+  Call Application.OnKey("{F2}", "Library.ZoomIn")
+  
+  Call init.setting
+  Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name & "<|>" & ActiveSheet.Name, pressed)
+  
+  If pressed = False Then
+    Call Application.OnKey("{F2}")
+  
+
+    Call Library.delRegistry("ZoomIn", ActiveWorkbook.Name & "<|>" & ActiveSheet.Name)
+  End If
+End Function
+
+
+'==================================================================================================
+Function delStyle(control As IRibbonControl)
+  Call Main.スタイル削除
+End Function
+
 
 
 
@@ -451,62 +551,62 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_削除(control As IRibbonControl)
   Call Library.罫線_クリア
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_表_破線(control As IRibbonControl)
   Call Library.罫線_表
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_表_実線(control As IRibbonControl)
   Call Library.罫線_実線_格子
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_水平(control As IRibbonControl)
   Call Library.罫線_破線_水平
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_垂直(control As IRibbonControl)
   Call Library.罫線_破線_垂直
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_左右(control As IRibbonControl)
   Call Library.罫線_破線_左右
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_上下(control As IRibbonControl)
   Call Library.罫線_破線_上下
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_囲み(control As IRibbonControl)
   Call Library.罫線_破線_囲み
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_破線_格子(control As IRibbonControl)
   Call Library.罫線_破線_格子
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_左右(control As IRibbonControl)
   Call Library.罫線_二重線_左右
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_上下(control As IRibbonControl)
   Call Library.罫線_実線_上下
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function 罫線_二重線_囲み(control As IRibbonControl)
   Call Library.罫線_二重線_囲み
 End Function
@@ -519,49 +619,35 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function makeSampleData_SelectPattern(control As IRibbonControl)
   Call sampleData.パターン選択
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function makeSampleData_DigitsInt(control As IRibbonControl)
   Call sampleData.数値_桁数固定
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function makeSampleData_RangeInt(control As IRibbonControl)
   Call sampleData.数値_範囲
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function makeSampleData_FamilyName(control As IRibbonControl)
   Call sampleData.名前_姓
 End Function
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function makeSampleData_Name(control As IRibbonControl)
   Call sampleData.名前_名
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function makeSampleData_FullName(control As IRibbonControl)
   Call sampleData.名前_フルネーム
 End Function
 
-'**************************************************************************************************
-' * リボンメニュー[オプション]
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-'設定Import------------------------------------------------------------------------------------
-Function settingImport(control As IRibbonControl)
-  Call Main.設定_取込
-End Function
-
-'設定Export------------------------------------------------------------------------------------
-Function settingExport(control As IRibbonControl)
-  Call Main.設定_抽出
-End Function
 
 
 
@@ -571,21 +657,9 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'中央揃え------------------------------------------------------------------------------------------
+'==================================================================================================
 Function setCenter(control As IRibbonControl)
   If TypeName(Selection) = "Range" Then
     Selection.HorizontalAlignment = xlCenterAcrossSelection
   End If
 End Function
-
-'ハイライト----------------------------------------------------------------------------------------
-Function highLight(control As IRibbonControl)
-  Call Main.ハイライト
-End Function
-
-
-'スタイル削除--------------------------------------------------------------------------------------
-Function delStyle(control As IRibbonControl)
-  Call Main.スタイル削除
-End Function
-

@@ -14,9 +14,9 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
-Private Declare Function SetFocus Lib "user32" (ByVal hWnd As Long) As Long
+Private Declare Function SetFocus Lib "user32" (ByVal hwnd As Long) As Long
 
 
 Private Sub UserForm_Activate()
-  SetFocus Application.hWnd
+  SetFocus Application.hwnd
 End Sub

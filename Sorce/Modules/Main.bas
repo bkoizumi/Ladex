@@ -40,10 +40,10 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 標準画面(control As IRibbonControl)
+Function 標準画面()
   Dim objSheet As Object
   Dim sheetName As String, SetActiveSheet As String
-  
+  Dim sheetCount As Long, sheetMaxCount As Long
   
   'On Error Resume Next
   
@@ -53,23 +53,35 @@ Function 標準画面(control As IRibbonControl)
   SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
   SelectAddress = Selection.Address
   
+  setZoomLevel = Library.getRegistry("Main", "zoomLevel")
+  resetBgColor = Library.getRegistry("Main", "bgColor")
+  setGgridLine = Library.getRegistry("Main", "gridLine")
+  
+  sheetCount = 0
+  sheetMaxCount = ActiveWorkbook.Sheets.count
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
-    Call Ctl_ProgressBar.showCount("標準画面設定", 1, 100, sheetName)
+    
+    Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 0, 4, sheetName)
+    
     If Worksheets(sheetName).Visible = True Then
       Worksheets(sheetName).Select
       
       '標準画面に設定
+      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 1, 4, sheetName)
       ActiveWindow.View = xlNormalView
       
       '表示倍率の指定
-      ActiveWindow.Zoom = Library.getRegistry("Main", "zoomLevel")
+      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 2, 4, sheetName)
+      ActiveWindow.Zoom = setZoomLevel
       
       'ガイドラインの表示/非表示
-      ActiveWindow.DisplayGridlines = Library.getRegistry("Main", "gridLine")
+      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 3, 4, sheetName)
+      ActiveWindow.DisplayGridlines = setGgridLine
   
       '背景白をなしにする
-      If Library.getRegistry("Main", "gridLine") = True Then
+      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 4, 4, sheetName)
+      If resetBgColor = True Then
         With Application.FindFormat.Interior
           .PatternColorIndex = xlAutomatic
           .ThemeColor = xlThemeColorDark1
@@ -85,6 +97,8 @@ Function 標準画面(control As IRibbonControl)
       End If
       Application.GoTo Reference:=Range("A1"), Scroll:=True
     End If
+    
+    sheetCount = sheetCount + 1
   Next
   
   Worksheets(SetActiveSheet).Select
@@ -242,33 +256,40 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function ハイライト()
-  Dim highLightFlg As String
-  Dim highLightArea As String
+'  Dim highLightFlg As String
+'  Dim highLightArea As String
+'
+'  Call Library.startScript
+'  highLightFlg = Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg")
+'
+'  If highLightFlg = "" Then
+'    Call Library.setLineColor(Selection.Address, True, Library.getRegistry("HighLightColor"))
+'
+'    Call Library.setRegistry(ActiveWorkbook.Name, True, "HighLightFlg")
+'    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightSheet", ActiveSheet.Name, "HighLightFlg")
+'    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightArea", Selection.Address, "HighLightFlg")
+'
+'  Else
+'    highLightArea = Library.getRegistry(ActiveWorkbook.Name & "_HighLightArea")
+'
+'    If highLightArea = "" Then
+'      highLightArea = Selection.Address
+'    End If
+'    Call Library.unsetLineColor(highLightArea)
+'
+'    Call Library.delRegistry(ActiveWorkbook.Name, "HighLightFlg")
+'    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightSheet")
+'    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightArea")
+'  End If
+'
+'  Call Library.endScript(True)
 
-  Call Library.startScript
-  highLightFlg = Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg")
+
+
   
-  If highLightFlg = "" Then
-    Call Library.setLineColor(Selection.Address, True, Library.getRegistry("HighLightColor"))
-    
-    Call Library.setRegistry(ActiveWorkbook.Name, True, "HighLightFlg")
-    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightSheet", ActiveSheet.Name, "HighLightFlg")
-    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightArea", Selection.Address, "HighLightFlg")
-    
-  Else
-    highLightArea = Library.getRegistry(ActiveWorkbook.Name & "_HighLightArea")
-    
-    If highLightArea = "" Then
-      highLightArea = Selection.Address
-    End If
-    Call Library.unsetLineColor(highLightArea)
-    
-    Call Library.delRegistry(ActiveWorkbook.Name, "HighLightFlg")
-    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightSheet")
-    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightArea")
-  End If
   
-  Call Library.endScript(True)
+
+
 End Function
 
 

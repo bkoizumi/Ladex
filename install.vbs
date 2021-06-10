@@ -26,9 +26,8 @@ Dim objFolder
 Dim objFile
 
 'ƒAƒhƒCƒ“î•ñ‚ğİ’è
-addInName = "ExcelHelp-142"
-addInFileName = "ExcelHelp-142.xlam"
-appFile = "rlxAliasOpen.vbs"
+addInName = "Liadex"
+addInFileName = "Liadex.xlam"
 
 Set objWshShell = CreateObject("WScript.Shell")
 Set objFileSys = CreateObject("Scripting.FileSystemObject")

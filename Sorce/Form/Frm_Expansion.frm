@@ -17,10 +17,18 @@ Attribute VB_Exposed = False
 
 
 Private Sub CancelButton_Click()
-  Unload ExpansionForm
+  Call Library.setRegistry("UserForm", "ZoomInTop", Me.Top)
+  Call Library.setRegistry("UserForm", "ZoomInLeft", Me.Left)
+
+
+  Unload Frm_Expansion
 End Sub
 
 Private Sub OK_Button_Click()
-  Call Library.showExpansionFormClose(TextBox, ExpansionForm.Caption)
-  Unload ExpansionForm
+  Call Library.setRegistry("UserForm", "ZoomInTop", Me.Top)
+  Call Library.setRegistry("UserForm", "ZoomInLeft", Me.Left)
+  
+  
+  Call Library.showExpansionFormClose(TextBox, Frm_Expansion.Caption)
+  Unload Frm_Expansion
 End Sub

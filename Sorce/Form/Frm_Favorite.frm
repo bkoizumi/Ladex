@@ -67,7 +67,7 @@ End Sub
 
 
 '==================================================================================================
-Private Sub Lst_Favorite_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal y As Single)
+Private Sub Lst_Favorite_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     If Button = 2 Then myMenu.ShowPopup
 End Sub
 

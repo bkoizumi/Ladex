@@ -17,7 +17,9 @@ Private Sub Workbook_Open()
   Set ctlEvent = New clsEvent
   Set ctlEvent.ExcelApplication = Application
   ctlEvent.InitializeBookSheets
-  ctlEvent.StopEvent = False
+  
+  'イベント発生再開
+'  clsEvent.StopEvent = False
 
 
 
