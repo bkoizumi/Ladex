@@ -238,7 +238,7 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(Sh) Then Exit Sub
 
-  If Library.getRegistry("zoomIn", ActiveWorkbook.Name & "<|>" & ActiveSheet.Name) = True Then
+  If Library.getRegistry("zoomIn", ActiveWorkbook.Name) = True Then
     Cancel = True
     Call Library.ZoomIn
   End If

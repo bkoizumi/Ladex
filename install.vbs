@@ -26,8 +26,8 @@ Dim objFolder
 Dim objFile
 
 'アドイン情報を設定
-addInName = "Liadex"
-addInFileName = "Liadex.xlam"
+addInName = "Ladex"
+addInFileName = "Ladex.xlam"
 
 Set objWshShell = CreateObject("WScript.Shell")
 Set objFileSys = CreateObject("Scripting.FileSystemObject")
@@ -44,27 +44,40 @@ End IF
 'Excel インスタンス化
 With CreateObject("Excel.Application")
 
-    'インストール先パスの作成
-    strPath = .UserLibraryPath
-    ' strPath = objFileSys.getParentFolderName(WScript.ScriptFullName)
+  'インストール先パスの作成
+  strPath = .UserLibraryPath
 
-    'インストールフォルダがない場合は作成
-    IF Not objFileSys.FolderExists(strPath) THEN
-        objFileSys.CreateFolder(strPath)
-    END IF
+  'インストールフォルダがない場合は作成
+  IF Not objFileSys.FolderExists(strPath) THEN
+    objFileSys.CreateFolder(strPath)
+  END IF
 
-    installPath = strPath & addInFileName
+  installPath = strPath & addInFileName
 
-    'ファイルコピー(上書き)
-    objFileSys.CopyFile  addInFileName ,installPath , True
+  'アドイン登録解除
+  For i = 1 To objExcel.Addins.Count
+  Set objAddin = objExcel.Addins.item(i)
+  If objAddin.Name = "Liadex.xlam" Then
+    objAddin.Installed = False
 
-    'アドイン登録
-    .Workbooks.Add
-    Set objAddin = .AddIns.Add(installPath, True)
-    objAddin.Installed = True
+    'ファイル削除
+    unInstallPath = strPath & addInFileName
+    If objFileSys.FileExists(unInstallPath) = True Then
+      objFileSys.DeleteFile unInstallPath , True
+    End If
+  End If
+  Next
 
-    'Excel 終了
-    .Quit
+  'ファイルコピー(上書き)
+  objFileSys.CopyFile  addInFileName ,installPath , True
+
+  'アドイン登録
+  .Workbooks.Add
+  Set objAddin = .AddIns.Add(installPath, True)
+  objAddin.Installed = True
+
+  'Excel 終了
+  .Quit
 
 End WIth
 

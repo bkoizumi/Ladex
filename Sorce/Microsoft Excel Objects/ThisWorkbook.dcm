@@ -21,7 +21,7 @@ Private Sub Workbook_Open()
   'イベント発生再開
 '  clsEvent.StopEvent = False
 
-
+  Call InitializeBook
 
   Call Application.OnKey("{F1}", "")
 End Sub
@@ -33,20 +33,28 @@ End Sub
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Private Function InitializeBook()
-  Dim val As Variant
+Function InitializeBook()
+  Dim RegistryKey As String, RegistrySubKey As String, val As String
+  
   Dim regName As String
 
-  Call init.setting
+  Call init.setting(True)
+  
+  BK_ThisBook.Activate
+  endLine = BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
+  
+  If Library.getRegistry("Main", "debugMode") <> "" Then
+    Exit Function
+  End If
+  
+  For line = 3 To endLine
+    RegistryKey = BK_sheetSetting.Range("D" & line)
+    RegistrySubKey = BK_sheetSetting.Range("E" & line)
+    val = BK_sheetSetting.Range("F" & line)
+    
+    If RegistryKey <> "" Then
+     Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
 
-  endLine = sheetsetting.Cells(Rows.count, 1).End(xlUp).Row
-
-
-'  For line = 3 To sheetsetting.Cells(Rows.count, 1).End(xlUp).Row
-'    val = Library.getRegistry(sheetsetting.Range("A" & line))
-'    If sheetsetting.Range("A" & line) <> "" And val = "" Then
-'     Call Library.setRegistry(sheetsetting.Range("A" & line), sheetsetting.Range("B" & line))
-'
-'    End If
-'  Next
+    End If
+  Next
 End Function

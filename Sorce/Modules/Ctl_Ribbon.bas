@@ -17,6 +17,8 @@ Private ctlEvent As New clsEvent
 '読み込み時処理
 Function onLoad(ribbon As IRibbonUI)
   On Error GoTo catchError
+  
+  
   Call init.setting
   
   BKh_rbPressed = Library.getRegistry("HighLight", ActiveWorkbook.Name)
@@ -24,7 +26,6 @@ Function onLoad(ribbon As IRibbonUI)
   
   Set BK_ribbonUI = ribbon
   
-
   Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
   
   BK_ribbonUI.ActivateTab ("Liadex")
@@ -33,36 +34,47 @@ Function onLoad(ribbon As IRibbonUI)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
+  Call Library.showNotice(400, "リボンメニュー読込", True)
 End Function
 
 
 '==================================================================================================
 ' トグルボタンにチェックを設定する
 Function HighLightPressed(control As IRibbonControl, ByRef returnedVal)
-  returnedVal = BKh_rbPressed
   
+  returnedVal = BKh_rbPressed
 End Function
 
 '==================================================================================================
 ' トグルボタンにチェックを設定する
 Function ZoomInPressed(control As IRibbonControl, ByRef returnedVal)
-  returnedVal = BKz_rbPressed
   
+  returnedVal = BKz_rbPressed
 End Function
 '==================================================================================================
 '更新
 Function Refresh()
+  On Error GoTo catchError
+  
   Call init.setting
   
-  #If VBA7 And Win64 Then
-    Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
-  #Else
-    Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
-  #End If
+  If BK_ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
+    #Else
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
+    #End If
+  End If
   
-  BK_ribbonUI.ActivateTab ("BK_Library")
+  BK_ribbonUI.ActivateTab ("LiadexTab")
   BK_ribbonUI.Invalidate
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "リボンメニュー更新", True)
 End Function
+
   
   
 '==================================================================================================
@@ -422,12 +434,18 @@ End Function
 '==================================================================================================
 Function setDispTab(control As IRibbonControl, pressed As Boolean)
   Call Library.setRegistry("Main", "CustomRibbon", pressed)
-  Call RefreshRibbon
+  
+  If pressed = True Then
+    Call Refresh
+  End If
+  
 End Function
 
 
 '==================================================================================================
 Function RefreshRibbon()
+  On Error GoTo catchError
+
   #If VBA7 And Win64 Then
     Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
   #Else
@@ -435,6 +453,10 @@ Function RefreshRibbon()
   #End If
   BK_ribbonUI.Invalidate
 
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  'Call Library.showNotice(400, Err.Description, True)
 End Function
 
 
@@ -509,7 +531,7 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Ctl_HighLight.showStart(ActiveCell)
   If pressed = False Then
     'Call Library.unsetHighLight
-    Call Ctl_HighLight.showEnd
+'    Call Ctl_HighLight.showEnd
     Call Library.delRegistry("HighLight", ActiveWorkbook.Name)
 
   End If
@@ -524,16 +546,16 @@ Function ZoomIn(control As IRibbonControl, pressed As Boolean)
   ctlEvent.InitializeBookSheets
   
   BKz_rbPressed = pressed
-  Call Application.OnKey("{F2}", "Library.ZoomIn")
+  
   
   Call init.setting
-  Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name & "<|>" & ActiveSheet.Name, pressed)
+  Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name, pressed)
   
   If pressed = False Then
     Call Application.OnKey("{F2}")
-  
-
-    Call Library.delRegistry("ZoomIn", ActiveWorkbook.Name & "<|>" & ActiveSheet.Name)
+    Call Library.delRegistry("ZoomIn", ActiveWorkbook.Name)
+  Else
+    Call Application.OnKey("{F2}", "Library.ZoomIn")
   End If
 End Function
 

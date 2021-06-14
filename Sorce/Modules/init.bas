@@ -12,7 +12,7 @@ Public targetBook As Workbook
 
 
 'ワークシート用変数------------------------------
-Public BK_sheetsetting   As Worksheet
+Public BK_sheetSetting   As Worksheet
 Public BK_sheetNotice    As Worksheet
 Public BK_sheetStyle     As Worksheet
 Public BK_sheetTestData  As Worksheet
@@ -26,7 +26,7 @@ Public Const thisAppName = "Liadex"
 Public Const thisAppVersion = "0.0.4.0"
 
 'レジストリ登録用サブキー
-'Public Const RegistryKey  As String = "Liadex"
+Public Const RegistryKey  As String = "Ladex"
 Public RegistrySubKey     As String
 'Public RegistryRibbonName As String
 
@@ -61,7 +61,7 @@ Function usetting()
   Set BK_ThisBook = Nothing
   
   'ワークシート名の設定
-  Set BK_sheetsetting = Nothing
+  Set BK_sheetSetting = Nothing
   Set BK_sheetNotice = Nothing
   Set BK_sheetStyle = Nothing
   Set BK_sheetTestData = Nothing
@@ -97,7 +97,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_ThisBook = ThisWorkbook
   
   'ワークシート名の設定
-  Set BK_sheetsetting = BK_ThisBook.Worksheets("設定")
+  Set BK_sheetSetting = BK_ThisBook.Worksheets("設定")
   Set BK_sheetNotice = BK_ThisBook.Worksheets("Notice")
   Set BK_sheetStyle = BK_ThisBook.Worksheets("Style")
   Set BK_sheetTestData = BK_ThisBook.Worksheets("testData")
@@ -159,14 +159,14 @@ Function 名前定義()
   Next
   
   'VBA用の設定
-  For line = 3 To BK_sheetsetting.Cells(Rows.count, 1).End(xlUp).Row
-    If BK_sheetsetting.Range("A" & line) <> "" Then
-      BK_sheetsetting.Range("B" & line).Name = BK_sheetsetting.Range("A" & line)
+  For line = 3 To BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
+    If BK_sheetSetting.Range("A" & line) <> "" Then
+      BK_sheetSetting.Range("B" & line).Name = BK_sheetSetting.Range("A" & line)
     End If
   Next
   
   'Book用の設定
-  BK_sheetsetting.Range("D3:D" & BK_sheetsetting.Cells(Rows.count, 6).End(xlUp).Row).Name = BK_sheetsetting.Range("D2")
+  BK_sheetSetting.Range("D3:D" & BK_sheetSetting.Cells(Rows.count, 6).End(xlUp).Row).Name = BK_sheetSetting.Range("D2")
   
 
   Exit Function

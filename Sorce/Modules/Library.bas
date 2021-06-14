@@ -1341,17 +1341,6 @@ End Function
 
 
 '**************************************************************************************************
-' * 選択セルの拡大表示終了
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function showExpansionFormClose(Text As String, SetSelectTargetaddress As String)
-  Range(SetSelectTargetaddress).Value = Text
-  Call endScript
-End Function
-
-
-'**************************************************************************************************
 ' * デバッグ用画面表示
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
@@ -1443,19 +1432,20 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function showNotice(Code As Long, Optional process As String, Optional runEndflg As Boolean)
-
-
   Dim Message As String
   Dim runTime As Date
   Dim endLine As Long
+  
+  On Error GoTo catchError
+
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
 
   endLine = BK_sheetNotice.Cells(Rows.count, 1).End(xlUp).Row
   Message = Application.WorksheetFunction.VLookup(Code, BK_sheetNotice.Range("A2:B" & endLine), 2, False)
-
-  If process <> "" Then
-    Message = Replace(Message, "%%", process)
+  Message = Replace(Message, "%%", process)
+  If process = "" Then
+    Message = Replace(Message, "<>", process)
   End If
   If runEndflg = True Then
     Message = Message & vbNewLine & "処理を中止します"
@@ -1498,6 +1488,12 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   Else
     Call Library.showDebugForm(Message)
   End If
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call MsgBox(Message, vbCritical, thisAppName)
+  
 End Function
 
 
@@ -1836,12 +1832,16 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String)
   If RegistryKey <> "" Then
     regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
   End If
-  getRegistry = regVal
+  If regVal = "" Then
+    getRegistry = 0
+  Else
+    getRegistry = regVal
+  End If
   
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-'  Call Library.showNotice(400, Err.Description, True)
+  Call Library.showNotice(400, Err.Description)
 End Function
 
 
@@ -2163,152 +2163,6 @@ Function TEXTJOIN(Delim, Ignore As Boolean, ParamArray par())
 End Function
 
 
-'**************************************************************************************************
-' * 選択セルの拡大表示呼出
-' *
-' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
-'**************************************************************************************************
-Function KOETOL_ExpansionFormStart(Text As String, SetSelectTargetRows As String)
-  Dim colLineName As Variant
-  Dim count As Integer
-
-  With KOETOL_ExpansionForm
-    .StartUpPosition = 2
-'    .Top = Application.Top + (ActiveWindow.Width / 4)
-'    .Left = Application.Left + (ActiveWindow.Height / 4)
-    .TextBox = Text
-'    .TextBox.ForeColor = Color
-    .TextBox.MultiLine = True
-    .TextBox.MultiLine = True
-    .TextBox.EnterKeyBehavior = True
-    .Caption = SetSelectTargetRows
-
-    'ニーズのチェックボックスの設定
-    .needs01.Caption = Range("J3").Value
-    .needs02.Caption = Range("K3").Value
-    .needs03.Caption = Range("L3").Value
-    .needs04.Caption = Range("M3").Value
-    .needs05.Caption = Range("N3").Value
-    .needs06.Caption = Range("O3").Value
-    .needs07.Caption = Range("P3").Value
-    .needs08.Caption = Range("Q3").Value
-    .needs09.Caption = Range("R3").Value
-    .needs10.Caption = Range("S3").Value
-
-    'ポジティブのチェックボックスの設定
-    .positive01.Caption = Range("T3").Value
-    .positive02.Caption = Range("U3").Value
-    .positive03.Caption = Range("V3").Value
-    .positive04.Caption = Range("W3").Value
-    .positive05.Caption = Range("X3").Value
-    .positive06.Caption = Range("Y3").Value
-    .positive07.Caption = Range("Z3").Value
-    .positive08.Caption = Range("AA3").Value
-    .positive09.Caption = Range("AB3").Value
-    .positive10.Caption = Range("AC3").Value
-    .positive11.Caption = Range("AD3").Value
-    .positive12.Caption = Range("AE3").Value
-    .positive13.Caption = Range("AF3").Value
-    .positive14.Caption = Range("AG3").Value
-    .positive15.Caption = Range("AH3").Value
-
-    'ネガティブのチェックボックスの設定
-    .negative01.Caption = Range("AI3").Value
-    .negative02.Caption = Range("AJ3").Value
-    .negative03.Caption = Range("AK3").Value
-    .negative04.Caption = Range("AL3").Value
-    .negative05.Caption = Range("AM3").Value
-    .negative06.Caption = Range("AN3").Value
-    .negative07.Caption = Range("AO3").Value
-    .negative08.Caption = Range("AP3").Value
-    .negative09.Caption = Range("AQ3").Value
-    .negative10.Caption = Range("AR3").Value
-    .negative11.Caption = Range("AS3").Value
-    .negative12.Caption = Range("AT3").Value
-    .negative13.Caption = Range("AU3").Value
-    .negative14.Caption = Range("AV3").Value
-    .negative15.Caption = Range("AW3").Value
-
-    'ニーズのチェックボックスの値
-    .needs01.Value = IIf(Range("J" & SetSelectTargetRows).Value, True, False)
-    .needs02.Value = IIf(Range("K" & SetSelectTargetRows).Value, True, False)
-    .needs03.Value = IIf(Range("L" & SetSelectTargetRows).Value, True, False)
-    .needs04.Value = IIf(Range("M" & SetSelectTargetRows).Value, True, False)
-    .needs05.Value = IIf(Range("N" & SetSelectTargetRows).Value, True, False)
-    .needs06.Value = IIf(Range("O" & SetSelectTargetRows).Value, True, False)
-    .needs07.Value = IIf(Range("P" & SetSelectTargetRows).Value, True, False)
-    .needs08.Value = IIf(Range("Q" & SetSelectTargetRows).Value, True, False)
-    .needs09.Value = IIf(Range("R" & SetSelectTargetRows).Value, True, False)
-    .needs10.Value = IIf(Range("S" & SetSelectTargetRows).Value, True, False)
-
-    'ポジティブのチェックボックスの値
-    .positive01.Value = IIf(Range("T" & SetSelectTargetRows).Value, True, False)
-    .positive02.Value = IIf(Range("U" & SetSelectTargetRows).Value, True, False)
-    .positive03.Value = IIf(Range("V" & SetSelectTargetRows).Value, True, False)
-    .positive04.Value = IIf(Range("W" & SetSelectTargetRows).Value, True, False)
-    .positive05.Value = IIf(Range("X" & SetSelectTargetRows).Value, True, False)
-    .positive06.Value = IIf(Range("Y" & SetSelectTargetRows).Value, True, False)
-    .positive07.Value = IIf(Range("Z" & SetSelectTargetRows).Value, True, False)
-    .positive08.Value = IIf(Range("AA" & SetSelectTargetRows).Value, True, False)
-    .positive09.Value = IIf(Range("AB" & SetSelectTargetRows).Value, True, False)
-    .positive10.Value = IIf(Range("AC" & SetSelectTargetRows).Value, True, False)
-    .positive11.Value = IIf(Range("AD" & SetSelectTargetRows).Value, True, False)
-    .positive12.Value = IIf(Range("AE" & SetSelectTargetRows).Value, True, False)
-    .positive13.Value = IIf(Range("AF" & SetSelectTargetRows).Value, True, False)
-    .positive14.Value = IIf(Range("AG" & SetSelectTargetRows).Value, True, False)
-    .positive15.Value = IIf(Range("AH" & SetSelectTargetRows).Value, True, False)
-
-    'ネガティブのチェックボックスの値
-    .negative01.Value = IIf(Range("AI" & SetSelectTargetRows).Value, True, False)
-    .negative02.Value = IIf(Range("AJ" & SetSelectTargetRows).Value, True, False)
-    .negative03.Value = IIf(Range("AK" & SetSelectTargetRows).Value, True, False)
-    .negative04.Value = IIf(Range("AL" & SetSelectTargetRows).Value, True, False)
-    .negative05.Value = IIf(Range("AM" & SetSelectTargetRows).Value, True, False)
-    .negative06.Value = IIf(Range("AN" & SetSelectTargetRows).Value, True, False)
-    .negative07.Value = IIf(Range("AO" & SetSelectTargetRows).Value, True, False)
-    .negative08.Value = IIf(Range("AP" & SetSelectTargetRows).Value, True, False)
-    .negative09.Value = IIf(Range("AQ" & SetSelectTargetRows).Value, True, False)
-    .negative10.Value = IIf(Range("AR" & SetSelectTargetRows).Value, True, False)
-    .negative11.Value = IIf(Range("AS" & SetSelectTargetRows).Value, True, False)
-    .negative12.Value = IIf(Range("AT" & SetSelectTargetRows).Value, True, False)
-    .negative13.Value = IIf(Range("AU" & SetSelectTargetRows).Value, True, False)
-    .negative14.Value = IIf(Range("AV" & SetSelectTargetRows).Value, True, False)
-    .negative15.Value = IIf(Range("AW" & SetSelectTargetRows).Value, True, False)
-
-  End With
-
-  If (KOETOL_ExpansionForm.Visible = True) Then
-    KOETOL_ExpansionForm.StartUpPosition = 0
-  Else
-    KOETOL_ExpansionForm.StartUpPosition = 2
-  End If
-
-  KOETOL_ExpansionForm.Show vbModeless
-
-End Function
-
-
-'**************************************************************************************************
-' * 選択セルの拡大表示終了
-' *
-' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
-'**************************************************************************************************
-Function KOETOL_ExpansionFormEnd()
-  Call init.setting
-
-
-  If BK_setVal("HighLightFlg") = False Then
-    SetActiveCell = Selection.Address
-    endRowLine = sheetKoetol.Cells(Rows.count, 3).End(xlUp).Row
-
-    Call Library.startScript
-    Call Library.unsetLineColor("C5:AZ" & endRowLine)
-    Call Library.endScript
-
-    Range(SetActiveCell).Select
-  End If
-
-End Function
 
 '**************************************************************************************************
 ' * 選択セルの拡大表示終了
@@ -2316,11 +2170,11 @@ End Function
 ' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
 '**************************************************************************************************
 Function ZoomIn()
-  topPosition = Library.getRegistry("UserForm", "ZoomInTop")
-  leftPosition = Library.getRegistry("UserForm", "ZoomInLeft")
+  topPosition = Library.getRegistry("UserForm", "ZoomTop")
+  leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
   
   
-  With Frm_Expansion
+  With Frm_Zoom
     .StartUpPosition = 0
     If topPosition = "" Then
       .Top = 10
@@ -2333,16 +2187,26 @@ Function ZoomIn()
     .TextBox.MultiLine = True
     .TextBox.MultiLine = True
     .TextBox.EnterKeyBehavior = True
-    .Caption = ActiveCell.Address
+'    .Caption = ActiveCell.Address
+    .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
   End With
 
-  If (Frm_Expansion.Visible = True) Then
-    Frm_Expansion.StartUpPosition = 0
+  If (Frm_Zoom.Visible = True) Then
+    Frm_Zoom.StartUpPosition = 0
   Else
-    Frm_Expansion.StartUpPosition = 2
+    Frm_Zoom.StartUpPosition = 2
   End If
 
-  Frm_Expansion.Show vbModeless
+  Frm_Zoom.Show vbModeless
+End Function
+
+
+'==================================================================================================
+Function ZoomOut(Text As String, SetTargetAddress As String)
+  
+  SetTargetAddress = Replace(SetTargetAddress, "選択セル：", "")
+  Range(SetTargetAddress).Value = Text
+  Call endScript
 End Function
 
 

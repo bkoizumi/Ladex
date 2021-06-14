@@ -287,8 +287,8 @@ End Function
 '******************************************************************************
 ' ‚ ‚éŒ‚Ì‘æ›¢—j“ú‚ª “ú‚Å‚ ‚é‚©‚ğ’²‚×‚éŠÖ”B
 '******************************************************************************
-Public Function DaiXYoubi(y, m, n, Yobi As Integer) As String
-    DaiXYoubi = ((9 - Weekday(DateSerial(y, m, 0))) + (n - 1) * 7 + 1)
+Public Function DaiXYoubi(Y, m, n, Yobi As Integer) As String
+    DaiXYoubi = ((9 - Weekday(DateSerial(Y, m, 0))) + (n - 1) * 7 + 1)
 End Function
 '******************************************************************************
 ' U‘Ö‹x“ú‚©‚ğ’²‚×‚éŠÖ”B
