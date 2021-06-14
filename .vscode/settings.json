@@ -26,11 +26,6 @@
   "editor.trimAutoWhitespace": true,
   "editor.wordWrap": "off",
 
-  // ターミナル-----------------------------------------------------------------------------------------
-  // "terminal.integrated.fontFamily": "'Roboto Mono'",  // フォント
-  // "terminal.integrated.fontSize": 10,                 // フォントサイズ
-
-
   // 言語設定------------------------------------------------------------------------------------------
   "[sql]": {
     "files.encoding": "utf8"

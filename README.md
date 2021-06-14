@@ -32,8 +32,6 @@ Ladex(ラデック)
 
 
 
-
-
 ## 参考サイト
 [RelaxTools Addin](https://software.opensquare.net/relaxtools/)  
 [Excelでお仕事!](http://www.ne.jp/asahi/excel/inoue/)  
