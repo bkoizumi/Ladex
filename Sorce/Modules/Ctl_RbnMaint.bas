@@ -4,9 +4,22 @@ Attribute VB_Name = "Ctl_RbnMaint"
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
 Function シート追加()
   Call init.setting
   ThisWorkbook.Worksheets.add.Name = "HighLight"
+  ThisWorkbook.Save
+End Function
+
+
+'==================================================================================================
+Function シート削除()
+  Call init.setting
+  Application.DisplayAlerts = False
+  
+  ThisWorkbook.Sheets("HighLight").delete
+  
+  Application.DisplayAlerts = True
   ThisWorkbook.Save
 End Function
 

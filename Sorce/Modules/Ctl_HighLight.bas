@@ -87,9 +87,44 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
       Left:=Rng.Left, Top:=Rng.Top, Width:=Application.Width, Height:=Rng.Height)
     HighLight_X.Name = "HighLight_X"
     HighLight_X.OnAction = "GetCursorposition"
-    HighLight_X.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
-    HighLight_X.Fill.Transparency = 0.4
-    HighLight_X.line.Visible = msoFalse
+    
+    '表示方法
+    Highlight_DspMethod = Library.getRegistry("Main", "Highlight_DspMethod")
+    
+    '帯(塗りつぶし)
+    If Highlight_DspMethod = "0" Then
+      HighLight_X.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
+      
+      Selection.ShapeRange.line.Visible = msoFalse
+      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+    
+    '囲み線
+    ElseIf Highlight_DspMethod = "1" Then
+      ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
+      
+      Selection.ShapeRange.Fill.Visible = msoFalse
+      Selection.ShapeRange.line.Visible = msoTrue
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Weight = 3
+    
+    '直線
+    ElseIf Highlight_DspMethod = "2" Then
+'      Set Rng = Range("A" & Target.Row + 1)
+      
+      ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
+      
+      Selection.ShapeRange.Fill.Visible = msoFalse
+      Selection.ShapeRange.line.Visible = msoTrue
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Weight = 3
+      Selection.ShapeRange.Height = 1
+'      Selection.ShapeRange.Top = Rng.Top
+    
+    End If
+    
   
   End If
   Set Rng = Nothing
@@ -110,9 +145,45 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       
     HighLight_Y.Name = "HighLight_Y"
     HighLight_Y.OnAction = "GetCursorposition"
-    HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
-    HighLight_Y.Fill.Transparency = 0.4
-    HighLight_Y.line.Visible = msoFalse
+    HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+    
+    
+    '表示方法
+    Highlight_DspMethod = Library.getRegistry("Main", "Highlight_DspMethod")
+    
+    '帯(塗りつぶし)
+    If Highlight_DspMethod = "0" Then
+      HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
+      
+      Selection.ShapeRange.line.Visible = msoFalse
+      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+    
+    '囲み線
+    ElseIf Highlight_DspMethod = "1" Then
+      ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
+      
+      Selection.ShapeRange.Fill.Visible = msoFalse
+      Selection.ShapeRange.line.Visible = msoTrue
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Weight = 3
+    
+    '直線
+    ElseIf Highlight_DspMethod = "2" Then
+'      Set Rng = Cells(1, Target.Column + 1)
+      
+      ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
+      
+      Selection.ShapeRange.Fill.Visible = msoFalse
+      Selection.ShapeRange.line.Visible = msoTrue
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Weight = 3
+      Selection.ShapeRange.Width = 1
+'      Selection.ShapeRange.Left = Rng.Left
+    
+    End If
   
   End If
   Set Rng = Nothing

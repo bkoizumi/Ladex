@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
-   ClientHeight    =   8640
+   ClientHeight    =   7095
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   11265
+   ClientWidth     =   7440
    OleObjectBlob   =   "Frm_Option.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -47,17 +47,62 @@ Private Sub UserForm_Initialize()
     .gridLine.Value = Library.getRegistry("Main", "gridLine")
     .bgColor.Value = Library.getRegistry("Main", "bgColor")
       
-    If Library.getRegistry("Main", "highLightColor") = "" Then
-      .highLightColor.BackColor = 10222585
-    Else
-      .highLightColor.BackColor = Library.getRegistry("Main", "highLightColor")
-    End If
-    
-    If Library.getRegistry("Main", "LineColor") = "" Then
+    LineColor = Library.getRegistry("Main", "LineColor")
+    If LineColor = "" Then
       .LineColor.BackColor = 0
     Else
-      .LineColor.BackColor = Library.getRegistry("Main", "LineColor")
+      .LineColor.BackColor = LineColor
     End If
+  
+    'Highlight設定
+    HighLight_Color = Library.getRegistry("Main", "HighLight_Color")
+    If HighLight_Color = "0" Then
+      .HighLight_Color.BackColor = 10222585
+    Else
+      .HighLight_Color.BackColor = HighLight_Color
+    End If
+    .HighLight_Color.Caption = ""
+    
+    '透明度
+    Highlight_TransparentRate = Library.getRegistry("Main", "Highlight_TransparentRate")
+    If Highlight_TransparentRate = "0" Then
+      .Highlight_TransparentRate.Value = 50
+    Else
+      .Highlight_TransparentRate.Value = Highlight_TransparentRate
+    End If
+  
+    '表示方向
+    Highlight_DspDirection = Library.getRegistry("Main", "Highlight_DspDirection")
+    If Highlight_DspDirection = "X" Then
+      Highlight_DspDirection_X.Value = True
+      
+    ElseIf Highlight_DspDirection = "Y" Then
+      Highlight_DspDirection_Y.Value = True
+    
+    ElseIf Highlight_DspDirection = "B" Then
+      Highlight_DspDirection_B.Value = True
+    
+    End If
+  
+    '表示方法
+    Highlight_DspMethod = Library.getRegistry("Main", "Highlight_DspMethod")
+    If Highlight_DspMethod = "0" Then
+      Highlight_DspMethod_0.Value = True
+    
+    ElseIf Highlight_DspMethod = "0" Then
+      Highlight_DspMethod_0.Value = True
+      
+    ElseIf Highlight_DspMethod = "1" Then
+      Highlight_DspMethod_1.Value = True
+    
+    ElseIf Highlight_DspMethod = "2" Then
+      Highlight_DspMethod_2.Value = True
+    
+    End If
+  
+  
+  
+  
   End With
 End Sub
 
@@ -106,17 +151,20 @@ End Function
 
 
 '**************************************************************************************************
-' * 基本設定
+' * ボタン押下時処理
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Private Sub highLightColor_Click()
+'==================================================================================================
+Private Sub HighLight_Color_Click()
   Dim colorValue As Long
-  colorValue = Library.getColor(Me.highLightColor.BackColor)
-  Me.highLightColor.BackColor = colorValue
+  
+  colorValue = Library.getColor(Me.HighLight_Color.BackColor)
+  Me.HighLight_Color.BackColor = colorValue
 End Sub
 
 
+'==================================================================================================
 Private Sub LineColor_Click()
   Dim colorValue As Long
   colorValue = Library.getColor(Me.LineColor.BackColor)
@@ -124,11 +172,8 @@ Private Sub LineColor_Click()
 End Sub
 
 
-'**************************************************************************************************
-' * 処理キャンセル
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
+'==================================================================================================
+'キャンセル処理
 Private Sub Cancel_Click()
 
   Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
@@ -138,11 +183,8 @@ Private Sub Cancel_Click()
 End Sub
 
 
-'**************************************************************************************************
-' * 処理実行
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
+'==================================================================================================
+' 実行
 Private Sub run_Click()
   Dim execDay As Date
   
@@ -153,8 +195,40 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "zoomLevel", Me.zoomLevel.Text)
   Call Library.setRegistry("Main", "gridLine", Me.gridLine.Value)
   Call Library.setRegistry("Main", "bgColor", Me.bgColor.Value)
-  Call Library.setRegistry("Main", "highLightColor", Me.highLightColor.BackColor)
   Call Library.setRegistry("Main", "LineColor", Me.LineColor.BackColor)
+  
+  
+  Call Library.setRegistry("Main", "HighLight_Color", Me.HighLight_Color.BackColor)
+  Call Library.setRegistry("Main", "Highlight_TransparentRate", Me.Highlight_TransparentRate.Value)
+
+  '表示方向
+  If Highlight_DspDirection_X.Value = True Then
+    Highlight_DspDirection = "X"
+  ElseIf Highlight_DspDirection_Y.Value = True Then
+    Highlight_DspDirection = "Y"
+  ElseIf Highlight_DspDirection_B.Value = True Then
+    Highlight_DspDirection = "B"
+  End If
+  Call Library.setRegistry("Main", "Highlight_DspDirection", Highlight_DspDirection)
+
+
+
+  '表示方向
+  If Highlight_DspMethod_0.Value = True Then
+    Highlight_DspMethod = "0"
+  
+  ElseIf Highlight_DspMethod_1.Value = True Then
+    Highlight_DspMethod = "1"
+  
+  ElseIf Highlight_DspMethod_2.Value = True Then
+    Highlight_DspMethod = "2"
+  End If
+  Call Library.setRegistry("Main", "Highlight_DspMethod", Highlight_DspMethod)
+
+
+
+
+  
   
   'スタイルシートをスタイル2シートへコピー
 '  endLine = sheetStyle2.Cells(Rows.count, 2).End(xlUp).Row
@@ -164,3 +238,4 @@ Private Sub run_Click()
   Unload Me
 End Sub
 
+  

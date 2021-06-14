@@ -96,7 +96,8 @@ Private Sub run_Click()
   
   Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
   Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
-
+  
+  Call Ctl_Favorite.addList
   Unload Me
 End Sub
 

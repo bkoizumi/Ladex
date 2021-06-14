@@ -4,7 +4,35 @@ Attribute VB_Name = "Ctl_Favorite"
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+Function getList()
+  Dim tmp, i As Long, buf As String
+  
+  tmp = GetAllSettings(thisAppName, "FavoriteList")
+  
+  If Not IsEmpty(tmp) Then
+    For i = 0 To UBound(tmp)
+      buf = buf & tmp(i, 0) & Chr(9) & tmp(i, 1) & vbCrLf
+      Debug.Print buf
+    Next i
+  End If
+End Function
 
+'==================================================================================================
+Function addList()
+
+  Dim line As Long, endLine As Long
+  
+  Call init.setting
+  endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+  
+  For line = 2 To endLine
+    Call Library.setRegistry("FavoriteList", "Favorite" & line - 1, BK_sheetFavorite.Range("A" & line))
+  
+  Next
+  
+  
+End Function
 
 
 '==================================================================================================
@@ -30,7 +58,7 @@ End Function
 
 '==================================================================================================
 'è⁄ç◊ï\é¶
-Function detail(control As IRibbonControl)
+Function detail()
   Dim line As Long, endLine As Long
   Dim regLists As Variant
   

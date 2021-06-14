@@ -28,7 +28,7 @@ Function onLoad(ribbon As IRibbonUI)
   
   Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
   
-  BK_ribbonUI.ActivateTab ("Liadex")
+  BK_ribbonUI.ActivateTab ("Ladex")
   BK_ribbonUI.Invalidate
   
   Exit Function
@@ -226,7 +226,6 @@ Private Function GetRibbon(ByVal lRibbonPointer As Long) As Object
 
   Dim ribbonObj As Object
   
-  Stop
   MoveMemory ribbonObj, lRibbonPointer, LenB(lRibbonPointer)
   Set GetRibbon = ribbonObj
   p = 0: MoveMemory ribbonObj, p, LenB(p)
@@ -247,7 +246,6 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Call init.setting
   
   If BK_ribbonUI Is Nothing Then
-    Stop
     #If VBA7 And Win64 Then
       Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
@@ -264,6 +262,8 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   If Workbooks.count = 0 Then
     endLine = 100
   Else
+    Call Ctl_Favorite.getList
+    
     endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   End If
   
@@ -485,10 +485,6 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'==================================================================================================
-Function disOption(control As IRibbonControl)
-
-End Function
 
 '==================================================================================================
 Function FavoriteAdd(control As IRibbonControl)
@@ -497,13 +493,9 @@ End Function
 
 '==================================================================================================
 Function FavoriteDetail(control As IRibbonControl)
-
+  Call Ctl_Favorite.detail
 End Function
 
-'==================================================================================================
-Function FavoriteList(control As IRibbonControl)
-
-End Function
 
 
 '**************************************************************************************************

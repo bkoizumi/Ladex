@@ -1,11 +1,5 @@
 Attribute VB_Name = "init"
 
-
-
-
-
-
-
 'ワークブック用変数------------------------------
 Public BK_ThisBook   As Workbook
 Public targetBook As Workbook
@@ -18,11 +12,10 @@ Public BK_sheetStyle     As Worksheet
 Public BK_sheetTestData  As Worksheet
 Public BK_sheetRibbon    As Worksheet
 Public BK_sheetFavorite  As Worksheet
-Public BK_sheetHighLight  As Worksheet
 
 
 'グローバル変数----------------------------------
-Public Const thisAppName = "Liadex"
+Public Const thisAppName = "Ladex"
 Public Const thisAppVersion = "0.0.4.0"
 
 'レジストリ登録用サブキー
@@ -45,10 +38,10 @@ Public StopTime           As Date
 
 
 'リボン関連--------------------------------------
-Public BK_ribbonUI      As Office.IRibbonUI
-Public BK_ribbonVal     As Object
-Public BKh_rbPressed     As Boolean
-Public BKz_rbPressed     As Boolean
+Public BK_ribbonUI    As Office.IRibbonUI
+Public BK_ribbonVal   As Object
+Public BKh_rbPressed  As Boolean
+Public BKz_rbPressed  As Boolean
 
 
 '**************************************************************************************************
@@ -103,9 +96,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetTestData = BK_ThisBook.Worksheets("testData")
   Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
   Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
-  Set BK_sheetHighLight = BK_ThisBook.Worksheets("HighLight")
-
-  
+ 
   
   logFile = ThisWorkbook.Path & "\ExcelMacro.log"
         
