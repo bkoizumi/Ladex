@@ -42,6 +42,7 @@ Public BK_ribbonUI    As Office.IRibbonUI
 Public BK_ribbonVal   As Object
 Public BKh_rbPressed  As Boolean
 Public BKz_rbPressed  As Boolean
+Public BKcf_rbPressed  As Boolean
 
 
 '**************************************************************************************************

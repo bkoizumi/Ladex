@@ -224,6 +224,12 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
     Call Ctl_HighLight.showStart(Target)
   End If
   
+  If BKcf_rbPressed = True Then
+    Call Main.”®Šm”F
+  End If
+  
+  
+  
   
 End Sub
 

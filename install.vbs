@@ -55,18 +55,18 @@ With CreateObject("Excel.Application")
   installPath = strPath & addInFileName
 
   'アドイン登録解除
-  For i = 1 To objExcel.Addins.Count
-  Set objAddin = objExcel.Addins.item(i)
-  If objAddin.Name = "Liadex.xlam" Then
-    objAddin.Installed = False
+  ' For i = 1 To objExcel.Addins.Count
+  ' Set objAddin = objExcel.Addins.item(i)
+  ' If objAddin.Name = "Liadex.xlam" Then
+  '   objAddin.Installed = False
 
-    'ファイル削除
-    unInstallPath = strPath & addInFileName
-    If objFileSys.FileExists(unInstallPath) = True Then
-      objFileSys.DeleteFile unInstallPath , True
-    End If
-  End If
-  Next
+  '   'ファイル削除
+  '   unInstallPath = strPath &  "Liadex.xlam"
+  '   If objFileSys.FileExists(unInstallPath) = True Then
+  '     objFileSys.DeleteFile unInstallPath , True
+  '   End If
+  ' End If
+  ' Next
 
   'ファイルコピー(上書き)
   objFileSys.CopyFile  addInFileName ,installPath , True

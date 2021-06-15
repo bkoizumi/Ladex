@@ -7,7 +7,7 @@ Attribute VB_Name = "Ctl_RbnMaint"
 '==================================================================================================
 Function ÉVÅ[Égí«â¡()
   Call init.setting
-  ThisWorkbook.Worksheets.add.Name = "HighLight"
+  ThisWorkbook.Worksheets.add.Name = "Stamp"
   ThisWorkbook.Save
 End Function
 

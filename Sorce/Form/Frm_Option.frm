@@ -53,6 +53,8 @@ Private Sub UserForm_Initialize()
     Else
       .LineColor.BackColor = LineColor
     End If
+    .LineColor.Caption = ""
+    
   
     'Highlight設定
     HighLight_Color = Library.getRegistry("Main", "HighLight_Color")
@@ -64,7 +66,7 @@ Private Sub UserForm_Initialize()
     .HighLight_Color.Caption = ""
     
     '透明度
-    Highlight_TransparentRate = Library.getRegistry("Main", "Highlight_TransparentRate")
+    Highlight_TransparentRate = Library.getRegistry("Main", "HighLight_TransparentRate")
     If Highlight_TransparentRate = "0" Then
       .Highlight_TransparentRate.Value = 50
     Else
@@ -72,30 +74,30 @@ Private Sub UserForm_Initialize()
     End If
   
     '表示方向
-    Highlight_DspDirection = Library.getRegistry("Main", "Highlight_DspDirection")
-    If Highlight_DspDirection = "X" Then
+    HighLight_DspDirection = Library.getRegistry("Main", "HighLight_DspDirection")
+    If HighLight_DspDirection = "X" Then
       Highlight_DspDirection_X.Value = True
       
-    ElseIf Highlight_DspDirection = "Y" Then
+    ElseIf HighLight_DspDirection = "Y" Then
       Highlight_DspDirection_Y.Value = True
     
-    ElseIf Highlight_DspDirection = "B" Then
+    ElseIf HighLight_DspDirection = "B" Then
       Highlight_DspDirection_B.Value = True
     
     End If
   
     '表示方法
-    Highlight_DspMethod = Library.getRegistry("Main", "Highlight_DspMethod")
-    If Highlight_DspMethod = "0" Then
+    HighLight_DspMethod = Library.getRegistry("Main", "HighLight_DspMethod")
+    If HighLight_DspMethod = "0" Then
       Highlight_DspMethod_0.Value = True
     
-    ElseIf Highlight_DspMethod = "0" Then
+    ElseIf HighLight_DspMethod = "0" Then
       Highlight_DspMethod_0.Value = True
       
-    ElseIf Highlight_DspMethod = "1" Then
+    ElseIf HighLight_DspMethod = "1" Then
       Highlight_DspMethod_1.Value = True
     
-    ElseIf Highlight_DspMethod = "2" Then
+    ElseIf HighLight_DspMethod = "2" Then
       Highlight_DspMethod_2.Value = True
     
     End If
@@ -199,31 +201,31 @@ Private Sub run_Click()
   
   
   Call Library.setRegistry("Main", "HighLight_Color", Me.HighLight_Color.BackColor)
-  Call Library.setRegistry("Main", "Highlight_TransparentRate", Me.Highlight_TransparentRate.Value)
+  Call Library.setRegistry("Main", "HighLight_TransparentRate", Me.Highlight_TransparentRate.Value)
 
   '表示方向
   If Highlight_DspDirection_X.Value = True Then
-    Highlight_DspDirection = "X"
+    HighLight_DspDirection = "X"
   ElseIf Highlight_DspDirection_Y.Value = True Then
-    Highlight_DspDirection = "Y"
+    HighLight_DspDirection = "Y"
   ElseIf Highlight_DspDirection_B.Value = True Then
-    Highlight_DspDirection = "B"
+    HighLight_DspDirection = "B"
   End If
-  Call Library.setRegistry("Main", "Highlight_DspDirection", Highlight_DspDirection)
+  Call Library.setRegistry("Main", "HighLight_DspDirection", HighLight_DspDirection)
 
 
 
   '表示方向
   If Highlight_DspMethod_0.Value = True Then
-    Highlight_DspMethod = "0"
+    HighLight_DspMethod = "0"
   
   ElseIf Highlight_DspMethod_1.Value = True Then
-    Highlight_DspMethod = "1"
+    HighLight_DspMethod = "1"
   
   ElseIf Highlight_DspMethod_2.Value = True Then
-    Highlight_DspMethod = "2"
+    HighLight_DspMethod = "2"
   End If
-  Call Library.setRegistry("Main", "Highlight_DspMethod", Highlight_DspMethod)
+  Call Library.setRegistry("Main", "HighLight_DspMethod", HighLight_DspMethod)
 
 
 
