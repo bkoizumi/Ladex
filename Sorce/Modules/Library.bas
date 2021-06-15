@@ -956,12 +956,14 @@ Function getColor(colorValue As Long)
   Dim setColorValue As Long
 
   Call getRGB(colorValue, Red, Green, Blue)
-  setColorValue = Application.Dialogs(xlDialogEditColor).Show(10, Red, Green, Blue)
-  If setColorValue = False Then
-    setColorValue = colorValue
-  Else
-    setColorValue = ThisWorkbook.Colors(10)
-  End If
+  Application.Dialogs(xlDialogEditColor).Show 10, Red, Green, Blue
+  
+  setColorValue = ActiveWorkbook.Colors(10)
+'  If setColorValue = False Then
+'    setColorValue = colorValue
+'  Else
+'    setColorValue = ActiveWorkbook.Colors(10)
+'  End If
 
   getColor = setColorValue
 
@@ -1846,7 +1848,7 @@ End Function
 
 
 '==================================================================================================
-Function delRegistry(RegistrySubKey As String, RegistryKey As String)
+Function delRegistry(RegistrySubKey As String, Optional RegistryKey As String)
 
   Dim regVal As String
 

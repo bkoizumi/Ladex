@@ -3,15 +3,20 @@ Attribute VB_Name = "Main"
 'ワークシート用変数------------------------------
 'グローバル変数----------------------------------
 
+'==================================================================================================
+Function xxxxxxxxxx()
+End Function
+
+
 
 '**************************************************************************************************
 ' * オプション画面表示
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function オプション画面表示(control As IRibbonControl)
+Function オプション画面表示()
   
-'  On Error GoTo catchError
+  On Error GoTo catchError
   
   topPosition = Library.getRegistry("UserForm", "OptionTop")
   leftPosition = Library.getRegistry("UserForm", "OptionLeft")
@@ -24,6 +29,7 @@ Function オプション画面表示(control As IRibbonControl)
       .Top = topPosition
       .Left = leftPosition
     End If
+    .MultiPage1.Value = 0
     .Show
   End With
 
@@ -284,12 +290,76 @@ Function ハイライト()
 '
 '  Call Library.endScript(True)
 
+End Function
 
 
+'==================================================================================================
+Function 数式確認()
+  Dim formulaVal As String
+  Dim formulaVals As Variant
+  Dim count As Long
+  
+  '既存のファイル削除
+  For Each objShp In ActiveSheet.Shapes
+    If objShp.Name Like "confirmFormulaName_*" Then
+      ActiveSheet.Shapes(objShp.Name).delete
+    End If
+  Next
   
   
+  If ActiveCell.HasFormula = False Or BKcf_rbPressed = False Then
+    Exit Function
+  End If
+  Call init.setting
+  
+  formulaVal = ActiveCell.Formula
+  
+  If formulaVal Like "*SUM*" Then
+    formulaVal = Replace(formulaVal, "=SUM(", "")
+    formulaVal = Replace(formulaVal, ")", "")
+  
+  ElseIf formulaVal Like "*SUBTOTAL*" Then
+    formulaVal = Replace(formulaVal, "=SUBTOTAL(9,", "")
+    formulaVal = Replace(formulaVal, ")", "")
+  
+  Else
+    Exit Function
+  End If
+  
+  Call Library.showDebugForm(formulaVal)
+  
+  count = 1
+  For Each formulaVals In Split(formulaVal, ",")
+    confirmFormulaName = "confirmFormulaName_" & count
+    
+    
+    With ActiveSheet.Range(formulaVals)
+      ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, Top:=.Top, Width:=.Width, Height:=.Height).Select
+    End With
+    Selection.Name = confirmFormulaName
+    Selection.ShapeRange.Fill.ForeColor.RGB = 10222585
+    Selection.ShapeRange.Fill.Transparency = 0.5
+    
+    Selection.Text = formulaVals
+    Selection.ShapeRange.TextFrame2.TextRange.Font.Fill.ForeColor.RGB = RGB(255, 0, 0)
+    
+    Selection.ShapeRange.line.Visible = msoTrue
+    Selection.ShapeRange.line.ForeColor.RGB = RGB(0, 0, 0)
+    Selection.ShapeRange.line.Weight = 1
+
+    
+    
+    count = count + 1
+  Next
+  
+  ActiveCell.Select
 
 
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  'Call Library.showNotice(400, "", True)
 End Function
 
 

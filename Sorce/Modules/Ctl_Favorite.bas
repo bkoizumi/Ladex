@@ -18,6 +18,7 @@ Function getList()
   End If
 End Function
 
+
 '==================================================================================================
 Function addList()
 
@@ -26,12 +27,11 @@ Function addList()
   Call init.setting
   endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   
+  Call Library.delRegistry("FavoriteList")
+  
   For line = 2 To endLine
     Call Library.setRegistry("FavoriteList", "Favorite" & line - 1, BK_sheetFavorite.Range("A" & line))
-  
   Next
-  
-  
 End Function
 
 

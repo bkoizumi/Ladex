@@ -51,6 +51,14 @@ Function ZoomInPressed(control As IRibbonControl, ByRef returnedVal)
   
   returnedVal = BKz_rbPressed
 End Function
+
+'==================================================================================================
+' トグルボタンにチェックを設定する
+Function confFormulaPressed(control As IRibbonControl, ByRef returnedVal)
+  
+  returnedVal = BKcf_rbPressed
+End Function
+
 '==================================================================================================
 '更新
 Function Refresh()
@@ -469,6 +477,11 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
+Function showOption(control As IRibbonControl)
+  Call Main.オプション画面表示
+End Function
+
+'==================================================================================================
 Function settingImport(control As IRibbonControl)
   Call Main.設定_取込
 End Function
@@ -556,6 +569,46 @@ End Function
 Function delStyle(control As IRibbonControl)
   Call Main.スタイル削除
 End Function
+
+
+'==================================================================================================
+Function stamp(control As IRibbonControl)
+  Call Main.xxxxxxxxxx
+End Function
+
+'==================================================================================================
+Function confirmFormula(control As IRibbonControl, pressed As Boolean)
+  Call Library.endScript
+  Set ctlEvent = New clsEvent
+  Set ctlEvent.ExcelApplication = Application
+  ctlEvent.InitializeBookSheets
+  
+  BKcf_rbPressed = pressed
+  
+  
+  Call init.setting
+  'Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name, pressed)
+  
+  Call Main.数式確認
+End Function
+
+'==================================================================================================
+Function formatComment(control As IRibbonControl)
+  Call Main.xxxxxxxxxx
+End Function
+
+
+
+
+'==================================================================================================
+Function xxxxxxxxxx(control As IRibbonControl)
+  Call Main.xxxxxxxxxx
+End Function
+
+
+
+
+
 
 
 

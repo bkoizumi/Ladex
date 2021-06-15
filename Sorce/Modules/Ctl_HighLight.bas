@@ -83,34 +83,42 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
+    'MaxWidth = Application.Width
+    'MaxWidth = Range(Cells(1, 1), Cells(1, Columns.count)).Width
+    MaxWidth = 169056
+     
+    'Cells(Rows.count, Columns.Count)
+    
     Set HighLight_X = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
-      Left:=Rng.Left, Top:=Rng.Top, Width:=Application.Width, Height:=Rng.Height)
+      Left:=Rng.Left, Top:=Rng.Top, Width:=MaxWidth, Height:=Rng.Height)
     HighLight_X.Name = "HighLight_X"
     HighLight_X.OnAction = "GetCursorposition"
     
     '表示方法
-    Highlight_DspMethod = Library.getRegistry("Main", "Highlight_DspMethod")
+    HighLight_DspMethod = Library.getRegistry("Main", "HighLight_DspMethod")
     
     '帯(塗りつぶし)
-    If Highlight_DspMethod = "0" Then
+    If HighLight_DspMethod = "0" Then
       HighLight_X.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
-      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+'      Selection.ShapeRange.Width = Range(Cells(1, 1), Cells(1, Columns.count)).Width
+    
     
     '囲み線
-    ElseIf Highlight_DspMethod = "1" Then
+    ElseIf HighLight_DspMethod = "1" Then
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
       Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
     
     '直線
-    ElseIf Highlight_DspMethod = "2" Then
+    ElseIf HighLight_DspMethod = "2" Then
 '      Set Rng = Range("A" & Target.Row + 1)
       
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
@@ -118,7 +126,7 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
       Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.Height = 1
 '      Selection.ShapeRange.Top = Rng.Top
@@ -138,10 +146,13 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
   If BKh_rbPressed = True Then
+    MaxHeight = 169056
+    
+    
     Set Rng = Cells(1, Target.Column)
     
     Set HighLight_Y = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
-      Left:=Rng.Left, Top:=Rng.Top, Width:=Rng.Width, Height:=Application.Height)
+      Left:=Rng.Left, Top:=Rng.Top, Width:=Rng.Width, Height:=MaxHeight)
       
     HighLight_Y.Name = "HighLight_Y"
     HighLight_Y.OnAction = "GetCursorposition"
@@ -149,28 +160,28 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
     
     
     '表示方法
-    Highlight_DspMethod = Library.getRegistry("Main", "Highlight_DspMethod")
+    HighLight_DspMethod = Library.getRegistry("Main", "HighLight_DspMethod")
     
     '帯(塗りつぶし)
-    If Highlight_DspMethod = "0" Then
+    If HighLight_DspMethod = "0" Then
       HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
-      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
     
     '囲み線
-    ElseIf Highlight_DspMethod = "1" Then
+    ElseIf HighLight_DspMethod = "1" Then
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
       Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
     
     '直線
-    ElseIf Highlight_DspMethod = "2" Then
+    ElseIf HighLight_DspMethod = "2" Then
 '      Set Rng = Cells(1, Target.Column + 1)
       
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
@@ -178,7 +189,7 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
       Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "Highlight_TransparentRate") / 100
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.Width = 1
 '      Selection.ShapeRange.Left = Rng.Left
@@ -192,3 +203,25 @@ End Function
 
 
 
+Sub Sample()
+    Dim rngStart As Range, rngEnd As Range
+    Dim BX As Single, BY As Single, EX As Single, EY As Single
+    
+    On Error Resume Next
+    
+    
+    'Shapeを配置するための基準となるセル
+    Set rngStart = Range("A2")
+    Set rngEnd = Range("EEL2")
+    
+    'セルのLeft、Top、Widthプロパティを利用して位置決め
+    BX = rngStart.Left
+    BY = rngStart.Top
+    EX = rngEnd.Left + rngEnd.Width
+    EY = rngEnd.Top
+    
+    '直線
+    ActiveSheet.Shapes.AddLine BX, BY, EX, EY
+
+    rngEnd.Select
+End Sub
