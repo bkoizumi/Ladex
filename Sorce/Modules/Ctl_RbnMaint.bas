@@ -70,6 +70,19 @@ Function SheetExport(control As IRibbonControl)
   ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
   
   
+  Application.DisplayAlerts = False
+  targetBook.Sheets("Stamp").delete
+  targetBook.Worksheets.add.Name = "Stamp"
+  
+  ThisWorkbook.Worksheets("Stamp").Columns("A:AP").Copy targetBook.Sheets("Stamp").Range("A1")
+  Application.DisplayAlerts = True
+  
+  
+  
+  
+  
+  
+  
   Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
   
 
