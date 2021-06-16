@@ -41,6 +41,13 @@ Function SheetImport(control As IRibbonControl)
   targetBook.Sheets("testData").Columns("A:P").Copy ThisWorkbook.Worksheets("testData").Range("A1")
   targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
   
+  
+  Application.DisplayAlerts = False
+  ThisWorkbook.Sheets("Stamp").delete
+  ThisWorkbook.Worksheets.add.Name = "Stamp"
+  targetBook.Sheets("Stamp").Columns("A:AP").Copy ThisWorkbook.Worksheets("Stamp").Range("A1")
+  Application.DisplayAlerts = True
+  
   ThisWorkbook.Save
   
   'Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("C39"))

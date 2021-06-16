@@ -285,7 +285,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
         .SetAttribute "id", "Favorite_" & line
         .SetAttribute "label", objFSO.GetFileName(BK_sheetFavorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
-        .SetAttribute "onAction", "Liadex.xlam!Ctl_Ribbon.OpenFavoriteList"
+        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.OpenFavoriteList"
       End With
       Menu.AppendChild Button
       Set Button = Nothing
@@ -576,7 +576,7 @@ End Function
 
 '==================================================================================================
 Function stamp(control As IRibbonControl)
-  Call Main.xxxxxxxxxx
+  Call Ctl_Stamp.âüàÛ_çœàÛ
 End Function
 
 '==================================================================================================

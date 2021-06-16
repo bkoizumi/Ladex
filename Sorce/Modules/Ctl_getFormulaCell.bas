@@ -105,7 +105,7 @@ Sub GetCurPosition()
     ActiveWindow.RangeFromPoint(p.X, p.Y).Select
   End If
   Call Library.endScript
-  Call Main.数式確認
+  Call Ctl_getFormulaCell.数式確認
 
 
 End Sub

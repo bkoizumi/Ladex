@@ -12,7 +12,7 @@ Public BK_sheetStyle     As Worksheet
 Public BK_sheetTestData  As Worksheet
 Public BK_sheetRibbon    As Worksheet
 Public BK_sheetFavorite  As Worksheet
-
+Public BK_sheetStamp     As Worksheet
 
 'ÉOÉçÅ[ÉoÉãïœêî----------------------------------
 Public Const thisAppName = "Ladex"
@@ -97,6 +97,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetTestData = BK_ThisBook.Worksheets("testData")
   Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
   Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
+  Set BK_sheetStamp = BK_ThisBook.Worksheets("Stamp")
  
   
   logFile = ThisWorkbook.Path & "\ExcelMacro.log"
