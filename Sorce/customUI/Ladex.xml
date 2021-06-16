@@ -37,9 +37,9 @@
       <button id="DefaultDisplay" label="標準画面" imageMso="ViewNormalViewExcel" size="normal" screentip="標準画面"  supertip="標準画面" onAction="Ladex.xlam!Ctl_Ribbon.defaultView" />
       <menu id="CustomMenu" label="メニュー"  itemSize="large" imageMso="BlogHomePage">
         <menuSeparator id="削除" title="設定を削除します" />
-        <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Main.スタイル削除" description="スタイルを削除します &#13;" />
-        <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Main.名前定義削除" description="名前定義を削除します &#13;" />
-        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Main.画像設定"     description="画像設定 &#13;"             />
+        <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle" description="スタイルを削除します &#13;" />
+        <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除" description="名前定義を削除します &#13;" />
+        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"     description="画像設定 &#13;"             />
       </menu>
       <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
 

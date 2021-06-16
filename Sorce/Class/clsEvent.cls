@@ -60,7 +60,7 @@ End Sub
 Public Function AddBookSheet(ByRef argAry) As Boolean
     Dim i1 As Long
     Dim i2 As Long
-    Dim IX As Integer
+    Dim ix As Integer
     Dim myArray() As String
 
     '配列の次元数により分岐
@@ -69,13 +69,13 @@ Public Function AddBookSheet(ByRef argAry) As Boolean
         Case 1 '1次元配列
             ReDim Preserve pBookSheets(pCntBS)
             pBookSheets(pCntBS).Book = argAry(LBound(argAry))
-            IX = 0
-            ReDim myArray(IX)
+            ix = 0
+            ReDim myArray(ix)
             For i1 = LBound(argAry) + 1 To UBound(argAry)
                 If argAry(i1) <> "" Then
-                    ReDim Preserve myArray(IX)
-                    myArray(IX) = argAry(i1)
-                    IX = IX + 1
+                    ReDim Preserve myArray(ix)
+                    myArray(ix) = argAry(i1)
+                    ix = ix + 1
                 End If
             Next
             pBookSheets(pCntBS).Sheets = myArray
@@ -86,13 +86,13 @@ Public Function AddBookSheet(ByRef argAry) As Boolean
             For i1 = LBound(argAry, 1) To UBound(argAry, 1)
                 ReDim Preserve pBookSheets(pCntBS)
                 pBookSheets(pCntBS).Book = argAry(i1, LBound(argAry, 2))
-                IX = 0
-                ReDim myArray(IX)
+                ix = 0
+                ReDim myArray(ix)
                 For i2 = LBound(argAry, 2) + 1 To UBound(argAry, 2)
                     If argAry(i1, i2) <> "" Then
-                        ReDim Preserve myArray(IX)
-                        myArray(IX) = argAry(i1, i2)
-                        IX = IX + 1
+                        ReDim Preserve myArray(ix)
+                        myArray(ix) = argAry(i1, i2)
+                        ix = ix + 1
                     End If
                 Next
                 pBookSheets(pCntBS).Sheets = myArray
@@ -225,7 +225,7 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   End If
   
   If BKcf_rbPressed = True Then
-    Call Main.数式確認
+    Call Ctl_getFormulaCell.数式確認
   End If
   
   

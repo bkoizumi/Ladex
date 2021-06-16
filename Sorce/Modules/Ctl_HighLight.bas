@@ -18,9 +18,12 @@ Sub GetCursorposition()
   Dim p        As POINTAPI 'APIópïœêî
   Dim Rng  As Range
   
-  ActiveSheet.Shapes("HighLight_X").Visible = False
-  ActiveSheet.Shapes("HighLight_Y").Visible = False
-  
+  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
+    ActiveSheet.Shapes("HighLight_X").Visible = False
+  End If
+  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[Y,B]" Then
+    ActiveSheet.Shapes("HighLight_Y").Visible = False
+  End If
   Call Library.waitTime(50)
   Call Library.startScript
   
@@ -29,8 +32,14 @@ Sub GetCursorposition()
   If TypeName(ActiveWindow.RangeFromPoint(p.X, p.Y)) = "Range" Then
     ActiveWindow.RangeFromPoint(p.X, p.Y).Select
   End If
-  ActiveSheet.Shapes("HighLight_X").Visible = True
-  ActiveSheet.Shapes("HighLight_Y").Visible = True
+  
+  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
+    ActiveSheet.Shapes("HighLight_X").Visible = True
+  End If
+  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[Y,B]" Then
+    ActiveSheet.Shapes("HighLight_Y").Visible = True
+  End If
+  
   Call Library.endScript
 
 
@@ -52,21 +61,22 @@ Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Option
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
-    If targetArea_X Is Nothing Then
-      Call showStart_X(Target, targetArea_X)
-      
-    ElseIf Not (targetArea_X Is Nothing) And Application.Intersect(ActiveCell, targetArea_X) Is Nothing Then
-      Call showStart_X(Target, targetArea_X)
+    If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
+      If targetArea_X Is Nothing Then
+        Call showStart_X(Target, targetArea_X)
+        
+      ElseIf Not (targetArea_X Is Nothing) And Application.Intersect(ActiveCell, targetArea_X) Is Nothing Then
+        Call showStart_X(Target, targetArea_X)
+      End If
     End If
-  
-  
-    If targetArea_Y Is Nothing Then
-      Call showStart_Y(Target, targetArea_Y)
-      
-    ElseIf Not (targetArea_Y Is Nothing) And Application.Intersect(ActiveCell, targetArea_Y) Is Nothing Then
-      Call showStart_Y(Target, targetArea_Y)
+    
+    If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[Y,B]" Then
+      If targetArea_Y Is Nothing Then
+        Call showStart_Y(Target, targetArea_Y)
+      ElseIf Not (targetArea_Y Is Nothing) And Application.Intersect(ActiveCell, targetArea_Y) Is Nothing Then
+        Call showStart_Y(Target, targetArea_Y)
+      End If
     End If
-  
   End If
 
   Target.Activate

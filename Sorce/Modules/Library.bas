@@ -693,11 +693,11 @@ Function delSheetData(Optional line As Long)
     Rows(line & ":" & Rows.count).delete Shift:=xlUp
     Rows(line & ":" & Rows.count).Select
     Rows(line & ":" & Rows.count).NumberFormatLocal = "G/標準"
-    Rows(line & ":" & Rows.count).style = "Normal"
+    Rows(line & ":" & Rows.count).Style = "Normal"
   Else
     Cells.delete Shift:=xlUp
     Cells.NumberFormatLocal = "G/標準"
-    Cells.style = "Normal"
+    Cells.Style = "Normal"
   End If
   DoEvents
 
@@ -1181,16 +1181,16 @@ End Function
 Function getFixlng(strInText As String, lngFixBytes As Long) As String
     Dim lngKeta As Long
     Dim lngByte As Long, lngByte2 As Long, lngByte3 As Long
-    Dim IX As Long
+    Dim ix As Long
     Dim intCHAR As Long
     Dim strOutText As String
 
     lngKeta = Len(strInText)
     strOutText = strInText
     ' バイト数判定
-    For IX = 1 To lngKeta
+    For ix = 1 To lngKeta
         ' 1文字ずつ半角/全角を判断
-        intCHAR = Asc(Mid(strInText, IX, 1))
+        intCHAR = Asc(Mid(strInText, ix, 1))
         ' 全角と判断される場合はバイト数に1を加える
         If ((intCHAR < 0) Or (intCHAR > 255)) Then
             lngByte2 = 2        ' 全角
@@ -1201,15 +1201,15 @@ Function getFixlng(strInText As String, lngFixBytes As Long) As String
         lngByte3 = lngByte + lngByte2
         If lngByte3 >= lngFixBytes Then
             If lngByte3 > lngFixBytes Then
-                strOutText = Left(strInText, IX - 1)
+                strOutText = Left(strInText, ix - 1)
             Else
-                strOutText = Left(strInText, IX)
+                strOutText = Left(strInText, ix)
                 lngByte = lngByte3
             End If
             Exit For
         End If
         lngByte = lngByte3
-    Next IX
+    Next ix
     ' 桁不足判定(空白文字追加)
     If lngByte < lngFixBytes Then
         strOutText = strOutText & Space(lngFixBytes - lngByte)

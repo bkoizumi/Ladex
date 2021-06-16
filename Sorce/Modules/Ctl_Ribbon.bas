@@ -124,7 +124,7 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
       End If
       
-      .SetAttribute "onAction", "Liadex.xlam!Ctl_Ribbon.selectActiveSheet"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
     End With
     Menu.AppendChild Button
     Set Button = Nothing
@@ -234,6 +234,9 @@ Private Function GetRibbon(ByVal lRibbonPointer As Long) As Object
 
   Dim ribbonObj As Object
   
+  If lRibbonPointer = 0 Then
+    End
+  End If
   MoveMemory ribbonObj, lRibbonPointer, LenB(lRibbonPointer)
   Set GetRibbon = ribbonObj
   p = 0: MoveMemory ribbonObj, p, LenB(p)
@@ -589,7 +592,7 @@ Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Call init.setting
   'Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name, pressed)
   
-  Call Main.数式確認
+  Call Ctl_getFormulaCell.数式確認
 End Function
 
 '==================================================================================================
