@@ -37,15 +37,16 @@
       <button id="DefaultDisplay" label="標準画面" imageMso="ViewNormalViewExcel" size="normal" screentip="標準画面"  supertip="標準画面" onAction="Ladex.xlam!Ctl_Ribbon.defaultView" />
       <menu id="CustomMenu" label="メニュー"  itemSize="large" imageMso="BlogHomePage">
         <menuSeparator id="削除" title="設定を削除します" />
-        <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle" description="スタイルを削除します &#13;" />
-        <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除" description="名前定義を削除します &#13;" />
-        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"     description="画像設定 &#13;"             />
+        <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除します &#13;" />
+        <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除します &#13;" />
+        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;"             />
+        <button id="unSetOutLine"   label="すべて表示"     imageMso="OutlineUngroup"         onAction="Ladex.xlam!Ctl_Ribbon.すべて表示"    description="非表示セルの表示。フィルターの解除。アウトラインの解除。をします &#13;" supertip="非表示セルの表示&#13;フィルターの解除&#13;アウトラインの解除&#13;" />
       </menu>
-      <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
+      <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.ZoomIn"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるようにします &#13;" />
 
       <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
       <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Main.R1C1表記"                                       screentip="R1C1表記"    supertip="R1C1参照形式に変更" />
-      <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.ZoomIn"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるようにします &#13;" />
+      <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
 
       <button id="stamp"          label="電子印鑑"      imageMso="StampTool"              size="normal" screentip="電子印鑑"     supertip="電子印鑑"     onAction="Ladex.xlam!Ctl_Ribbon.stamp" />
       <button id="formatComment"  label="コメント整形"  imageMso="NewComment"             size="normal" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
@@ -191,11 +192,17 @@
 
 
 
-    <group idMso="GroupOutline"                    visible="true"/>                               <!--アウトラインー-->
+    <!-- <group idMso="GroupOutline" visible="true"/>                               アウトライン -->
+    <group id="Group_GroupOutline" label="アウトライン">
+      <control idMso="OutlineGroupMenu"   size="normal" visible="true" />
+      <control idMso="OutlineUngroupMenu" size="normal" visible="true" />
+      <control idMso="OutlineSubtotals"   size="normal" visible="true" />
 
+      <control idMso="OutlineShowDetail"  size="normal" visible="true" />
+      <control idMso="OutlineHideDetail"  size="normal" visible="true" />
+      <control idMso="OutlineSettings"    size="normal" visible="true" />
 
-
-
+    </group>
 
 
     </tab>

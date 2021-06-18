@@ -294,6 +294,48 @@ End Function
 
 
 '**************************************************************************************************
+' * Ç∑Ç◊Çƒï\é¶
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function Ç∑Ç◊Çƒï\é¶()
+  Dim rowOutlineLevel As Long, colOutlineLevel As Long
+  
+  On Error Resume Next
+  
+  Call Library.startScript
+  Call init.setting
+
+  If ActiveSheet.FilterMode = True Then
+    ActiveSheet.ShowAllData
+  End If
+  If ActiveWindow.DisplayOutline = True Then
+    For rowOutlineLevel = 1 To 15
+      DoEvents
+      ActiveSheet.Outline.ShowLevels rowLevels:=rowOutlineLevel
+      If Err.Number <> 0 Then
+        Err.Clear
+        Exit For
+      End If
+    Next
+    
+    For colOutlineLevel = 1 To 15
+      DoEvents
+      ActiveSheet.Outline.ShowLevels columnLevels:=colOutlineLevel
+      If Err.Number <> 0 Then
+        Err.Clear
+        Exit For
+      End If
+    Next
+  End If
+  ActiveSheet.Cells.EntireColumn.Hidden = False
+  ActiveSheet.Cells.EntireRow.Hidden = False
+  
+  Call Library.endScript(, True)
+End Function
+
+
+'**************************************************************************************************
 ' * ê›íËImport / Export
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>

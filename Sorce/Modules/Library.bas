@@ -1351,7 +1351,7 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
   Dim runTime As Date
   Dim StartUpPosition As Long
 
-  On Error GoTo catchError
+'  On Error GoTo catchError
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
 

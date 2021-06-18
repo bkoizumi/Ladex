@@ -13,9 +13,9 @@ End Type
 
 
 '==================================================================================================
-Sub GetCursorposition()
+Sub getCursorPosition()
 
-  Dim p        As POINTAPI 'API用変数
+  Dim p    As POINTAPI 'API用変数
   Dim Rng  As Range
   
   If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
@@ -102,7 +102,7 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
     Set HighLight_X = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
       Left:=Rng.Left, Top:=Rng.Top, Width:=MaxWidth, Height:=Rng.Height)
     HighLight_X.Name = "HighLight_X"
-    HighLight_X.OnAction = "GetCursorposition"
+    HighLight_X.OnAction = "getCursorPosition"
     
     '表示方法
     HighLight_DspMethod = Library.getRegistry("Main", "HighLight_DspMethod")
@@ -165,7 +165,7 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       Left:=Rng.Left, Top:=Rng.Top, Width:=Rng.Width, Height:=MaxHeight)
       
     HighLight_Y.Name = "HighLight_Y"
-    HighLight_Y.OnAction = "GetCursorposition"
+    HighLight_Y.OnAction = "getCursorPosition"
     HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
     
     

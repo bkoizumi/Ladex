@@ -525,6 +525,30 @@ Function defaultView(control As IRibbonControl)
 End Function
 
 '==================================================================================================
+Function delStyle(control As IRibbonControl)
+  Call Main.スタイル削除
+End Function
+
+'==================================================================================================
+Function 名前定義削除(control As IRibbonControl)
+  Call Main.名前定義削除
+End Function
+
+'==================================================================================================
+Function 画像設定(control As IRibbonControl)
+  'Call Main.すべて表示
+End Function
+
+'==================================================================================================
+Function すべて表示(control As IRibbonControl)
+  Call Main.すべて表示
+End Function
+
+
+
+
+
+'==================================================================================================
 Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Library.endScript
   Set ctlEvent = New clsEvent
@@ -568,10 +592,7 @@ Function ZoomIn(control As IRibbonControl, pressed As Boolean)
 End Function
 
 
-'==================================================================================================
-Function delStyle(control As IRibbonControl)
-  Call Main.スタイル削除
-End Function
+
 
 
 '==================================================================================================
