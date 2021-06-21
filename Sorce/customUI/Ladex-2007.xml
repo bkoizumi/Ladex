@@ -172,8 +172,10 @@
       </box>
       <separator id="sbAlignment01" />
       <box id="bAlignment04"  boxStyle="vertical">
-        <control idMso="WrapText"         showLabel="true" visible="true" />
-        <control idMso="MergeCenterMenu"  showLabel="true" visible="true" />
+        <control idMso="WrapText"                   label="折り返し" visible="true" />
+        <control idMso="MergeCenterMenu"            label="中央揃え" visible="true" />
+        <control idMso="ConditionalFormattingMenu"  label="条件書式" visible="true" />
+
       </box>
     </group>
 

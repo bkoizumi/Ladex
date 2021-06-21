@@ -33,8 +33,6 @@ Function ”®Šm”F()
   formulaVal = Replace(formulaVal, vbLf, "")
   formulaVal = Trim(formulaVal)
   
-  Call Library.showDebugForm("formulaValF" & formulaVal)
-  
   aryRange = getFormulaRange(ActiveCell)
   Call Library.startScript
   

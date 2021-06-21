@@ -29,7 +29,7 @@ Private Sub UserForm_Initialize()
   indexCnt = 0
   
   With Frm_smplData
-    For Each cmdVal In BK_sheetSetting.Range("G3:G22")
+    For Each cmdVal In BK_sheetSetting.Range("H3:H22")
       ListBox1.AddItem indexCnt & "." & cmdVal
       indexCnt = indexCnt + 1
     Next

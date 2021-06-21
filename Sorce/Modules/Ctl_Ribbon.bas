@@ -270,11 +270,10 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
+  Call Ctl_Favorite.getList
   If Workbooks.count = 0 Then
     endLine = 100
   Else
-    Call Ctl_Favorite.getList
-    
     endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   End If
   
@@ -525,6 +524,20 @@ Function defaultView(control As IRibbonControl)
 End Function
 
 '==================================================================================================
+Function dspDefaultViewSelect(control As IRibbonControl)
+  Call Main.A1セル選択
+End Function
+
+'==================================================================================================
+Function defaultViewAndSave(control As IRibbonControl)
+  Call Main.A1セル選択
+  
+  ActiveWorkbook.Save
+End Function
+
+
+
+'==================================================================================================
 Function delStyle(control As IRibbonControl)
   Call Main.スタイル削除
 End Function
@@ -596,9 +609,21 @@ End Function
 
 
 '==================================================================================================
-Function stamp(control As IRibbonControl)
+Function stamp01(control As IRibbonControl)
   Call Ctl_Stamp.押印_済印
 End Function
+
+'==================================================================================================
+Function stamp02(control As IRibbonControl)
+  Call Ctl_Stamp.押印_済印
+End Function
+
+'==================================================================================================
+Function stamp03(control As IRibbonControl)
+  Call Ctl_Stamp.押印_済印
+End Function
+
+
 
 '==================================================================================================
 Function confirmFormula(control As IRibbonControl, pressed As Boolean)
@@ -618,7 +643,7 @@ End Function
 
 '==================================================================================================
 Function formatComment(control As IRibbonControl)
-  Call Main.xxxxxxxxxx
+  Call Main.コメント整形
 End Function
 
 

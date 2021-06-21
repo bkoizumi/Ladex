@@ -87,14 +87,15 @@ Function パターン選択()
 '  On Error GoTo catchError
   Call init.setting
   
+  Sheets("Sheet1").Select
   Sheets("Sheet1").Columns("A:Z").Clear
   Sheets("Sheet1").Range("A1").Select
-  
   
   Call showFrm_sampleData("パターン選択")
   maxCount = BK_setVal("maxCount")
   line = Selection(1).Row
-
+  
+  
   For Each varDic In sampleDataList
     Debug.Print sampleDataList.Item(varDic)
     

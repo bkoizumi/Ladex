@@ -8,12 +8,12 @@ Attribute VB_Name = "Ctl_Favorite"
 Function getList()
   Dim tmp, i As Long, buf As String
   
+  Call init.setting
   tmp = GetAllSettings(thisAppName, "FavoriteList")
   
   If Not IsEmpty(tmp) Then
     For i = 0 To UBound(tmp)
-      buf = buf & tmp(i, 0) & Chr(9) & tmp(i, 1) & vbCrLf
-      Debug.Print buf
+      BK_sheetFavorite.Range("A" & i + 2) = tmp(i, 1)
     Next i
   End If
 End Function

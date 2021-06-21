@@ -2039,7 +2039,7 @@ End Function
 ' *
 ' * @Link   http://techoh.net/customize-excel-comment-by-vba/
 '**************************************************************************************************
-Function resetComment()
+Function setComment()
     Dim cl As Range
     Dim count As Long
 
@@ -2070,7 +2070,7 @@ Function resetComment()
         End With
       End If
     Next cl
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
+
 End Function
 
 

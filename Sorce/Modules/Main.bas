@@ -114,6 +114,40 @@ Function 標準画面()
   
 End Function
 
+'==================================================================================================
+Function A1セル選択()
+
+  Dim objSheet As Object
+  Dim sheetName As String, SetActiveSheet As String
+  Dim sheetCount As Long, sheetMaxCount As Long
+  
+  'On Error Resume Next
+  
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  
+  SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
+  
+  sheetCount = 0
+  sheetMaxCount = ActiveWorkbook.Sheets.count
+  For Each objSheet In ActiveWorkbook.Sheets
+    sheetName = objSheet.Name
+    
+    If Worksheets(sheetName).Visible = True Then
+      Worksheets(sheetName).Select
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
+    End If
+    
+    sheetCount = sheetCount + 1
+  Next
+  
+  Worksheets(SetActiveSheet).Select
+  Call Ctl_ProgressBar.showEnd
+  Call Library.endScript
+  
+End Function
+'==================================================================================================
+
 
 '**************************************************************************************************
 ' * スタイル削除
@@ -291,6 +325,29 @@ Function ハイライト()
 '  Call Library.endScript(True)
 
 End Function
+
+'**************************************************************************************************
+' * コメント整形
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function コメント整形()
+  
+  On Error GoTo catchError
+  
+  If TypeName(ActiveCell) = "Range" Then
+    Call Library.setComment
+  
+  End If
+  
+  
+  Exit Function
+
+'エラー発生時=====================================================================================
+catchError:
+  'Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+
 
 
 '**************************************************************************************************
