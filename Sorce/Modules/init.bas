@@ -81,7 +81,7 @@ Function setting(Optional reCheckFlg As Boolean)
   'レジストリ関連設定------------------------------------------------------------------------------
   RegistrySubKey = "Main"
   
-  If BK_ThisBook Is Nothing Or reCheckFlg = True Then
+  If logFile = "" Or reCheckFlg = True Then
     Call usetting
   Else
     Exit Function
@@ -95,7 +95,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetNotice = BK_ThisBook.Worksheets("Notice")
   Set BK_sheetStyle = BK_ThisBook.Worksheets("Style")
   Set BK_sheetTestData = BK_ThisBook.Worksheets("testData")
-  Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
+'  Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
   Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
   Set BK_sheetStamp = BK_ThisBook.Worksheets("Stamp")
  
@@ -107,18 +107,18 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_setVal = CreateObject("Scripting.Dictionary")
   BK_setVal.add "debugMode", "develop"
   
-  Set BK_ribbonVal = Nothing
-  Set BK_ribbonVal = CreateObject("Scripting.Dictionary")
-  For line = 2 To BK_sheetRibbon.Cells(Rows.count, 1).End(xlUp).Row
-    If BK_sheetRibbon.Range("A" & line) <> "" Then
-      BK_ribbonVal.add "Lbl_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("B" & line).Text
-      BK_ribbonVal.add "Act_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("C" & line).Text
-      BK_ribbonVal.add "Sup_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("D" & line).Text
-      BK_ribbonVal.add "Dec_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("E" & line).Text
-      BK_ribbonVal.add "Siz_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("F" & line).Text
-      BK_ribbonVal.add "Img_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("G" & line).Text
-    End If
-  Next
+'  Set BK_ribbonVal = Nothing
+'  Set BK_ribbonVal = CreateObject("Scripting.Dictionary")
+'  For line = 2 To BK_sheetRibbon.Cells(Rows.count, 1).End(xlUp).Row
+'    If BK_sheetRibbon.Range("A" & line) <> "" Then
+'      BK_ribbonVal.add "Lbl_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("B" & line).Text
+'      BK_ribbonVal.add "Act_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("C" & line).Text
+'      BK_ribbonVal.add "Sup_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("D" & line).Text
+'      BK_ribbonVal.add "Dec_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("E" & line).Text
+'      BK_ribbonVal.add "Siz_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("F" & line).Text
+'      BK_ribbonVal.add "Img_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("G" & line).Text
+'    End If
+'  Next
   
   
   Exit Function
