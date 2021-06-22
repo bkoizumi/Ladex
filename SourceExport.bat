@@ -10,7 +10,6 @@ del /Q Form\*.*
 cd ..\..
 cscript //nologo vbac.wsf decombine /binary:Ladex /source:Ladex/Sorce
 
-
 cd "Ladex\Sorce\Ladex.xlam"
 
 move *.dcm "..\Microsoft Excel Objects"
@@ -22,3 +21,4 @@ move *.cls ..\Class
 
 cd %~dp0
 rmdir "Sorce\Ladex.xlam"
+rmdir /s /q "Sorce\メンテナンス用.xlsm"

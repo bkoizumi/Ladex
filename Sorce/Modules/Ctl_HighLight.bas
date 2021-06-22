@@ -18,10 +18,10 @@ Sub getCursorPosition()
   Dim p    As POINTAPI 'APIópïœêî
   Dim Rng  As Range
   
-  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
+  If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
     ActiveSheet.Shapes("HighLight_X").Visible = False
   End If
-  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[Y,B]" Then
+  If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[Y,B]" Then
     ActiveSheet.Shapes("HighLight_Y").Visible = False
   End If
   Call Library.waitTime(50)
@@ -33,10 +33,10 @@ Sub getCursorPosition()
     ActiveWindow.RangeFromPoint(p.X, p.Y).Select
   End If
   
-  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
+  If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
     ActiveSheet.Shapes("HighLight_X").Visible = True
   End If
-  If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[Y,B]" Then
+  If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[Y,B]" Then
     ActiveSheet.Shapes("HighLight_Y").Visible = True
   End If
   
@@ -50,7 +50,7 @@ Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Option
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
-  
+  Call Library.startScript
   If Library.chkShapeName("HighLight_X") = True Then
     ActiveSheet.Shapes("HighLight_X").delete
   End If
@@ -61,7 +61,7 @@ Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Option
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
-    If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[X,B]" Then
+    If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
       If targetArea_X Is Nothing Then
         Call showStart_X(Target, targetArea_X)
         
@@ -70,7 +70,7 @@ Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Option
       End If
     End If
     
-    If Library.getRegistry(RegistrySubKey, "HighLight_DspDirection") Like "[Y,B]" Then
+    If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[Y,B]" Then
       If targetArea_Y Is Nothing Then
         Call showStart_Y(Target, targetArea_Y)
       ElseIf Not (targetArea_Y Is Nothing) And Application.Intersect(ActiveCell, targetArea_Y) Is Nothing Then
@@ -82,6 +82,7 @@ Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Option
   Target.Activate
   Set Rng = Nothing
 
+  Call Library.endScript
 End Function
 
 
@@ -109,11 +110,11 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
     
     'ë—(ìhÇËÇ¬Ç‘Çµ)
     If HighLight_DspMethod = "0" Then
-      HighLight_X.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      HighLight_X.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
-      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
 '      Selection.ShapeRange.Width = Range(Cells(1, 1), Cells(1, Columns.count)).Width
     
     
@@ -123,8 +124,8 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
     
     'íºê¸
@@ -135,8 +136,8 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.Height = 1
 '      Selection.ShapeRange.Top = Rng.Top
@@ -166,7 +167,7 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       
     HighLight_Y.Name = "HighLight_Y"
     HighLight_Y.OnAction = "getCursorPosition"
-    HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+    HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
     
     
     'ï\é¶ï˚ñ@
@@ -174,11 +175,11 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
     
     'ë—(ìhÇËÇ¬Ç‘Çµ)
     If HighLight_DspMethod = "0" Then
-      HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
+      HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
-      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
     
     'àÕÇ›ê¸
     ElseIf HighLight_DspMethod = "1" Then
@@ -186,8 +187,8 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
     
     'íºê¸
@@ -198,8 +199,8 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLight_Color")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLight_TransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
+      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.Width = 1
 '      Selection.ShapeRange.Left = Rng.Left

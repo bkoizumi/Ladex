@@ -209,33 +209,17 @@ End Sub
 '==================================================================================================
 Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
 
-    If Not CheckSheet(Sh) Then Exit Sub
-    
-'    If Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg") = "True" _
-'      And Library.getRegistry(ActiveWorkbook.Name & "_HighLightSheet", "HighLightFlg") = ActiveSheet.Name Then
-'
-'      Application.ScreenUpdating = True
-'    End If
-    
-    
-    
-  If Library.getRegistry("HighLight", ActiveWorkbook.Name) = True Then
-    'Call Library.setHighLight(Target)
+  If Not CheckSheet(Sh) Then Exit Sub
+  
+  If Library.getRegistry("Main", "HighLightFlg") = True Then
     Call Ctl_HighLight.showStart(Target)
   End If
   
   If BKcf_rbPressed = True Then
     Call Ctl_getFormulaCell.êîéÆämîF
   End If
-  
-  
-  
-  
+
 End Sub
-
-
-
-
 
 
 '==================================================================================================
@@ -244,9 +228,9 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(Sh) Then Exit Sub
 
-  If Library.getRegistry("zoomIn", ActiveWorkbook.Name) = True Then
+  If Library.getRegistry("Main", "Zoom") = True Then
     Cancel = True
-    Call Library.ZoomIn
+    Call Library.Zoom
   End If
 
 

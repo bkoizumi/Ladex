@@ -959,11 +959,9 @@ Function getColor(colorValue As Long)
   Application.Dialogs(xlDialogEditColor).Show 10, Red, Green, Blue
   
   setColorValue = ActiveWorkbook.Colors(10)
-'  If setColorValue = False Then
-'    setColorValue = colorValue
-'  Else
-'    setColorValue = ActiveWorkbook.Colors(10)
-'  End If
+  If setColorValue = False Then
+    setColorValue = colorValue
+  End If
 
   getColor = setColorValue
 
@@ -2171,7 +2169,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
 '**************************************************************************************************
-Function ZoomIn()
+Function Zoom()
   topPosition = Library.getRegistry("UserForm", "ZoomTop")
   leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
   

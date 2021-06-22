@@ -21,8 +21,8 @@ Function onLoad(ribbon As IRibbonUI)
   
   Call init.setting
   
-  BKh_rbPressed = Library.getRegistry("HighLight", ActiveWorkbook.Name)
-  BKz_rbPressed = Library.getRegistry("ZoomIn", ActiveWorkbook.Name)
+  BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg")
+  BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg")
   
   Set BK_ribbonUI = ribbon
   
@@ -526,15 +526,27 @@ End Function
 
 '==================================================================================================
 Function dspDefaultViewSelect(control As IRibbonControl)
-  Call Main.A1セル選択
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 '==================================================================================================
 Function defaultViewAndSave(control As IRibbonControl)
-  Call Main.A1セル選択
-  
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   ActiveWorkbook.Save
 End Function
+
+'==================================================================================================
+Function dspDefaultViewSelect2(control As IRibbonControl)
+  Call Main.A1セル選択
+End Function
+
+'==================================================================================================
+Function dspDefaultViewSelect2AndSave(control As IRibbonControl)
+  Call Main.A1セル選択
+  ActiveWorkbook.Save
+End Function
+
+
 
 
 
@@ -572,20 +584,18 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   BKh_rbPressed = pressed
   
   Call init.setting
-  Call Library.setRegistry("HighLight", ActiveWorkbook.Name, pressed)
+  Call Library.setRegistry("Main", "HighLightFlg", pressed)
   
   Call Ctl_HighLight.showStart(ActiveCell)
   If pressed = False Then
-    'Call Library.unsetHighLight
-'    Call Ctl_HighLight.showEnd
-    Call Library.delRegistry("HighLight", ActiveWorkbook.Name)
+    Call Library.delRegistry("Main", "HighLightFlg")
 
   End If
 End Function
 
 
 '==================================================================================================
-Function ZoomIn(control As IRibbonControl, pressed As Boolean)
+Function Zoom(control As IRibbonControl, pressed As Boolean)
   Call Library.endScript
   Set ctlEvent = New clsEvent
   Set ctlEvent.ExcelApplication = Application
@@ -595,13 +605,13 @@ Function ZoomIn(control As IRibbonControl, pressed As Boolean)
   
   
   Call init.setting
-  Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name, pressed)
+  Call Library.setRegistry("Main", "ZoomFlg", pressed)
   
   If pressed = False Then
     Call Application.OnKey("{F2}")
-    Call Library.delRegistry("ZoomIn", ActiveWorkbook.Name)
+    Call Library.delRegistry("Main", "ZoomFlg")
   Else
-    Call Application.OnKey("{F2}", "Library.ZoomIn")
+    Call Application.OnKey("{F2}", "Library.Zoom")
   End If
 End Function
 
