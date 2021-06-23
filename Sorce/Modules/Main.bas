@@ -277,7 +277,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function R1C1表記(control As IRibbonControl)
+Function R1C1表記()
 
   On Error Resume Next
   
@@ -287,6 +287,26 @@ Function R1C1表記(control As IRibbonControl)
     Application.ReferenceStyle = xlA1
   End If
   
+End Function
+
+'**************************************************************************************************
+' * セル幅・高さ調整
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function セル幅調整()
+  Call Library.startScript
+  Cells.EntireColumn.AutoFit
+  Call Library.endScript(True)
+End Function
+
+
+'==================================================================================================
+Function セル高さ調整()
+  Call Library.startScript
+  Cells.EntireRow.AutoFit
+  Call Library.endScript(True)
 End Function
 
 

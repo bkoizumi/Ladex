@@ -593,6 +593,31 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   End If
 End Function
 
+'==================================================================================================
+Function dispR1C1(control As IRibbonControl)
+  Call Main.R1C1表記
+End Function
+
+
+'==================================================================================================
+Function AdjustWidth(control As IRibbonControl)
+  Call Main.セル幅調整
+End Function
+
+'==================================================================================================
+Function AdjustHeight(control As IRibbonControl)
+  Call Main.セル高さ調整
+End Function
+
+'==================================================================================================
+Function AdjustHeightAndWidth(control As IRibbonControl)
+  Call Main.セル幅調整
+  Call Main.セル高さ調整
+  
+End Function
+
+
+
 
 '==================================================================================================
 Function Zoom(control As IRibbonControl, pressed As Boolean)

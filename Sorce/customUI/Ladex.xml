@@ -51,15 +51,22 @@
         <menuSeparator id="削除" title="設定を削除します" />
         <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除します &#13;" />
         <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除します &#13;" />
-        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;"             />
+        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
       </menu>
       <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるようにします &#13;" />
 
       <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
-      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Main.R1C1表記"                                       screentip="R1C1表記"    supertip="R1C1参照形式に変更" />
+      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
+
+      <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
+        <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="セル幅調整 &#13;" />
+        <button id="AdjustHeight"         label="高さ"    imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeight"         description="セル高さ調整 &#13;" />
+        <button id="AdjustHeightAndWidth" label="両方"    imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeightAndWidth" description="セル幅、高さ両方を調整 &#13;" />
+      </menu>
+
       <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
 
-      <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool">
+      <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool" screentip="電子印鑑" supertip="電子印鑑">
         <button id="stamp01"  label="電子印鑑【済】"    imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp01" description="電子印鑑 &#13;" />
         <button id="stamp02"  label="電子印鑑【確認】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp02" description="電子印鑑 &#13;" />
         <button id="stamp03"  label="電子印鑑【日付】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp03" description="電子印鑑 &#13;" />
@@ -69,7 +76,7 @@
 
 
 
-      <button id="formatComment"  label="コメント整形"  imageMso="NewComment"             size="normal" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
+      <button id="formatComment"  label="コメント整形"  imageMso="NewComment" size="normal" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
       <toggleButton id="confirmFormula"      label="数式確認"  imageMso="ShapeSheetShowFormulas" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.confirmFormula" getPressed="confFormulaPressed"  screentip="数式確認"  supertip="数式確認" />
 
 
