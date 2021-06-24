@@ -115,12 +115,12 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
       .SetAttribute "id", "sheetID_" & sheetName.Index
       .SetAttribute "label", sheetName.Name
     
-      If Sheets(sheetName.Name).Visible = True Then
+      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+      ElseIf Sheets(sheetName.Name).Visible = True Then
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
       ElseIf Sheets(sheetName.Name).Visible <> True Then
         .SetAttribute "imageMso", "SheetProtect"
-      ElseIf ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
-        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
       End If
       
       .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
@@ -183,6 +183,12 @@ Function selectActiveSheet(control As IRibbonControl)
   Sheets(sheetNameID).Select
   
   Application.GoTo Reference:=Range("A1"), Scroll:=True
+  
+  If BK_ribbonUI Is Nothing Then
+  Else
+    BK_ribbonUI.Invalidate
+  End If
+  
   
   Call Library.endScript
 End Function

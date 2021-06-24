@@ -186,12 +186,18 @@ End Sub
 
 'シートがアクティブになったときに発生
 Private Sub xlApp_SheetActivate(ByVal Sh As Object)
-    If Me.StopEvent Then Exit Sub
-    If Not CheckSheet(Sh) Then Exit Sub
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
 
     'メッセージボックスでイベント補足を確認
 '    MsgBox "SheetActivate : [" & Sh.Parent.Name & "]" & Sh.Name
+  Exit Sub
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  'Call Library.showNotice(400, "", True)
 End Sub
+
 
 '==================================================================================================
 'ワークシートのセルが変更されたときに発生
