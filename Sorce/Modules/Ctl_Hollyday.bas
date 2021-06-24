@@ -1,8 +1,63 @@
-Attribute VB_Name = "Hollyday"
+Attribute VB_Name = "Ctl_Hollyday"
 '******************************************************************************
 ' ‚ ‚é“ú‚ªj“ú‚Å‚ ‚é‚©H‚»‚Ìê‡‚Ç‚Ìj“ú‚©H‚ğ’²‚×‚éŠÖ”B
 ' http://www.excelio.jp/LABORATORY/EXCEL_CALENDER.html
 '******************************************************************************
+
+'==================================================================================================
+Function InitializeHollyday()
+  Dim startDay As Date, endDay As Date
+  Dim NowYear As Integer, today As Date
+  Dim line As Long, endLine As Long
+  Dim HollydayName As String
+  Dim count As Long
+  
+  Call init.setting
+'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("İ’è")
+  
+  NowYear = Format(Date, "yyyy")
+  startDay = Format(NowYear & "/4/1", "yyyy/mm/dd")
+  endDay = Format(NowYear + 2 & "/3/31", "yyyy/mm/dd")
+  
+  If Library.chkArrayEmpty(arryHollyday) = False Then
+    Exit Function
+  Else
+    endLine = BK_sheetSetting.Cells(Rows.count, 10).End(xlUp).Row
+    Range("J3:K" & endLine).ClearContents
+  End If
+  
+
+  line = 3
+  For today = startDay To endDay
+    If GetHollyday(today, HollydayName) = True Then
+      BK_sheetSetting.Range("J" & line) = today
+      BK_sheetSetting.Range("K" & line) = HollydayName
+      line = line + 1
+    End If
+    Debug.Print today
+  Next
+  
+'  Stop
+  endLine = BK_sheetSetting.Cells(Rows.count, 10).End(xlUp).Row
+  ReDim arryHollyday(endLine - 2)
+  
+  count = 0
+  For line = 3 To endLine
+    arryHollyday(count) = BK_sheetSetting.Range("J" & line)
+    count = count + 1
+  Next
+  
+'  Call Library.Œrü_•\(Range("J3:K" & line - 1))
+'
+'  BK_sheetSetting.Range("A3") = "HollydayList"
+'  BK_sheetSetting.Range("B3") = "J3:K" & line - 1
+'
+'  Call init.setting(True)
+End Function
+
+
+
+'==================================================================================================
 Public Function GetHollyday(targetdate As Date, HollydayName As String) As Boolean
     kaerichi = False
     HollydayName = ""
@@ -404,14 +459,14 @@ Public Function TokubetsunaKyujitsu(targetdate As Date, HollydayName As String) 
 '    End If
     
     
-    '‰ïĞw’è‹x“ú‚Ìİ’è
-    endLine = sheetsetting.Cells(Rows.count, Library.getColumnNo(BK_setVal("cell_CompanyHoliday"))).End(xlUp).Row
-    For line = 3 To endLine
-      If targetdate = sheetsetting.Range(BK_setVal("cell_CompanyHoliday") & line) Then
-          HollydayName = "‰ïĞw’è‹x“ú"
-          TokubetsunaKyujitsu = True
-      End If
-    Next
+'    '‰ïĞw’è‹x“ú‚Ìİ’è
+'    endLine = sheetsetting.Cells(Rows.count, Library.getColumnNo(BK_setVal("cell_CompanyHoliday"))).End(xlUp).Row
+'    For line = 3 To endLine
+'      If targetdate = sheetsetting.Range(BK_setVal("cell_CompanyHoliday") & line) Then
+'          HollydayName = "‰ïĞw’è‹x“ú"
+'          TokubetsunaKyujitsu = True
+'      End If
+'    Next
     
     
     

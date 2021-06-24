@@ -208,17 +208,25 @@ End Sub
 
 '==================================================================================================
 Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
-
+  If Me.StopEvent Then Exit Sub
   If Not CheckSheet(Sh) Then Exit Sub
   
+  'ハイライト機能----------------------------------------------------------------------------------
   If Library.getRegistry("Main", "HighLightFlg") = True Then
     Call Ctl_HighLight.showStart(Target)
   End If
   
+  '数式確認機能------------------------------------------------------------------------------------
   If BKcf_rbPressed = True Then
-    Call Ctl_getFormulaCell.数式確認
+    Call Ctl_Formula.数式確認
   End If
 
+  'ズーム機能--------------------------------------------------------------------------------------
+  If Library.getRegistry("Main", "ZoomFlg") = True Then
+    Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
+  End If
+  
+  
 End Sub
 
 
@@ -228,15 +236,15 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(Sh) Then Exit Sub
 
-  If Library.getRegistry("Main", "Zoom") = True Then
+  'ズーム機能--------------------------------------------------------------------------------------
+  If Library.getRegistry("Main", "ZoomFlg") = True Then
     Cancel = True
-    Call Library.Zoom
+    Call Ctl_Zoom.ZoomIn
   End If
 
 
 
-    'メッセージボックスでイベント補足を確認
-    'MsgBox "SheetBeforeDoubleClick : " & Target.Address(external:=True)
+
 End Sub
 
 '==================================================

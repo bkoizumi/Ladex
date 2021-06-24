@@ -1038,13 +1038,14 @@ Function getSaveFilePath(CurrentDirectory As String, saveFileName As String, Fil
   Dim result As Long
 
   Dim fileName As Variant
+  
   fileName = Application.GetSaveAsFilename( _
       InitialFileName:=CurrentDirectory & "\" & saveFileName, _
-      FileFilter:="Excelファイル,*.xlsx,Excel2003以前,*.xls,Excelマクロブック,*.xlsm", _
+      FileFilter:="Excelファイル,*.xlsx,Excel2003以前,*.xls,Excelマクロブック,*.xlsm,すべてのファイル, *.*", _
       FilterIndex:=FileTypeNo)
 
   If fileName <> "False" Then
-    getSaveFilePath = fileName
+    getSaveFilePath = filePath
   Else
     getSaveFilePath = ""
   End If
@@ -2134,80 +2135,7 @@ Function waitTime(timeVal As Long)
 End Function
 
 
-'**************************************************************************************************
-' * TEXTJOIN関数
-' *
-' * @Link   https://www.excelspeedup.com/textjoin2/
-'**************************************************************************************************
-Function TEXTJOIN(Delim, Ignore As Boolean, ParamArray par())
-  Dim i As Integer
-  Dim tR As Range
 
-  TEXTJOIN = ""
-  For i = LBound(par) To UBound(par)
-    If TypeName(par(i)) = "Range" Then
-      For Each tR In par(i)
-        If tR.Value <> "" Or Ignore = False Then
-          TEXTJOIN = TEXTJOIN & Delim & tR.Value2
-        End If
-      Next
-    Else
-      If (par(i) <> "" And par(i) <> "<>") Or Ignore = False Then
-        TEXTJOIN = TEXTJOIN & Delim & par(i)
-      End If
-    End If
-  Next
-
-  TEXTJOIN = Mid(TEXTJOIN, Len(Delim) + 1)
-
-End Function
-
-
-
-'**************************************************************************************************
-' * 選択セルの拡大表示終了
-' *
-' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
-'**************************************************************************************************
-Function Zoom()
-  topPosition = Library.getRegistry("UserForm", "ZoomTop")
-  leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
-  
-  
-  With Frm_Zoom
-    .StartUpPosition = 0
-    If topPosition = "" Then
-      .Top = 10
-      .Left = 120
-    Else
-      .Top = topPosition
-      .Left = leftPosition
-    End If
-    .TextBox = ActiveCell.Text
-    .TextBox.MultiLine = True
-    .TextBox.MultiLine = True
-    .TextBox.EnterKeyBehavior = True
-'    .Caption = ActiveCell.Address
-    .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
-  End With
-
-  If (Frm_Zoom.Visible = True) Then
-    Frm_Zoom.StartUpPosition = 0
-  Else
-    Frm_Zoom.StartUpPosition = 2
-  End If
-
-  Frm_Zoom.Show vbModeless
-End Function
-
-
-'==================================================================================================
-Function ZoomOut(Text As String, SetTargetAddress As String)
-  
-  SetTargetAddress = Replace(SetTargetAddress, "選択セル：", "")
-  Range(SetTargetAddress).Value = Text
-  Call endScript
-End Function
 
 
 '**************************************************************************************************

@@ -95,7 +95,9 @@ Function パターン選択()
   maxCount = BK_setVal("maxCount")
   line = Selection(1).Row
   
-  
+  If sampleDataList Is Nothing Then
+    End
+  End If
   For Each varDic In sampleDataList
     Debug.Print sampleDataList.Item(varDic)
     
@@ -133,8 +135,8 @@ Function 数値_桁数固定()
 
 '  On Error GoTo catchError
   Call init.setting
-  Sheets("Sheet1").Columns("A:A").Clear
-  Sheets("Sheet1").Range("A1").Select
+'  Sheets("Sheet1").Columns("A:A").Clear
+'  Sheets("Sheet1").Range("A1").Select
   
   Call showFrm_sampleData("【数値】桁数固定")
   maxCount = BK_setVal("maxCount")
@@ -158,8 +160,8 @@ Function 数値_範囲()
 '  On Error GoTo catchError
   Call init.setting
   
-  Sheets("Sheet1").Columns("B:B").Clear
-  Sheets("Sheet1").Range("B1").Select
+'  Sheets("Sheet1").Columns("B:B").Clear
+'  Sheets("Sheet1").Range("B1").Select
   
   
   Call showFrm_sampleData("【数値】範囲指定")

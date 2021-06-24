@@ -45,6 +45,10 @@ Public BKz_rbPressed  As Boolean
 Public BKcf_rbPressed  As Boolean
 
 
+
+Public arryHollyday() As Date
+
+
 '**************************************************************************************************
 ' * ê›íËâèú
 ' *
@@ -65,6 +69,8 @@ Function usetting()
   'ê›íËílì«Ç›çûÇ›
   Set BK_setVal = Nothing
   Set BK_ribbonVal = Nothing
+  
+  logFile = ""
 End Function
 
 
@@ -106,6 +112,14 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_setVal = Nothing
   Set BK_setVal = CreateObject("Scripting.Dictionary")
   BK_setVal.add "debugMode", "develop"
+  
+  For line = 3 To BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
+    If BK_sheetSetting.Range("A" & line) <> "" Then
+      BK_setVal.add BK_sheetSetting.Range("A" & line).Text, BK_sheetSetting.Range("B" & line).Text
+    End If
+  Next
+  
+  
   
 '  Set BK_ribbonVal = Nothing
 '  Set BK_ribbonVal = CreateObject("Scripting.Dictionary")

@@ -9,10 +9,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private ctlEvent As New clsEvent
 
-Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
-End Sub
-
+'==================================================================================================
 Private Sub Workbook_Open()
   Set ctlEvent = New clsEvent
   Set ctlEvent.ExcelApplication = Application
@@ -22,7 +20,8 @@ Private Sub Workbook_Open()
 '  clsEvent.StopEvent = False
 
   Call InitializeBook
-
+  Call Ctl_UsrFunction.InitializeUsrFunction
+  
   Call Application.OnKey("{F1}", "")
 End Sub
 
@@ -54,7 +53,8 @@ Function InitializeBook()
     
     If RegistryKey <> "" Then
      Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
-
     End If
   Next
+  
+  Call Ctl_Hollyday.InitializeHollyday
 End Function

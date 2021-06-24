@@ -27,7 +27,7 @@ Private Sub OK_Button_Click()
   Call Library.setRegistry("UserForm", "ZoomTop", Me.Top)
   Call Library.setRegistry("UserForm", "ZoomLeft", Me.Left)
   
-  Call Library.ZoomOut(TextBox, Frm_Zoom.Label1.Caption)
+  Call Ctl_Zoom.ZoomOut(TextBox, Frm_Zoom.Label1.Caption)
   
   Unload Me
 End Sub

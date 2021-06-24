@@ -95,7 +95,6 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Call init.setting
   
   If BK_ribbonUI Is Nothing Then
-    Stop
     #If VBA7 And Win64 Then
       Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
     #Else
@@ -237,6 +236,8 @@ Private Function GetRibbon(ByVal lRibbonPointer As Long) As Object
   If lRibbonPointer = 0 Then
     End
   End If
+  
+  Stop
   MoveMemory ribbonObj, lRibbonPointer, LenB(lRibbonPointer)
   Set GetRibbon = ribbonObj
   p = 0: MoveMemory ribbonObj, p, LenB(p)
@@ -674,7 +675,7 @@ Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Call init.setting
   'Call Library.setRegistry("ZoomIn", ActiveWorkbook.Name, pressed)
   
-  Call Ctl_getFormulaCell.数式確認
+  Call Ctl_Formula.数式確認
 End Function
 
 '==================================================================================================
@@ -686,12 +687,30 @@ End Function
 
 
 '==================================================================================================
-Function xxxxxxxxxx(control As IRibbonControl)
+Function formula01(control As IRibbonControl)
+  Call Ctl_Formula.formula01
+End Function
+
+'==================================================================================================
+Function formula02(control As IRibbonControl)
   Call Main.xxxxxxxxxx
 End Function
 
+'==================================================================================================
+Function formula03(control As IRibbonControl)
+  Call Main.xxxxxxxxxx
+End Function
+
+'==================================================================================================
+Function saveSelectArea2Image(control As IRibbonControl)
+  Call Ctl_Image.saveSelectArea2Image
+End Function
 
 
+'==================================================================================================
+Function xxxxxxxxxx(control As IRibbonControl)
+  Call Main.xxxxxxxxxx
+End Function
 
 
 

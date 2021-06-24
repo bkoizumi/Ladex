@@ -1,4 +1,4 @@
-Attribute VB_Name = "Ctl_getFormulaCell"
+Attribute VB_Name = "Ctl_Formula"
 '**************************************************************************************************
 ' * 数式内のセル参照
 ' *
@@ -8,11 +8,11 @@ Attribute VB_Name = "Ctl_getFormulaCell"
 '==================================================================================================
 Function 数式確認()
 
-  Dim formulaVal As String
+  Dim formulaVal As String, confirmFormulaName As String
   Dim count As Long
   Dim formulaVals As Variant
 
-  On Error GoTo catchError
+'  On Error GoTo catchError
   Call Library.startScript
   
   '既存のファイル削除
@@ -38,37 +38,9 @@ Function 数式確認()
   
   count = 1
   For Each formulaVals In aryRange
-    Call Library.showDebugForm(formulaVals.Address(External:=False))
-    
     confirmFormulaName = "confirmFormulaName_" & count
   
-    With ActiveSheet.Range(formulaVals.Address(External:=False))
-      ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, Top:=.Top, Width:=.Width, Height:=.Height).Select
-    End With
-    
-    Selection.Name = confirmFormulaName
-    Selection.ShapeRange.Fill.ForeColor.RGB = RGB(205, 205, 255)
-    Selection.ShapeRange.Fill.Transparency = 0.5
-    Selection.OnAction = "Ctl_getFormulaCell.GetCurPosition"
-    Selection.Text = formulaVals.Address(RowAbsolute:=False, ColumnAbsolute:=False, External:=False)
-    
-    With Selection.ShapeRange.TextFrame2
-      .TextRange.Font.NameComplexScript = "メイリオ"
-      .TextRange.Font.NameFarEast = "メイリオ"
-      .TextRange.Font.Name = "メイリオ"
-      .TextRange.Font.Size = 9
-      .MarginLeft = 3
-      .MarginRight = 0
-      .MarginTop = 0
-      .MarginBottom = 0
-      .TextRange.Font.Fill.ForeColor.RGB = RGB(255, 0, 0)
-    
-    End With
-    
-    Selection.ShapeRange.line.Visible = msoTrue
-    Selection.ShapeRange.line.ForeColor.RGB = RGB(255, 0, 0)
-    Selection.ShapeRange.line.Weight = 2
-    
+    Call 範囲選択(formulaVals, confirmFormulaName)
     count = count + 1
   Next
   
@@ -82,6 +54,42 @@ catchError:
   Call Library.endScript
   'Call Library.showNotice(400, "", True)
 End Function
+
+
+'==================================================================================================
+Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
+
+  With ActiveSheet.Range(formulaVals.Address(external:=False))
+    ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, Top:=.Top, Width:=.Width, Height:=.Height).Select
+  End With
+  
+  Selection.Name = confirmFormulaName
+  Selection.ShapeRange.Fill.ForeColor.RGB = RGB(205, 205, 255)
+  Selection.ShapeRange.Fill.Transparency = 0.5
+  Selection.OnAction = "Ctl_Formula.GetCurPosition"
+  Selection.Text = formulaVals.Address(RowAbsolute:=False, ColumnAbsolute:=False, external:=False)
+  
+  With Selection.ShapeRange.TextFrame2
+    .TextRange.Font.NameComplexScript = "メイリオ"
+    .TextRange.Font.NameFarEast = "メイリオ"
+    .TextRange.Font.Name = "メイリオ"
+    .TextRange.Font.Size = 9
+    .MarginLeft = 3
+    .MarginRight = 0
+    .MarginTop = 0
+    .MarginBottom = 0
+    .TextRange.Font.Fill.ForeColor.RGB = RGB(255, 0, 0)
+  
+  End With
+  
+  Selection.ShapeRange.line.Visible = msoTrue
+  Selection.ShapeRange.line.ForeColor.RGB = RGB(255, 0, 0)
+  Selection.ShapeRange.line.Weight = 2
+  
+  
+End Function
+
+
 
 '==================================================================================================
 Sub GetCurPosition()
@@ -103,7 +111,7 @@ Sub GetCurPosition()
     ActiveWindow.RangeFromPoint(p.X, p.Y).Select
   End If
   Call Library.endScript
-  Call Ctl_getFormulaCell.数式確認
+  Call Ctl_Formula.数式確認
 
 
 End Sub
@@ -186,3 +194,74 @@ Function getFormulaRange(ByVal argRange As Range) As Range()
     On Error GoTo 0
     getFormulaRange = aryRange
 End Function
+
+
+
+'**************************************************************************************************
+' * 数式編集
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function formula01()
+  Dim formulaVal As String
+  
+  'On Error GoTo catchError
+  
+  If ActiveCell.HasFormula = False Then
+    Exit Function
+  End If
+  Call init.setting
+  
+  formulaVal = ActiveCell.Formula
+  formulaVal = Replace(formulaVal, "=", "")
+  formulaVal = Replace(formulaVal, vbCrLf, "")
+  formulaVal = Replace(formulaVal, vbLf, "")
+  formulaVal = Trim(formulaVal)
+  
+  formulaVal = "IFERROR(" & formulaVal & ","""")"
+  
+  ActiveCell.Formula = "=" & formulaVal
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+
+End Function
+
+'==================================================================================================
+Function formula02()
+  Dim formulaVal As String
+  
+  'On Error GoTo catchError
+
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+
+End Function
+
+
+'==================================================================================================
+Function formula03()
+  Dim formulaVal As String
+  
+  'On Error GoTo catchError
+
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+
+End Function
+
+
+
+
+
+
+
+
+
+
