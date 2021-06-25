@@ -33,12 +33,14 @@ Ladex(ラデックス)
 * 数式にIFERRORを追加し、『#VALUE!』『#DIV/0!』『#N/A!』の防止
 * コメントのスタイル変更
 * 選択範囲を画像として保存
+* セルの拡大表示、全画面表示
+
 * ユーザー定義関数
   |関数名| 説明 |
   |---|---|
   | chkWorkDay | 第N営業日かチェックし、True/Falseを返す|
+  | chkWeekNum | 第N週X曜日の日付かチェックし、True/Falseを返す|
   | getWorkDay | 第N営業日をシリアル値で返す|
-  | chkWeekNum | 第N週X曜日の日付をシリアル値で返す|
   | Textjoin | 文字列連結|
   ※ 当年、翌年のみ対応
 

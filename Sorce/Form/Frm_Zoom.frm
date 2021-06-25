@@ -15,19 +15,31 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
-
+'==================================================================================================
 Private Sub CancelButton_Click()
   Call Library.setRegistry("UserForm", "ZoomTop", Me.Top)
   Call Library.setRegistry("UserForm", "ZoomLeft", Me.Left)
   
+'  Call Ctl_DefaultVal.delVal("ZoomIn")
   Unload Me
 End Sub
 
+'==================================================================================================
 Private Sub OK_Button_Click()
   Call Library.setRegistry("UserForm", "ZoomTop", Me.Top)
   Call Library.setRegistry("UserForm", "ZoomLeft", Me.Left)
   
   Call Ctl_Zoom.ZoomOut(TextBox, Frm_Zoom.Label1.Caption)
-  
+'  Call Ctl_DefaultVal.delVal("ZoomIn")
   Unload Me
 End Sub
+
+
+
+'==================================================================================================
+Private Sub TextBox_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+  
+'  Call Ctl_DefaultVal.setVal("reSetZoomIn", TextBox.Text)
+End Sub
+
+

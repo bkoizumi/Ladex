@@ -6,30 +6,33 @@ Public targetBook As Workbook
 
 
 'ワークシート用変数------------------------------
-Public BK_sheetSetting   As Worksheet
-Public BK_sheetNotice    As Worksheet
-Public BK_sheetStyle     As Worksheet
-Public BK_sheetTestData  As Worksheet
-Public BK_sheetRibbon    As Worksheet
-Public BK_sheetFavorite  As Worksheet
-Public BK_sheetStamp     As Worksheet
+Public BK_sheetSetting    As Worksheet
+Public BK_sheetNotice     As Worksheet
+Public BK_sheetStyle      As Worksheet
+Public BK_sheetTestData   As Worksheet
+Public BK_sheetRibbon     As Worksheet
+Public BK_sheetFavorite   As Worksheet
+Public BK_sheetStamp      As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName = "Ladex"
 Public Const thisAppVersion = "0.0.4.0"
+Public FuncName           As String
+Public resetVal           As String
+
 
 'レジストリ登録用サブキー
 Public Const RegistryKey  As String = "Ladex"
 Public RegistrySubKey     As String
-'Public RegistryRibbonName As String
+
 
 '設定値保持
-Public BK_setVal         As Object
-Public sampleDataList    As Object
+Public BK_setVal          As Object
+Public sampleDataList     As Object
 
 
 'ファイル関連
-Public logFile As String
+Public logFile            As String
 
 '処理時間計測用
 Public StartTime          As Date
@@ -38,15 +41,21 @@ Public StopTime           As Date
 
 
 'リボン関連--------------------------------------
-Public BK_ribbonUI    As Office.IRibbonUI
-Public BK_ribbonVal   As Object
-Public BKh_rbPressed  As Boolean
-Public BKz_rbPressed  As Boolean
-Public BKcf_rbPressed  As Boolean
+Public BK_ribbonUI        As Office.IRibbonUI
+Public BK_ribbonVal       As Object
+Public BKT_rbPressed      As Boolean
+
+Public BKh_rbPressed      As Boolean
+Public BKz_rbPressed      As Boolean
+Public BKcf_rbPressed     As Boolean
 
 
 
-Public arryHollyday() As Date
+'ユーザー関数関連--------------------------------
+Public arryHollyday()     As Date
+
+'ズーム関連--------------------------------------
+Public defaultZoomInVal   As String
 
 
 '**************************************************************************************************

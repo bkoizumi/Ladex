@@ -94,14 +94,14 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function errorHandle(funcName As String, ByRef objErr As Object)
+Function errorHandle(FuncName As String, ByRef objErr As Object)
 
   Dim Message As String
   Dim runTime As Date
   Dim endLine As Long
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
-  Message = funcName & vbCrLf & objErr.Description
+  Message = FuncName & vbCrLf & objErr.Description
 
   '音声認識発話
   Application.Speech.Speak Text:="エラーが発生しました", SpeakAsync:=True

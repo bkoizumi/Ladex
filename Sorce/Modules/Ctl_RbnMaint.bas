@@ -25,9 +25,9 @@ End Function
 
 
 '==================================================================================================
-Function SheetImport(control As IRibbonControl)
+Function OptionSheetImport(control As IRibbonControl)
   Call init.setting
-  Set targetBook = Workbooks("メンテナンス用.xlsx")
+  Set targetBook = Workbooks("メンテナンス用.xlsm")
   
 '  ThisWorkbook.Sheets("Ribbon").Columns("A:G").Value = targetBook.Sheets("Ribbon").Columns("A:G").Value
 '  ThisWorkbook.Sheets("Notice").Columns("A:B").Value = targetBook.Sheets("Notice").Columns("A:B").Value
@@ -57,7 +57,7 @@ End Function
 
 
 '==================================================================================================
-Function SheetExport(control As IRibbonControl)
+Function OptionSheetExport(control As IRibbonControl)
 
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsx")

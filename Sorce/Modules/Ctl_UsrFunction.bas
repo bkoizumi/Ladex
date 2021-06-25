@@ -20,7 +20,7 @@ Function InitializeUsrFunction()
 
   Application.MacroOptions _
     Macro:="chkWeekNum", _
-    Description:="第N週X曜日の日付をシリアル値で返す", _
+    Description:="第N週X曜日の日付かチェックし、True/Falseを返す", _
     Category:=thisAppName, _
     ArgumentDescriptions:=Array("チェックする日付を指定", "第N週を数値で指定", "X曜日を数値で指定")
 
@@ -41,6 +41,8 @@ Attribute Textjoin.VB_Description = "文字列連結"
 Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim i As Integer
   Dim tR As Range
+
+'  Application.Volatile
 
   Textjoin = ""
   For i = LBound(par) To UBound(par)
@@ -71,7 +73,7 @@ Attribute chkWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim getDay As Date, firstDay As Date
   
   
-  Application.Volatile
+'  Application.Volatile
   If Library.chkArrayEmpty(arryHollyday) = True Then
     Call Ctl_Hollyday.InitializeHollyday
   End If
@@ -88,18 +90,22 @@ Attribute chkWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
 End Function
 
 '==================================================================================================
-Function chkWeekNum(ByVal checkDate As Date, ByVal checkWeekday As Long, ByVal weekNum As Long) As Date
-Attribute chkWeekNum.VB_Description = "第N週X曜日の日付をシリアル値で返す"
+Function chkWeekNum(ByVal checkDate As Date, ByVal checkWeekday As Long, ByVal weekNum As Long) As Boolean
+Attribute chkWeekNum.VB_Description = "第N週X曜日の日付かチェックし、True/Falseを返す"
 Attribute chkWeekNum.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim getDay As Date, firstDay As Long, diff As Long
   
-  Application.Volatile
+'  Application.Volatile
   
   firstDay = Weekday(DateSerial(Year(checkDate), Month(checkDate), 1))
   diff = (checkWeekday + 7 - firstDay) Mod 7
   getDay = DateSerial(Year(checkDate), Month(checkDate), 1 + diff + 7 * (weekNum - 1))
   
-  chkWeekNum = getDay
+  If checkDate = getDay Then
+    chkWeekNum = True
+  Else
+    chkWeekNum = False
+  End If
   
 End Function
 
@@ -109,7 +115,7 @@ Attribute getWorkDay.VB_Description = "第N営業日をシリアル値で返す"
 Attribute getWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim getDay As Date, firstDay As Date
   
-  Application.Volatile
+'  Application.Volatile
   If Library.chkArrayEmpty(arryHollyday) = True Then
     Call Ctl_Hollyday.InitializeHollyday
   End If

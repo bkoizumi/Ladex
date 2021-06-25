@@ -14,11 +14,15 @@
 
       <splitButton id="SB_Option" size="large">
         <button id="Option" label="Option" imageMso="AnimationCustomAddActionVerbDialog" screentip="オプション設定" supertip="オプション画面を表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.showOption" />
-        <menu id="DateTimeMenu" screentip="メンテナンス"  supertip="メンテナンス" itemSize="large">
-        <menuSeparator id="MS_Option" title="Option設定をします" />
-          <button id="SheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"  description="リボン更新"  />
-          <button id="SheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.SheetImport" description="Import"      />
-          <button id="SheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.SheetExport" description="Export"      />
+        <menu id="OptionMenu" screentip="オプション設定メニュー"  supertip="オプション設定メニュー" itemSize="large">
+        <menuSeparator id="MS_Option" title="オプション設定メニュー" />
+          <button id="OptionStyleImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleImport" description="Import"      />
+          <button id="OptionStyleExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleExport" description="Export"      />
+
+        <menuSeparator id="MS_Maintenance" title="メンテナンス用" />
+          <button id="OptionSheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"  description="リボン更新"  />
+          <button id="OptionSheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetImport" description="Import"      />
+          <button id="OptionSheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetExport" description="Export"      />
         </menu>
       </splitButton>
 
@@ -40,8 +44,8 @@
         <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除します &#13;" />
         <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
       </menu>
-      <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるようにします &#13;" />
-      <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
+      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
+      <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
 
       <menu id="画面設定_Menu" label="画面設定"  itemSize="large" image="dspDefaultCellSelect">
         <menuSeparator id="画面設定_sheet" title="アクティブシートのみを対象とした処理" />
@@ -53,8 +57,19 @@
         <button id="dspDefaultViewSelect2Save"  label="セルとシート＆保存"  image="dspDefaultCellSelectAllSheet2Save"  onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect2AndSave" description="全シートをA1セルを選択、最初のシート選択後、上書き保存 &#13;"      />
         <button id="dspDefault"                 label="標準画面"            imageMso="ViewNormalViewExcel"  onAction="Ladex.xlam!Ctl_Ribbon.defaultView"                  description="標準画面&#13;" />
       </menu>
-      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
-      <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
+
+      <splitButton id="SB_ZoomIn" size="normal">
+        <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるようにします &#13;F2キーにも対応" />
+          <menu id="ZoomIn_Menu"  screentip="ズームメニュー"  supertip="ズームメニュー" itemSize="large">
+            <button id="Zoom01"   label="全画面表示"   imageMso="ZoomIn" onAction="Ladex.xlam!Ctl_Ribbon.Zoom01" description="画面を最大化します &#13;" />
+          </menu>
+      </splitButton>
+
+
+
+
+
+      <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
         <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="セル幅調整 &#13;" />
@@ -72,21 +87,13 @@
       <menu id="formulaMenu" label="数式編集"  itemSize="large" imageMso="Formula" screentip="数式編集" supertip="数式編集">
         <menuSeparator id="数式編集_SP1" title="エラー防止" />
         <button id="formula01"  label="エラー防止"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.formula01" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加する" />
-        <button id="formula02"  label="XXXXXXX"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.formula02" description="数式編集 &#13;" />
-        <menuSeparator id="数式編集_SP2" title="XXXXXXX" />
-        <button id="formula03"  label="XXXXXXX"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.formula03" description="数式編集 &#13;" />
       </menu>
+      <menu id="文字編集" label="文字編集"  itemSize="large" imageMso="AsianTypography" >
+        <menuSeparator id="文字編集_SP1" title="スペース削除" />
+        <button id="Trim"  label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Trim01" description="文頭、文末にあるスペースを取り除きます &#13;" />
+      </menu>
+
       <button id="saveImage"  label="画像保存"  imageMso="RestorePicture" size="normal" screentip="選択範囲を画像として保存" supertip="選択範囲を画像として保存" onAction="Ladex.xlam!Ctl_Ribbon.saveSelectArea2Image" />
-
-
-
-
-
-
-
-
-
-
       <menu id="LineMenu" label="罫線" itemSize="large" size="normal"  imageMso="BorderDrawGrid">
         <button id="Line_Clear"  label="クリア"  imageMso="BorderErase"      onAction="Ladex.xlam!Ctl_Ribbon.罫線_削除" description="罫線を削除します" />
 

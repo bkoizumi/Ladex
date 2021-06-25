@@ -59,31 +59,7 @@ Function confFormulaPressed(control As IRibbonControl, ByRef returnedVal)
   returnedVal = BKcf_rbPressed
 End Function
 
-'==================================================================================================
-'更新
-Function Refresh()
-  On Error GoTo catchError
-  
-  Call init.setting
-  
-  If BK_ribbonUI Is Nothing Then
-    #If VBA7 And Win64 Then
-      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
-    #Else
-      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
-    #End If
-  End If
-  
-  BK_ribbonUI.ActivateTab ("LiadexTab")
-  BK_ribbonUI.Invalidate
-
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Call Library.showNotice(400, "リボンメニュー更新", True)
-End Function
-
-  
+ 
   
 '==================================================================================================
 'シート一覧メニュー
@@ -243,7 +219,7 @@ Private Function GetRibbon(ByVal lRibbonPointer As Long) As Object
     End
   End If
   
-  Stop
+'  Stop
   MoveMemory ribbonObj, lRibbonPointer, LenB(lRibbonPointer)
   Set GetRibbon = ribbonObj
   p = 0: MoveMemory ribbonObj, p, LenB(p)
@@ -450,10 +426,12 @@ End Function
 
 '==================================================================================================
 Function setDispTab(control As IRibbonControl, pressed As Boolean)
-  Call Library.setRegistry("Main", "CustomRibbon", pressed)
+  
+  BKT_rbPressed = pressed
+  Call Library.setRegistry("Main", "CustomRibbon", BKT_rbPressed)
   
   If pressed = True Then
-    Call Refresh
+    Call RefreshRibbon
   End If
   
 End Function
@@ -491,14 +469,14 @@ Function showOption(control As IRibbonControl)
 End Function
 
 '==================================================================================================
-Function settingImport(control As IRibbonControl)
-  Call Main.設定_取込
+Function OptionStyleImport(control As IRibbonControl)
+  Call Ctl_Style.Import
 End Function
 
 
 '==================================================================================================
-Function settingExport(control As IRibbonControl)
-  Call Main.設定_抽出
+Function OptionStyleExport(control As IRibbonControl)
+  Call Ctl_Style.Export
 End Function
 
 
@@ -642,11 +620,17 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   If pressed = False Then
     Call Application.OnKey("{F2}")
     Call Library.delRegistry("Main", "ZoomFlg")
+'    Call Ctl_DefaultVal.delVal("ZoomIn")
   Else
-    Call Application.OnKey("{F2}", "Library.Zoom")
+    Call Application.OnKey("{F2}", "Ctl_Zoom.ZoomIn")
   End If
 End Function
 
+'==================================================================================================
+Function Zoom01(control As IRibbonControl)
+  Call Ctl_Zoom.Zoom01
+  
+End Function
 
 
 
@@ -710,6 +694,12 @@ End Function
 '==================================================================================================
 Function saveSelectArea2Image(control As IRibbonControl)
   Call Ctl_Image.saveSelectArea2Image
+End Function
+
+'==================================================================================================
+Function Trim01(control As IRibbonControl)
+  Call Ctl_Formula.Trim01
+  
 End Function
 
 

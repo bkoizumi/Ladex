@@ -17,6 +17,9 @@ Function ZoomIn(Optional slctCellAddress As String)
     Else
       cellVal = ActiveCell.Formula
     End If
+    
+'    Call Ctl_DefaultVal.setVal("ZoomIn", cellVal)
+    
     With Frm_Zoom
       .StartUpPosition = 0
       If topPosition = "" Then
@@ -37,7 +40,8 @@ Function ZoomIn(Optional slctCellAddress As String)
   
   Else
     If (Frm_Zoom.Visible = True) Then
-      Frm_Zoom.TextBox.SelText = slctCellAddress
+      'Frm_Zoom.TextBox.SelText = Ctl_DefaultVal.getVal("ZoomIn") & slctCellAddress
+'      Frm_Zoom.TextBox = Ctl_DefaultVal.getVal("ZoomIn") & slctCellAddress
     End If
   End If
   
@@ -49,7 +53,34 @@ End Function
 Function ZoomOut(Text As String, SetTargetAddress As String)
   
   SetTargetAddress = Replace(SetTargetAddress, "選択セル：", "")
+  
   Range(SetTargetAddress).Value = Text
   Call endScript
+End Function
+
+
+
+'全画面表示----------------------------------------------------------------------------------------
+Function Zoom01()
+
+  Call Library.startScript
+  Application.DisplayFullScreen = True
+  Call Library.endScript
+  
+  topPosition = Library.getRegistry("UserForm", "Zoom01Top")
+  leftPosition = Library.getRegistry("UserForm", "Zoom01Left")
+      
+  With Frm_DispFullScreenForm
+    .StartUpPosition = 0
+    If topPosition = "" Then
+      .Top = 10
+      .Left = 10
+    Else
+      .Top = topPosition
+      .Left = leftPosition
+    End If
+    .Show vbModeless
+  End With
+  
 End Function
 
