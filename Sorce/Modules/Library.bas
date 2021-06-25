@@ -2715,10 +2715,10 @@ Function Œrü_“ñdü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long,
       .Borders(xlEdgeTop).LineStyle = xlDouble
       .Borders(xlEdgeBottom).LineStyle = xlDouble
 
-      .Borders(xlEdgeLeft).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
-      .Borders(xlEdgeTop).Weight = WeightVal
-      .Borders(xlEdgeBottom).Weight = WeightVal
+'      .Borders(xlEdgeLeft).Weight = WeightVal
+'      .Borders(xlEdgeRight).Weight = WeightVal
+'      .Borders(xlEdgeTop).Weight = WeightVal
+'      .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2734,10 +2734,10 @@ Function Œrü_“ñdü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long,
       .Borders(xlEdgeTop).LineStyle = xlDouble
       .Borders(xlEdgeBottom).LineStyle = xlDouble
 
-      .Borders(xlEdgeLeft).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
-      .Borders(xlEdgeTop).Weight = WeightVal
-      .Borders(xlEdgeBottom).Weight = WeightVal
+'      .Borders(xlEdgeLeft).Weight = WeightVal
+'      .Borders(xlEdgeRight).Weight = WeightVal
+'      .Borders(xlEdgeTop).Weight = WeightVal
+'      .Borders(xlEdgeBottom).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2850,6 +2850,40 @@ Function Œrü_”jü_‹tLš(Optional setArea As Range, Optional LineColor As Long, 
     Call Œrü_”jü_ˆÍ‚İ(setArea, LineColor, WeightVal)
   
   End If
+End Function
+
+
+
+'==================================================================================================
+Function Œrü_’†‰›üíœ_‰¡(Optional setArea As Range)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+  End If
+End Function
+
+
+
+
+'==================================================================================================
+Function Œrü_’†‰›üíœ_c(Optional setArea As Range)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlInsideVertical).LineStyle = xlNone
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideVertical).LineStyle = xlNone
+    End With
+  End If
+
 End Function
 
 
