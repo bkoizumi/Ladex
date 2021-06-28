@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
-   ClientHeight    =   7095
+   ClientHeight    =   6630
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   7440
+   ClientWidth     =   7695
    OleObjectBlob   =   "Frm_Option.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -19,12 +19,6 @@ Dim HighLightDspDirection As String
 Dim old_BKh_rbPressed  As Boolean
 Public InitializeFlg   As Boolean
 
-
-
-
-
-
-
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -35,6 +29,7 @@ Private Sub UserForm_Initialize()
   Dim setZoomLevel As String
   Dim endLine As Long
   Dim indexCnt As Integer
+  Dim previewImgPath As String
   
   InitializeFlg = True
   
@@ -111,6 +106,44 @@ Private Sub UserForm_Initialize()
       .HighlightDspMethod_2.Value = True
     
     End If
+    
+    imageName = thisAppName & "HighLightImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
+    If Library.chkFileExists(previewImgPath) = False Then
+      imageName = thisAppName & "NoHighLightImg" & ".jpg"
+      previewImgPath = LadexDir & "\" & imageName
+    End If
+    HighLightImg.Picture = LoadPicture(previewImgPath)
+    
+    
+    
+    'コメント 背景色-------------------------------------------------------------------------------
+    CommentBgColor = Library.getRegistry("Main", "CommentBgColor")
+    If CommentBgColor = "0" Then
+      .CommentColor.BackColor = 10222585
+    Else
+      .CommentColor.BackColor = CommentBgColor
+    End If
+    .CommentColor.Caption = ""
+    
+    'コメント フォント-------------------------------------------------------------------------------
+    CommentFont = Library.getRegistry("Main", "CommentFont")
+    If CommentFont = "0" Then
+      .CommentFont.Caption = "メイリオ"
+    Else
+      .CommentFont.Caption = CommentFont
+    End If
+    
+    imageName = thisAppName & "CommentImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
+    If Library.chkFileExists(previewImgPath) = False Then
+      imageName = thisAppName & "NoCommentImg" & ".jpg"
+      previewImgPath = LadexDir & "\" & imageName
+    End If
+    CommentImg.Picture = LoadPicture(previewImgPath)
+    
+    
+    
   End With
   
   InitializeFlg = False
@@ -152,7 +185,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function doPreview()
+Function doHighLightPreview()
   Dim previewImgPath As String
   Dim HighLightColor As String, HighLightDspDirection As String, HighLightDspMethod As String, HighlightTransparentRate   As Long
   
@@ -194,28 +227,53 @@ Function doPreview()
     BKh_rbPressed = True
   End If
   
-  Call Ctl_HighLight.showStart(Range("C4"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+  Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
   
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("A1:E8"))
-  
-  imageName = thisAppName & "ExportPreviewImg" & ".jpg"
+  imageName = thisAppName & "HighLightImg" & ".jpg"
   previewImgPath = LadexDir & "\" & imageName
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("A1:C3"), imageName)
   
-  If Library.chkFileExists(previewImgPath) Then
-    previewImg.Picture = LoadPicture(previewImgPath)
-  Else
-    imageName = thisAppName & "NoPreviewImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+  
+  If Library.chkFileExists(previewImgPath) = False Then
     
-    previewImg.Picture = LoadPicture(previewImgPath)
+    imageName = thisAppName & "NoHighLightImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
   End If
+  HighLightImg.Picture = LoadPicture(previewImgPath)
+  
   BKh_rbPressed = old_BKh_rbPressed
   Call Ctl_HighLight.showStart(Range("C4"))
   
 End Function
 
 
+'==================================================================================================
+Function doCommentPreview()
+  Dim previewImgPath As String
 
+  Call init.setting
+'  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
+  
+  BK_sheetHighLight.Activate
+  BK_sheetHighLight.Range("N5").Activate
+  
+  CommentBgColor = Me.CommentColor.BackColor
+  CommentFont = Me.CommentFont.Caption
+  
+  Call Library.setComment(CommentBgColor, CommentFont)
+  
+  imageName = thisAppName & "CommentImg" & ".jpg"
+  previewImgPath = LadexDir & "\" & imageName
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N4:S8"), imageName)
+  
+  
+  If Library.chkFileExists(previewImgPath) = False Then
+    imageName = thisAppName & "NoCommentImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
+  End If
+    CommentImg.Picture = LoadPicture(previewImgPath)
+  
+End Function
 
 
 
@@ -236,7 +294,7 @@ End Function
 Private Sub HighlightDspDirection_B_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -244,7 +302,7 @@ End Sub
 Private Sub HighlightDspDirection_X_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -252,7 +310,7 @@ End Sub
 Private Sub HighlightDspDirection_Y_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -260,7 +318,7 @@ End Sub
 Private Sub HighlightDspMethod_0_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -268,7 +326,7 @@ End Sub
 Private Sub HighlightDspMethod_1_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -276,7 +334,7 @@ End Sub
 Private Sub HighlightDspMethod_2_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -284,7 +342,7 @@ End Sub
 Private Sub HighlightTransparentRate_Click()
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -296,7 +354,7 @@ Private Sub HighLightColor_Click()
   Me.HighLightColor.BackColor = colorValue
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
 
@@ -305,11 +363,36 @@ End Sub
 Private Sub LineColor_Click()
   colorValue = Library.getColor(Me.LineColor.BackColor)
   Me.LineColor.BackColor = colorValue
+  Me.LineColor.Caption = ""
   
   If InitializeFlg = False Then
-    Call doPreview
+    Call doHighLightPreview
   End If
 End Sub
+
+
+'==================================================================================================
+Private Sub CommentColor_Click()
+  colorValue = Library.getColor(Me.CommentColor.BackColor)
+  Me.CommentColor.BackColor = colorValue
+  Me.CommentColor.Caption = ""
+  
+  If InitializeFlg = False Then
+    Call doCommentPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub CommentFont_Click()
+  CommentFont = Me.CommentFont.Caption
+  
+  Call Library.getFont(CommentFont, 9)
+  
+  
+  
+
+End Sub
+
 
 
 '==================================================================================================
@@ -370,6 +453,7 @@ Private Sub run_Click()
   BKh_rbPressed = old_BKh_rbPressed
 
 
+  Call Library.setRegistry("Main", "CommentBgColor", Me.CommentColor.BackColor)
 
   
   

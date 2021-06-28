@@ -100,7 +100,7 @@ Function setting(Optional reCheckFlg As Boolean)
   'レジストリ関連設定------------------------------------------------------------------------------
   RegistrySubKey = "Main"
   
-  If logFile = "" Or reCheckFlg = True Then
+  If LadexDir = "" Or reCheckFlg = True Then
     Call usetting
   Else
     Exit Function

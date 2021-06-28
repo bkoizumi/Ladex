@@ -6,25 +6,25 @@ Attribute VB_Name = "Ctl_Image"
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function saveSelectArea2Image(Optional defSlctArea As Variant)
+Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageName As Variant)
   Dim slctArea
   Dim targetImg As Chart
-  Dim imageName As String, saveDir As String
+  Dim saveDir As String
   
   'èàóùäJén--------------------------------------
-  On Error GoTo catchError
+'  On Error GoTo catchError
 
   Call init.setting
-  Call Library.startScript
+'  Call Library.startScript
   '----------------------------------------------
 
   If IsMissing(defSlctArea) Then
-    imageName = thisAppName & "ExportImg_" & Format(Now(), "yyyymmdd_hhnnss") & ".jpg"
+    imageName = thisAppName & "ExportImg_" & Format(Now(), "yyyymmdd_hhnnss") & ".png"
     saveDir = Library.getDirPath(ActiveWorkbook.Path, "âÊëú")
     Set slctArea = Selection
   Else
-    imageName = thisAppName & "ExportPreviewImg" & ".jpg"
-    saveDir = LadexDir & "\" & fileName
+'    imageName = thisAppName & "ExportPreviewImg" & ".jpg"
+    saveDir = LadexDir
     Set slctArea = defSlctArea
   End If
   
@@ -38,7 +38,11 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant)
   ElseIf TypeName(slctArea) = "ChartArea" Then
     slctArea.Copy
   End If
-
+  
+  ActiveWorkbook.Activate
+  ActiveSheet.Select
+'  Call Library.waitTime(1000)
+  
   Set targetImg = ActiveSheet.ChartObjects.add(0, 0, slctArea.Width, slctArea.Height).Chart
   With targetImg
     .Parent.Select

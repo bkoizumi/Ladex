@@ -84,6 +84,16 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
+  Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "sheetID_" & ActiveWorkbook.Name
+      .SetAttribute "title", ActiveWorkbook.Name
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+  
+  
+  
   For Each sheetName In ActiveWorkbook.Sheets
     Set Button = DOMDoc.createElement("button")
     With Button
@@ -107,7 +117,7 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
 
   DOMDoc.AppendChild Menu
   
-  'Call Library.showDebugForm(DOMDoc.XML)
+'  Call Library.showDebugForm(DOMDoc.XML)
   
   returnedVal = DOMDoc.XML
   Set Menu = Nothing
@@ -484,6 +494,10 @@ Function OptionHighLight(control As IRibbonControl)
   Ctl_Option.HighLight
 End Function
 
+'==================================================================================================
+Function OptionComment(control As IRibbonControl)
+  Ctl_Option.Comment
+End Function
 
 
 '**************************************************************************************************

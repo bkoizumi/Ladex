@@ -967,6 +967,20 @@ Function getColor(colorValue As Long)
 
 End Function
 
+'**************************************************************************************************
+' * フォントダイアログ表示
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getFont(fontName As String, fontSize As Long)
+  Dim Red As Long, Green As Long, Blue As Long
+  Dim setColorValue As Long
+
+  Application.Dialogs(xlDialogActiveCellFont).Show fontName, "レギュラー", fontSize
+  
+  
+End Function
+
 
 '**************************************************************************************************
 ' * IndentLevel値取得
@@ -2038,7 +2052,7 @@ End Function
 ' *
 ' * @Link   http://techoh.net/customize-excel-comment-by-vba/
 '**************************************************************************************************
-Function setComment()
+Function setComment(Optional BgColorVal, Optional FontVal)
     Dim cl As Range
     Dim count As Long
 
@@ -2048,22 +2062,29 @@ Function setComment()
       DoEvents
       If Not cl.Comment Is Nothing Then
         With cl.Comment.Shape
-          ' サイズ自動設定
+          'サイズ設定
           .TextFrame.AutoSize = True
           .TextFrame.Characters.Font.Size = 9
 
-          ' 形状を角丸四角形に変更
+          '形状を角丸四角形に変更
           .AutoShapeType = msoShapeRectangle
-          ' 塗り色・線色 変更
+          
+          '色
           .line.ForeColor.RGB = RGB(128, 128, 128)
-          .Fill.ForeColor.RGB = RGB(240, 240, 240)
-          ' 影 透過率 30%、オフセット量 x:1px,y:1px
+          '.Fill.ForeColor.RGB = RGB(240, 240, 240)
+          .Fill.ForeColor.RGB = BgColorVal
+          
+          '影 透過率 30%、オフセット量 x:1px,y:1px
           .Shadow.Transparency = 0.3
           .Shadow.OffsetX = 1
           .Shadow.OffsetY = 1
+          
           ' 太字解除、中央揃え
           .TextFrame.Characters.Font.Bold = False
           .TextFrame.HorizontalAlignment = xlLeft
+          
+'          .TextFrame.Characters.Font = FontVal
+          
           ' セルに合わせて移動する
           .Placement = xlMove
         End With

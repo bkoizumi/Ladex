@@ -39,6 +39,7 @@ Function showOption()
   
   On Error GoTo catchError
   
+  Call init.setting(True)
   topPosition = Library.getRegistry("UserForm", "OptionTop")
   leftPosition = Library.getRegistry("UserForm", "OptionLeft")
   With Frm_Option
@@ -51,6 +52,11 @@ Function showOption()
       .Left = leftPosition
     End If
     .MultiPage1.SelectedItem.Index = 0
+    .MultiPage1.Page1.Visible = True
+    .MultiPage1.Page2.Visible = True
+    .MultiPage1.Page3.Visible = True
+    
+    '.Show vbModeless
     .Show
   End With
 
@@ -80,6 +86,38 @@ Function HighLight()
     End If
     .MultiPage1.SelectedItem.Index = 1
     .MultiPage1.Page1.Visible = False
+    .MultiPage1.Page3.Visible = False
+    
+    .Show
+  End With
+
+  Exit Function
+
+'ÉGÉâÅ[î≠ê∂éû=====================================================================================
+catchError:
+  'Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+
+
+'==================================================================================================
+Function Comment()
+  
+  On Error GoTo catchError
+  
+  topPosition = Library.getRegistry("UserForm", "OptionTop")
+  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
+  With Frm_Option
+    
+    If topPosition = 0 Then
+      .StartUpPosition = 2
+    Else
+      .StartUpPosition = 0
+      .Top = topPosition
+      .Left = leftPosition
+    End If
+    .MultiPage1.SelectedItem.Index = 2
+    .MultiPage1.Page1.Visible = False
+    .MultiPage1.Page2.Visible = False
     
     .Show
   End With

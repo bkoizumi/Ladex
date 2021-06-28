@@ -25,6 +25,24 @@ End Function
 
 
 '==================================================================================================
+Function その他()
+  Call init.setting(True)
+  BK_ThisBook.Sheets("HighLight").Activate
+'  Cells.Select
+'  Selection.ColumnWidth = 5
+  
+  BK_sheetHighLight.Range("N5").Select
+  BK_sheetHighLight.Range("N5").ClearComments
+  BK_sheetHighLight.Range("N5").AddComment
+  BK_sheetHighLight.Range("N5").Comment.Visible = False
+  BK_sheetHighLight.Range("N5").Comment.Text Text:="Sampleコメント" & Chr(10) & "Sampleコメント" & Chr(10) & "Sampleコメント "
+  
+  BK_sheetHighLight.Range("N5").Comment.Visible = True
+  
+  ThisWorkbook.Save
+End Function
+
+'==================================================================================================
 Function OptionSheetImport(control As IRibbonControl)
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsm")

@@ -62,7 +62,8 @@ Function detail()
   Dim line As Long, endLine As Long
   Dim regLists As Variant
   
-'  On Error GoTo catchError
+  On Error GoTo catchError
+  Call getList
   topPosition = Library.getRegistry("UserForm", "FavoriteTop")
   leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
   

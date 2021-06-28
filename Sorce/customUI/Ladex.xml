@@ -69,6 +69,7 @@
       <splitButton id="SB_HighLight" size="normal">
         <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
           <menu id="HighLight_Menu"  screentip="ハイライトメニュー"  supertip="ハイライトメニュー" itemSize="large">
+            <menuSeparator id="HighLight_SP1" title="HighLight 書式設定" />
             <button id="OptionHighLight"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionHighLight" description="ハイライトの設定 &#13;" />
           </menu>
       </splitButton>
@@ -85,7 +86,16 @@
         <button id="stamp02"  label="電子印鑑【確認印】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp02" description="電子印鑑 &#13;" />
         <button id="stamp03"  label="電子印鑑【日付印】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp03" description="電子印鑑 &#13;" />
       </menu>
-      <button id="formatComment"  label="コメント整形"  imageMso="NewComment" size="normal" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
+
+      <splitButton id="SB_Comment" size="normal">
+        <button id="formatComment"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
+          <menu id="Comment_Menu"  screentip="コメント整形メニュー"  supertip="コメント整形メニュー" itemSize="large">
+            <menuSeparator id="コメント整形_SP1" title="コメント整形 書式設定" />
+            <button id="OptionComment"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionComment" description="コメント整形の設定 &#13;" />
+          </menu>
+      </splitButton>
+
+
 
       <toggleButton id="confirmFormula"      label="数式確認"  imageMso="ShapeSheetShowFormulas" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.confirmFormula" getPressed="confFormulaPressed"  screentip="数式確認"  supertip="数式確認" />
       <menu id="formulaMenu" label="数式編集"  itemSize="large" imageMso="Formula" screentip="数式編集" supertip="数式編集">
@@ -101,8 +111,6 @@
       <menu id="罫線_Menu" label="罫線" itemSize="large" size="normal"  imageMso="BorderDrawGrid">
         <menuSeparator id="罫線_クリア" title="罫線を削除します &#13;" />
         <button id="罫線_Clear"  label="クリア"  imageMso="BorderErase"      onAction="Ladex.xlam!Ctl_Ribbon.罫線_削除" description="罫線を削除します" />
-
-        <menuSeparator id="中央線" title="中央線を削除します &#13;" />
         <button id="罫線_中央線削除_横"  label="横方向"  imageMso="BorderInsideHorizontal"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_中央線削除_横" description="横方向の中央線を削除します &#13;" />
         <button id="罫線_中央線削除_縦"  label="縦方向"  imageMso="BorderInsideVertical"    onAction="Ladex.xlam!Ctl_Ribbon.罫線_中央線削除_縦" description="縦方向の中央線を削除します &#13;" />
 
