@@ -19,6 +19,13 @@ Dim HighLightDspDirection As String
 Dim old_BKh_rbPressed  As Boolean
 Public InitializeFlg   As Boolean
 
+
+
+
+
+
+
+
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -127,12 +134,19 @@ Private Sub UserForm_Initialize()
     .CommentColor.Caption = ""
     
     'コメント フォント-------------------------------------------------------------------------------
-    CommentFont = Library.getRegistry("Main", "CommentFont")
-    If CommentFont = "0" Then
-      .CommentFont.Caption = "メイリオ"
-    Else
-      .CommentFont.Caption = CommentFont
-    End If
+'    Dim cBox As CommandBarComboBox
+'    CommentFont = Library.getRegistry("Main", "CommentFont")
+'
+'    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
+'
+'      For i = 1 To cBox.ListCount
+'        .CommentFont.AddItem cBox.list(i)
+'        If cBox.list(i) = CommentFont Then
+'          ListIndex = i - 1
+'        End If
+'      Next
+'    .CommentFont.ListIndex = ListIndex
+
     
     imageName = thisAppName & "CommentImg" & ".jpg"
     previewImgPath = LadexDir & "\" & imageName
@@ -141,6 +155,32 @@ Private Sub UserForm_Initialize()
       previewImgPath = LadexDir & "\" & imageName
     End If
     CommentImg.Picture = LoadPicture(previewImgPath)
+    
+    '電子印鑑 フォント-------------------------------------------------------------------------------
+    Dim cBox As CommandBarComboBox
+    StampVal = Library.getRegistry("Main", "StampVal")
+    StampFont = Library.getRegistry("Main", "StampFont")
+  
+    .StampVal.Value = StampVal
+    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
+      
+      For i = 1 To cBox.ListCount
+        .StampFont.AddItem cBox.list(i)
+        If cBox.list(i) = StampFont Then
+          ListIndex = i - 1
+        End If
+      Next
+    .StampFont.ListIndex = ListIndex
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -258,7 +298,7 @@ Function doCommentPreview()
   BK_sheetHighLight.Range("N5").Activate
   
   CommentBgColor = Me.CommentColor.BackColor
-  CommentFont = Me.CommentFont.Caption
+  CommentFont = Me.StampFont.Value
   
   Call Library.setComment(CommentBgColor, CommentFont)
   
@@ -276,7 +316,38 @@ Function doCommentPreview()
 End Function
 
 
+'==================================================================================================
+Function doStampPreview()
+  Dim previewImgPath As String
+  Dim StampVal As String, StampFont As String
+  
 
+  Call init.setting(True)
+  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
+  
+  BK_sheetHighLight.Activate
+  BK_sheetHighLight.Range("C10").Activate
+  
+  StampVal = Me.StampVal.Value
+  StampFont = Me.StampFont.Value
+  
+  Call Ctl_Stamp.押印_確認印(StampVal, StampFont, thisAppName & "StampImg")
+  
+  imageName = thisAppName & "StampImg" & ".jpg"
+  previewImgPath = LadexDir & "\" & imageName
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("C10:D12"), imageName)
+  
+  
+  If Library.chkFileExists(previewImgPath) = False Then
+    imageName = thisAppName & "NoCommentImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
+  End If
+  StanpImg.Picture = LoadPicture(previewImgPath)
+  
+  BK_sheetHighLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
+  
+  
+End Function
 
 
 
@@ -383,13 +454,20 @@ Private Sub CommentColor_Click()
 End Sub
 
 '==================================================================================================
-Private Sub CommentFont_Click()
-  CommentFont = Me.CommentFont.Caption
+Private Sub StampFont_Exit(ByVal Cancel As MSForms.ReturnBoolean)
   
-  Call Library.getFont(CommentFont, 9)
+  If InitializeFlg = False Then
+    Call doStampPreview
+  End If
+
+End Sub
+
+'==================================================================================================
+Private Sub StampFont_Change()
   
-  
-  
+  If InitializeFlg = False Then
+    Call doStampPreview
+  End If
 
 End Sub
 
@@ -455,6 +533,9 @@ Private Sub run_Click()
 
   Call Library.setRegistry("Main", "CommentBgColor", Me.CommentColor.BackColor)
 
+
+  Call Library.setRegistry("Main", "StampVal", Me.StampVal.Value)
+  Call Library.setRegistry("Main", "StampFont", Me.StampFont.Value)
   
   
   'スタイルシートをスタイル2シートへコピー

@@ -972,11 +972,11 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getFont(fontName As String, fontSize As Long)
+Function getFont(FontName As String, fontSize As Long)
   Dim Red As Long, Green As Long, Blue As Long
   Dim setColorValue As Long
 
-  Application.Dialogs(xlDialogActiveCellFont).Show fontName, "ÉåÉMÉÖÉâÅ[", fontSize
+  Application.Dialogs(xlDialogActiveCellFont).Show FontName, "ÉåÉMÉÖÉâÅ[", fontSize
   
   
 End Function
@@ -2606,8 +2606,8 @@ Function årê¸_é¿ê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       
-      .Borders(xlEdgeLeft).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
+'      .Borders(xlEdgeLeft).Weight = WeightVal
+'      .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2619,8 +2619,8 @@ Function årê¸_é¿ê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       
-      .Borders(xlInsideHorizontal).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
+'      .Borders(xlEdgeLeft).Weight = WeightVal
+'      .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2675,7 +2675,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
   If TypeName(setArea) = "Range" Then
     With setArea
       .Borders(xlInsideVertical).LineStyle = xlContinuous
-      .Borders(xlInsideVertical).Weight = WeightVal
+'      .Borders(xlInsideVertical).Weight = WeightVal
       
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
@@ -2683,8 +2683,8 @@ Function årê¸_é¿ê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
     End With
   Else
     With Selection
-      .Borders(xlInsideVertical).LineStyle = xlDash
-      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+'      .Borders(xlInsideVertical).Weight = WeightVal
       
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
@@ -2702,7 +2702,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
   If TypeName(setArea) = "Range" Then
     With setArea
       .Borders(xlInsideHorizontal).LineStyle = xlContinuous
-      .Borders(xlInsideHorizontal).Weight = WeightVal
+'      .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
@@ -2711,8 +2711,8 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
   Else
 
     With Selection
-      .Borders(xlInsideHorizontal).LineStyle = xlDash
-      .Borders(xlInsideHorizontal).Weight = WeightVal
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+'      .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
@@ -2851,7 +2851,32 @@ Function årê¸_ìÒèdê¸_â∫(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
+'==================================================================================================
+Function årê¸_ìÒèdê¸_è„â∫(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
 
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
 
 
 '==================================================================================================
