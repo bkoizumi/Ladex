@@ -121,7 +121,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function startScript()
-  
+  On Error Resume Next
   'アクティブセルの取得
   If TypeName(Selection) = "Range" Then
     SelectionCell = Selection.Address

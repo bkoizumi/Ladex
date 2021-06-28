@@ -14,6 +14,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim ret As Boolean
+Dim colorValue As Long
+Dim HighLightDspDirection As String
+Dim old_BKh_rbPressed  As Boolean
+Public InitializeFlg   As Boolean
+
+
+
 
 
 
@@ -29,9 +36,12 @@ Private Sub UserForm_Initialize()
   Dim endLine As Long
   Dim indexCnt As Integer
   
+  InitializeFlg = True
+  
   Call init.setting
   Application.Cursor = xlDefault
   indexCnt = 0
+  old_BKh_rbPressed = BKh_rbPressed
   
   setZoomLevel = Library.getRegistry("Main", "ZoomLevel")
   
@@ -56,7 +66,7 @@ Private Sub UserForm_Initialize()
     .LineColor.Caption = ""
     
   
-    'Highlight設定
+    'Highlight設定---------------------------------------------------------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
     If HighLightColor = "0" Then
       .HighLightColor.BackColor = 10222585
@@ -65,7 +75,7 @@ Private Sub UserForm_Initialize()
     End If
     .HighLightColor.Caption = ""
     
-    '透明度
+    '透明度----------------------------------------------------------------------------------------
     HighlightTransparentRate = Library.getRegistry("Main", "HighLightTransparentRate")
     If HighlightTransparentRate = "0" Then
       .HighlightTransparentRate.Value = 50
@@ -73,39 +83,37 @@ Private Sub UserForm_Initialize()
       .HighlightTransparentRate.Value = HighlightTransparentRate
     End If
   
-    '表示方向
+    '表示方向--------------------------------------------------------------------------------------
     HighLightDspDirection = Library.getRegistry("Main", "HighLightDspDirection")
     If HighLightDspDirection = "X" Then
-      HighlightDspDirection_X.Value = True
+      .HighlightDspDirection_X.Value = True
       
     ElseIf HighLightDspDirection = "Y" Then
-      Highlight_DspDirection_Y.Value = True
+      .HighlightDspDirection_Y.Value = True
     
-    ElseIf Highlight_DspDirection = "B" Then
-      Highlight_DspDirection_B.Value = True
+    ElseIf HighLightDspDirection = "B" Then
+      .HighlightDspDirection_B.Value = True
     
     End If
   
-    '表示方法
+    '表示方法--------------------------------------------------------------------------------------
     HighLightDspMethod = Library.getRegistry("Main", "HighLightDspMethod")
     If HighLightDspMethod = "0" Then
-      HighlightDspMethod_0.Value = True
+      .HighlightDspMethod_0.Value = True
     
-    ElseIf HighLight_DspMethod = "0" Then
-      HighlightDspMethod_0.Value = True
+    ElseIf HighLightDspMethod = "0" Then
+      .HighlightDspMethod_0.Value = True
       
-    ElseIf HighLight_DspMethod = "1" Then
-      HighlightDspMethod_1.Value = True
+    ElseIf HighLightDspMethod = "1" Then
+      .HighlightDspMethod_1.Value = True
     
-    ElseIf HighLight_DspMethod = "2" Then
-      HighlightDspMethod_2.Value = True
+    ElseIf HighLightDspMethod = "2" Then
+      .HighlightDspMethod_2.Value = True
     
     End If
-  
-  
-  
-  
   End With
+  
+  InitializeFlg = False
 End Sub
 
 '**************************************************************************************************
@@ -139,6 +147,72 @@ Function セルの書式設定_フォント(Optional line As Long = 1)
 End Function
 
 
+'**************************************************************************************************
+' * プレビュー表示
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function doPreview()
+  Dim previewImgPath As String
+  Dim HighLightColor As String, HighLightDspDirection As String, HighLightDspMethod As String, HighlightTransparentRate   As Long
+  
+  Call init.setting
+'  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
+  
+  
+  HighLightColor = Me.HighLightColor.BackColor
+
+  '透明度----------------------------------------------------------------------------------------
+  HighlightTransparentRate = Me.HighlightTransparentRate.Value
+
+  '表示方向--------------------------------------------------------------------------------------
+  If Me.HighlightDspDirection_X.Value = True Then
+    HighLightDspDirection = "X"
+    
+  ElseIf Me.HighlightDspDirection_Y.Value = True Then
+    HighLightDspDirection = "Y"
+    
+  ElseIf Me.HighlightDspDirection_B.Value = True Then
+    HighLightDspDirection = "B"
+  End If
+  
+  '表示方法--------------------------------------------------------------------------------------
+  If Me.HighlightDspMethod_0.Value = True Then
+    HighLightDspMethod = "0"
+  
+  ElseIf Me.HighlightDspMethod_1.Value = True Then
+    HighLightDspMethod = "1"
+  
+  ElseIf Me.HighlightDspMethod_2.Value = True Then
+    HighLightDspMethod = "2"
+  End If
+
+
+  BK_sheetHighLight.Activate
+  
+  If BKh_rbPressed = False Then
+    BKh_rbPressed = True
+  End If
+  
+  Call Ctl_HighLight.showStart(Range("C4"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+  
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("A1:E8"))
+  
+  imageName = thisAppName & "ExportPreviewImg" & ".jpg"
+  previewImgPath = LadexDir & "\" & imageName
+  
+  If Library.chkFileExists(previewImgPath) Then
+    previewImg.Picture = LoadPicture(previewImgPath)
+  Else
+    imageName = thisAppName & "NoPreviewImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
+    
+    previewImg.Picture = LoadPicture(previewImgPath)
+  End If
+  BKh_rbPressed = old_BKh_rbPressed
+  Call Ctl_HighLight.showStart(Range("C4"))
+  
+End Function
 
 
 
@@ -157,20 +231,84 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'プレビュー
+'==================================================================================================
+Private Sub HighlightDspDirection_B_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub HighlightDspDirection_X_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub HighlightDspDirection_Y_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub HighlightDspMethod_0_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub HighlightDspMethod_1_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub HighlightDspMethod_2_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub HighlightTransparentRate_Click()
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
+End Sub
+
+
 '==================================================================================================
 Private Sub HighLightColor_Click()
-  Dim colorValue As Long
   
   colorValue = Library.getColor(Me.HighLightColor.BackColor)
   Me.HighLightColor.BackColor = colorValue
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
 End Sub
 
 
 '==================================================================================================
 Private Sub LineColor_Click()
-  Dim colorValue As Long
   colorValue = Library.getColor(Me.LineColor.BackColor)
   Me.LineColor.BackColor = colorValue
+  
+  If InitializeFlg = False Then
+    Call doPreview
+  End If
 End Sub
 
 
@@ -180,6 +318,7 @@ Private Sub Cancel_Click()
 
   Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
   Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+  
   
   Unload Me
 End Sub
@@ -201,21 +340,23 @@ Private Sub run_Click()
   
   
   Call Library.setRegistry("Main", "HighLightColor", Me.HighLightColor.BackColor)
-  Call Library.setRegistry("Main", "HighLightTransparentRate", Me.HighlightTransparentRate.Value)
+  
+  '透明度----------------------------------------------------------------------------------------
+  Call Library.setRegistry("Main", "HighLightDspDirection", HighlightTransparentRate.Value)
 
-  '表示方向
+  '表示方向--------------------------------------------------------------------------------------
   If HighlightDspDirection_X.Value = True Then
     HighLightDspDirection = "X"
-  ElseIf Highlight_DspDirection_Y.Value = True Then
+    
+  ElseIf HighlightDspDirection_Y.Value = True Then
     HighLightDspDirection = "Y"
+    
   ElseIf HighlightDspDirection_B.Value = True Then
     HighLightDspDirection = "B"
   End If
   Call Library.setRegistry("Main", "HighLightDspDirection", HighLightDspDirection)
-
-
-
-  '表示方向
+  
+  '表示方法--------------------------------------------------------------------------------------
   If HighlightDspMethod_0.Value = True Then
     HighLightDspMethod = "0"
   
@@ -226,7 +367,7 @@ Private Sub run_Click()
     HighLightDspMethod = "2"
   End If
   Call Library.setRegistry("Main", "HighLightDspMethod", HighLightDspMethod)
-
+  BKh_rbPressed = old_BKh_rbPressed
 
 
 

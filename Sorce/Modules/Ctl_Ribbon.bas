@@ -464,8 +464,8 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function showOption(control As IRibbonControl)
-  Call Main.オプション画面表示
+Function Optionshow(control As IRibbonControl)
+  Ctl_Option.showOption
 End Function
 
 '==================================================================================================
@@ -478,6 +478,12 @@ End Function
 Function OptionStyleExport(control As IRibbonControl)
   Call Ctl_Style.Export
 End Function
+
+'==================================================================================================
+Function OptionHighLight(control As IRibbonControl)
+  Ctl_Option.HighLight
+End Function
+
 
 
 '**************************************************************************************************

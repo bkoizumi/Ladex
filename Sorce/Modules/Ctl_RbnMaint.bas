@@ -17,7 +17,7 @@ Function シート削除()
   Call init.setting
   Application.DisplayAlerts = False
   
-  ThisWorkbook.Sheets("Ribbon").delete
+  ThisWorkbook.Sheets("HighLight").delete
   
   Application.DisplayAlerts = True
   ThisWorkbook.Save
@@ -34,7 +34,7 @@ Function OptionSheetImport(control As IRibbonControl)
 '  ThisWorkbook.Worksheets("Style").Columns("A:J").Value = targetBook.Sheets("Style").Columns("A:J").Value
 '
 
-  targetBook.Sheets("設定").Columns("A:H").Copy ThisWorkbook.Worksheets("設定").Range("A1")
+  targetBook.Sheets("設定").Columns("A:AA").Copy ThisWorkbook.Worksheets("設定").Range("A1")
 '  targetBook.Sheets("Ribbon").Columns("A:G").Copy ThisWorkbook.Worksheets("Ribbon").Range("A1")
   targetBook.Sheets("Notice").Columns("A:B").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
   targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
@@ -60,9 +60,9 @@ End Function
 Function OptionSheetExport(control As IRibbonControl)
 
   Call init.setting
-  Set targetBook = Workbooks("メンテナンス用.xlsx")
+  Set targetBook = Workbooks("メンテナンス用.xlsm")
   
-  ThisWorkbook.Sheets("設定").Columns("A:H").Copy targetBook.Worksheets("設定").Range("A1")
+  ThisWorkbook.Sheets("設定").Columns("A:AA").Copy targetBook.Worksheets("設定").Range("A1")
 '  ThisWorkbook.Sheets("Ribbon").Columns("A:G").Copy targetBook.Worksheets("Ribbon").Range("A1")
   ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
   ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
@@ -70,12 +70,12 @@ Function OptionSheetExport(control As IRibbonControl)
   ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
   
   
-  Application.DisplayAlerts = False
-  targetBook.Sheets("Stamp").delete
-  targetBook.Worksheets.add.Name = "Stamp"
-  
-  ThisWorkbook.Worksheets("Stamp").Columns("A:AP").Copy targetBook.Sheets("Stamp").Range("A1")
-  Application.DisplayAlerts = True
+'  Application.DisplayAlerts = False
+'  targetBook.Sheets("Stamp").delete
+'  targetBook.Worksheets.add.Name = "Stamp"
+'
+'  ThisWorkbook.Worksheets("Stamp").Columns("A:AP").Copy targetBook.Sheets("Stamp").Range("A1")
+'  Application.DisplayAlerts = True
   
   
   

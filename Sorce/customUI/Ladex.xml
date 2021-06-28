@@ -13,7 +13,7 @@
     <group  id="カスタマイズ" label="カスタマイズ">
 
       <splitButton id="SB_Option" size="large">
-        <button id="Option" label="Option" imageMso="AnimationCustomAddActionVerbDialog" screentip="オプション設定" supertip="オプション画面を表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.showOption" />
+        <button id="Option" label="Option" imageMso="CurrentViewSettings" screentip="オプション設定" supertip="オプション画面を表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionShow" />
         <menu id="OptionMenu" screentip="オプション設定メニュー"  supertip="オプション設定メニュー" itemSize="large">
         <menuSeparator id="MS_Option" title="オプション設定メニュー" />
           <button id="OptionStyleImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleImport" description="Import"      />
@@ -66,10 +66,14 @@
       </splitButton>
 
 
+      <splitButton id="SB_HighLight" size="normal">
+        <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
+          <menu id="HighLight_Menu"  screentip="ハイライトメニュー"  supertip="ハイライトメニュー" itemSize="large">
+            <button id="OptionHighLight"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionHighLight" description="ハイライトの設定 &#13;" />
+          </menu>
+      </splitButton>
 
 
-
-      <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
         <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="セル幅調整 &#13;" />

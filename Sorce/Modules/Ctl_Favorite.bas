@@ -67,11 +67,10 @@ Function detail()
   leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
   
   With Frm_Favorite
-    .StartUpPosition = 0
-    If topPosition = "" Then
-      .Top = 10
-      .Left = 120
+    If topPosition = 0 Then
+      .StartUpPosition = 2
     Else
+      .StartUpPosition = 0
       .Top = topPosition
       .Left = leftPosition
     End If

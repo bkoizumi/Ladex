@@ -6,32 +6,37 @@ Attribute VB_Name = "Ctl_Image"
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function saveSelectArea2Image()
+Function saveSelectArea2Image(Optional defSlctArea As Variant)
   Dim slctArea
   Dim targetImg As Chart
   Dim imageName As String, saveDir As String
   
   'èàóùäJén--------------------------------------
-  'On Error GoTo catchError
+  On Error GoTo catchError
 
   Call init.setting
   Call Library.startScript
   '----------------------------------------------
 
-  imageName = thisAppName & "ExportImg_" & Format(Now(), "yyyymmdd_hhnnss") & ".png"
-  saveDir = Library.getDirPath(ActiveWorkbook.Path, "âÊëú")
-
+  If IsMissing(defSlctArea) Then
+    imageName = thisAppName & "ExportImg_" & Format(Now(), "yyyymmdd_hhnnss") & ".jpg"
+    saveDir = Library.getDirPath(ActiveWorkbook.Path, "âÊëú")
+    Set slctArea = Selection
+  Else
+    imageName = thisAppName & "ExportPreviewImg" & ".jpg"
+    saveDir = LadexDir & "\" & fileName
+    Set slctArea = defSlctArea
+  End If
+  
   If saveDir = "" Then
     Call Library.showNotice(200, "", True)
   End If
   
-  Set slctArea = Selection
-  
-  If TypeName(Selection) = "Range" Then
+  If TypeName(slctArea) = "Range" Then
     slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
   
-  ElseIf TypeName(Selection) = "ChartArea" Then
-    Selection.Copy
+  ElseIf TypeName(slctArea) = "ChartArea" Then
+    slctArea.Copy
   End If
 
   Set targetImg = ActiveSheet.ChartObjects.add(0, 0, slctArea.Width, slctArea.Height).Chart
@@ -46,9 +51,10 @@ Function saveSelectArea2Image()
   Set slctArea = Nothing
 
   'èàóùèIóπ--------------------------------------
-  Call Ctl_ProgressBar.showEnd
   Call Library.endScript
-  Call Shell("Explorer.exe /select, " & saveDir & "\" & imageName, vbNormalFocus)
+  If IsMissing(defSlctArea) Then
+    Call Shell("Explorer.exe /select, " & saveDir & "\" & imageName, vbNormalFocus)
+  End If
   '----------------------------------------------
 
   Exit Function

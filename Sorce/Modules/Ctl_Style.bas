@@ -6,9 +6,8 @@ Attribute VB_Name = "Ctl_Style"
 '**************************************************************************************************
 '==================================================================================================
 Function Export()
-  Dim FSO As Object
   Dim filePath As String, fileName As String
-  Set FSO = CreateObject("Scripting.FileSystemObject")
+  Dim FSO As Object
      
      
   'èàóùäJén--------------------------------------
