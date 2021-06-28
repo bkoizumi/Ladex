@@ -13,13 +13,14 @@ Public BK_sheetTestData   As Worksheet
 Public BK_sheetRibbon     As Worksheet
 Public BK_sheetFavorite   As Worksheet
 Public BK_sheetStamp      As Worksheet
+Public BK_sheetHighLight  As Worksheet
+
 
 'グローバル変数----------------------------------
 Public Const thisAppName = "Ladex"
 Public Const thisAppVersion = "0.0.4.0"
 Public FuncName           As String
 Public resetVal           As String
-
 
 'レジストリ登録用サブキー
 Public Const RegistryKey  As String = "Ladex"
@@ -31,8 +32,11 @@ Public BK_setVal          As Object
 Public sampleDataList     As Object
 
 
-'ファイル関連
+'ファイル/ディレクトリ関連
 Public logFile            As String
+Public LadexDir           As String
+Public LadexPreDir        As String
+
 
 '処理時間計測用
 Public StartTime          As Date
@@ -96,7 +100,7 @@ Function setting(Optional reCheckFlg As Boolean)
   'レジストリ関連設定------------------------------------------------------------------------------
   RegistrySubKey = "Main"
   
-  If logFile = "" Or reCheckFlg = True Then
+  If LadexDir = "" Or reCheckFlg = True Then
     Call usetting
   Else
     Exit Function
@@ -113,6 +117,7 @@ Function setting(Optional reCheckFlg As Boolean)
 '  Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
   Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
   Set BK_sheetStamp = BK_ThisBook.Worksheets("Stamp")
+  Set BK_sheetHighLight = BK_ThisBook.Worksheets("HighLight")
  
   
   logFile = ThisWorkbook.Path & "\ExcelMacro.log"
@@ -128,6 +133,11 @@ Function setting(Optional reCheckFlg As Boolean)
     End If
   Next
   
+  Dim wsh As Object
+  Set wsh = CreateObject("WScript.Shell")
+
+  LadexDir = wsh.SpecialFolders("AppData") & "\Ladex"
+  LadexPreDir = wsh.SpecialFolders("AppData") & "\Ladex\Preview"
   
   
 '  Set BK_ribbonVal = Nothing

@@ -15,6 +15,7 @@ Function setVal(pType As String, pText As String)
 
   Call init.setting
   chkFlg = False
+  BK_ThisBook.Activate
   Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
   '----------------------------------------------
   endLine = Cells(Rows.count, 4).End(xlUp).Row

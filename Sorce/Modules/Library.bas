@@ -121,7 +121,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function startScript()
-  
+  On Error Resume Next
   'アクティブセルの取得
   If TypeName(Selection) = "Range" Then
     SelectionCell = Selection.Address
@@ -965,6 +965,20 @@ Function getColor(colorValue As Long)
 
   getColor = setColorValue
 
+End Function
+
+'**************************************************************************************************
+' * フォントダイアログ表示
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getFont(FontName As String, fontSize As Long)
+  Dim Red As Long, Green As Long, Blue As Long
+  Dim setColorValue As Long
+
+  Application.Dialogs(xlDialogActiveCellFont).Show FontName, "レギュラー", fontSize
+  
+  
 End Function
 
 
@@ -2038,7 +2052,7 @@ End Function
 ' *
 ' * @Link   http://techoh.net/customize-excel-comment-by-vba/
 '**************************************************************************************************
-Function setComment()
+Function setComment(Optional BgColorVal, Optional FontVal)
     Dim cl As Range
     Dim count As Long
 
@@ -2048,22 +2062,29 @@ Function setComment()
       DoEvents
       If Not cl.Comment Is Nothing Then
         With cl.Comment.Shape
-          ' サイズ自動設定
+          'サイズ設定
           .TextFrame.AutoSize = True
           .TextFrame.Characters.Font.Size = 9
 
-          ' 形状を角丸四角形に変更
+          '形状を角丸四角形に変更
           .AutoShapeType = msoShapeRectangle
-          ' 塗り色・線色 変更
+          
+          '色
           .line.ForeColor.RGB = RGB(128, 128, 128)
-          .Fill.ForeColor.RGB = RGB(240, 240, 240)
-          ' 影 透過率 30%、オフセット量 x:1px,y:1px
+          '.Fill.ForeColor.RGB = RGB(240, 240, 240)
+          .Fill.ForeColor.RGB = BgColorVal
+          
+          '影 透過率 30%、オフセット量 x:1px,y:1px
           .Shadow.Transparency = 0.3
           .Shadow.OffsetX = 1
           .Shadow.OffsetY = 1
+          
           ' 太字解除、中央揃え
           .TextFrame.Characters.Font.Bold = False
           .TextFrame.HorizontalAlignment = xlLeft
+          
+'          .TextFrame.Characters.Font = FontVal
+          
           ' セルに合わせて移動する
           .Placement = xlMove
         End With
@@ -2585,8 +2606,8 @@ Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       
-      .Borders(xlEdgeLeft).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
+'      .Borders(xlEdgeLeft).Weight = WeightVal
+'      .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2598,8 +2619,8 @@ Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       
-      .Borders(xlInsideHorizontal).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
+'      .Borders(xlEdgeLeft).Weight = WeightVal
+'      .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2654,7 +2675,7 @@ Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, O
   If TypeName(setArea) = "Range" Then
     With setArea
       .Borders(xlInsideVertical).LineStyle = xlContinuous
-      .Borders(xlInsideVertical).Weight = WeightVal
+'      .Borders(xlInsideVertical).Weight = WeightVal
       
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
@@ -2662,8 +2683,8 @@ Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, O
     End With
   Else
     With Selection
-      .Borders(xlInsideVertical).LineStyle = xlDash
-      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideVertical).LineStyle = xlContinuous
+'      .Borders(xlInsideVertical).Weight = WeightVal
       
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
@@ -2681,7 +2702,7 @@ Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, O
   If TypeName(setArea) = "Range" Then
     With setArea
       .Borders(xlInsideHorizontal).LineStyle = xlContinuous
-      .Borders(xlInsideHorizontal).Weight = WeightVal
+'      .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
@@ -2690,8 +2711,8 @@ Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, O
   Else
 
     With Selection
-      .Borders(xlInsideHorizontal).LineStyle = xlDash
-      .Borders(xlInsideHorizontal).Weight = WeightVal
+      .Borders(xlInsideHorizontal).LineStyle = xlContinuous
+'      .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
@@ -2830,7 +2851,32 @@ Function 罫線_二重線_下(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
+'==================================================================================================
+Function 罫線_二重線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
 
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      .Borders(xlEdgeBottom).LineStyle = xlDouble
+  
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
 
 
 '==================================================================================================

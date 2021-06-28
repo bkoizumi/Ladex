@@ -9,36 +9,6 @@ End Function
 
 
 
-'**************************************************************************************************
-' * オプション画面表示
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function オプション画面表示()
-  
-  On Error GoTo catchError
-  
-  topPosition = Library.getRegistry("UserForm", "OptionTop")
-  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
-  With Frm_Option
-    .StartUpPosition = 0
-    If topPosition = "" Then
-      .Top = 10
-      .Left = 120
-    Else
-      .Top = topPosition
-      .Left = leftPosition
-    End If
-    .MultiPage1.Value = 0
-    .Show
-  End With
-
-  Exit Function
-
-'エラー発生時=====================================================================================
-catchError:
-  'Call Library.showNotice(Err.Number, Err.Description, True)
-End Function
 
 
 '**************************************************************************************************

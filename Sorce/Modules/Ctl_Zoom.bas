@@ -21,11 +21,10 @@ Function ZoomIn(Optional slctCellAddress As String)
 '    Call Ctl_DefaultVal.setVal("ZoomIn", cellVal)
     
     With Frm_Zoom
-      .StartUpPosition = 0
-      If topPosition = "" Then
-        .Top = 10
-        .Left = 120
+      If topPosition = 0 Then
+        .StartUpPosition = 2
       Else
+        .StartUpPosition = 0
         .Top = topPosition
         .Left = leftPosition
       End If
@@ -59,8 +58,9 @@ Function ZoomOut(Text As String, SetTargetAddress As String)
 End Function
 
 
+'==================================================================================================
+'全画面表示
 
-'全画面表示----------------------------------------------------------------------------------------
 Function Zoom01()
 
   Call Library.startScript
@@ -71,11 +71,11 @@ Function Zoom01()
   leftPosition = Library.getRegistry("UserForm", "Zoom01Left")
       
   With Frm_DispFullScreenForm
-    .StartUpPosition = 0
-    If topPosition = "" Then
-      .Top = 10
-      .Left = 10
+    
+    If topPosition = 0 Then
+      .StartUpPosition = 2
     Else
+      .StartUpPosition = 0
       .Top = topPosition
       .Left = leftPosition
     End If

@@ -46,7 +46,13 @@ Sub getCursorPosition()
 End Sub
 
 '==================================================================================================
-Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Optional targetArea_Y As Range)
+Function showStart(ByVal Target As Range, _
+                  Optional HighLightColor As String, _
+                  Optional HighLightDspDirection As String, _
+                  Optional HighLightDspMethod As String, _
+                  Optional HighlightTransparentRate As Long)
+                  
+                  
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
@@ -61,21 +67,30 @@ Function showStart(ByVal Target As Range, Optional targetArea_X As Range, Option
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
-    If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
-      If targetArea_X Is Nothing Then
-        Call showStart_X(Target, targetArea_X)
         
-      ElseIf Not (targetArea_X Is Nothing) And Application.Intersect(ActiveCell, targetArea_X) Is Nothing Then
-        Call showStart_X(Target, targetArea_X)
-      End If
+    If HighLightColor = "" Then
+      HighLightColor = Library.getRegistry("Main", "HighLightColor")
     End If
     
-    If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[Y,B]" Then
-      If targetArea_Y Is Nothing Then
-        Call showStart_Y(Target, targetArea_Y)
-      ElseIf Not (targetArea_Y Is Nothing) And Application.Intersect(ActiveCell, targetArea_Y) Is Nothing Then
-        Call showStart_Y(Target, targetArea_Y)
-      End If
+    If HighLightDspDirection = "" Then
+      HighLightDspDirection = Library.getRegistry("Main", "HighLightDspDirection")
+    End If
+        
+    If HighLightDspMethod = "" Then
+      HighLightDspMethod = Library.getRegistry("Main", "HighLightDspMethod")
+    End If
+        
+    If HighlightTransparentRate = 0 Then
+      HighlightTransparentRate = CLng(Library.getRegistry("Main", "HighLightTransparentRate"))
+    End If
+    
+    
+    If HighLightDspDirection Like "[X,B]" Then
+      Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+    End If
+    
+    If HighLightDspDirection Like "[Y,B]" Then
+      Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
     End If
   End If
 
@@ -87,7 +102,12 @@ End Function
 
 
 '==================================================================================================
-Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
+Function showStart_X(ByVal Target As Range, _
+                  HighLightColor As String, _
+                  HighLightDspDirection As String, _
+                  HighLightDspMethod As String, _
+                  HighlightTransparentRate As Long)
+                  
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
@@ -106,38 +126,38 @@ Function showStart_X(ByVal Target As Range, Optional targetArea_X As Range)
     HighLight_X.OnAction = "getCursorPosition"
     
     '表示方法
-    HighLight_DspMethod = Library.getRegistry("Main", "HighLight_DspMethod")
+    HighLightDspMethod = HighLightDspMethod
     
     '帯(塗りつぶし)
-    If HighLight_DspMethod = "0" Then
-      HighLight_X.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
+    If HighLightDspMethod = "0" Then
+      HighLight_X.Fill.ForeColor.RGB = HighLightColor
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
-      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
+      Selection.ShapeRange.Fill.Transparency = HighlightTransparentRate / 100
 '      Selection.ShapeRange.Width = Range(Cells(1, 1), Cells(1, Columns.count)).Width
     
     
     '囲み線
-    ElseIf HighLight_DspMethod = "1" Then
+    ElseIf HighLightDspMethod = "1" Then
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = HighLightColor
+      Selection.ShapeRange.line.Transparency = HighlightTransparentRate / 100
       Selection.ShapeRange.line.Weight = 3
     
     '直線
-    ElseIf HighLight_DspMethod = "2" Then
+    ElseIf HighLightDspMethod = "2" Then
 '      Set Rng = Range("A" & Target.Row + 1)
       
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = HighLightColor
+      Selection.ShapeRange.line.Transparency = HighlightTransparentRate / 100
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.Height = 1
 '      Selection.ShapeRange.Top = Rng.Top
@@ -152,7 +172,12 @@ End Function
 
 
 '==================================================================================================
-Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
+Function showStart_Y(ByVal Target As Range, _
+                  HighLightColor As String, _
+                  HighLightDspDirection As String, _
+                  HighLightDspMethod As String, _
+                  HighlightTransparentRate As Long)
+                   
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
@@ -167,43 +192,40 @@ Function showStart_Y(ByVal Target As Range, Optional targetArea_Y As Range)
       
     HighLight_Y.Name = "HighLight_Y"
     HighLight_Y.OnAction = "getCursorPosition"
-    HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
     
     
-    '表示方法
-    HighLight_DspMethod = Library.getRegistry("Main", "HighLight_DspMethod")
-    
+    '表示方法--------------------------------------------------------------------------------------
     '帯(塗りつぶし)
-    If HighLight_DspMethod = "0" Then
-      HighLight_Y.Fill.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
+    If HighLightDspMethod = "0" Then
+      HighLight_Y.Fill.ForeColor.RGB = HighLightColor
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
-      Selection.ShapeRange.Fill.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
+      Selection.ShapeRange.Fill.Transparency = HighlightTransparentRate / 100
     
     '囲み線
-    ElseIf HighLight_DspMethod = "1" Then
+    ElseIf HighLightDspMethod = "1" Then
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = HighLightColor
+      Selection.ShapeRange.line.Transparency = HighlightTransparentRate / 100
       Selection.ShapeRange.line.Weight = 3
     
     '直線
-    ElseIf HighLight_DspMethod = "2" Then
-'      Set Rng = Cells(1, Target.Column + 1)
+    ElseIf HighLightDspMethod = "2" Then
       
       ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
-      Selection.ShapeRange.line.ForeColor.RGB = Library.getRegistry(RegistrySubKey, "HighLightColor")
-      Selection.ShapeRange.line.Transparency = Library.getRegistry("Main", "HighLightTransparentRate") / 100
+      Selection.ShapeRange.line.ForeColor.RGB = HighLightColor
+      Selection.ShapeRange.line.Transparency = HighlightTransparentRate / 100
       Selection.ShapeRange.line.Weight = 3
-      Selection.ShapeRange.Width = 1
-'      Selection.ShapeRange.Left = Rng.Left
+      Selection.ShapeRange.Height = MaxHeight
+      Selection.ShapeRange.Width = 0
+'      Selection.ShapeRange.Top = Rng.Top
     
     End If
   
