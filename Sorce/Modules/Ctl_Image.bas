@@ -29,7 +29,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   End If
   
   If saveDir = "" Then
-    Call Library.showNotice(200, "", True)
+    Call Library.showNotice(999, "", True)
   End If
   
   If TypeName(slctArea) = "Range" Then

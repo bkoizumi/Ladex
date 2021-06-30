@@ -1478,8 +1478,6 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     Application.Speech.Speak Text:=Message, SpeakAsync:=True, SpeakXML:=True
   End If
 
-
-
   Select Case Code
     Case 0 To 399
       Call MsgBox(Message, vbInformation, thisAppName)
@@ -1490,6 +1488,8 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     Case 500 To 599
       Call MsgBox(Message, vbExclamation, thisAppName)
 
+    Case 999
+    
     Case Else
       Call MsgBox(Message, vbCritical, thisAppName)
   End Select

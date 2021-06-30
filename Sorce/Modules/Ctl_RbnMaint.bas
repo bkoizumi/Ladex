@@ -31,13 +31,16 @@ Function その他()
 '  Cells.Select
 '  Selection.ColumnWidth = 5
   
-  BK_sheetHighLight.Range("N5").Select
-  BK_sheetHighLight.Range("N5").ClearComments
-  BK_sheetHighLight.Range("N5").AddComment
-  BK_sheetHighLight.Range("N5").Comment.Visible = False
-  BK_sheetHighLight.Range("N5").Comment.Text Text:="Sampleコメント" & Chr(10) & "Sampleコメント" & Chr(10) & "Sampleコメント "
+'  BK_sheetHighLight.Range("N5").Select
+'  BK_sheetHighLight.Range("N5").ClearComments
+'  BK_sheetHighLight.Range("N5").AddComment
+'  BK_sheetHighLight.Range("N5").Comment.Visible = False
+'  BK_sheetHighLight.Range("N5").Comment.Text Text:="Sampleコメント" & Chr(10) & "Sampleコメント" & Chr(10) & "Sampleコメント "
+'
+'  BK_sheetHighLight.Range("N5").Comment.Visible = True
   
-  BK_sheetHighLight.Range("N5").Comment.Visible = True
+  
+  BK_sheetHighLight.Columns("E:H").ColumnWidth = 3.5
   
   ThisWorkbook.Save
 End Function

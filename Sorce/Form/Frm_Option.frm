@@ -154,7 +154,7 @@ Private Sub UserForm_Initialize()
       imageName = thisAppName & "NoCommentImg" & ".jpg"
       previewImgPath = LadexDir & "\" & imageName
     End If
-    CommentImg.Picture = LoadPicture(previewImgPath)
+    .CommentImg.Picture = LoadPicture(previewImgPath)
     
     '電子印鑑 フォント-------------------------------------------------------------------------------
     Dim cBox As CommandBarComboBox
@@ -172,7 +172,13 @@ Private Sub UserForm_Initialize()
       Next
     .StampFont.ListIndex = ListIndex
     
-    
+    imageName = thisAppName & "StampImg" & ".jpg"
+    previewImgPath = LadexDir & "\" & imageName
+    If Library.chkFileExists(previewImgPath) = False Then
+      imageName = thisAppName & "NoStampImg" & ".jpg"
+      previewImgPath = LadexDir & "\" & imageName
+    End If
+    .StampImg.Picture = LoadPicture(previewImgPath)
     
     
     
@@ -326,7 +332,7 @@ Function doStampPreview()
   Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
   
   BK_sheetHighLight.Activate
-  BK_sheetHighLight.Range("C10").Activate
+  BK_sheetHighLight.Range("F10").Activate
   
   StampVal = Me.StampVal.Value
   StampFont = Me.StampFont.Value
@@ -335,14 +341,14 @@ Function doStampPreview()
   
   imageName = thisAppName & "StampImg" & ".jpg"
   previewImgPath = LadexDir & "\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("C10:D12"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("E10:H12"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
     previewImgPath = LadexDir & "\" & imageName
   End If
-  StanpImg.Picture = LoadPicture(previewImgPath)
+  StampImg.Picture = LoadPicture(previewImgPath)
   
   BK_sheetHighLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
   

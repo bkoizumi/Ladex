@@ -207,7 +207,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 名前定義削除(control As IRibbonControl)
+Function 名前定義削除()
   Dim wb As Workbook, tmp As String
   
   Call Library.startScript
@@ -227,7 +227,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function 画像設定(control As IRibbonControl)
+Function 画像設定()
 
   With ActiveWorkbook.ActiveSheet
     Dim AllShapes As Shapes
