@@ -68,7 +68,7 @@
 
       <splitButton id="SB_HighLight" size="normal">
         <toggleButton id="HighLight"      label="ハイライト"  image="HighLight" onAction="Ladex.xlam!Ctl_Ribbon.highLight" getPressed="HighLightPressed"  screentip="ハイライト"  supertip="ハイライト"         />
-          <menu id="HighLight_Menu"  screentip="ハイライトメニュー"  supertip="ハイライトメニュー" itemSize="large">
+          <menu id="HighLight_Menu"  screentip="ハイライトメニュー"  supertip="ハイライトメニュー" itemSize="normal">
             <menuSeparator id="HighLight_SP1" title="HighLight 書式設定" />
             <button id="OptionHighLight"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionHighLight" description="ハイライトの設定をします &#13;" />
           </menu>
@@ -85,11 +85,13 @@
         <button id="stamp01"  label="電子印鑑【済印】"    imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp01" description="電子印鑑 &#13;" />
         <button id="stamp02"  label="電子印鑑【確認印】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp02" description="電子印鑑 &#13;" />
         <button id="stamp03"  label="電子印鑑【日付印】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp03" description="電子印鑑 &#13;" />
+        <menuSeparator id="電子印鑑_SP1" title="設定" />
+        <button id="OptionStamp"  label="設定"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.OptionStamp" description="電子印鑑 &#13;" />
       </menu>
 
       <splitButton id="SB_Comment" size="normal">
         <button id="formatComment"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
-          <menu id="Comment_Menu"  screentip="コメント整形メニュー"  supertip="コメント整形メニュー" itemSize="large">
+          <menu id="Comment_Menu"  screentip="コメント整形メニュー"  supertip="コメント整形メニュー" itemSize="normal">
             <menuSeparator id="コメント整形_SP1" title="コメント整形 書式設定" />
             <button id="OptionComment"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionComment" description="コメント整形の設定をします &#13;" />
           </menu>

@@ -132,14 +132,14 @@ Public Function showCount( _
                           , Optional flg As Boolean = False _
                         )
 
-  Call showBar(Prg_Title, 0, 0, PrgC_Cnt, PrgC_Max, PrgMeg)
+  Call showBar(Prg_Title, 2, 2, PrgC_Cnt, PrgC_Max, PrgMeg)
                 
 End Function
 '==================================================================================================
 Public Function showBar( _
                             Prg_Title As String _
-                          , PrgP_Cnt As Long, PrgP_Max As Long _
-                          , PrgC_Cnt As Long, PrgC_Max As Long _
+                          , ByVal L_PrgP_Cnt As Long, PrgP_Max As Long _
+                          , ByVal L_PrgC_Cnt As Long, PrgC_Max As Long _
                           , PrgMeg As String _
                         )
                         
@@ -148,28 +148,32 @@ Public Function showBar( _
   Dim myMsg2 As String
   Dim PrgP_Prg As Long, PrgC_Prg As Long
   
-  If PrgP_Cnt = 0 And PrgC_Cnt = 0 Then
+  L_PrgP_Cnt = L_PrgP_Cnt - 1
+  L_PrgC_Cnt = L_PrgC_Cnt
+  
+  If L_PrgP_Cnt <= 0 And L_PrgC_Cnt > 0 Then
     PrgP_Prg = 0
-    PrgP_Meg = PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
     
+    PrgC_Prg = Int((L_PrgC_Cnt) / PrgC_Max * 100)
+    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+  
+  
+  
+  ElseIf L_PrgP_Cnt > 0 And L_PrgC_Cnt > 0 Then
+    PrgP_Prg = Int((L_PrgP_Cnt) / PrgP_Max * 100)
+    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    
+    PrgC_Prg = Int((L_PrgC_Cnt) / PrgC_Max * 100)
+    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+  
+  ElseIf L_PrgP_Cnt = 0 Then
+    PrgP_Prg = 0
+    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    
+  ElseIf L_PrgC_Cnt = 0 Then
     PrgC_Prg = 0
-    PrgC_Meg = PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
-  
-  ElseIf PrgP_Cnt <= 0 And PrgC_Cnt > 0 Then
-    PrgP_Prg = 0
-    PrgP_Meg = PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
-    
-    PrgC_Prg = Int((PrgC_Cnt) / PrgC_Max * 100)
-    PrgC_Meg = PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
-  
-  
-  
-  ElseIf PrgP_Cnt > 0 And PrgC_Cnt > 0 Then
-    PrgP_Prg = Int((PrgP_Cnt) / PrgP_Max * 100)
-    PrgP_Meg = PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
-    
-    PrgC_Prg = Int((PrgC_Cnt) / PrgC_Max * 100)
-    PrgC_Meg = PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
   
   End If
   
@@ -204,6 +208,8 @@ Public Function showEnd()
   Unload Frm_Progress
   
 End Function
+
+
 
 
 

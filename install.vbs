@@ -46,30 +46,24 @@ With CreateObject("Excel.Application")
 
   'インストール先パスの作成
   strPath = .UserLibraryPath
+  imageFolder = objWshShell.SpecialFolders("Appdata") & "\Ladex\"
 
   'インストールフォルダがない場合は作成
   IF Not objFileSys.FolderExists(strPath) THEN
-    objFileSys.CreateFolder(strPath)
+      objFileSys.CreateFolder(strPath)
   END IF
 
-  installPath = strPath & addInFileName
-
-  'アドイン登録解除
-  For i = 1 To objExcel.Addins.Count
-  Set objAddin = objExcel.Addins.item(i)
-  If objAddin.Name = "Liadex.xlam" Then
-    objAddin.Installed = False
-
-    'ファイル削除
-    unInstallPath = strPath & addInFileName
-    If objFileSys.FileExists(unInstallPath) = True Then
-      objFileSys.DeleteFile unInstallPath , True
-    End If
-  End If
-  Next
 
   'ファイルコピー(上書き)
   objFileSys.CopyFile  addInFileName ,installPath , True
+
+  'イメージフォルダがない場合は作成
+  IF Not objFileSys.FolderExists(imageFolder) THEN
+      objFileSys.CreateFolder(imageFolder)
+  END IF
+
+  'イメージフォルダをコピー(上書き)
+  objFileSys.CopyFolder  "Source\Ladex" ,imageFolder , True
 
   'アドイン登録
   .Workbooks.Add
