@@ -244,7 +244,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
   Dim regLists As Variant, i As Long
   Dim line As Long, endLine As Long
-  Dim objFSO As New FileSystemObject
+  Dim objFso As New FileSystemObject
    
   On Error GoTo catchError
   Call init.setting
@@ -275,7 +275,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
       Set Button = DOMDoc.createElement("button")
       With Button
         .SetAttribute "id", "Favorite_" & line
-        .SetAttribute "label", objFSO.GetFileName(BK_sheetFavorite.Range("A" & line))
+        .SetAttribute "label", objFso.GetFileName(BK_sheetFavorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
         .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.OpenFavoriteList"
       End With

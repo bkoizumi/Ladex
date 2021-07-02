@@ -1650,6 +1650,7 @@ End Function
 '**************************************************************************************************
 Function importXlsx(filePath As String, targeSheet As String, targeArea As String, dictSheet As Worksheet, Optional passWord As String)
 
+  On Error GoTo catchError
   If passWord <> "" Then
     Workbooks.Open fileName:=filePath, ReadOnly:=True, passWord:=passWord
   Else
@@ -1672,36 +1673,49 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
   Application.CutCopyMode = False
   ActiveWorkbook.Close SaveChanges:=False
   dictSheet.Range("A1").Select
+  
   DoEvents
-  Call unsetClipboard
   Call Library.startScript
 
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName, True)
 End Function
 
 
 '**************************************************************************************************
 ' * MkDirで階層の深いフォルダーを作る
 ' *
-' * @link https://www.relief.jp/docs/excel-vba-mkdir-folder-structure.html
+' * @link http://officetanaka.net/excel/vba/filesystemobject/sample10.htm
 '**************************************************************************************************
 Function makeDir(fullPath As String)
-  Dim tmpPath As String, arr() As String
-  Dim i As Long
-
+  
   If chkDirExists(fullPath) Then
     Exit Function
   End If
+  Call chkParentDir(fullPath)
+End Function
 
-  arr = Split(fullPath, "\")
-  tmpPath = arr(0)  ' ドライブ名の代入
-
-  For i = 1 To UBound(arr)
-    tmpPath = tmpPath & "\" & arr(i)
-    If Dir(tmpPath, vbDirectory) = "" Then
-      MkDir tmpPath
-    End If
-  Next i
-
+'==================================================================================================
+Private Function chkParentDir(TargetFolder)
+  Dim ParentFolder As String, FSO As Object
+  
+  On Error GoTo catchError
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  ParentFolder = FSO.GetParentFolderName(TargetFolder)
+  If Not FSO.FolderExists(ParentFolder) Then
+    Call chkParentDir(ParentFolder)
+  End If
+  
+  FSO.CreateFolder TargetFolder
+  Set FSO = Nothing
+  
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "ディレクトリの作成に失敗しました" & vbNewLine & Err.Description, True)
 End Function
 
 
