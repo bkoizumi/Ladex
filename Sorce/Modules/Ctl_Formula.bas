@@ -8,7 +8,7 @@ Attribute VB_Name = "Ctl_Formula"
 '==================================================================================================
 Function 数式確認()
 
-  Dim formulaVal As String, confirmFormulaName As String
+  Dim confirmFormulaName As String
   Dim count As Long
   Dim formulaVals As Variant
 
@@ -21,20 +21,14 @@ Function 数式確認()
       ActiveSheet.Shapes(objShp.Name).delete
     End If
   Next
-  Call Library.endScript
   
   If ActiveCell.HasFormula = False Or BKcf_rbPressed = False Then
+    Call Library.endScript
     Exit Function
   End If
+  
   Call init.setting
-  
-  formulaVal = ActiveCell.Formula
-  formulaVal = Replace(formulaVal, vbCrLf, "")
-  formulaVal = Replace(formulaVal, vbLf, "")
-  formulaVal = Trim(formulaVal)
-  
   aryRange = getFormulaRange(ActiveCell)
-  Call Library.startScript
   
   count = 1
   For Each formulaVals In aryRange
@@ -58,6 +52,10 @@ End Function
 
 '==================================================================================================
 Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
+
+  If formulaVals.Worksheet.Name <> ActiveSheet.Name Then
+    Exit Function
+  End If
 
   With ActiveSheet.Range(formulaVals.Address(external:=False))
     ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, Top:=.Top, Width:=.Width, Height:=.Height).Select
@@ -249,22 +247,6 @@ Function formula03()
   
   'On Error GoTo catchError
 
-  
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-
-End Function
-
-
-'**************************************************************************************************
-' * 文字編集
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-'==================================================================================================
-Function Trim01()
-  ActiveCell = Trim(ActiveCell.Text)
   
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------

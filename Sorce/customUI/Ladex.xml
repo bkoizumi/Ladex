@@ -81,13 +81,13 @@
         <button id="AdjustHeight"         label="高さ"    imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeight"         description="セル高さ調整 &#13;" />
         <button id="AdjustHeightAndWidth" label="両方"    imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeightAndWidth" description="セル幅、高さ両方を調整 &#13;" />
       </menu>
-      <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool" screentip="電子印鑑" supertip="電子印鑑">
+      <!-- <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool" screentip="電子印鑑" supertip="電子印鑑">
         <button id="stamp01"  label="電子印鑑【済印】"    imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp01" description="電子印鑑 &#13;" />
         <button id="stamp02"  label="電子印鑑【確認印】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp02" description="電子印鑑 &#13;" />
         <button id="stamp03"  label="電子印鑑【日付印】"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp03" description="電子印鑑 &#13;" />
         <menuSeparator id="電子印鑑_SP1" title="設定" />
         <button id="OptionStamp"  label="設定"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.OptionStamp" description="電子印鑑 &#13;" />
-      </menu>
+      </menu> -->
 
       <splitButton id="SB_Comment" size="normal">
         <button id="formatComment"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
@@ -106,7 +106,9 @@
       </menu>
       <menu id="文字編集" label="文字編集"  itemSize="large" imageMso="AsianTypography" >
         <menuSeparator id="文字編集_SP1" title="スペース削除" />
-        <button id="Trim"  label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Trim01" description="文頭、文末にあるスペースを取り除きます &#13;" />
+        <button id="Trim"       label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Trim01"      description="文頭、文末にあるスペースを取り除きます &#13;" />
+        <button id="中黒点付与" label="文頭に・を追加"      imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.中黒点付与"  description="文頭に「・」を追加します&#13;" />
+        <button id="連番付与"   label="文頭に連番を追加"    imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.連番付与"  description="文頭に1から始まる連番を追加します &#13;" />
       </menu>
 
       <button id="saveImage"  label="画像保存"  imageMso="RestorePicture" size="normal" screentip="選択範囲を画像として保存します" supertip="選択範囲を画像として保存します" onAction="Ladex.xlam!Ctl_Ribbon.saveSelectArea2Image" />

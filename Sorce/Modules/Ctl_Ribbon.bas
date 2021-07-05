@@ -716,11 +716,26 @@ Function saveSelectArea2Image(control As IRibbonControl)
   Call Ctl_Image.saveSelectArea2Image
 End Function
 
+'**************************************************************************************************
+' * リボンメニュー[文字編集]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function Trim01(control As IRibbonControl)
-  Call Ctl_Formula.Trim01
+  Call Ctl_String.Trim01
   
 End Function
+'--------------------------------------------------------------------------------------------------
+Function 中黒点付与(control As IRibbonControl)
+  Call Ctl_String.中黒点付与
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 連番付与(control As IRibbonControl)
+  Call Ctl_String.連番付与
+End Function
+
 
 
 '--------------------------------------------------------------------------------------------------

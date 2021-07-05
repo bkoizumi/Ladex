@@ -187,8 +187,8 @@ Private Sub UserForm_Initialize()
     
     
     
-    
-    
+    '電子印鑑非表示(公開一時停止)
+    .MultiPage1.Page4.Visible = False
     
   End With
   
