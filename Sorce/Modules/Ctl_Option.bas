@@ -5,6 +5,38 @@ Attribute VB_Name = "Ctl_Option"
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
+Function showHelp()
+
+  Call init.setting(True)
+  BK_ThisBook.Activate
+  BK_sheetHelp.Activate
+  Sheets("Help").Copy
+  ActiveWindow.DisplayGridlines = False
+  
+  Set targetBook = ActiveWorkbook
+  
+    'É}ÉNÉçñÑÇﬂçûÇ›-----------------------------------------------------------------------
+  With targetBook.VBProject.VBComponents.Item("Help").CodeModule
+    .InsertLines 1, "Private Sub Worksheet_SelectionChange(ByVal Target As Range)"
+    .InsertLines 2, ""
+    .InsertLines 3, "  On Error GoTo catchError"
+    .InsertLines 4, "  If ActiveCell.Column = 1 And ActiveCell.Value <> """" Then"
+    .InsertLines 5, "    With ActiveWindow"
+    .InsertLines 6, "      .ScrollRow = Target.Row"
+    .InsertLines 7, "      .ScrollColumn = Target.Column"
+    .InsertLines 8, "    End With"
+    .InsertLines 9, "  End If"
+    .InsertLines 10, "Exit Sub"
+    .InsertLines 11, "catchError:"
+    .InsertLines 12, ""
+    .InsertLines 13, ""
+    .InsertLines 14, "End Sub"
+  End With
+
+End Function
+
+
+'==================================================================================================
 Function èâä˙âª()
   Dim RegistryKey As String, RegistrySubKey As String, RegistryVal As String
   

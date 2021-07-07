@@ -14,13 +14,17 @@ Public BK_sheetRibbon     As Worksheet
 Public BK_sheetFavorite   As Worksheet
 Public BK_sheetStamp      As Worksheet
 Public BK_sheetHighLight  As Worksheet
-
+Public BK_sheetHelp       As Worksheet
 
 'グローバル変数----------------------------------
-Public Const thisAppName = "Ladex"
-Public Const thisAppVersion = "0.0.4.0"
-Public FuncName           As String
-Public resetVal           As String
+Public Const thisAppName    As String = "Ladex"
+Public Const thisAppVersion As String = "0.0.4.0"
+Public FuncName             As String
+Public resetVal             As String
+
+Public Const RelaxTools     As String = "Relaxtools.xlam"
+
+
 
 'レジストリ登録用サブキー
 Public Const RegistryKey  As String = "Ladex"
@@ -118,6 +122,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
   Set BK_sheetStamp = BK_ThisBook.Worksheets("Stamp")
   Set BK_sheetHighLight = BK_ThisBook.Worksheets("HighLight")
+  Set BK_sheetHelp = BK_ThisBook.Worksheets("Help")
  
   
   logFile = ThisWorkbook.Path & "\ExcelMacro.log"

@@ -27,7 +27,7 @@ End Function
 '==================================================================================================
 Function その他()
   Call init.setting(True)
-  BK_ThisBook.Sheets("HighLight").Activate
+  BK_ThisBook.Sheets("Help").Activate
 '  Cells.Select
 '  Selection.ColumnWidth = 5
   
@@ -40,7 +40,16 @@ Function その他()
 '  BK_sheetHighLight.Range("N5").Comment.Visible = True
   
   
-  BK_sheetHighLight.Columns("E:H").ColumnWidth = 3.5
+  BK_sheetHelp.Cells.ColumnWidth = 3
+  BK_sheetHelp.Cells.RowHeight = 15
+  
+  endLine = BK_sheetHelp.Cells(Rows.count, 1).End(xlUp).Row
+  For line = 1 To endLine
+    If BK_sheetHelp.Range("A" & line) <> "" Then
+      BK_sheetHelp.Cells.RowHeight = 20
+    End If
+  Next
+  
   
   ThisWorkbook.Save
 End Function
@@ -64,7 +73,23 @@ Function OptionSheetImport(control As IRibbonControl)
   
   
   Application.DisplayAlerts = False
+  ThisWorkbook.Sheets("Help").delete
   ThisWorkbook.Sheets("Stamp").delete
+  
+  'ヘルプシート編集
+  ThisWorkbook.Worksheets.add.Name = "Help"
+  
+  ThisWorkbook.Sheets("Help").Cells.ColumnWidth = 3
+  ThisWorkbook.Sheets("Help").Cells.RowHeight = 15
+  targetBook.Sheets("Help").Cells.Copy ThisWorkbook.Worksheets("Help").Range("A1")
+  endLine = ThisWorkbook.Sheets("Help").Cells(Rows.count, 1).End(xlUp).Row
+  For line = 1 To endLine
+    If ThisWorkbook.Sheets("Help").Range("A" & line) <> "" Then
+      ThisWorkbook.Sheets("Help").Cells.RowHeight = 20
+    End If
+  Next
+  
+  'スタンプシート編集
   ThisWorkbook.Worksheets.add.Name = "Stamp"
   targetBook.Sheets("Stamp").Columns("A:AP").Copy ThisWorkbook.Worksheets("Stamp").Range("A1")
   Application.DisplayAlerts = True

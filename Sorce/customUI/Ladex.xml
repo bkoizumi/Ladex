@@ -23,6 +23,8 @@
           <button id="OptionSheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"  description="リボン更新"  />
           <button id="OptionSheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetImport" description="Import"      />
           <button id="OptionSheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetExport" description="Export"      />
+        <menuSeparator id="MS_Help" title="Help" />
+        <button id="Help" label="Help" imageMso="Help" screentip="Helpを表示します" supertip="Helpを表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionHelpShow" />
         </menu>
       </splitButton>
 
@@ -38,7 +40,7 @@
 
       <separator id="Sprt01" />
 
-      <menu id="CustomMenu" label="メニュー"  itemSize="large" imageMso="BlogHomePage">
+      <menu id="CustomMenu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
         <menuSeparator id="削除" title="設定を削除します" />
         <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除します &#13;" />
         <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除します &#13;" />

@@ -70,59 +70,65 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   On Error GoTo catchError
   Call init.setting
   
-  If BK_ribbonUI Is Nothing Then
-    #If VBA7 And Win64 Then
-      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
-    #Else
-      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
-    #End If
-  End If
-  
-  Set DOMDoc = CreateObject("Msxml2.DOMDocument")
-  Set Menu = DOMDoc.createElement("menu")
-
-  Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
-  Menu.SetAttribute "itemSize", "normal"
-
-  Set MenuSepa = DOMDoc.createElement("menuSeparator")
-    With MenuSepa
-      .SetAttribute "id", "sheetID_" & ActiveWorkbook.Name
-      .SetAttribute "title", ActiveWorkbook.Name
-    End With
-    Menu.AppendChild MenuSepa
-    Set MenuSepa = Nothing
-  
-  
-  
-  For Each sheetName In ActiveWorkbook.Sheets
-    Set Button = DOMDoc.createElement("button")
-    With Button
-      sheetNameID = sheetName.Name
-      .SetAttribute "id", "sheetID_" & sheetName.Index
-      .SetAttribute "label", sheetName.Name
-    
-      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
-        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
-      ElseIf Sheets(sheetName.Name).Visible = True Then
-        .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-      ElseIf Sheets(sheetName.Name).Visible <> True Then
-        .SetAttribute "imageMso", "SheetProtect"
-      End If
+  If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
+    Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
       
-      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
-    End With
-    Menu.AppendChild Button
-    Set Button = Nothing
-  Next
+  Else
+    If BK_ribbonUI Is Nothing Then
+      #If VBA7 And Win64 Then
+        Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
+      #Else
+        Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
+      #End If
+    End If
+    
+    Set DOMDoc = CreateObject("Msxml2.DOMDocument")
+    Set Menu = DOMDoc.createElement("menu")
+  
+    Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
+    Menu.SetAttribute "itemSize", "normal"
+  
+    Set MenuSepa = DOMDoc.createElement("menuSeparator")
+      With MenuSepa
+        .SetAttribute "id", "sheetID_" & ActiveWorkbook.Name
+        .SetAttribute "title", ActiveWorkbook.Name
+      End With
+      Menu.AppendChild MenuSepa
+      Set MenuSepa = Nothing
+    
+    
+    
+    For Each sheetName In ActiveWorkbook.Sheets
+      Set Button = DOMDoc.createElement("button")
+      With Button
+        sheetNameID = sheetName.Name
+        .SetAttribute "id", "sheetID_" & sheetName.Index
+        .SetAttribute "label", sheetName.Name
+      
+        If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+          .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+        ElseIf Sheets(sheetName.Name).Visible = True Then
+          .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+        ElseIf Sheets(sheetName.Name).Visible <> True Then
+          .SetAttribute "imageMso", "SheetProtect"
+        End If
+        
+        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
+      End With
+      Menu.AppendChild Button
+      Set Button = Nothing
+    Next
+  
+    DOMDoc.AppendChild Menu
+    
+  '  Call Library.showDebugForm(DOMDoc.XML)
+    
+    returnedVal = DOMDoc.XML
+    Set Menu = Nothing
+    Set DOMDoc = Nothing
+  End If
+  BK_ribbonUI.Invalidate
 
-  DOMDoc.AppendChild Menu
-  
-'  Call Library.showDebugForm(DOMDoc.XML)
-  
-  returnedVal = DOMDoc.XML
-  Set Menu = Nothing
-  Set DOMDoc = Nothing
-  
   Exit Function
 'ÉGÉâÅ[î≠ê∂éû--------------------------------------------------------------------------------------
 catchError:
@@ -498,6 +504,15 @@ End Function
 Function OptionComment(control As IRibbonControl)
   Ctl_Option.Comment
 End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function OptionHelpShow(control As IRibbonControl)
+  Ctl_Option.showHelp
+End Function
+
+
+
 
 
 '**************************************************************************************************
