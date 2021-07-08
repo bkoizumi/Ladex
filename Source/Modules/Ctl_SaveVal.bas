@@ -16,7 +16,7 @@ Function setVal(pType As String, pText As String)
   Call init.setting
   chkFlg = False
   BK_ThisBook.Activate
-  Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
+'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
   '----------------------------------------------
   endLine = Cells(Rows.count, 4).End(xlUp).Row
   For line = 3 To BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
@@ -51,7 +51,7 @@ Function getVal(pType As String) As String
   FuncName = "Ctl_SaveVal.setVal"
 
   Call init.setting
-  Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
+'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
   '----------------------------------------------
   
   Set resetObjVal = Nothing
@@ -86,7 +86,7 @@ Function delVal(pType As String)
   
   Call Library.startScript
   Call init.setting
-  Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
+'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("ê›íË")
   '----------------------------------------------
   
   

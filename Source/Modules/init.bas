@@ -39,7 +39,6 @@ Public sampleDataList     As Object
 'ファイル/ディレクトリ関連
 Public logFile            As String
 Public LadexDir           As String
-Public LadexPreDir        As String
 
 
 '処理時間計測用
@@ -125,7 +124,6 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetHelp = BK_ThisBook.Worksheets("Help")
  
   
-  logFile = ThisWorkbook.Path & "\ExcelMacro.log"
         
   '設定値読み込み----------------------------------------------------------------------------------
   Set BK_setVal = Nothing
@@ -142,7 +140,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set wsh = CreateObject("WScript.Shell")
 
   LadexDir = wsh.SpecialFolders("AppData") & "\Ladex"
-  LadexPreDir = wsh.SpecialFolders("AppData") & "\Ladex\Preview"
+  logFile = LadexDir & "\ExcelMacro.log"
   
   
 '  Set BK_ribbonVal = Nothing

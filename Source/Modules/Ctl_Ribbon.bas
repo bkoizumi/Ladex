@@ -70,10 +70,6 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   On Error GoTo catchError
   Call init.setting
   
-  If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
-    Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
-      
-  Else
     If BK_ribbonUI Is Nothing Then
       #If VBA7 And Win64 Then
         Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
@@ -81,13 +77,33 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
         Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
       #End If
     End If
+  
+  Set DOMDoc = CreateObject("Msxml2.DOMDocument")
+  Set Menu = DOMDoc.createElement("menu")
+
+  Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
+  Menu.SetAttribute "itemSize", "normal"
+  
+    If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
+      Set MenuSepa = DOMDoc.createElement("menuSeparator")
+        With MenuSepa
+          .SetAttribute "id", "M_RelaxTools"
+          .SetAttribute "title", "RelaxToolsを利用"
+        End With
+        Menu.AppendChild MenuSepa
+        Set MenuSepa = Nothing
+
+        Set Button = DOMDoc.createElement("button")
+        With Button
+          .SetAttribute "id", "RelaxTools"
+          .SetAttribute "label", "RelaxTools"
+          .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+          .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxTools"
+        End With
+        Menu.AppendChild Button
+        Set Button = Nothing
+    End If
     
-    Set DOMDoc = CreateObject("Msxml2.DOMDocument")
-    Set Menu = DOMDoc.createElement("menu")
-  
-    Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
-    Menu.SetAttribute "itemSize", "normal"
-  
     Set MenuSepa = DOMDoc.createElement("menuSeparator")
       With MenuSepa
         .SetAttribute "id", "sheetID_" & ActiveWorkbook.Name
@@ -126,7 +142,7 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
     returnedVal = DOMDoc.XML
     Set Menu = Nothing
     Set DOMDoc = Nothing
-  End If
+
   BK_ribbonUI.Invalidate
 
   Exit Function
@@ -148,6 +164,11 @@ Function dMenuRefresh(control As IRibbonControl)
   BK_ribbonUI.Invalidate
 End Function
 
+
+'==================================================================================================
+Function actRelaxTools(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
+End Function
 
 '==================================================================================================
 Function selectActiveSheet(control As IRibbonControl)
@@ -572,7 +593,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function delStyle(control As IRibbonControl)
-  Call Main.スタイル削除
+  Call Ctl_Style.スタイル削除
 End Function
 
 '--------------------------------------------------------------------------------------------------

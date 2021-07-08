@@ -73,21 +73,30 @@ Function OptionSheetImport(control As IRibbonControl)
   
   
   Application.DisplayAlerts = False
-  ThisWorkbook.Sheets("Help").delete
+  'ThisWorkbook.Sheets("Help").delete
   ThisWorkbook.Sheets("Stamp").delete
   
   'ヘルプシート編集
-  ThisWorkbook.Worksheets.add.Name = "Help"
-  
+  'ThisWorkbook.Worksheets.add.Name = "Help"
   ThisWorkbook.Sheets("Help").Cells.ColumnWidth = 3
   ThisWorkbook.Sheets("Help").Cells.RowHeight = 15
-  targetBook.Sheets("Help").Cells.Copy ThisWorkbook.Worksheets("Help").Range("A1")
-  endLine = ThisWorkbook.Sheets("Help").Cells(Rows.count, 1).End(xlUp).Row
-  For line = 1 To endLine
-    If ThisWorkbook.Sheets("Help").Range("A" & line) <> "" Then
-      ThisWorkbook.Sheets("Help").Cells.RowHeight = 20
-    End If
+  
+  
+  ThisWorkbook.Worksheets("Help").Cells.delete Shift:=xlUp
+  For Each objShp In ThisWorkbook.Worksheets("Help").Shapes
+    objShp.delete
   Next
+  
+  
+  
+  targetBook.Sheets("Help").Columns("A:AZ").Copy ThisWorkbook.Worksheets("Help").Range("A1")
+  
+  endLine = ThisWorkbook.Sheets("Help").Cells(Rows.count, 1).End(xlUp).Row
+'  For line = 1 To endLine
+'    If ThisWorkbook.Sheets("Help").Range("A" & line) <> "" Then
+'      ThisWorkbook.Sheets("Help").Cells.RowHeight = 20
+'    End If
+'  Next
   
   'スタンプシート編集
   ThisWorkbook.Worksheets.add.Name = "Stamp"

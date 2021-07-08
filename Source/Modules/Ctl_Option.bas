@@ -6,14 +6,18 @@ Attribute VB_Name = "Ctl_Option"
 '**************************************************************************************************
 '==================================================================================================
 Function showHelp()
-
+  
   Call init.setting(True)
   BK_ThisBook.Activate
   BK_sheetHelp.Activate
   Sheets("Help").Copy
   ActiveWindow.DisplayGridlines = False
-  
   Set targetBook = ActiveWorkbook
+  
+  
+  With targetBook.VBProject
+    .VBComponents.Import (LadexDir & "\Ctl_Help.bas")
+  End With
   
     'É}ÉNÉçñÑÇﬂçûÇ›-----------------------------------------------------------------------
   With targetBook.VBProject.VBComponents.Item("Help").CodeModule
@@ -33,6 +37,18 @@ Function showHelp()
     .InsertLines 14, "End Sub"
   End With
 
+  With targetBook.VBProject.VBComponents.Item("ThisWorkbook").CodeModule
+    .InsertLines 1, "Private Sub Workbook_Activate()"
+    .InsertLines 2, ""
+    .InsertLines 3, "  call Ctl_Help.ñ⁄éüê∂ê¨"
+    .InsertLines 4, ""
+    .InsertLines 5, "End Sub"
+  End With
+
+
+  targetBook.Activate
+  Set targetBook = Nothing
+  
 End Function
 
 

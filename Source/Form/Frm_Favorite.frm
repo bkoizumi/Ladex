@@ -55,12 +55,6 @@ Private Sub UserForm_Initialize()
       .OnAction = "Ctl_Favorite.delete"
       .FaceId = 293
     End With
-    With .Controls.add
-      .BeginGroup = True
-      .Caption = "更新"
-      .OnAction = "Ctl_Favorite.RefreshListBox"
-      .FaceId = 293
-    End With
     
   End With
 End Sub
@@ -80,20 +74,9 @@ End Sub
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-'キャンセル
-Private Sub Cancel_Click()
+'閉じる
+Private Sub Submit_Click()
 
-  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
-  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
-  
-  Unload Me
-End Sub
-
-
-'==================================================================================================
-'実行
-Private Sub run_Click()
-  
   Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
   Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
   
