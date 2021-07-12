@@ -1,8 +1,8 @@
 Attribute VB_Name = "init"
 
 'ワークブック用変数------------------------------
-Public BK_ThisBook   As Workbook
-Public targetBook As Workbook
+Public BK_ThisBook    As Workbook
+Public targetBook     As Workbook
 
 
 'ワークシート用変数------------------------------

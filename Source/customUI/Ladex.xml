@@ -4,7 +4,7 @@
  <tabs>
       <tab idMso="TabView">
         <group id="dispGroup" label="Ladexタブ表示">
-          <checkBox id="Ladex"  label="Ladex"  onAction="Ladex.xlam!Ctl_Ribbon.setDispTab"  />
+          <checkBox id="Ladex"  label="Ladex"  onAction="Ladex.xlam!Ctl_Ribbon.setDispTab" supertip="Ladexタブの表示/非表示を切り替えます"  />
         </group>
       </tab>
 
@@ -15,16 +15,22 @@
       <splitButton id="SB_Option" size="large">
         <button id="Option" label="Option" imageMso="CurrentViewSettings" screentip="オプション設定" supertip="オプション画面を表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionShow" />
         <menu id="OptionMenu" screentip="オプション設定メニュー"  supertip="オプション設定メニュー" itemSize="large">
-        <menuSeparator id="MS_Option" title="オプション設定メニュー" />
-          <button id="OptionStyleImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleImport" description="Import"      />
-          <button id="OptionStyleExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleExport" description="Export"      />
 
-        <menuSeparator id="MS_Maintenance" title="メンテナンス用" />
-          <button id="OptionSheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"  description="リボン更新"  />
-          <button id="OptionSheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetImport" description="Import"      />
-          <button id="OptionSheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetExport" description="Export"      />
-        <menuSeparator id="MS_Help" title="Help" />
-        <button id="Help" label="Help" imageMso="Help" screentip="Helpを表示します" supertip="Helpを表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionHelpShow" />
+          <menu id="スタイル設定_Menu" label="スタイル設定"  itemSize="large" imageMso="AppointmentColorDialog">
+            <menuSeparator id="MS_スタイル設定" title="スタイル設定" />
+            <button id="OptionStyleExport"  label="スタイル出力"  imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleExport" description="Export" />
+            <button id="OptionStyleImport"  label="スタイル取込"  imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleImport" description="Import" />
+          </menu>
+
+          <menu id="メンテナンス用_Menu" label="メンテナンス用"  itemSize="large" imageMso="CurrentViewSettings">
+            <menuSeparator id="MS_Maintenance" title="メンテナンス用" />
+            <button id="OptionSheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"  description="リボン更新"  />
+            <button id="OptionSheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetImport" description="Import" />
+            <button id="OptionSheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetExport" description="Export" />
+          </menu>
+
+          <menuSeparator id="MS_Help" title="Help" />
+          <button id="Help" label="Help" imageMso="Help" screentip="Helpを表示します" supertip="Helpを表示します &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionHelpShow" />
         </menu>
       </splitButton>
 
@@ -32,7 +38,7 @@
       <splitButton id="SB_Favorite" size="large">
         <button id="Favorite_detail" label="お気に入り&#xD;&#xA;" imageMso="Favorites" screentip="お気に入り" supertip="お気に入り登録リスト表示" onAction="Ladex.xlam!Ctl_Ribbon.FavoriteDetail" />
           <menu id="Favorite_Menu" screentip="お気に入りメニュー"  supertip="お気に入りメニュー表示" itemSize="large">
-            <button id="Favorite_Add"      label="お気に入りに追加"   imageMso="AddToFavorites" onAction="Ladex.xlam!Ctl_Ribbon.FavoriteAdd" description="アクティブBookをお気に入りに追加します &#13;" />
+            <button id="Favorite_Add"      label="お気に入りに追加"   imageMso="AddToFavorites" onAction="Ladex.xlam!Ctl_Ribbon.FavoriteAdd" description="アクティブブックをお気に入りに追加します &#13;" />
 
             <dynamicMenu  id="Favorite_List"  imageMso="Favorites"  invalidateContentOnDrop="true" label="お気に入り一覧"  getContent="Ladex.xlam!Ctl_Ribbon.FavoriteMenu" />
           </menu>
@@ -181,7 +187,7 @@
           </menu>
       </splitButton>
 
-
+      <dynamicMenu  id="DM_RelaxTools"  image="RelaxToolsLogo"  invalidateContentOnDrop="true" label="RelaxTools"  getContent="Ladex.xlam!Ctl_Ribbon.getRelaxTools" />
     </group >
 
 

@@ -1,4 +1,7 @@
 Attribute VB_Name = "Ctl_Style"
+Dim setStyleBook     As Workbook
+
+
 '**************************************************************************************************
 ' * スタイルImport/Export
 ' *
@@ -20,8 +23,10 @@ Function Export()
 
   BK_sheetStyle.Copy
   
+  Set setStyleBook = ActiveWorkbook
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  With ActiveWorkbook
+  
+  With setStyleBook
     With FSO
       fileName = thisAppName & "_" & .GetBaseName(.GetTempName) & ".xlsx"
       filePath = .GetSpecialFolder(2) & "\" & fileName
@@ -58,21 +63,25 @@ Function Import()
 
   Call Library.startScript
   Call init.setting
-  '----------------------------------------------
-  targetFilePath = Ctl_SaveVal.getVal("ExportStyleFilePaht")
-  Set targetBook = Workbooks.Open(targetFilePath)
-  Call Library.startScript
   
-  targetBook.Sheets("Style").Columns("A:J").Copy BK_ThisBook.Worksheets("Style").Range("A1")
+  '----------------------------------------------
+  If setStyleBook = Nothing Then
+    Call Library.showNotice(400, FuncName, True)
+  End If
+  
+  Call Library.startScript
+  setStyleBook.Save
+  
+  setStyleBook.Sheets("Style").Columns("A:J").Copy BK_ThisBook.Worksheets("Style").Range("A1")
   
   Call Ctl_SaveVal.delVal("ExportStyleFilePaht")
   Call Ctl_SaveVal.delVal("ExportStyleFileName")
   
   Application.DisplayAlerts = False
-  targetBook.Close
-  Set targetBook = Nothing
-  Kill targetFilePath
+  setStyleBook.Close
+  Kill setStyleBook.Path
   
+  Set setStyleBook = Nothing
   Call Ctl_Style.スタイル削除
   
   '処理終了--------------------------------------

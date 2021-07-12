@@ -98,7 +98,7 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
           .SetAttribute "id", "RelaxTools"
           .SetAttribute "label", "RelaxTools"
           .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-          .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxTools"
+          .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
         End With
         Menu.AppendChild Button
         Set Button = Nothing
@@ -164,11 +164,127 @@ Function dMenuRefresh(control As IRibbonControl)
   BK_ribbonUI.Invalidate
 End Function
 
-
 '==================================================================================================
-Function actRelaxTools(control As IRibbonControl)
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
+'RelaxTools
+Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
+  Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
+  Dim sheetName As Worksheet
+  
+'  On Error GoTo catchError
+  Call init.setting
+  
+    If BK_ribbonUI Is Nothing Then
+      #If VBA7 And Win64 Then
+        Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
+      #Else
+        Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
+      #End If
+    End If
+  
+  Set DOMDoc = CreateObject("Msxml2.DOMDocument")
+  Set Menu = DOMDoc.createElement("menu")
+
+  Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
+  Menu.SetAttribute "itemSize", "normal"
+  
+  If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
+    'RelaxTools------------------------------------------------------------------------------------
+    Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "M_RelaxTools"
+      .SetAttribute "title", "RelaxToolsを利用"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+    
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxTools01"
+      .SetAttribute "label", "RelaxTools"
+      .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxTools"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
+    'RelaxShapes------------------------------------------------------------------------------------
+    Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "M_RelaxShapes"
+      .SetAttribute "title", "RelaxShapesを利用"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxShapes01"
+      .SetAttribute "label", "サイズ合わせ"
+      .SetAttribute "imageMso", "ShapesDuplicate"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxShapes01"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+  
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxShapes02"
+      .SetAttribute "label", "上位置合わせ"
+      .SetAttribute "imageMso", "ObjectsAlignTop"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxShapes02"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxShapes03"
+      .SetAttribute "label", "左位置合わせ"
+      .SetAttribute "imageMso", "ObjectsAlignLeft"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxShapes03"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
+    'RelaxApps------------------------------------------------------------------------------------
+    Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "M_RelaxApps"
+      .SetAttribute "title", "RelaxAppsを利用"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+    
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxApps01"
+      .SetAttribute "label", "逆Ｌ罫線"
+      .SetAttribute "imageMso", "BorderDrawGrid"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxApps01"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
+    
+  End If
+
+  DOMDoc.AppendChild Menu
+  
+'  Call Library.showDebugForm(DOMDoc.XML)
+  
+  returnedVal = DOMDoc.XML
+  Set Menu = Nothing
+  Set DOMDoc = Nothing
+
+  'BK_ribbonUI.Invalidate
+  BK_ribbonUI.InvalidateControl control.ID
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+'  Call Library.showNotice(400, Err.Description, True)
 End Function
+
 
 '==================================================================================================
 Function selectActiveSheet(control As IRibbonControl)
@@ -297,6 +413,15 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
     endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
   End If
   
+  Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "MS_お気に入り一覧"
+      .SetAttribute "title", "お気に入り一覧"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+    
+    
   For line = 2 To endLine
     If BK_sheetFavorite.Range("A" & line) <> "" Then
       Set Button = DOMDoc.createElement("button")
@@ -304,6 +429,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
         .SetAttribute "id", "Favorite_" & line
         .SetAttribute "label", objFso.GetFileName(BK_sheetFavorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
+        .SetAttribute "supertip", BK_sheetFavorite.Range("A" & line)
         .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.OpenFavoriteList"
       End With
       Menu.AppendChild Button
@@ -453,6 +579,8 @@ End Function
 Function getVisible(control As IRibbonControl, ByRef returnedVal)
   Call init.setting
   returnedVal = Library.getRegistry("Main", "CustomRibbon")
+  Call RefreshRibbon
+    
 End Function
 
 '==================================================================================================
@@ -468,6 +596,9 @@ Function setDispTab(control As IRibbonControl, pressed As Boolean)
   Call Library.setRegistry("Main", "CustomRibbon", BKT_rbPressed)
   
   If pressed = True Then
+    Call RefreshRibbon
+  Else
+    Call Library.setRegistry("Main", "CustomRibbon", False)
     Call RefreshRibbon
   End If
   
@@ -975,3 +1106,55 @@ Function setCenter(control As IRibbonControl)
     Selection.HorizontalAlignment = xlCenterAcrossSelection
   End If
 End Function
+
+
+
+'**************************************************************************************************
+' * リボンメニュー[RelaxTools]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function actRelaxSheetManager(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
+End Function
+
+
+'==================================================================================================
+Function RelaxTools01(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
+End Function
+
+'==================================================================================================
+'サイズ合わせ
+Function RelaxShapes01(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
+End Function
+
+'==================================================================================================
+'上位置合わせ
+Function RelaxShapes02(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
+End Function
+
+'==================================================================================================
+'左位置合わせ
+Function RelaxShapes03(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
+End Function
+
+
+'==================================================================================================
+'逆Ｌ罫線
+Function RelaxRelaxApps01(control As IRibbonControl)
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
+End Function
+
+
+
+
+
+
+
+
+
