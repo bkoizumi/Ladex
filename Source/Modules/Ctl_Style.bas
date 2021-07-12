@@ -117,7 +117,7 @@ Function スタイル削除()
     count = count + 1
   Next
   
-  'スタイル初期化
+  'スタイル初期化----------------------------------------------------------------------------------
   endLine = BK_sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
   For line = 2 To endLine
     If BK_sheetStyle.Range("A" & line) <> "無効" Then
@@ -156,23 +156,41 @@ Function スタイル削除()
         
         '罫線
         If BK_sheetStyle.Range("G" & line) = "TRUE" Then
-          .Borders(xlDiagonalDown).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).LineStyle
-          .Borders(xlDiagonalUp).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).LineStyle
-        
-          .Borders(xlEdgeLeft).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlEdgeLeft).LineStyle
-          .Borders(xlEdgeRight).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlEdgeRight).LineStyle
-          
-          .Borders(xlEdgeTop).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlEdgeTop).LineStyle
-          .Borders(xlEdgeBottom).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlEdgeBottom).LineStyle
-          
-          If BK_sheetStyle.Range("J" & line).Borders(xlEdgeBottom).LineStyle <> xlNone Then
-            .Borders(xlBottom).Weight = xlThin
+          If BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).LineStyle <> xlNone Then
+            .Borders(xlDiagonalDown).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).LineStyle
+            .Borders(xlDiagonalDown).Weight = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).Weight
+            .Borders(xlDiagonalDown).Color = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).Color
           End If
           
+          If BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).LineStyle <> xlNone Then
+            .Borders(xlDiagonalUp).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).LineStyle
+            .Borders(xlDiagonalUp).Weight = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).Weight
+            .Borders(xlDiagonalUp).Color = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).Color
+          End If
           
-          .Borders(xlInsideVertical).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlInsideVertical).LineStyle
-          .Borders(xlInsideHorizontal).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlInsideHorizontal).LineStyle
-        
+          If BK_sheetStyle.Range("J" & line).Borders(xlLeft).LineStyle <> xlNone Then
+            .Borders(xlLeft).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlLeft).LineStyle
+            .Borders(xlLeft).Weight = BK_sheetStyle.Range("J" & line).Borders(xlLeft).Weight
+            .Borders(xlLeft).Color = BK_sheetStyle.Range("J" & line).Borders(xlLeft).Color
+          End If
+          
+          If BK_sheetStyle.Range("J" & line).Borders(xlRight).LineStyle <> xlNone Then
+            .Borders(xlRight).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlRight).LineStyle
+            .Borders(xlRight).Weight = BK_sheetStyle.Range("J" & line).Borders(xlRight).Weight
+            .Borders(xlRight).Color = BK_sheetStyle.Range("J" & line).Borders(xlRight).Color
+          End If
+          
+          If BK_sheetStyle.Range("J" & line).Borders(xlTop).LineStyle <> xlNone Then
+            .Borders(xlTop).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlTop).LineStyle
+            .Borders(xlTop).Weight = BK_sheetStyle.Range("J" & line).Borders(xlTop).Weight
+            .Borders(xlTop).Color = BK_sheetStyle.Range("J" & line).Borders(xlTop).Color
+          End If
+          
+          If BK_sheetStyle.Range("J" & line).Borders(xlBottom).LineStyle <> xlNone Then
+            .Borders(xlBottom).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlBottom).LineStyle
+            .Borders(xlBottom).Weight = BK_sheetStyle.Range("J" & line).Borders(xlBottom).Weight
+            .Borders(xlBottom).Color = BK_sheetStyle.Range("J" & line).Borders(xlBottom).Color
+          End If
         End If
         
         
