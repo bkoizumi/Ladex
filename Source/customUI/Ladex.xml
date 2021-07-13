@@ -48,12 +48,12 @@
 
       <menu id="CustomMenu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
         <menuSeparator id="削除" title="設定を削除します" />
-        <button id="del_Style"      label="スタイル削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除します &#13;" />
-        <button id="del_CellNames"  label="名前定義削除"   image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除します &#13;" />
-        <button id="set_Images"     label="画像設定"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
+        <button id="del_Style"      label="スタイルの初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除します &#13;" />
+        <button id="del_CellNames"  label="名前定義削除"      image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除します &#13;" />
+        <button id="set_Images"     label="画像設定"          imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
       </menu>
       <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
-      <dynamicMenu  id="SheetList"      label="シート一覧"  imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
+      <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
 
       <menu id="画面設定_Menu" label="画面設定"  itemSize="large" image="dspDefaultCellSelect">
         <menuSeparator id="画面設定_sheet" title="アクティブシートのみを対象とした処理" />

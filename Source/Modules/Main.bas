@@ -245,7 +245,7 @@ Function コメント整形()
   On Error GoTo catchError
   
   If TypeName(ActiveCell) = "Range" Then
-    Call Library.setComment
+    Call Library.setComment(Library.getRegistry("Main", "CommentBgColor"))
   
   End If
   
@@ -254,7 +254,7 @@ Function コメント整形()
 
 'エラー発生時=====================================================================================
 catchError:
-  'Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showNotice(Err.Number, Err.Description, True)
 End Function
 
 

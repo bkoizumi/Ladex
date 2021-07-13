@@ -73,21 +73,17 @@ Function OptionSheetImport(control As IRibbonControl)
   
   
   Application.DisplayAlerts = False
-  'ThisWorkbook.Sheets("Help").delete
-  ThisWorkbook.Sheets("Stamp").delete
   
-  'ヘルプシート編集
+  'ヘルプシート編集--------------------------------------------------------------------------------
+  'ThisWorkbook.Sheets("Help").delete
   'ThisWorkbook.Worksheets.add.Name = "Help"
   ThisWorkbook.Sheets("Help").Cells.ColumnWidth = 3
   ThisWorkbook.Sheets("Help").Cells.RowHeight = 15
-  
   
   ThisWorkbook.Worksheets("Help").Cells.delete Shift:=xlUp
   For Each objShp In ThisWorkbook.Worksheets("Help").Shapes
     objShp.delete
   Next
-  
-  
   
   targetBook.Sheets("Help").Columns("A:AZ").Copy ThisWorkbook.Worksheets("Help").Range("A1")
   
@@ -98,7 +94,8 @@ Function OptionSheetImport(control As IRibbonControl)
 '    End If
 '  Next
   
-  'スタンプシート編集
+  'スタンプシート編集------------------------------------------------------------------------------
+  ThisWorkbook.Sheets("Stamp").delete
   ThisWorkbook.Worksheets.add.Name = "Stamp"
   targetBook.Sheets("Stamp").Columns("A:AP").Copy ThisWorkbook.Worksheets("Stamp").Range("A1")
   Application.DisplayAlerts = True

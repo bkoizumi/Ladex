@@ -26,7 +26,7 @@ Function addList()
   
   Call init.setting
   endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
-  
+
   Call Library.delRegistry("FavoriteList")
   
   For line = 2 To endLine
@@ -49,9 +49,7 @@ Function add(Optional filePath As String)
   End If
   BK_sheetFavorite.Range("A" & line) = filePath
   
-  ThisWorkbook.Save
-'  Set targetBook = Workbooks("メンテナンス用.xlsx")
-'  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  Call addList
 
 End Function
 

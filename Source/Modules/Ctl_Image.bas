@@ -24,7 +24,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
     Set slctArea = Selection
   Else
 '    imageName = thisAppName & "ExportPreviewImg" & ".jpg"
-    saveDir = LadexDir
+    saveDir = LadexDir & "\RibbonImg\"
     Set slctArea = defSlctArea
   End If
   
@@ -32,12 +32,17 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
     Call Library.showNotice(999, "", True)
   End If
   
-  If TypeName(slctArea) = "Range" Then
-    slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
-  
-  ElseIf TypeName(slctArea) = "ChartArea" Then
-    slctArea.Copy
-  End If
+  Select Case TypeName(slctArea)
+    Case "Range"
+      slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
+    
+    Case "ChartArea", "Picture"
+      slctArea.Copy
+    
+    Case Else
+      Call Library.showNotice(5, TypeName(slctArea))
+      
+  End Select
   
   ActiveWorkbook.Activate
   ActiveSheet.Select

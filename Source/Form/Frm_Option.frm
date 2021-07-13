@@ -115,10 +115,10 @@ Private Sub UserForm_Initialize()
     End If
     
     imageName = thisAppName & "HighLightImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
       imageName = thisAppName & "NoHighLightImg" & ".jpg"
-      previewImgPath = LadexDir & "\" & imageName
+      previewImgPath = LadexDir & "\RibbonImg\" & imageName
     End If
     HighLightImg.Picture = LoadPicture(previewImgPath)
     
@@ -149,10 +149,10 @@ Private Sub UserForm_Initialize()
 
     
     imageName = thisAppName & "CommentImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
       imageName = thisAppName & "NoCommentImg" & ".jpg"
-      previewImgPath = LadexDir & "\" & imageName
+      previewImgPath = LadexDir & "\RibbonImg\" & imageName
     End If
     .CommentImg.Picture = LoadPicture(previewImgPath)
     
@@ -173,10 +173,10 @@ Private Sub UserForm_Initialize()
     .StampFont.ListIndex = ListIndex
     
     imageName = thisAppName & "StampImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
       imageName = thisAppName & "NoStampImg" & ".jpg"
-      previewImgPath = LadexDir & "\" & imageName
+      previewImgPath = LadexDir & "\RibbonImg\" & imageName
     End If
     .StampImg.Picture = LoadPicture(previewImgPath)
     
@@ -276,14 +276,14 @@ Function doHighLightPreview()
   Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
   
   imageName = thisAppName & "HighLightImg" & ".jpg"
-  previewImgPath = LadexDir & "\" & imageName
+  previewImgPath = LadexDir & "\RibbonImg\" & imageName
   Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("A1:C3"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
     
     imageName = thisAppName & "NoHighLightImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
   End If
   HighLightImg.Picture = LoadPicture(previewImgPath)
   
@@ -309,13 +309,13 @@ Function doCommentPreview()
   Call Library.setComment(CommentBgColor, CommentFont)
   
   imageName = thisAppName & "CommentImg" & ".jpg"
-  previewImgPath = LadexDir & "\" & imageName
+  previewImgPath = LadexDir & "\RibbonImg\" & imageName
   Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N4:S8"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
   End If
     CommentImg.Picture = LoadPicture(previewImgPath)
   
@@ -340,13 +340,13 @@ Function doStampPreview()
   Call Ctl_Stamp.‰Ÿˆó_Šm”Fˆó(StampVal, StampFont, thisAppName & "StampImg")
   
   imageName = thisAppName & "StampImg" & ".jpg"
-  previewImgPath = LadexDir & "\" & imageName
+  previewImgPath = LadexDir & "\RibbonImg\" & imageName
   Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("E10:H12"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
-    previewImgPath = LadexDir & "\" & imageName
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
   End If
   StampImg.Picture = LoadPicture(previewImgPath)
   

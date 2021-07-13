@@ -18,7 +18,7 @@ Public BK_sheetHelp       As Worksheet
 
 'ÉOÉçÅ[ÉoÉãïœêî----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "0.0.4.0"
+Public Const thisAppVersion As String = "0.1.0.0"
 Public FuncName             As String
 Public resetVal             As String
 
@@ -140,7 +140,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set wsh = CreateObject("WScript.Shell")
 
   LadexDir = wsh.SpecialFolders("AppData") & "\Ladex"
-  logFile = LadexDir & "\ExcelMacro.log"
+  logFile = LadexDir & "\log\ExcelMacro.log"
   
   
 '  Set BK_ribbonVal = Nothing

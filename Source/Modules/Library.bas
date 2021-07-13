@@ -1997,9 +1997,28 @@ End Function
 
 
 '**************************************************************************************************
+' * シートの保護/保護解除
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function setProtectSheet()
+
+  ActiveSheet.Protect passWord:=thisAppPasswd, DrawingObjects:=True, Contents:=True, Scenarios:=True
+  ActiveSheet.EnableSelection = xlUnlockedCells
+  
+End Function
+
+'==================================================================================================
+Function unsetProtectSheet()
+
+  ActiveSheet.Unprotect passWord:=thisAppPasswd
+End Function
+
+
+'**************************************************************************************************
 ' * 最初のシートを選択
 ' *
-' * @Link https://www.relief.jp/docs/excel-vba-select-1st-visible%20-sheet.html
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function setFirstsheet()
   Dim i As Long

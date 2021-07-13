@@ -16,7 +16,7 @@ Function showHelp()
   
   
   With targetBook.VBProject
-    .VBComponents.Import (LadexDir & "\Ctl_Help.bas")
+    .VBComponents.Import (LadexDir & "\RibbonSrc\Ctl_Help.bas")
   End With
   
     'マクロ埋め込み-----------------------------------------------------------------------
@@ -85,7 +85,7 @@ End Function
 '==================================================================================================
 Function showOption()
   
-  On Error GoTo catchError
+'  On Error GoTo catchError
   
   Call init.setting(True)
   topPosition = Library.getRegistry("UserForm", "OptionTop")
@@ -112,7 +112,7 @@ Function showOption()
 
 'エラー発生時=====================================================================================
 catchError:
-  'Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showNotice(Err.Number, Err.Description, True)
 End Function
 
 

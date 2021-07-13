@@ -70,85 +70,85 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   On Error GoTo catchError
   Call init.setting
   
-    If BK_ribbonUI Is Nothing Then
-      #If VBA7 And Win64 Then
-        Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
-      #Else
-        Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
-      #End If
-    End If
+  If BK_ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
+    #Else
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
+    #End If
+  End If
   
   Set DOMDoc = CreateObject("Msxml2.DOMDocument")
   Set Menu = DOMDoc.createElement("menu")
 
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
-  
-    If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
-      Set MenuSepa = DOMDoc.createElement("menuSeparator")
-        With MenuSepa
-          .SetAttribute "id", "M_RelaxTools"
-          .SetAttribute "title", "RelaxToolsÇóòóp"
-        End With
-        Menu.AppendChild MenuSepa
-        Set MenuSepa = Nothing
 
-        Set Button = DOMDoc.createElement("button")
-        With Button
-          .SetAttribute "id", "RelaxTools"
-          .SetAttribute "label", "RelaxTools"
-          .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-          .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
-        End With
-        Menu.AppendChild Button
-        Set Button = Nothing
-    End If
-    
+  If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
     Set MenuSepa = DOMDoc.createElement("menuSeparator")
       With MenuSepa
-        .SetAttribute "id", "sheetID_" & ActiveWorkbook.Name
-        .SetAttribute "title", ActiveWorkbook.Name
+        .SetAttribute "id", "M_RelaxTools"
+        .SetAttribute "title", "RelaxToolsÇóòóp"
       End With
       Menu.AppendChild MenuSepa
       Set MenuSepa = Nothing
-    
-    
-    
-    For Each sheetName In ActiveWorkbook.Sheets
+
       Set Button = DOMDoc.createElement("button")
       With Button
-        sheetNameID = sheetName.Name
-        .SetAttribute "id", "sheetID_" & sheetName.Index
-        .SetAttribute "label", sheetName.Name
-      
-        If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
-          .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
-        ElseIf Sheets(sheetName.Name).Visible = True Then
-          .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-        ElseIf Sheets(sheetName.Name).Visible <> True Then
-          .SetAttribute "imageMso", "SheetProtect"
-        End If
-        
-        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
+        .SetAttribute "id", "RelaxTools"
+        .SetAttribute "label", "RelaxTools"
+        .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
       End With
       Menu.AppendChild Button
       Set Button = Nothing
-    Next
+  End If
   
-    DOMDoc.AppendChild Menu
+  Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "sheetID_0"
+      .SetAttribute "title", ActiveWorkbook.Name
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+  
+  
+  
+  For Each sheetName In ActiveWorkbook.Sheets
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      sheetNameID = sheetName.Name
+      .SetAttribute "id", "sheetID_" & sheetName.Index
+      .SetAttribute "label", sheetName.Name
     
-  '  Call Library.showDebugForm(DOMDoc.XML)
-    
-    returnedVal = DOMDoc.XML
-    Set Menu = Nothing
-    Set DOMDoc = Nothing
+      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+        .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+      ElseIf Sheets(sheetName.Name).Visible = True Then
+        .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+      ElseIf Sheets(sheetName.Name).Visible <> True Then
+        .SetAttribute "imageMso", "SheetProtect"
+      End If
+      
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+  Next
+
+  DOMDoc.AppendChild Menu
+  
+'  Debug.Print DOMDoc.XML
+  
+  returnedVal = DOMDoc.XML
+  Set Menu = Nothing
+  Set DOMDoc = Nothing
 
   BK_ribbonUI.Invalidate
 
   Exit Function
 'ÉGÉâÅ[î≠ê∂éû--------------------------------------------------------------------------------------
 catchError:
-'  Call Library.showNotice(400, Err.Description, True)
+  Call Library.showNotice(400, Err.Description, True)
 End Function
 
 '==================================================================================================
@@ -675,7 +675,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function FavoriteAdd(control As IRibbonControl)
-  Call Ctl_Favorite.addList
+  Call Ctl_Favorite.add
   
 End Function
 
@@ -1146,7 +1146,7 @@ End Function
 
 '==================================================================================================
 'ãtÇkårê¸
-Function RelaxRelaxApps01(control As IRibbonControl)
+Function RelaxApps01(control As IRibbonControl)
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
 End Function
 
