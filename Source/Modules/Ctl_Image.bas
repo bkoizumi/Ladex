@@ -36,7 +36,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
     Case "Range"
       slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
     
-    Case "ChartArea", "Picture"
+    Case "ChartArea", "Picture", "GroupObject"
       slctArea.Copy
     
     Case Else

@@ -161,43 +161,6 @@ Function 画像設定()
 End Function
 
 
-'**************************************************************************************************
-' * R1C1表記
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function R1C1表記()
-
-  On Error Resume Next
-  
-  If Application.ReferenceStyle = xlA1 Then
-    Application.ReferenceStyle = xlR1C1
-  Else
-    Application.ReferenceStyle = xlA1
-  End If
-  
-End Function
-
-'**************************************************************************************************
-' * セル幅・高さ調整
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-'==================================================================================================
-Function セル幅調整()
-  Call Library.startScript
-  Cells.EntireColumn.AutoFit
-  Call Library.endScript(True)
-End Function
-
-
-'==================================================================================================
-Function セル高さ調整()
-  Call Library.startScript
-  Cells.EntireRow.AutoFit
-  Call Library.endScript(True)
-End Function
-
 
 '**************************************************************************************************
 ' * ハイライト

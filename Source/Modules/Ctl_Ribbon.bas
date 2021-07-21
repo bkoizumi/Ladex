@@ -767,24 +767,24 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function dispR1C1(control As IRibbonControl)
-  Call Main.R1C1表記
+  Call Ctl_Sheet.R1C1表記
 End Function
 
 
 '--------------------------------------------------------------------------------------------------
 Function AdjustWidth(control As IRibbonControl)
-  Call Main.セル幅調整
+  Call Ctl_Sheet.セル幅調整
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function AdjustHeight(control As IRibbonControl)
-  Call Main.セル高さ調整
+  Call Ctl_Sheet.セル高さ調整
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function AdjustHeightAndWidth(control As IRibbonControl)
-  Call Main.セル幅調整
-  Call Main.セル高さ調整
+  Call Ctl_Sheet.セル幅調整
+  Call Ctl_Sheet.セル高さ調整
   
 End Function
 

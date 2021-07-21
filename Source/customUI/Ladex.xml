@@ -38,8 +38,8 @@
       <splitButton id="SB_Favorite" size="large">
         <button id="Favorite_detail" label="お気に入り&#xD;&#xA;" imageMso="Favorites" screentip="お気に入り" supertip="お気に入り登録リスト表示" onAction="Ladex.xlam!Ctl_Ribbon.FavoriteDetail" />
           <menu id="Favorite_Menu" screentip="お気に入りメニュー"  supertip="お気に入りメニュー表示" itemSize="large">
+            <menuSeparator id="Favorite_SP1" title="お気に入り" />
             <button id="Favorite_Add"      label="お気に入りに追加"   imageMso="AddToFavorites" onAction="Ladex.xlam!Ctl_Ribbon.FavoriteAdd" description="アクティブブックをお気に入りに追加します &#13;" />
-
             <dynamicMenu  id="Favorite_List"  imageMso="Favorites"  invalidateContentOnDrop="true" label="お気に入り一覧"  getContent="Ladex.xlam!Ctl_Ribbon.FavoriteMenu" />
           </menu>
       </splitButton>
@@ -69,6 +69,7 @@
       <splitButton id="SB_ZoomIn" size="normal">
         <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるようにします &#13;F2キーにも対応" />
           <menu id="ZoomIn_Menu"  screentip="ズームメニュー"  supertip="ズームメニュー" itemSize="large">
+            <menuSeparator id="ZoomIn_SP1" title="ズーム" />
             <button id="Zoom01"   label="全画面表示"   imageMso="ZoomIn" onAction="Ladex.xlam!Ctl_Ribbon.Zoom01" description="画面を最大化します &#13;" />
           </menu>
       </splitButton>
@@ -85,7 +86,8 @@
 
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
-        <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="セル幅調整 &#13;" />
+        <menuSeparator id="Adjust_SP1" title="サイズ調整" />
+        <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="セル幅調整 &#13;30ポイント以上には広げません" />
         <button id="AdjustHeight"         label="高さ"    imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeight"         description="セル高さ調整 &#13;" />
         <button id="AdjustHeightAndWidth" label="両方"    imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeightAndWidth" description="セル幅、高さ両方を調整 &#13;" />
       </menu>
@@ -280,9 +282,9 @@
       <control idMso="OutlineUngroupMenu" size="normal" visible="true" />
       <control idMso="OutlineSubtotals"   size="normal" visible="true" />
 
-      <control idMso="OutlineShowDetail"  size="normal" visible="true" />
-      <control idMso="OutlineHideDetail"  size="normal" visible="true" />
-      <control idMso="OutlineSettings"    size="normal" visible="true" />
+      <control idMso="OutlineShowDetail"  size="normal" visible="true"  label="データ表示" />
+      <control idMso="OutlineHideDetail"  size="normal" visible="true"  label="データ非表示" />
+      <control idMso="OutlineSettings"    size="normal" visible="true"  label="設定" />
 
     </group>
 

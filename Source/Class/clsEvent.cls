@@ -26,9 +26,9 @@ Private pCntBS As Integer
 'イベント停止（一時的に停止させる）
 Private pStopEvent As Boolean
 
-'==================================================
+'==================================================================================================
 ' 公開プロパティ
-'==================================================
+'==================================================================================================
 'Excelアプリケーションの設定・取得
 Public Property Set ExcelApplication(argApp As Excel.Application)
     Set xlApp = argApp
@@ -47,15 +47,17 @@ Public Property Get StopEvent() As Boolean
     StopEvent = pStopEvent
 End Property
 
-'==================================================
+'==================================================================================================
 ' 公開メソッド
-'==================================================
+'==================================================================================================
 '対象ブック・シートの初期化
 Public Sub InitializeBookSheets()
     pCntBS = 0
     Erase pBookSheets
 End Sub
 
+
+'==================================================================================================
 '対象ブック・シートの設定
 Public Function AddBookSheet(ByRef argAry) As Boolean
     Dim i1 As Long
@@ -108,6 +110,8 @@ Public Function AddBookSheet(ByRef argAry) As Boolean
     AddBookSheet = True
 End Function
 
+
+'==================================================================================================
 '対象ブック・シートの全取得：2次元配列で戻す
 Public Function GetBookSheets() As Variant
     Dim i1 As Integer, i2 As Integer
@@ -133,9 +137,9 @@ Public Function GetBookSheets() As Variant
     GetBookSheets = myArray
 End Function
 
-'==================================================
+'==================================================================================================
 ' クラスのメソッド
-'==================================================
+'==================================================================================================
 
 'クラスの初期化
 Private Sub Class_Initialize()
@@ -149,10 +153,12 @@ Private Sub Class_Terminate()
     Set xlApp = Nothing
 End Sub
 
-'==================================================
+'==================================================================================================
 ' Applicationのブックイベント
-'==================================================
+'==================================================================================================
 
+
+'==================================================================================================
 'ブックが開かれたときに発生
 Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
     If Me.StopEvent Then Exit Sub
@@ -162,6 +168,8 @@ Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
 '    MsgBox "WorkbookOpen : " & wb.FullName
 End Sub
 
+
+'==================================================================================================
 'ブックが閉じられる直前に発生
 Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
     If Me.StopEvent Then Exit Sub
@@ -171,6 +179,8 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
 '    MsgBox "WorkbookBeforeClose : " & wb.FullName
 End Sub
 
+
+'==================================================================================================
 '新しいブックが作成されたときに発生
 Private Sub xlApp_NewWorkbook(ByVal wb As Workbook)
     If Me.StopEvent Then Exit Sub
@@ -180,10 +190,12 @@ Private Sub xlApp_NewWorkbook(ByVal wb As Workbook)
 '    MsgBox "NewWorkbook : " & wb.Name
 End Sub
 
-'==================================================
+'==================================================================================================
 ' Applicationのシートイベント
-'==================================================
+'==================================================================================================
 
+
+'==================================================================================================
 'シートがアクティブになったときに発生
 Private Sub xlApp_SheetActivate(ByVal Sh As Object)
   On Error GoTo catchError
@@ -255,88 +267,99 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
 
 End Sub
 
-'==================================================
+'==================================================================================================
 ' 非公開メソッド
-'==================================================
+'==================================================================================================
 
+
+'==================================================================================================
 '対象ブックの判定
 Private Function CheckBook(ByVal wb As Workbook) As Boolean
-    '指定なしはすべて対象とする
-    If pCntBS = 0 Then
+  '指定なしはすべて対象とする
+  If pCntBS = 0 Then
+    CheckBook = True
+    Exit Function
+  End If
+  
+  'ブック・シート指定の配列にブック名があるか判定
+  Dim i1 As Integer
+  CheckBook = False
+  For i1 = 0 To UBound(pBookSheets)
+    'ブックの名称判定
+    If wb.Name Like pBookSheets(i1).Book Then
+      'シート指定がない時のみブックの指定と判定
+      If pBookSheets(i1).Sheets(0) = "" Then
         CheckBook = True
         Exit Function
+      End If
     End If
-
-    'ブック・シート指定の配列にブック名があるか判定
-    Dim i1 As Integer
-    CheckBook = False
-    For i1 = 0 To UBound(pBookSheets)
-        'ブックの名称判定
-        If wb.Name Like pBookSheets(i1).Book Then
-            'シート指定がない時のみブックの指定と判定
-            If pBookSheets(i1).Sheets(0) = "" Then
-                CheckBook = True
-                Exit Function
-            End If
-        End If
-    Next
+  Next
 End Function
 
+'==================================================================================================
 '対象シートの判定
 Private Function CheckSheet(ByVal ws As Worksheet) As Boolean
-    '指定なしはすべて対象とする
-    If pCntBS = 0 Then
-        CheckSheet = True
-        Exit Function
-    End If
-
-    'ブック・シート指定の配列にシート名があるか判定
-    Dim i1 As Integer, i2 As Integer
-    Dim wb As Workbook
+  'コピー中なら動作しない
+  If Application.CutCopyMode = 1 Then
     CheckSheet = False
-    Set wb = ws.Parent
-    For i1 = 0 To UBound(pBookSheets)
-        'ブックの名称判定
-        If wb.Name Like pBookSheets(i1).Book Then
-            'シートの名称判定
-            For i2 = LBound(pBookSheets(i1).Sheets) To UBound(pBookSheets(i1).Sheets)
-                If ws.Name Like pBookSheets(i1).Sheets(i2) Then
-                    CheckSheet = True
-                    Exit Function
-                End If
-            Next
+    Exit Function
+  End If
+    
+  '指定なしはすべて対象とする
+  If pCntBS = 0 Then
+    CheckSheet = True
+    Exit Function
+  End If
+
+  'ブック・シート指定の配列にシート名があるか判定
+  Dim i1 As Integer, i2 As Integer
+  Dim wb As Workbook
+  CheckSheet = False
+  Set wb = ws.Parent
+  For i1 = 0 To UBound(pBookSheets)
+    'ブックの名称判定
+    If wb.Name Like pBookSheets(i1).Book Then
+      'シートの名称判定
+      For i2 = LBound(pBookSheets(i1).Sheets) To UBound(pBookSheets(i1).Sheets)
+        If ws.Name Like pBookSheets(i1).Sheets(i2) Then
+          CheckSheet = True
+          Exit Function
         End If
-    Next
+      Next
+    End If
+  Next
 End Function
 
+
+'==================================================================================================
 '配列の次元数取得とエラー値判定：1,2以外の戻り値はエラー
 Private Function GetDimension(ByVal argAry) As Integer
-    On Error Resume Next
-
-    '配列の次元数取得
-    Dim intDim As Integer
-    Dim tmpDim As Integer
-    intDim = 0
-    Do While Err.Number = 0
-        intDim = intDim + 1
-        'エラーになった時点で配列が終わり
-        tmpDim = UBound(argAry, intDim)
-    Loop
-    Err.Clear
-    intDim = intDim - 1
-
-    '配列の場合、エラー値データの判定
-    Dim vTemp
-    Select Case intDim
-        Case 1, 2
-            For Each vTemp In argAry
-                If IsError(vTemp) Then
-                    GetDimension = 0
-                    Exit Function
-                End If
-            Next
-    End Select
-
-    GetDimension = intDim
-    On Error GoTo 0
+  On Error Resume Next
+  
+  '配列の次元数取得
+  Dim intDim As Integer
+  Dim tmpDim As Integer
+  intDim = 0
+  Do While Err.Number = 0
+      intDim = intDim + 1
+      'エラーになった時点で配列が終わり
+      tmpDim = UBound(argAry, intDim)
+  Loop
+  Err.Clear
+  intDim = intDim - 1
+  
+  '配列の場合、エラー値データの判定
+  Dim vTemp
+  Select Case intDim
+    Case 1, 2
+      For Each vTemp In argAry
+        If IsError(vTemp) Then
+          GetDimension = 0
+          Exit Function
+        End If
+      Next
+  End Select
+  
+  GetDimension = intDim
+  On Error GoTo 0
 End Function
