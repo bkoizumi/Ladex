@@ -44,7 +44,7 @@ Public Property Let StopEvent(argStop As Boolean)
 End Property
 
 Public Property Get StopEvent() As Boolean
-    StopEvent = pStopEvent
+  StopEvent = pStopEvent
 End Property
 
 '==================================================================================================
@@ -299,11 +299,6 @@ End Function
 '==================================================================================================
 '対象シートの判定
 Private Function CheckSheet(ByVal ws As Worksheet) As Boolean
-  'コピー中なら動作しない
-  If Application.CutCopyMode = 1 Then
-    CheckSheet = False
-    Exit Function
-  End If
     
   '指定なしはすべて対象とする
   If pCntBS = 0 Then

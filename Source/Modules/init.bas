@@ -98,7 +98,7 @@ End Function
 Function setting(Optional reCheckFlg As Boolean)
   
   On Error GoTo catchError
-  ThisWorkbook.Save
+'  ThisWorkbook.Save
 
   'レジストリ関連設定------------------------------------------------------------------------------
   RegistrySubKey = "Main"

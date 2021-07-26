@@ -1119,7 +1119,6 @@ Function actRelaxSheetManager(control As IRibbonControl)
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
 End Function
 
-
 '==================================================================================================
 Function RelaxTools01(control As IRibbonControl)
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
