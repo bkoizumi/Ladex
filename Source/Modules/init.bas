@@ -1,4 +1,6 @@
 Attribute VB_Name = "init"
+Option Explicit
+
 
 'ワークブック用変数------------------------------
 Public BK_ThisBook    As Workbook
@@ -96,6 +98,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function setting(Optional reCheckFlg As Boolean)
+  Dim line As Long, endLine As Long
   
   On Error GoTo catchError
 '  ThisWorkbook.Save

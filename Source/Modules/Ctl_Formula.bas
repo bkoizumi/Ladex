@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Formula"
+Option Explicit
+
 '**************************************************************************************************
 ' * 数式内のセル参照
 ' *
@@ -11,7 +13,8 @@ Function 数式確認()
   Dim confirmFormulaName As String
   Dim count As Long
   Dim formulaVals As Variant
-
+  Dim objShp, aryRange
+  
 '  On Error GoTo catchError
   Call Library.startScript
   
@@ -94,6 +97,7 @@ Sub GetCurPosition()
 
   Dim p        As POINTAPI 'API用変数
   Dim Rng  As Range
+  Dim objShp
   
   For Each objShp In ActiveSheet.Shapes
     If objShp.Name Like "confirmFormulaName_*" Then

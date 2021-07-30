@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_sampleData"
+Option Explicit
+
 Dim newBook As Workbook
 Dim count As Long, getLine As Long
 Dim fstDate As Date, lstDate As Date
@@ -12,6 +14,7 @@ Public maxCount  As Long
 '**************************************************************************************************
 '==================================================================================================
 Function showFrm_sampleData(showType As String)
+  Dim topPosition As Long, leftPosition As Long
   
   topPosition = Library.getRegistry("UserForm", "mkSmpDtTop")
   leftPosition = Library.getRegistry("UserForm", "mkSmpDtLeft")
@@ -96,7 +99,9 @@ End Function
 Function パターン選択()
   Dim line As Long, endLine As Long
   Dim count As Long
-
+  Dim varDic
+  
+  
 '  On Error GoTo catchError
   Call init.setting
   

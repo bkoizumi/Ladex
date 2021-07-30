@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_RbnMaint"
+Option Explicit
+
 '**************************************************************************************************
 ' * Copy
 ' *
@@ -26,6 +28,8 @@ End Function
 
 '==================================================================================================
 Function その他()
+  Dim line As Long, endLine As Long
+  
   Call init.setting(True)
   BK_ThisBook.Sheets("Help").Activate
 '  Cells.Select
@@ -56,6 +60,9 @@ End Function
 
 '==================================================================================================
 Function OptionSheetImport(control As IRibbonControl)
+  Dim line As Long, endLine As Long
+  Dim objShp
+  
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsm")
   

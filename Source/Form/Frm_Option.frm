@@ -21,11 +21,6 @@ Public InitializeFlg   As Boolean
 
 
 
-
-
-
-
-
 '**************************************************************************************************
 ' * èâä˙ê›íË
 ' *
@@ -78,6 +73,8 @@ Private Sub UserForm_Initialize()
     .HighLightColor.Caption = ""
     
     'ìßñæìx----------------------------------------------------------------------------------------
+    .HighlightTransparentRate.Min = 0
+    .HighlightTransparentRate.Max = 100
     HighlightTransparentRate = Library.getRegistry("Main", "HighLightTransparentRate")
     If HighlightTransparentRate = "0" Then
       .HighlightTransparentRate.Value = 50
@@ -416,11 +413,11 @@ Private Sub HighlightDspMethod_2_Click()
 End Sub
 
 '==================================================================================================
-Private Sub HighlightTransparentRate_Click()
-  
+Private Sub HighlightTransparentRate_Change()
   If InitializeFlg = False Then
     Call doHighLightPreview
   End If
+
 End Sub
 
 
@@ -509,7 +506,7 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "HighLightColor", Me.HighLightColor.BackColor)
   
   'ìßñæìx----------------------------------------------------------------------------------------
-  Call Library.setRegistry("Main", "HighLightDspDirection", HighlightTransparentRate.Value)
+  Call Library.setRegistry("Main", "HighlightTransparentRate", HighlightTransparentRate.Value)
 
   'ï\é¶ï˚å¸--------------------------------------------------------------------------------------
   If HighlightDspDirection_X.Value = True Then

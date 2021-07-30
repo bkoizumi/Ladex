@@ -1,4 +1,5 @@
 Attribute VB_Name = "Ctl_Stamp"
+Option Explicit
 
 '==================================================================================================
 Function ‰Ÿˆó_Ïˆó()
@@ -7,7 +8,8 @@ Function ‰Ÿˆó_Ïˆó()
   Dim ActvSheet As Worksheet
   Dim ActvCell As Range
   Dim objShp As Shape
-
+  Dim addShapeLeft
+  
   On Error GoTo catchError
 
   Call Library.startScript
@@ -70,7 +72,8 @@ Function ‰Ÿˆó_Šm”Fˆó(Optional nameVal As String, Optional FontName As String, Op
   Dim ActvSheet As Worksheet
   Dim ActvCell As Range
   Dim objShp As Shape
-
+  Dim addShapeLeft
+  
   On Error GoTo catchError
 
   Call Library.startScript

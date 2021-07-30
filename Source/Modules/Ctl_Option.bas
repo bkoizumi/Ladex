@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Option"
+Option Explicit
+
 '**************************************************************************************************
 ' * オプション画面表示
 ' *
@@ -55,7 +57,7 @@ End Function
 '==================================================================================================
 Function 初期化()
   Dim RegistryKey As String, RegistrySubKey As String, RegistryVal As String
-  
+  Dim line As Long, endLine As Long
   Dim regName As String
 
   Call init.setting(True)
@@ -84,7 +86,7 @@ End Function
 
 '==================================================================================================
 Function showOption()
-  
+  Dim topPosition As Long, leftPosition As Long
 '  On Error GoTo catchError
   
   Call init.setting(True)
@@ -118,7 +120,7 @@ End Function
 
 '==================================================================================================
 Function HighLight()
-  
+  Dim topPosition As Long, leftPosition As Long
   On Error GoTo catchError
   
   topPosition = Library.getRegistry("UserForm", "OptionTop")
@@ -149,7 +151,7 @@ End Function
 
 '==================================================================================================
 Function Comment()
-  
+  Dim topPosition As Long, leftPosition As Long
   On Error GoTo catchError
   
   topPosition = Library.getRegistry("UserForm", "OptionTop")

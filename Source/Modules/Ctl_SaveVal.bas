@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_SaveVal"
+Option Explicit
+
 '**************************************************************************************************
 ' * VBA実行前の値を保持
 ' *
@@ -44,7 +46,7 @@ End Function
 '==================================================================================================
 Function getVal(pType As String) As String
   Dim resetObjVal          As Object
-  
+  Dim line As Long, endLine As Long
   
   '処理開始--------------------------------------
   On Error GoTo catchError
@@ -79,6 +81,7 @@ End Function
 
 '==================================================================================================
 Function delVal(pType As String)
+  Dim line As Long, endLine As Long
   
   '処理開始--------------------------------------
   On Error GoTo catchError

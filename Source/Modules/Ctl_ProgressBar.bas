@@ -1,4 +1,5 @@
 Attribute VB_Name = "Ctl_ProgressBar"
+Option Explicit
 
 '**************************************************************************************************
 ' * プログレスバー表示制御
@@ -23,7 +24,7 @@ Public Function showStart()
     .StartUpPosition = 0
     .Top = Application.Top + 10
     .Left = Application.Left + 120
-    .Caption = myMsg1
+    .Caption = PrgMeg
     
     
     '親進捗バー------------------------------------------------------------------------------------

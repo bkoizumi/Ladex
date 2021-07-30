@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Favorite"
+Option Explicit
+
 '**************************************************************************************************
 ' * ‚¨‹C‚É“ü‚è
 ' *
@@ -59,6 +61,7 @@ End Function
 Function detail()
   Dim line As Long, endLine As Long
   Dim regLists As Variant
+  Dim topPosition As Long, leftPosition As Long
   
   On Error GoTo catchError
   Call getList

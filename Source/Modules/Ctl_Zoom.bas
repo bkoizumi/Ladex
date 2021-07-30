@@ -1,4 +1,5 @@
 Attribute VB_Name = "Ctl_Zoom"
+Option Explicit
 
 '**************************************************************************************************
 ' * 選択セルの拡大表示/終了
@@ -7,6 +8,7 @@ Attribute VB_Name = "Ctl_Zoom"
 '**************************************************************************************************
 Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
+  Dim topPosition As Long, leftPosition As Long
   
   If slctCellAddress = "" Then
     topPosition = Library.getRegistry("UserForm", "ZoomTop")
@@ -60,9 +62,9 @@ End Function
 
 '==================================================================================================
 '全画面表示
-
 Function Zoom01()
-
+  Dim topPosition As Long, leftPosition As Long
+  
   Call Library.startScript
   Application.DisplayFullScreen = True
   Call Library.endScript

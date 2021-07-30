@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Ribbon"
+Option Explicit
+
 Private ctlEvent As New clsEvent
 
 #If VBA7 And Win64 Then
@@ -66,6 +68,7 @@ End Function
 Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
   Dim sheetName As Worksheet
+  Dim MenuSepa, sheetNameID
   
   On Error GoTo catchError
   Call init.setting
@@ -181,6 +184,8 @@ End Function
 Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
   Dim sheetName As Worksheet
+  Dim MenuSepa
+  
   
 '  On Error GoTo catchError
   Call init.setting
@@ -407,7 +412,8 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Dim regLists As Variant, i As Long
   Dim line As Long, endLine As Long
   Dim objFso As New FileSystemObject
-   
+  Dim MenuSepa
+  
   On Error GoTo catchError
   Call init.setting
   

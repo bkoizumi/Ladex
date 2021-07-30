@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Hollyday"
+Option Explicit
+
 '******************************************************************************
 ' ‚ ‚é“ú‚ªj“ú‚Å‚ ‚é‚©H‚»‚Ìê‡‚Ç‚Ìj“ú‚©H‚ð’²‚×‚éŠÖ”B
 ' http://www.excelio.jp/LABORATORY/EXCEL_CALENDER.html
@@ -36,6 +38,8 @@ End Function
 
 '==================================================================================================
 Public Function GetHollyday(targetdate As Date, HollydayName As String) As Boolean
+    Dim kaerichi As Boolean
+    
     kaerichi = False
     HollydayName = ""
     kaerichi = NationalHollydays(targetdate, HollydayName)
@@ -67,9 +71,11 @@ End Function
 ' j“ú”»’èŠÖ”
 '******************************************************************************
 Public Function NationalHollydays(targetdate As Date, HollydayName As String) As Boolean
-Dim targetyear As Integer
-Dim targetmonth As Integer
-Dim targetday As Integer
+  Dim targetyear As Integer
+  Dim targetmonth As Integer
+  Dim targetday As Integer
+  Dim hantei As Boolean
+  
     targetyear = CInt(Format(targetdate, "yyyy"))
     targetmonth = CInt(Format(targetdate, "m"))
     targetday = CInt(Format(targetdate, "d"))
@@ -283,7 +289,8 @@ End Function
 ' t•ª‚Ì“ú‚ð‹‚ß‚é
 '******************************************************************************
 Public Function Syunbun(Nen As Integer) As Integer
-    syubun = 0
+    
+    Syunbun = 0
     If (1899 >= Nen And Nen >= 1851) Then
         Syunbun = Int(19.8277 + 0.242194 * (Nen - 1980) - Int((Nen - 1983) / 4))
     End If
@@ -302,19 +309,21 @@ End Function
 ' H•ª‚Ì“ú‚ð‹‚ß‚é
 '******************************************************************************
 Public Function Syuubun(Nen As Integer) As Integer
-    Syuubun = 0
-    If (1899 >= Nen And Nen >= 1851) Then
-        Syuubun = Int(22.2588 + 0.242194 * (Nen - 1980) - Int((Nen - 1983) / 4))
-    End If
-    If (1979 >= Nen And Nen >= 1900) Then
-        Syuubun = Int(23.2588 + 0.242194 * (Nen - 1980) - Int((Nen - 1983) / 4))
-    End If
-    If (2099 >= Nen And Nen >= 1980) Then
-        Syuubun = Int(23.2488 + 0.242194 * (Nen - 1980) - Int((Nen - 1980) / 4))
-    End If
-    If (2150 >= Nen And Nen >= 2100) Then
-        Syuubun = Int(24.2488 + 0.242194 * (Nen - 1980) - Int((Nen - 1980) / 4))
-    End If
+
+    
+  Syuubun = 0
+  If (1899 >= Nen And Nen >= 1851) Then
+      Syuubun = Int(22.2588 + 0.242194 * (Nen - 1980) - Int((Nen - 1983) / 4))
+  End If
+  If (1979 >= Nen And Nen >= 1900) Then
+      Syuubun = Int(23.2588 + 0.242194 * (Nen - 1980) - Int((Nen - 1983) / 4))
+  End If
+  If (2099 >= Nen And Nen >= 1980) Then
+      Syuubun = Int(23.2488 + 0.242194 * (Nen - 1980) - Int((Nen - 1980) / 4))
+  End If
+  If (2150 >= Nen And Nen >= 2100) Then
+      Syuubun = Int(24.2488 + 0.242194 * (Nen - 1980) - Int((Nen - 1980) / 4))
+  End If
 End Function
 '******************************************************************************
 ' ‚ ‚éŒŽ‚Ì‘æ›¢—j“ú‚ª “ú‚Å‚ ‚é‚©‚ð’²‚×‚éŠÖ”B
@@ -326,45 +335,51 @@ End Function
 ' U‘Ö‹x“ú‚©‚ð’²‚×‚éŠÖ”B
 '******************************************************************************
 Public Function FurikaeKyujitsu(targetdate As Date, HollydayName As String) As Boolean
-Dim lastsunday  As Date
-Dim days As Integer
-    HollydayName = ""
-    hantei = False
-    lastsunday = DateAdd("d", 1 - (Weekday(targetdate)), targetdate)
-    days = (Weekday(targetdate) - 1)
-    If targetdate > "1973/04/11" Then
-        If NationalHollydays(targetdate, HollydayName) = False Then
-            If targetyear < 2007 Then
-                If NationalHollydays(DateAdd("d", -1, targetdate), HollydayName) = True And Weekday(targetdate) = 2 Then
-                    HollydayName = "U‘Ö‹x“ú"
-                    FurikaeKyujitsu = True
-                Else
-                    HollydayName = ""
-                    FurikaeKyujitsu = False
-                End If
-            Else
-                If NationalHollydays(lastsunday, HollydayName) = True Then
-                    For i = 0 To (days - 1)
-                        If NationalHollydays(DateAdd("d", i, lastsunday), HollydayName) = False Then
-                            FurikaeKyujitsu = False
-                            HollydayName = ""
-                            Exit Function
-                        End If
-                    Next i
-                    HollydayName = "U‘Ö‹x“ú"
-                    FurikaeKyujitsu = True
-                Else
-                    FurikaeKyujitsu = False
-                    HollydayName = ""
-                End If
-            End If
-        End If
-    End If
+  Dim lastsunday  As Date
+  Dim days As Integer
+  Dim hantei As Boolean
+  Dim targetyear As Integer, i As Integer
+  
+  
+  HollydayName = ""
+  hantei = False
+  lastsunday = DateAdd("d", 1 - (Weekday(targetdate)), targetdate)
+  days = (Weekday(targetdate) - 1)
+  If targetdate > "1973/04/11" Then
+      If NationalHollydays(targetdate, HollydayName) = False Then
+          If targetyear < 2007 Then
+              If NationalHollydays(DateAdd("d", -1, targetdate), HollydayName) = True And Weekday(targetdate) = 2 Then
+                  HollydayName = "U‘Ö‹x“ú"
+                  FurikaeKyujitsu = True
+              Else
+                  HollydayName = ""
+                  FurikaeKyujitsu = False
+              End If
+          Else
+              If NationalHollydays(lastsunday, HollydayName) = True Then
+                  For i = 0 To (days - 1)
+                      If NationalHollydays(DateAdd("d", i, lastsunday), HollydayName) = False Then
+                          FurikaeKyujitsu = False
+                          HollydayName = ""
+                          Exit Function
+                      End If
+                  Next i
+                  HollydayName = "U‘Ö‹x“ú"
+                  FurikaeKyujitsu = True
+              Else
+                  FurikaeKyujitsu = False
+                  HollydayName = ""
+              End If
+          End If
+      End If
+  End If
 End Function
 '******************************************************************************
 ' ‘–¯‚Ì‹x“ú‚©‚ð’²‚×‚éŠÖ”B
 '******************************************************************************
 Public Function KokuminnoKyujitsu(targetdate As Date, HollydayName As String) As Boolean
+  Dim targetyear As Integer, i As Integer
+    
     HollydayName = ""
     If targetdate > "1985/12/26" Then
         If NationalHollydays(targetdate, HollydayName) = False Then

@@ -78,6 +78,8 @@ With CreateObject("Excel.Application")
 
   'インストール先パスの作成
   strPath = .UserLibraryPath
+  installPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & addInFileName
+
   imageFolder = objWshShell.SpecialFolders("Appdata") & "\Ladex\"
 
   'インストールフォルダがない場合は作成

@@ -34,7 +34,7 @@ End Sub
 '**************************************************************************************************
 Function InitializeBook()
   Dim RegistryKey As String, RegistrySubKey As String, val As String
-  
+  Dim line As Long, endLine As Long
   Dim regName As String
 
   Call init.setting(True)

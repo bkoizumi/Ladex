@@ -1,4 +1,6 @@
 Attribute VB_Name = "Main"
+Option Explicit
+
 'ワークブック用変数------------------------------
 'ワークシート用変数------------------------------
 'グローバル変数----------------------------------
@@ -20,6 +22,7 @@ Function 標準画面()
   Dim objSheet As Object
   Dim sheetName As String, SetActiveSheet As String
   Dim sheetCount As Long, sheetMaxCount As Long
+  Dim SelectAddress, setZoomLevel, resetBgColor, setGgridLine
   
   'On Error Resume Next
   
@@ -305,7 +308,7 @@ Function 設定_取込()
   
   Call FSO.DeleteFile(TempName, True)
   
-  Call Main.スタイル削除
+  Call Ctl_Style.スタイル削除
   Call Library.endScript
 End Function
 

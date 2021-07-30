@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Help"
+Option Explicit
+
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
 

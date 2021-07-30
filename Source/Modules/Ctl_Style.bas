@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_Style"
+Option Explicit
+
 Dim setStyleBook     As Workbook
 
 
@@ -65,7 +67,7 @@ Function Import()
   Call init.setting
   
   '----------------------------------------------
-  If setStyleBook = Nothing Then
+  If setStyleBook Is Nothing Then
     Call Library.showNotice(400, FuncName, True)
   End If
   

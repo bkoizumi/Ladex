@@ -1,4 +1,6 @@
 Attribute VB_Name = "Ctl_HighLight"
+Option Explicit
+
 #If VBA7 And Win64 Then
     Public Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 #Else
@@ -110,6 +112,8 @@ Function showStart_X(ByVal Target As Range, _
                   
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
+  Dim MaxWidth As Long
+  Dim HighLight_X
   
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
@@ -180,6 +184,8 @@ Function showStart_Y(ByVal Target As Range, _
                    
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
+  Dim MaxHeight As Long
+  Dim HighLight_Y
   
   If BKh_rbPressed = True Then
     MaxHeight = 169056

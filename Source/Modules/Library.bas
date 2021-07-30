@@ -1,4 +1,6 @@
 Attribute VB_Name = "Library"
+Option Explicit
+
 '**************************************************************************************************
 ' * 参照設定、定数宣言
 ' *
@@ -105,7 +107,7 @@ Function errorHandle(FuncName As String, ByRef objErr As Object)
 
   '音声認識発話
   Application.Speech.Speak Text:="エラーが発生しました", SpeakAsync:=True
-  Message = Application.WorksheetFunction.VLookup(objErr.Number, noticeCodeSheet.Range("A2:B" & endLine), 2, False)
+  Message = Application.WorksheetFunction.VLookup(objErr.Number, BK_sheetNotice.Range("A2:B" & endLine), 2, False)
 
   Call MsgBox(Message, vbCritical)
   Call endScript
@@ -324,7 +326,7 @@ End Function
 '**************************************************************************************************
 Function chkHeader(baseNameArray As Variant, chkNameArray As Variant)
   Dim errMeg As String
-
+  Dim i As Integer
 
 On Error GoTo catchError
   errMeg = ""
@@ -493,9 +495,10 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function convPipe2Comma(strText As String) As String
-
   Dim covString As String
-
+  Dim tmp As Variant
+  Dim i As Integer
+  
   tmp = Split(strText, "|")
   covString = ""
   For i = 0 To UBound(tmp)
@@ -595,11 +598,14 @@ End Function
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
 Function convURLEncode(ByVal str As String) As String
-
+  Dim EncodeURL As String
+  
   With CreateObject("ScriptControl")
     .Language = "JScript"
     EncodeURL = .codeobject.encodeURIComponent(str)
   End With
+  
+  convURLEncode = EncodeURL
 End Function
 
 
@@ -675,11 +681,15 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function delMultipleLine(targetValue As String)
+  Dim combineMultipleLine As String
+  
   With CreateObject("VBScript.RegExp")
     .Global = True
     .Pattern = "(\r\n)+"
     combineMultipleLine = .Replace(targetValue, vbCrLf)
   End With
+  
+  delMultipleLine = combineMultipleLine
 End Function
 
 '**************************************************************************************************
@@ -894,7 +904,7 @@ End Function
 Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long)
 
   Dim R1C1Top As Long, R1C1Left As Long
-
+  Dim DPI, PPI
 
 
 
@@ -1120,7 +1130,8 @@ Function getFilesPath(CurrentDirectory As String, saveFileName As String, title 
 
   Dim filePath() As Variant
   Dim result As Long
-
+  Dim i As Integer
+  
   With Application.FileDialog(msoFileDialogFilePicker)
     '複数選択を許可
     .AllowMultiSelect = True
@@ -1419,7 +1430,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function showExpansionForm(Text As String, SetSelectTargetRows As String)
-  With ExpansionForm
+  With Frm_Zoom
     .StartUpPosition = 0
     .Top = Application.Top + (ActiveWindow.Width / 10)
     .Left = Application.Left + (ActiveWindow.Height / 5)
@@ -1428,8 +1439,9 @@ Function showExpansionForm(Text As String, SetSelectTargetRows As String)
     .TextBox.MultiLine = True
     .TextBox.EnterKeyBehavior = True
     .Caption = SetSelectTargetRows
+    
+    .Show vbModeless
   End With
-  ExpansionForm.Show vbModeless
 End Function
 
 
@@ -1485,27 +1497,27 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
   End Select
 
 label_showForm:
-  If meg1 Like "処理開始：*" Then
-
-    With Frm_debug
-      .Caption = "処理情報"
-      .ListBox1.Clear
-      .ListBox1.AddItem runTime & vbTab & meg1
-    End With
-  Else
-    With Frm_debug
-      .Caption = "処理情報"
-      .ListBox1.AddItem runTime & vbTab & meg1
-      .ListBox1.ListIndex = .ListBox1.ListCount - 1
-    End With
-  End If
-
-  If (Frm_debug.Visible = True) Then
-    Frm_debug.StartUpPosition = 0
-  Else
-    Frm_debug.StartUpPosition = 1
-  End If
-  Frm_debug.Show vbModeless
+'  If meg1 Like "処理開始：*" Then
+'
+'    With Frm_debug
+'      .Caption = "処理情報"
+'      .ListBox1.Clear
+'      .ListBox1.AddItem runTime & vbTab & meg1
+'    End With
+'  Else
+'    With Frm_debug
+'      .Caption = "処理情報"
+'      .ListBox1.AddItem runTime & vbTab & meg1
+'      .ListBox1.ListIndex = .ListBox1.ListCount - 1
+'    End With
+'  End If
+'
+'  If (Frm_debug.Visible = True) Then
+'    Frm_debug.StartUpPosition = 0
+'  Else
+'    Frm_debug.StartUpPosition = 1
+'  End If
+'  Frm_debug.Show vbModeless
 
 
 label_end:
@@ -1596,14 +1608,15 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function makeRandomString(ByVal setString As String, ByVal setStringCnt As Integer) As String
-
- For i = 1 To setStringCnt
-    '乱数ジェネレータを初期化
+  Dim i, n
+  Dim str1 As String
+  
+  For i = 1 To setStringCnt
     Randomize
     n = Int((Len(setString) - 1 + 1) * Rnd + 1)
     str1 = str1 + Mid(setString, n, 1)
   Next i
-
+  
   makeRandomString = str1
 
 End Function
@@ -1621,7 +1634,8 @@ End Function
 Function makeRandomDigits(maxCount As Long) As String
   Dim makeVal As String
   Dim tmpVal As String
-
+  Dim count As Integer
+  
   For count = 1 To maxCount
     Randomize
     tmpVal = CStr(Int(10 * Rnd))
@@ -1804,11 +1818,13 @@ End Function
 '**************************************************************************************************
 Function makePasswd() As String
   Dim halfChar As String, str1 As String
-
+  Dim i As Integer
+  Dim n
+  
+  
   halfChar = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&"
 
   For i = 1 To 12
-    '乱数ジェネレータを初期化
     Randomize
     n = Int((Len(halfChar) - 1 + 1) * Rnd + 1)
     str1 = str1 + Mid(halfChar, n, 1)
@@ -1833,6 +1849,8 @@ Function unsetHighLight()
   Static xRow
   Static xColumn
 
+  Dim pRow, pColumn
+  
   pRow = Selection.Row
   pColumn = Selection.Column
   xRow = pRow
@@ -1977,69 +1995,69 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function setReferences(BookType As String)
-
-  On Error GoTo Err_SetReferences:
-
-  'Microsoft Scripting Runtime (Windows Script Host / FileSystemObject)----------------------------
-    LibScript = "C:\Windows\System32\scrrun.dll"
-    If Dir(LibScript) <> "" Then
-      ActiveWorkbook.VBProject.References.AddFromFile (LibScript)
-    Else
-      MsgBox ("Microsoft Scripting Runtimeを利用できません。" & vbLf & "利用できない機能があります")
-    End If
-
-  'Microsoft ActiveX Data Objects Library 6.1 (ADO)------------------------------------------------
-  If BookType = "DataBase" Then
-    LibADO = "C:\Program Files\Common Files\System\Ado\msado15.dll"
-    If Dir(LibADO) <> "" Then
-      ActiveWorkbook.VBProject.References.AddFromFile (LibADO)
-    Else
-      MsgBox ("Microsoft ActiveX Data Objectsを利用できません" & vbLf & "利用できない機能があります")
-    End If
-
-  'Microsoft DAO 3.6 Objects Library (Database Access Object)--------------------------------------
-  LibDAO = "C:\Program Files\Common Files\Microsoft Shared\DAO\dao360.dll"
-    If Dir(LibDAO) <> "" Then
-      ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
-    Else
-      LibDAO = "C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll"
-      If Dir(LibDAO) <> "" Then
-        ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
-      Else
-        MsgBox ("Microsoft DAO 3.6 Objects Libraryを利用できません" & vbLf & "DBへの接続機能が利用できません")
-      End If
-    End If
-  End If
-
-  'Microsoft DAO 3.6 Objects Library (Database Access Object)--------------------------------------
-  If BookType = "" Then
-    LibDAO = "C:\Program Files\Common Files\Microsoft Shared\DAO\dao360.dll"
-    If Dir(LibDAO) <> "" Then
-      ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
-    Else
-      LibDAO = "C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll"
-      If Dir(LibDAO) <> "" Then
-        ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
-      Else
-        MsgBox ("Microsoft DAO 3.6 Objects Libraryを利用できません" & vbLf & "DBへの接続機能が利用できません")
-      End If
-    End If
-  End If
-
-
-Func_Exit:
-  Set Ref = Nothing
-  Exit Function
-
-Err_SetReferences:
-  If Err.Number = 32813 Then
-    Resume Next
-  ElseIf Err.Number = 1004 Then
-    MsgBox ("「VBA プロジェクト オブジェクト モデルへのアクセスを信頼する」に変更を！")
-  Else
-    MsgBox "Error Number : " & Err.Number & vbCrLf & Err.Description
-    GoTo Func_Exit:
-  End If
+'
+'  On Error GoTo Err_SetReferences:
+'
+'  'Microsoft Scripting Runtime (Windows Script Host / FileSystemObject)----------------------------
+'    LibScript = "C:\Windows\System32\scrrun.dll"
+'    If Dir(LibScript) <> "" Then
+'      ActiveWorkbook.VBProject.References.AddFromFile (LibScript)
+'    Else
+'      MsgBox ("Microsoft Scripting Runtimeを利用できません。" & vbLf & "利用できない機能があります")
+'    End If
+'
+'  'Microsoft ActiveX Data Objects Library 6.1 (ADO)------------------------------------------------
+'  If BookType = "DataBase" Then
+'    LibADO = "C:\Program Files\Common Files\System\Ado\msado15.dll"
+'    If Dir(LibADO) <> "" Then
+'      ActiveWorkbook.VBProject.References.AddFromFile (LibADO)
+'    Else
+'      MsgBox ("Microsoft ActiveX Data Objectsを利用できません" & vbLf & "利用できない機能があります")
+'    End If
+'
+'  'Microsoft DAO 3.6 Objects Library (Database Access Object)--------------------------------------
+'  LibDAO = "C:\Program Files\Common Files\Microsoft Shared\DAO\dao360.dll"
+'    If Dir(LibDAO) <> "" Then
+'      ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
+'    Else
+'      LibDAO = "C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll"
+'      If Dir(LibDAO) <> "" Then
+'        ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
+'      Else
+'        MsgBox ("Microsoft DAO 3.6 Objects Libraryを利用できません" & vbLf & "DBへの接続機能が利用できません")
+'      End If
+'    End If
+'  End If
+'
+'  'Microsoft DAO 3.6 Objects Library (Database Access Object)--------------------------------------
+'  If BookType = "" Then
+'    LibDAO = "C:\Program Files\Common Files\Microsoft Shared\DAO\dao360.dll"
+'    If Dir(LibDAO) <> "" Then
+'      ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
+'    Else
+'      LibDAO = "C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll"
+'      If Dir(LibDAO) <> "" Then
+'        ActiveWorkbook.VBProject.References.AddFromFile (LibDAO)
+'      Else
+'        MsgBox ("Microsoft DAO 3.6 Objects Libraryを利用できません" & vbLf & "DBへの接続機能が利用できません")
+'      End If
+'    End If
+'  End If
+'
+'
+'Func_Exit:
+'  Set Ref = Nothing
+'  Exit Function
+'
+'Err_SetReferences:
+'  If Err.Number = 32813 Then
+'    Resume Next
+'  ElseIf Err.Number = 1004 Then
+'    MsgBox ("「VBA プロジェクト オブジェクト モデルへのアクセスを信頼する」に変更を！")
+'  Else
+'    MsgBox "Error Number : " & Err.Number & vbCrLf & Err.Description
+'    GoTo Func_Exit:
+'  End If
 End Function
 
 
@@ -2079,7 +2097,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setProtectSheet()
+Function setProtectSheet(Optional thisAppPasswd As String)
 
   ActiveSheet.Protect passWord:=thisAppPasswd, DrawingObjects:=True, Contents:=True, Scenarios:=True
   ActiveSheet.EnableSelection = xlUnlockedCells
@@ -2087,7 +2105,7 @@ Function setProtectSheet()
 End Function
 
 '==================================================================================================
-Function unsetProtectSheet()
+Function unsetProtectSheet(Optional thisAppPasswd As String)
 
   ActiveSheet.Unprotect passWord:=thisAppPasswd
 End Function
