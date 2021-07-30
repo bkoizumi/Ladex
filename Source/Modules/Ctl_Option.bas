@@ -92,15 +92,12 @@ Function showOption()
   Call init.setting(True)
   topPosition = Library.getRegistry("UserForm", "OptionTop")
   leftPosition = Library.getRegistry("UserForm", "OptionLeft")
+  
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Option
-    
-    If topPosition = 0 Then
-      .StartUpPosition = 2
-    Else
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 0
     .MultiPage1.Page1.Visible = True
     .MultiPage1.Page2.Visible = True
@@ -125,15 +122,12 @@ Function HighLight()
   
   topPosition = Library.getRegistry("UserForm", "OptionTop")
   leftPosition = Library.getRegistry("UserForm", "OptionLeft")
+  
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Option
-    
-    If topPosition = 0 Then
-      .StartUpPosition = 2
-    Else
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 1
     .MultiPage1.Page1.Visible = False
     .MultiPage1.Page3.Visible = False
@@ -156,15 +150,12 @@ Function Comment()
   
   topPosition = Library.getRegistry("UserForm", "OptionTop")
   leftPosition = Library.getRegistry("UserForm", "OptionLeft")
+  
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Option
-    
-    If topPosition = 0 Then
-      .StartUpPosition = 2
-    Else
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 2
     .MultiPage1.Page1.Visible = False
     .MultiPage1.Page2.Visible = False

@@ -18,15 +18,13 @@ Function showFrm_sampleData(showType As String)
   
   topPosition = Library.getRegistry("UserForm", "mkSmpDtTop")
   leftPosition = Library.getRegistry("UserForm", "mkSmpDtLeft")
+  
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
+  
   With Frm_smplData
     .StartUpPosition = 0
-    If topPosition = "" Then
-      .Top = 10
-      .Left = 120
-    Else
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .Top = topPosition
+    .Left = leftPosition
     .Caption = showType
     
     '各ページ、パーツの有効/無効切り替え
@@ -68,7 +66,7 @@ Function showFrm_sampleData(showType As String)
         .MultiPage1.Pages.Item(3).Visible = False
         
         .minVal4 = #4/1/2021#
-        .maxVal4 = #5/1/2020#
+        .maxVal4 = #3/31/2022#
   
 
 
@@ -176,6 +174,7 @@ Function 数値_範囲()
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
+  Call Library.startScript
   Call init.setting
   
 '  Sheets("Sheet1").Columns("B:B").Clear
@@ -190,7 +189,7 @@ Function 数値_範囲()
     Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
   Next
 
-
+  Call Library.endScript
   Exit Function
 'エラー発生時====================================
 catchError:
@@ -202,6 +201,8 @@ Function 名前_姓(Optional maxCount As Long)
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
+  
+  Call Library.startScript
   
   Call init.setting
   endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
@@ -221,6 +222,7 @@ Function 名前_姓(Optional maxCount As Long)
     Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("A" & getLine)
   Next
 
+  Call Library.endScript
   Exit Function
 'エラー発生時====================================
 catchError:
@@ -232,7 +234,7 @@ Function 名前_名(Optional maxCount As Long)
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
-  
+  Call Library.startScript
   Call init.setting
   endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
   
@@ -250,6 +252,7 @@ Function 名前_名(Optional maxCount As Long)
     Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("D" & getLine)
   Next
 
+  Call Library.endScript
   Exit Function
 'エラー発生時====================================
 catchError:
@@ -261,6 +264,7 @@ Function 名前_フルネーム(Optional maxCount As Long)
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
+  Call Library.startScript
   
   Call init.setting
   endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
@@ -279,6 +283,7 @@ Function 名前_フルネーム(Optional maxCount As Long)
     getLine = Library.makeRandomNo(2, endLine)
     Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("A" & getLine) & "　" & BK_sheetTestData.Range("D" & getLine)
   Next
+  Call Library.endScript
 
   Exit Function
 'エラー発生時====================================
@@ -291,6 +296,7 @@ End Function
 Function 日付_日(Optional maxCount As Long)
   Dim line As Long, endLine As Long
   
+  Call Library.startScript
   
 '  On Error GoTo catchError
   
@@ -309,6 +315,7 @@ Function 日付_日(Optional maxCount As Long)
     Cells(line + count, ActiveCell.Column).NumberFormatLocal = "yyyy/mm/dd"
   Next
   
+  Call Library.endScript
   Exit Function
 'エラー発生時====================================
 catchError:
@@ -322,6 +329,8 @@ Function 日付_時間(Optional maxCount As Long)
   Dim val As Double
   
 '  On Error GoTo catchError
+  Call Library.startScript
+  
   Call init.setting
   
   If maxCount <= 1 Then
@@ -340,6 +349,7 @@ Function 日付_時間(Optional maxCount As Long)
     Cells(line + count, ActiveCell.Column).NumberFormatLocal = "hh:mm:ss"
   Next
   
+  Call Library.endScript
   Exit Function
 'エラー発生時====================================
 catchError:
@@ -354,6 +364,7 @@ Function 日時(Optional maxCount As Long)
   Dim val As Double
   
 '  On Error GoTo catchError
+  Call Library.startScript
   Call init.setting
   
   Call showFrm_sampleData("【日付】日")
@@ -376,6 +387,8 @@ Function 日時(Optional maxCount As Long)
 '    Cells(line + count, ActiveCell.Column + 1) = DateAdd("s", Library.makeRandomNo(0, 600), val)
 '    Cells(line + count, ActiveCell.Column + 1).NumberFormatLocal = "yyyy/mm/dd hh:mm:ss"
   Next
+  
+  Call Library.endScript
   
   Exit Function
 'エラー発生時====================================
