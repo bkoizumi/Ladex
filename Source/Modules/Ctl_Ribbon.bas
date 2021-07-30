@@ -97,6 +97,8 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
       With Button
         .SetAttribute "id", "RelaxTools"
         .SetAttribute "label", "RelaxTools"
+        .SetAttribute "supertip", "RelaxToolsのシート管理を起動"
+        
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
         .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
       End With
@@ -122,11 +124,21 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
       .SetAttribute "label", sheetName.Name
     
       If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+        .SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
+        
       ElseIf Sheets(sheetName.Name).Visible = True Then
+       '.SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-      ElseIf Sheets(sheetName.Name).Visible <> True Then
+      
+      ElseIf Sheets(sheetName.Name).Visible = 0 Then
+        .SetAttribute "supertip", "非表示シート"
         .SetAttribute "imageMso", "SheetProtect"
+      
+      ElseIf Sheets(sheetName.Name).Visible = 2 Then
+        .SetAttribute "supertip", "マクロによる非表示シート"
+        .SetAttribute "imageMso", "ReviewProtectWorkbook"
+      
       End If
       
       .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.selectActiveSheet"
@@ -200,9 +212,9 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
     Set Button = DOMDoc.createElement("button")
     With Button
       .SetAttribute "id", "RelaxTools01"
-      .SetAttribute "label", "RelaxTools"
+      .SetAttribute "label", "シート管理"
       .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxTools"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
     End With
     Menu.AppendChild Button
     Set Button = Nothing
@@ -295,8 +307,15 @@ Function selectActiveSheet(control As IRibbonControl)
   Call Library.startScript
   sheetNameID = Replace(control.ID, "sheetID_", "")
   
-  If Sheets(sheetNameID).Visible <> True Then
+  If Sheets(sheetNameID).Visible <> 2 Then
     Sheets(sheetNameID).Visible = True
+  
+  ElseIf Sheets(sheetNameID).Visible = 2 Then
+    If MsgBox("マクロによって非表示となっているシートです" & vbNewLine & "マクロの動作に影響を与える可能性があります。" & vbNewLine & "表示しますか？", vbYesNo + vbCritical) = vbNo Then
+      End
+    Else
+      Sheets(sheetNameID).Visible = True
+    End If
   End If
   
   sheetCount = 1
@@ -941,8 +960,20 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
-Function 罫線_表_破線(control As IRibbonControl)
+Function 罫線_表_破線A(control As IRibbonControl)
+  Call Library.罫線_破線_格子
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_表_破線B(control As IRibbonControl)
   Call Library.罫線_表
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_表_破線C(control As IRibbonControl)
+  Call Library.罫線_破線_格子
+  Call Library.罫線_実線_水平
+  Call Library.罫線_実線_囲み
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -967,8 +998,28 @@ Function 罫線_破線_垂直(control As IRibbonControl)
 End Function
 
 '--------------------------------------------------------------------------------------------------
+Function 罫線_破線_左(control As IRibbonControl)
+  Call Library.罫線_破線_左
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_右(control As IRibbonControl)
+  Call Library.罫線_破線_右
+End Function
+
+'--------------------------------------------------------------------------------------------------
 Function 罫線_破線_左右(control As IRibbonControl)
   Call Library.罫線_破線_左右
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_上(control As IRibbonControl)
+  Call Library.罫線_破線_上
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function 罫線_破線_下(control As IRibbonControl)
+  Call Library.罫線_破線_下
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -1064,34 +1115,48 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_SelectPattern(control As IRibbonControl)
-  Call sampleData.パターン選択
+  Call Ctl_sampleData.パターン選択
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_DigitsInt(control As IRibbonControl)
-  Call sampleData.数値_桁数固定
+  Call Ctl_sampleData.数値_桁数固定(Selection.count)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_RangeInt(control As IRibbonControl)
-  Call sampleData.数値_範囲
+  Call Ctl_sampleData.数値_範囲
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_FamilyName(control As IRibbonControl)
-  Call sampleData.名前_姓
+  Call Ctl_sampleData.名前_姓(Selection.count)
 End Function
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Name(control As IRibbonControl)
-  Call sampleData.名前_名
+  Call Ctl_sampleData.名前_名(Selection.count)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_FullName(control As IRibbonControl)
-  Call sampleData.名前_フルネーム
+  Call Ctl_sampleData.名前_フルネーム(Selection.count)
 End Function
 
 
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_Date(control As IRibbonControl)
+  Call Ctl_sampleData.日付_日(Selection.count)
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_Time(control As IRibbonControl)
+  Call Ctl_sampleData.日付_時間(Selection.count)
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function makeSampleData_Datetime(control As IRibbonControl)
+  Call Ctl_sampleData.日時(Selection.count)
+End Function
 
 
 
@@ -1121,7 +1186,7 @@ End Function
 
 '==================================================================================================
 Function RelaxTools01(control As IRibbonControl)
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
+  
 End Function
 
 '==================================================================================================

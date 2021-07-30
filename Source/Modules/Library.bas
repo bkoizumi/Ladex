@@ -2469,6 +2469,65 @@ Function årê¸_îjê¸_äiéq(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 
+
+'==================================================================================================
+Function årê¸_îjê¸_ç∂(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeLeft).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeLeft).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+  End If
+End Function
+
+
+'==================================================================================================
+Function årê¸_îjê¸_âE(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+
+    With Selection
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+  End If
+End Function
+
+
 '==================================================================================================
 Function årê¸_îjê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
@@ -2504,6 +2563,64 @@ Function årê¸_îjê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
      End With
   End If
 End Function
+
+
+
+'==================================================================================================
+Function årê¸_îjê¸_è„(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeTop).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeTop).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+'==================================================================================================
+Function årê¸_îjê¸_â∫(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(setArea) = "Range" Then
+    With setArea
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
 
 '==================================================================================================
 Function årê¸_îjê¸_è„â∫(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
@@ -2717,8 +2834,8 @@ Function årê¸_é¿ê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
 
-'      .Borders(xlEdgeLeft).Weight = WeightVal
-'      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2730,8 +2847,8 @@ Function årê¸_é¿ê¸_ç∂âE(Optional setArea As Range, Optional LineColor As Long, O
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
 
-'      .Borders(xlEdgeLeft).Weight = WeightVal
-'      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
@@ -2786,7 +2903,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
   If TypeName(setArea) = "Range" Then
     With setArea
       .Borders(xlInsideVertical).LineStyle = xlContinuous
-'      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
@@ -2795,7 +2912,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional setArea As Range, Optional LineColor As Long, O
   Else
     With Selection
       .Borders(xlInsideVertical).LineStyle = xlContinuous
-'      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
@@ -2813,7 +2930,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
   If TypeName(setArea) = "Range" Then
     With setArea
       .Borders(xlInsideHorizontal).LineStyle = xlContinuous
-'      .Borders(xlInsideHorizontal).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
@@ -2823,7 +2940,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional setArea As Range, Optional LineColor As Long, O
 
     With Selection
       .Borders(xlInsideHorizontal).LineStyle = xlContinuous
-'      .Borders(xlInsideHorizontal).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
 
       If Not (IsMissing(Red)) Then
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)

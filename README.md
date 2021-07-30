@@ -1,10 +1,11 @@
-# BK_Library Addin For Excel
+# Addin For Excel Library [Ladex]
 
 ![](https://img.shields.io/badge/Windows-10(64bit)-0078D6.svg?logo=windows&style=flat)
 ![](https://img.shields.io/badge/Excel-2016(32/64bit)-217346.svg?logo=microsoft-excel&style=flat)
 ![](https://img.shields.io/badge/Excel-Microsoft365(64bit)-217346.svg?logo=microsoft-excel&style=flat)
 
-Ladex(ラデックス)
+Addin For Excel Library　の造語でLadex[ラデックス]と読みます
+
 
 ## 動作環境
 * Windows 10 (64bit)
@@ -55,7 +56,7 @@ Ladex(ラデックス)
 |32|&nbsp;&nbsp;&nbsp;&nbsp;文頭に連番を追加|選択中のセルの文頭に１からの連番を設定します|
 |33|画像保存|選択中のセル、グラフ等を画像(PNG形式)として保存します|
 
-一部の機能を抜粋
+一部の機能を抜粋しています
 
 
 
@@ -67,13 +68,11 @@ Ladex(ラデックス)
   | getWorkDay | 第N営業日をシリアル値で返す|
   | Textjoin | 文字列連結|
   
-  ※ 当年、翌年のみ対応
+  ※ 現時点では当年、翌年のみ対応
 
 
 ### 作成予定(作成中含む)
 * 画像設定
-* サンプルデータ生成
-* 電子印鑑(済、確認印、日付つき印)
 
 ## よく使う標準機能のメニューをまとめたもの
 <img src="Docs/リボンメニュー_標準機能.png" width="75%">
@@ -99,3 +98,10 @@ Ladex(ラデックス)
 [moug モーグ](https://www.moug.net/)  
 [Office TANAKA](http://officetanaka.net/)  
 [エクセルの神髄](https://excel-ubara.com/)  
+
+## サポート
+当ソフトはフリーソフトウェアです。   
+個人・法人に限らず利用者は自由に使用および配布することができますが、著作権は作者にあります。   
+当ソフトを使用した事によるいかなる損害も作者は一切の責任を負いません。
+
+ソースを利用する場合にはMITライセンスです。

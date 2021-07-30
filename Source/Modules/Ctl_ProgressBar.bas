@@ -16,10 +16,6 @@ Public PrgC_Meg As String
 Public PrgMeg   As String
 
 
-
-
-
-
 '==================================================================================================
 Public Function showStart()
   

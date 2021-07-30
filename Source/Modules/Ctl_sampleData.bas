@@ -1,4 +1,4 @@
-Attribute VB_Name = "sampleData"
+Attribute VB_Name = "Ctl_sampleData"
 Dim newBook As Workbook
 Dim count As Long, getLine As Long
 Dim fstDate As Date, lstDate As Date
@@ -64,10 +64,23 @@ Function showFrm_sampleData(showType As String)
         .MultiPage1.Pages.Item(2).Visible = False
         .MultiPage1.Pages.Item(3).Visible = False
         
+        .minVal4 = #4/1/2021#
+        .maxVal4 = #5/1/2020#
+  
+
+
+
         .Frame4.Caption = showType
       Case Else
     End Select
-    
+      If Selection.count > 1 Then
+        .maxCount0 = Selection.count
+        .maxCount1 = Selection.count
+        .maxCount2 = Selection.count
+        .maxCount3 = Selection.count
+        .maxCount4 = Selection.count
+      End If
+
     .Show
   End With
   
@@ -130,19 +143,19 @@ End Function
 
 
 '==================================================================================================
-Function 数値_桁数固定()
+Function 数値_桁数固定(Optional maxCount As Long)
   Dim line As Long, endLine As Long
 
 '  On Error GoTo catchError
   Call init.setting
-'  Sheets("Sheet1").Columns("A:A").Clear
-'  Sheets("Sheet1").Range("A1").Select
   
   Call showFrm_sampleData("【数値】桁数固定")
+  
   maxCount = BK_setVal("maxCount")
   line = Selection(1).Row
   
   For count = 0 To (maxCount - 1)
+    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "G/標準"
     Cells(line + count, ActiveCell.Column) = Library.makeRandomDigits(BK_setVal("digits"))
   Next
 
@@ -191,7 +204,7 @@ Function 名前_姓(Optional maxCount As Long)
 '  Sheets("Sheet1").Columns("C:C").Clear
 '  Sheets("Sheet1").Range("C1").Select
   
-  If maxCount = 0 Then
+  If maxCount <= 1 Then
     Call showFrm_sampleData("【名前】姓")
     maxCount = BK_setVal("maxCount")
   End If
@@ -221,7 +234,7 @@ Function 名前_名(Optional maxCount As Long)
 '  Sheets("Sheet1").Columns("D:D").Clear
 '  Sheets("Sheet1").Range("D1").Select
   
-  If maxCount = 0 Then
+  If maxCount <= 1 Then
     Call showFrm_sampleData("【名前】名")
     maxCount = BK_setVal("maxCount")
   End If
@@ -250,7 +263,7 @@ Function 名前_フルネーム(Optional maxCount As Long)
 '  Sheets("Sheet1").Columns("E:E").Clear
 '  Sheets("Sheet1").Range("E1").Select
   
-  If maxCount = 0 Then
+  If maxCount <= 1 Then
     Call showFrm_sampleData("【名前】フルネーム")
     maxCount = BK_setVal("maxCount")
   End If
@@ -270,7 +283,7 @@ End Function
 
 
 '==================================================================================================
-Function 日付_日()
+Function 日付_日(Optional maxCount As Long)
   Dim line As Long, endLine As Long
   
   
@@ -278,24 +291,17 @@ Function 日付_日()
   
   Call init.setting
   
-  Sheets("Sheet1").Columns("F:F").Clear
-  Sheets("Sheet1").Range("F1").Select
-  
   Call showFrm_sampleData("【日付】日")
+  maxCount = BK_setVal("maxCount")
   line = Selection(1).Row
-  'maxCount = BK_setVal("maxCount")
-    
-'  fstDate = BK_setVal("minVal")
-'  lstDate = BK_setVal("maxVal")
-  
-  maxCount = 20
-  fstDate = #4/1/2021#
-  lstDate = #5/1/2020#
+
+  fstDate = BK_setVal("minVal")
+  lstDate = BK_setVal("maxVal")
   
   For count = 0 To (maxCount - 1)
     Randomize
     Cells(line + count, ActiveCell.Column) = Format(Int((lstDate - fstDate + 1) * Rnd + fstDate), "yyyy/mm/dd")
-    
+    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "yyyy/mm/dd"
   Next
   
   Exit Function
@@ -306,29 +312,27 @@ End Function
 
 
 '==================================================================================================
-Function 日付_時間()
+Function 日付_時間(Optional maxCount As Long)
   Dim line As Long, endLine As Long
   Dim val As Double
   
 '  On Error GoTo catchError
   Call init.setting
   
-  Sheets("Sheet1").Columns("G:G").Clear
-  Sheets("Sheet1").Range("G1").Select
+  If maxCount <= 1 Then
+    Call showFrm_sampleData("【日付】時間")
+  End If
   
-  Call showFrm_sampleData("【日付】時間")
-  line = Selection(1).Row
   maxCount = BK_setVal("maxCount")
-    
-'  fstDate = BK_setVal("minVal")
-'  lstDate = BK_setVal("maxVal")
-  
+  line = Selection(1).Row
   For count = 0 To (maxCount - 1)
     Randomize
-    val = WorksheetFunction.RandBetween(TimeValue("09:00:00") * 100000, TimeValue("18:00:00") * 100000) / 100000
+    val = WorksheetFunction.RandBetween(TimeValue("00:00:00") * 100000, TimeValue("23:59:59") * 100000) / 100000
     val = Int((lstDate - fstDate + 1) * Rnd + fstDate) + val
 
+    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "@"
     Cells(line + count, ActiveCell.Column) = Format(val, "hh:nn:ss")
+    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "hh:mm:ss"
   Next
   
   Exit Function
@@ -340,17 +344,19 @@ End Function
 
 
 '==================================================================================================
-Function 日時()
+Function 日時(Optional maxCount As Long)
   Dim line As Long, endLine As Long
   Dim val As Double
   
 '  On Error GoTo catchError
   Call init.setting
   
-  fstDate = DateAdd("d", -10, Date)
-  lstDate = Date
-  
-  Range("F2").Select
+  Call showFrm_sampleData("【日付】日")
+  maxCount = BK_setVal("maxCount")
+  line = Selection(1).Row
+
+  fstDate = BK_setVal("minVal")
+  lstDate = BK_setVal("maxVal")
   
   line = ActiveCell.Row
   For count = 0 To maxCount - 1
@@ -358,11 +364,12 @@ Function 日時()
     val = WorksheetFunction.RandBetween(TimeValue("09:00:00") * 100000, TimeValue("18:00:00") * 100000) / 100000
     val = Int((lstDate - fstDate + 1) * Rnd + fstDate) + val
 
+    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "@"
     Cells(line + count, ActiveCell.Column) = val
     Cells(line + count, ActiveCell.Column).NumberFormatLocal = "yyyy/mm/dd hh:mm:ss"
     
-    Cells(line + count, ActiveCell.Column + 1) = DateAdd("s", Library.makeRandomNo(0, 600), val)
-    Cells(line + count, ActiveCell.Column + 1).NumberFormatLocal = "yyyy/mm/dd hh:mm:ss"
+'    Cells(line + count, ActiveCell.Column + 1) = DateAdd("s", Library.makeRandomNo(0, 600), val)
+'    Cells(line + count, ActiveCell.Column + 1).NumberFormatLocal = "yyyy/mm/dd hh:mm:ss"
   Next
   
   Exit Function

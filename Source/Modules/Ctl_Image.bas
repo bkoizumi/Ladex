@@ -15,12 +15,12 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
 '  On Error GoTo catchError
 
   Call init.setting
-'  Call Library.startScript
+  Call Library.startScript
   '----------------------------------------------
 
   If IsMissing(defSlctArea) Then
     imageName = thisAppName & "ExportImg_" & Format(Now(), "yyyymmdd_hhnnss") & ".png"
-    saveDir = Library.getDirPath(ActiveWorkbook.Path, "âÊëú")
+    saveDir = LadexDir & "\Images\"
     Set slctArea = Selection
   Else
 '    imageName = thisAppName & "ExportPreviewImg" & ".jpg"
@@ -28,8 +28,8 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
     Set slctArea = defSlctArea
   End If
   
-  If saveDir = "" Then
-    Call Library.showNotice(999, "", True)
+  If Library.chkDirExists(saveDir) = "" Then
+    Call Library.makeDir(saveDir)
   End If
   
   Select Case TypeName(slctArea)
@@ -52,7 +52,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   With targetImg
     .Parent.Select
     .Paste
-    .Export saveDir & "\" & imageName
+    .Export saveDir & imageName
     .Parent.delete
   End With
   
@@ -62,7 +62,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   'èàóùèIóπ--------------------------------------
   Call Library.endScript
   If IsMissing(defSlctArea) Then
-    Call Shell("Explorer.exe /select, " & saveDir & "\" & imageName, vbNormalFocus)
+    Call Shell("Explorer.exe /select, " & saveDir & imageName, vbNormalFocus)
   End If
   '----------------------------------------------
 
