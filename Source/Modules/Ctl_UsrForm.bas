@@ -15,22 +15,29 @@ Function 表示位置(t, l)
   
   Call Library.getMachineInfo
   
-'  Call Library.showDebugForm("topPosition ：" & topPosition)
-'  Call Library.showDebugForm("leftPosition：" & leftPosition)
-'
-'  Call Library.showDebugForm("displayX    ：" & MachineInfo("displayX"))
-'  Call Library.showDebugForm("displayY    ：" & MachineInfo("displayY"))
+'  Call Library.showDebugForm("topPosition     ：" & topPosition)
+'  Call Library.showDebugForm("leftPosition    ：" & leftPosition)
+'  Call Library.showDebugForm("displayX        ：" & MachineInfo("displayX"))
+'  Call Library.showDebugForm("displayY        ：" & MachineInfo("displayY"))
+'  Call Library.showDebugForm("displayVirtualX ：" & MachineInfo("displayVirtualX"))
+'  Call Library.showDebugForm("displayVirtualY ：" & MachineInfo("displayVirtualY"))
   
-  If topPosition > MachineInfo("displayX") Then
-    t = CInt(MachineInfo("displayX") / 4)
+  
+  
+  If topPosition > MachineInfo("displayVirtualY") Then
+    t = CInt(MachineInfo("displayVirtualY") / 4)
   ElseIf topPosition = 0 Then
-    t = CInt(MachineInfo("displayX") / 4)
+    t = CInt(MachineInfo("displayVirtualY") / 4)
+  Else
+    t = topPosition
   End If
   
-  If leftPosition > MachineInfo("displayY") Then
-    l = CInt(MachineInfo("displayY") / 4)
+  If leftPosition > MachineInfo("displayVirtualX") Then
+    l = CInt(MachineInfo("displayVirtualX") / 4)
   ElseIf leftPosition = 0 Then
-    l = CInt(MachineInfo("displayY") / 4)
+    l = CInt(MachineInfo("displayVirtualX") / 4)
+  Else
+    l = leftPosition
   End If
   
 '  Call Library.showDebugForm("t：" & t)

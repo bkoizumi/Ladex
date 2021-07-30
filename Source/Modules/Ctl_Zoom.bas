@@ -10,7 +10,7 @@ Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
   Dim topPosition As Long, leftPosition As Long
   
-  If slctCellAddress = "" Then
+  If slctCellAddress <> "" Then
     topPosition = Library.getRegistry("UserForm", "ZoomTop")
     leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
     
