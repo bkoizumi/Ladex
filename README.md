@@ -1,6 +1,7 @@
 # Addin For Excel Library [Ladex]
 
 ![](https://img.shields.io/badge/Windows-10(64bit)-0078D6.svg?logo=windows&style=flat)
+![](https://img.shields.io/badge/Excel-2013(32/64bit)-217346.svg?logo=microsoft-excel&style=flat)
 ![](https://img.shields.io/badge/Excel-2016(32/64bit)-217346.svg?logo=microsoft-excel&style=flat)
 ![](https://img.shields.io/badge/Excel-Microsoft365(64bit)-217346.svg?logo=microsoft-excel&style=flat)
 
@@ -9,6 +10,7 @@ Addin For Excel Library　の造語でLadex[ラデックス]と読みます
 
 ## 動作環境
 * Windows 10 (64bit)
+* Microsoft Office 2013 (32/64bit)
 * Microsoft Office 2016 (32/64bit)
 * Microsoft 365 (64bit)
 

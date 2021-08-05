@@ -10,7 +10,7 @@ Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
   Dim topPosition As Long, leftPosition As Long
   
-  If slctCellAddress = "" Then
+  If slctCellAddress <> "" Then
     topPosition = Library.getRegistry("UserForm", "ZoomTop")
     leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
     
@@ -20,16 +20,11 @@ Function ZoomIn(Optional slctCellAddress As String)
       cellVal = ActiveCell.Formula
     End If
     
-'    Call Ctl_DefaultVal.setVal("ZoomIn", cellVal)
-    
+    Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
     With Frm_Zoom
-      If topPosition = 0 Then
-        .StartUpPosition = 2
-      Else
-        .StartUpPosition = 0
-        .Top = topPosition
-        .Left = leftPosition
-      End If
+      .StartUpPosition = 0
+      .Top = topPosition
+      .Left = leftPosition
       .TextBox = cellVal
       .TextBox.MultiLine = True
       .TextBox.MultiLine = True
@@ -72,15 +67,11 @@ Function Zoom01()
   topPosition = Library.getRegistry("UserForm", "Zoom01Top")
   leftPosition = Library.getRegistry("UserForm", "Zoom01Left")
       
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_DispFullScreenForm
-    
-    If topPosition = 0 Then
-      .StartUpPosition = 2
-    Else
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
     .Show vbModeless
   End With
   

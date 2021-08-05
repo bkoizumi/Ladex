@@ -239,12 +239,12 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
     Call Ctl_Formula.数式確認
   End If
 
-  'ズーム機能--------------------------------------------------------------------------------------
-  If Library.getRegistry("Main", "ZoomFlg") = True Then
-  
+'  ズーム機能--------------------------------------------------------------------------------------
+'  If Library.getRegistry("Main", "ZoomFlg") = True Then
+'
 '    Call Ctl_DefaultVal.setVal("reSetZoomIn", Frm_Zoom.TextBox.Text)
-    Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
-  End If
+'    Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
+'  End If
   
   
 End Sub
@@ -259,7 +259,7 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
   'ズーム機能--------------------------------------------------------------------------------------
   If Library.getRegistry("Main", "ZoomFlg") = True Then
     Cancel = True
-    Call Ctl_Zoom.ZoomIn
+    Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
   End If
 
 

@@ -19,7 +19,7 @@ Option Explicit
 ' クリップボード関数の利用
 #If VBA7 And Win64 Then
   'ディスプレイの解像度取得用
-  Private Declare PtrSafe Function getSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
+  Declare PtrSafe Function GetSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
 
   'Sleep関数の利用
   Private Declare PtrSafe Function Sleep Lib "kernel32" (ByVal ms As LongPtr)
@@ -31,7 +31,8 @@ Option Explicit
 
 #Else
   'ディスプレイの解像度取得用
-  Private Declare Function getSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
+  Declare Function GetSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
+
 
   'Sleep関数の利用
   Private Declare Function Sleep Lib "kernel32" (ByVal ms As Long)
@@ -862,15 +863,21 @@ Function getMachineInfo() As Object
   MachineInfo.add "UserDomain", WshNetworkObject.UserDomain
 
   '画面の解像度等取得------------------------------------------------------------------------------
-'  MachineInfo.Add "monitors", getSystemMetrics(80)
-'  MachineInfo.Add "displayX", getSystemMetrics(0)
-'  MachineInfo.Add "displayY", getSystemMetrics(1)
-'  MachineInfo.Add "displayVirtualX", getSystemMetrics(78)
-'  MachineInfo.Add "displayVirtualY", getSystemMetrics(79)
-'  MachineInfo.Add "appTop", ActiveWindow.Top
-'  MachineInfo.Add "appLeft", ActiveWindow.Left
-'  MachineInfo.Add "appWidth", ActiveWindow.Width
-'  MachineInfo.Add "appHeight", ActiveWindow.Height
+  MachineInfo.add "monitors", GetSystemMetrics(80)
+  MachineInfo.add "displayX", GetSystemMetrics(0)
+  MachineInfo.add "displayY", GetSystemMetrics(1)
+  
+  MachineInfo.add "displayVirtualX", GetSystemMetrics(78)
+  MachineInfo.add "displayVirtualY", GetSystemMetrics(79)
+  MachineInfo.add "appTop", ActiveWindow.Top
+  MachineInfo.add "appLeft", ActiveWindow.Left
+  MachineInfo.add "appWidth", ActiveWindow.Width
+  MachineInfo.add "appHeight", ActiveWindow.Height
+  
+
+  
+  
+  
 End Function
 
 

@@ -149,7 +149,7 @@
           <button id="罫線_破線_垂直" label="垂直" imageMso="BorderInsideVertical"      onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_垂直"  description="破線で垂直方向に罫線を設定 &#13;" />
           <button id="罫線_破線_左"   label="左"   imageMso="BorderLeft"                onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_左"    description="破線で左方向に罫線を設定 &#13;" />
           <button id="罫線_破線_右"   label="右"   imageMso="BorderRight"               onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_右"    description="破線で右方向に罫線を設定 &#13;" />
-          <button id="罫線_破線_左右" label="左右" image="BorderLeftAndRight"           onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_右左"  description="破線で左右方向に罫線を設定 &#13;" />
+          <button id="罫線_破線_左右" label="左右" image="BorderLeftAndRight"           onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_左右"  description="破線で左右方向に罫線を設定 &#13;" />
           <button id="罫線_破線_上"   label="上"   imageMso="BorderTop"                 onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_上"    description="破線で上方向に罫線を設定 &#13;" />
           <button id="罫線_破線_下"   label="下"   imageMso="BorderBottom"              onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_下"    description="破線で下方向に罫線を設定 &#13;" />
           <button id="罫線_破線_上下" label="上下" imageMso="BordersAndShadingInfoPath" onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_上下"  description="破線で上下方向に罫線を設定 &#13;" />
@@ -164,7 +164,7 @@
           <button id="罫線_実線_垂直" label="垂直" imageMso="BorderInsideVertical"      onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_垂直" description="実線で垂直方向に罫線を設定 &#13;" />
           <button id="罫線_実線_左右" label="左右" image="BorderLeftAndRight"           onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_左右" description="実線で左右に罫線を設定 &#13;" />
           <button id="罫線_実線_上下" label="上下" imageMso="BordersAndShadingInfoPath" onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_上下" description="実線で上下に罫線を設定 &#13;" />
-          <button id="罫線_実線_囲み" label="囲み" imageMso="BordersMoreDialog"         onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_囲み" description="実線で囲みに罫線を設定 &#13;" />
+          <button id="罫線_実線_囲み" label="囲み" imageMso="BorderOutside"             onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_囲み" description="実線で囲みに罫線を設定 &#13;" />
           <button id="罫線_実線_格子" label="格子" imageMso="BordersAll"                onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_格子" description="実線で格子方向に罫線を設定 &#13;" />
         </menu>
 
@@ -176,7 +176,7 @@
           <button id="罫線_二重線_左右" label="左右"  image="BorderLeftAndRight"            onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_左右"  description="二重線で左右に罫線を設定 &#13;" />
           <button id="罫線_二重線_下"   label="下"    imageMso="BorderBottom"               onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_下"    description="二重線で下部に罫線を設定 &#13;" />
           <button id="罫線_二重線_上下" label="上下"  imageMso="BordersAndShadingInfoPath"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_上下"  description="二重線で上下に罫線を設定 &#13;" />
-          <button id="罫線_二重線_囲み" label="囲み"  imageMso="BordersMoreDialog"          onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_囲み"  description="二重線で囲みに罫線を設定 &#13;" />
+          <button id="罫線_二重線_囲み" label="囲み"  imageMso="BorderOutside"              onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_囲み"  description="二重線で囲みに罫線を設定 &#13;" />
 
         </menu>
 

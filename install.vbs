@@ -26,6 +26,7 @@ Dim objFileSys
 Dim strPath
 Dim objFolder
 Dim objFile
+dim i
 
 'ƒAƒhƒCƒ“î•ñ‚ğİ’è
 addInName = "Ladex"
