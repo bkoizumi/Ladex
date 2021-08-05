@@ -281,7 +281,26 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
     End With
     Menu.AppendChild Button
     Set Button = Nothing
+  Else
+    'RelaxToolsŽæ“¾------------------------------------------------------------------------------------
+    Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "M_RelaxTools"
+      .SetAttribute "title", "RelaxTool‚ð“üŽè"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
     
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxTools_get"
+      .SetAttribute "label", "RelaxTool‚ð“üŽè"
+      .SetAttribute "image", "RelaxToolsLogo"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxTools_get"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+  
     
   End If
 
@@ -1185,6 +1204,12 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+Function RelaxTools_get()
+  CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
+End Function
+
+
 '==================================================================================================
 Function actRelaxSheetManager(control As IRibbonControl)
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
