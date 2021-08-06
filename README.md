@@ -83,8 +83,6 @@ Addin For Excel Library　の造語でLadex[ラデックス]と読みます
 
 
 
-
-
 ## 既存バグ
 
 * ハイライト機能で、仕様上の上限がある  

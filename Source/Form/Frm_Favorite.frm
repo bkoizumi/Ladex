@@ -129,7 +129,8 @@ Private Sub Lst_Favorite_Click()
     DetailMeg = DetailMeg & "パ　ス：" & filePath & vbNewLine
     DetailMeg = DetailMeg & "作成日：" & Format(fileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
     DetailMeg = DetailMeg & "更新日：" & Format(fileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
-    DetailMeg = DetailMeg & "サイズ：" & Format(fileInfo.Size, "#,##0") & " Byte" & vbNewLine
+    DetailMeg = DetailMeg & "サイズ：" & Library.convscale(fileInfo.Size) & " [" & Format(fileInfo.Size, "#,##0") & " Byte" & "]" & vbNewLine
+    
     DetailMeg = DetailMeg & "種　類：" & fileInfo.Type
   Else
     DetailMeg = "<<ファイル情報>>" & vbNewLine

@@ -393,6 +393,30 @@ End Function
 
 
 '**************************************************************************************************
+' * ByteからKB,MB,GBへ変換
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function convscale(ByVal lngVal As Long) As String
+  Dim convVal As String
+
+  If lngVal >= 1024 ^ 3 Then
+    convVal = Round(lngVal / (1024 ^ 3), 3) & " GB"
+  
+  ElseIf lngVal >= 1024 ^ 2 Then
+    convVal = Round(lngVal / (1024 ^ 2), 3) & " MB"
+    
+  ElseIf lngVal >= 1024 Then
+    convVal = Round(lngVal / (1024), 3) & " KB"
+  Else
+    convVal = lngVal & " Byte"
+  End If
+
+  convscale = convVal
+End Function
+
+
+'**************************************************************************************************
 ' * 固定長文字列に変換
 ' *
 ' * @Link http://bekkou68.hatenablog.com/entry/20090414/1239685179
@@ -1457,7 +1481,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function showDebugForm(meg1 As String, Optional meg2 As String)
+Function showDebugForm(ByVal meg1 As String, Optional meg2 As String)
   Dim runTime As Date
   Dim StartUpPosition As Long
 
@@ -1469,66 +1493,31 @@ Function showDebugForm(meg1 As String, Optional meg2 As String)
     Exit Function
   End If
 
-'  If StopTime <> 0 Then
-'    meg1 = meg1 & vbNewLine & "<処理時間：" & StopTime & ">"
-'  End If
   meg1 = Replace(meg1, vbNewLine, " ")
-
-
+  
   Select Case BK_setVal("debugMode")
     Case "file"
       If meg1 <> "" Then
         Call outputLog(runTime, meg1)
       End If
-      GoTo label_end
 
     Case "form"
-      GoTo label_showForm
 
     Case "all"
       If meg1 <> "" Then
         Call outputLog(runTime, meg1)
       End If
-      GoTo label_showForm
 
     Case "develop"
       If meg1 <> "" Then
         Call outputLog(runTime, meg1)
         Debug.Print runTime & vbTab & meg1
       End If
-      'GoTo label_showForm
-      GoTo label_end
 
     Case Else
       Exit Function
   End Select
-
-label_showForm:
-'  If meg1 Like "処理開始：*" Then
-'
-'    With Frm_debug
-'      .Caption = "処理情報"
-'      .ListBox1.Clear
-'      .ListBox1.AddItem runTime & vbTab & meg1
-'    End With
-'  Else
-'    With Frm_debug
-'      .Caption = "処理情報"
-'      .ListBox1.AddItem runTime & vbTab & meg1
-'      .ListBox1.ListIndex = .ListBox1.ListCount - 1
-'    End With
-'  End If
-'
-'  If (Frm_debug.Visible = True) Then
-'    Frm_debug.StartUpPosition = 0
-'  Else
-'    Frm_debug.StartUpPosition = 1
-'  End If
-'  Frm_debug.Show vbModeless
-
-
-label_end:
-
+  
   DoEvents
   Exit Function
 
