@@ -71,6 +71,10 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim MenuSepa, sheetNameID
   
   On Error GoTo catchError
+  
+  If Workbooks.count = 0 Then
+    Exit Function
+  End If
   Call init.setting
   
   If BK_ribbonUI Is Nothing Then
@@ -766,6 +770,11 @@ End Function
 
 
 
+'**************************************************************************************************
+' * リボンメニュー[ブック管理]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function delStyle(control As IRibbonControl)
   Call Ctl_Style.スタイル削除
@@ -787,6 +796,22 @@ Function すべて表示(control As IRibbonControl)
 End Function
 
 
+'--------------------------------------------------------------------------------------------------
+Function disp_SVGA12(control As IRibbonControl)
+  Call Ctl_Window.画面サイズ変更(612, 432)
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function disp_FHD15_6(control As IRibbonControl)
+  Call Ctl_Window.画面サイズ変更(1920, 1080)
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function disp_HD15_6(control As IRibbonControl)
+  Call Ctl_Window.画面サイズ変更(1366, 764)
+End Function
 
 
 

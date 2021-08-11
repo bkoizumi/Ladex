@@ -20,9 +20,6 @@ Private Sub CommandButton1_Click()
   Call Library.setRegistry("UserForm", "Zoom01Top", Me.Top)
   Call Library.setRegistry("UserForm", "Zoom01Left", Me.Left)
   
-  Call Library.startScript
   Application.DisplayFullScreen = False
-  Call Library.endScript
-  
   Unload Me
 End Sub

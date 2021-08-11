@@ -35,8 +35,8 @@ Public Function showStart()
       .Caption = ""
       .Top = 15
       .Left = 12
-      .Height = 15
-      .Width = 250
+      .height = 15
+      .width = 250
     End With
 
     'プログレスバーのバーの部分
@@ -46,8 +46,8 @@ Public Function showStart()
       .Caption = ""
       .Top = 16
       .Left = 13
-      .Height = 13
-      .Width = 0
+      .height = 13
+      .width = 0
     End With
 
     '進捗状況表示の部分 ( % )
@@ -58,8 +58,8 @@ Public Function showStart()
       .Caption = ""
       .Top = 17
       .Left = 12
-      .Height = 14
-      .Width = 250
+      .height = 14
+      .width = 250
       .Font.Size = 10
       .Font.Bold = False
     End With
@@ -72,8 +72,8 @@ Public Function showStart()
       .Caption = ""
       .Top = 45
       .Left = 12
-      .Height = 15
-      .Width = 250
+      .height = 15
+      .width = 250
     End With
 
     'プログレスバーのバーの部分
@@ -83,8 +83,8 @@ Public Function showStart()
       .Caption = ""
       .Top = 46
       .Left = 13
-      .Height = 13
-      .Width = 0
+      .height = 13
+      .width = 0
     End With
 
     '進捗状況表示の部分 ( % )
@@ -94,8 +94,8 @@ Public Function showStart()
       .BackStyle = 0
       .Top = 47
       .Left = 12
-      .Height = 14
-      .Width = 250
+      .height = 14
+      .width = 250
       .Font.Size = 10
       .Font.Bold = False
     End With
@@ -106,14 +106,14 @@ Public Function showStart()
       .Caption = "待機中"
       .Top = 70
       .Left = 12
-      .Height = 30
-      .Width = 270
+      .height = 30
+      .width = 270
       .Font.Size = 9
       .Font.Bold = False
     End With
 
-    PrgP_Barsize = .PrgP_Area.Width
-    PrgC_Barsize = .PrgP_Area.Width
+    PrgP_Barsize = .PrgP_Area.width
+    PrgC_Barsize = .PrgP_Area.width
   End With
 
   Frm_Progress.Show vbModeless
@@ -176,10 +176,10 @@ Public Function showBar( _
   
   With Frm_Progress
     .Caption = Prg_Title
-    .PrgP_Bar.Width = Int(PrgP_Barsize * PrgP_Prg / 100)
+    .PrgP_Bar.width = Int(PrgP_Barsize * PrgP_Prg / 100)
     .PrgP_Progress.Caption = PrgP_Meg
     
-    .PrgC_Bar.Width = Int(PrgC_Barsize * PrgC_Prg / 100)
+    .PrgC_Bar.width = Int(PrgC_Barsize * PrgC_Prg / 100)
     .PrgC_Progress.Caption = PrgC_Meg
     
     If PrgMeg = "" Then

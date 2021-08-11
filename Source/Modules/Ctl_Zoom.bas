@@ -4,7 +4,7 @@ Option Explicit
 '**************************************************************************************************
 ' * 選択セルの拡大表示/終了
 ' *
-' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
@@ -60,13 +60,11 @@ End Function
 Function Zoom01()
   Dim topPosition As Long, leftPosition As Long
   
-  Call Library.startScript
   Application.DisplayFullScreen = True
-  Call Library.endScript
   
   topPosition = Library.getRegistry("UserForm", "Zoom01Top")
   leftPosition = Library.getRegistry("UserForm", "Zoom01Left")
-      
+
   Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_DispFullScreenForm
     .StartUpPosition = 0

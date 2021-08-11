@@ -46,11 +46,20 @@
 
       <separator id="Sprt01" />
 
-      <menu id="CustomMenu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
+      <menu id="ブック管理Menu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
         <menuSeparator id="削除" title="設定を削除" />
         <button id="del_Style"      label="スタイルの初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除 &#13;" />
         <button id="del_CellNames"  label="名前定義削除"      image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除 &#13;" />
-        <button id="set_Images"     label="画像設定"          imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
+        <button id="set_Images"     label="画像設定"   enabled="false"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
+        <menuSeparator id="画面サイズ_MS01" title="画面サイズを変更" />
+        <menu id="画面サイズMenu" label="画面サイズ"  itemSize="large" imageMso="MicrosoftExcel">
+        <menuSeparator id="画面サイズ_MS02" title="画面サイズを変更" />
+          <button id="disp_SVGA12"  label="800✕600"      imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6" description="12型SVGA液晶 相当 &#13;" />
+          <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6" description="15.6型FHD液晶 相当 &#13;" />
+          <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"  description="15.6型HD 液晶 相当 &#13;" />
+        </menu>
+
+
       </menu>
       <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
       <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
@@ -70,7 +79,7 @@
         <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるように &#13;F2キーにも対応" />
           <menu id="ZoomIn_Menu"  screentip="ズームメニュー"  supertip="ズームメニュー" itemSize="large">
             <menuSeparator id="ZoomIn_SP1" title="ズーム" />
-            <button id="Zoom01"   label="全画面表示"   imageMso="ZoomIn" onAction="Ladex.xlam!Ctl_Ribbon.Zoom01" description="画面を最大化 &#13;" />
+            <button id="Zoom01"   label="全画面表示"   imageMso="ZoomIn" onAction="Ladex.xlam!Ctl_Ribbon.Zoom01" description="画面を最大化します。 &#13; Escキーで元に戻ります" />
           </menu>
       </splitButton>
 

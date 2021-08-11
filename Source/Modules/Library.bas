@@ -895,8 +895,8 @@ Function getMachineInfo() As Object
   MachineInfo.add "displayVirtualY", GetSystemMetrics(79)
   MachineInfo.add "appTop", ActiveWindow.Top
   MachineInfo.add "appLeft", ActiveWindow.Left
-  MachineInfo.add "appWidth", ActiveWindow.Width
-  MachineInfo.add "appHeight", ActiveWindow.Height
+  MachineInfo.add "appWidth", ActiveWindow.width
+  MachineInfo.add "appHeight", ActiveWindow.height
   
 
   
@@ -936,9 +936,9 @@ Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long
 
   Dim R1C1Top As Long, R1C1Left As Long
   Dim DPI, PPI
-
-
-
+'  Const DPI As Long = 96
+'  Const PPI As Long = 72
+  
   R1C1Top = ActiveWindow.PointsToScreenPixelsY(0)
   R1C1Left = ActiveWindow.PointsToScreenPixelsX(0)
 
@@ -948,17 +948,13 @@ Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long
   ActvCellTop = (((Rng.Top * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Top) * (PPI / DPI)
   ActvCellLeft = (((Rng.Left * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Left) * (PPI / DPI)
 
-
-
-
-
 '  If ActvCellLeft <= 0 Then
 '    ActvCellLeft = 20
 '  End If
 
   Call Library.showDebugForm("-------------------------")
-  Call Library.showDebugForm("R1C1Top ：" & R1C1Top)
-  Call Library.showDebugForm("R1C1Left ：" & R1C1Left)
+  Call Library.showDebugForm("R1C1Top     ：" & R1C1Top)
+  Call Library.showDebugForm("R1C1Left    ：" & R1C1Left)
   Call Library.showDebugForm("-------------------------")
   Call Library.showDebugForm("Rng.Address ：" & Rng.Address)
   Call Library.showDebugForm("ActvCellTop ：" & ActvCellTop)
@@ -1273,23 +1269,23 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
               SaveWithDocument:=True, _
               Left:=0, _
               Top:=0, _
-              Width:=0, _
-              Height:=0 _
+              width:=0, _
+              height:=0 _
               )
     With sp
       .LockAspectRatio = msoTrue
       .ScaleHeight 1, msoTrue
       .ScaleWidth 1, msoTrue
 
-      fileInfo.add "width", CLng(.Width * 4 / 3)
-      fileInfo.add "height", CLng(.Height * 4 / 3)
+      fileInfo.add "width", CLng(.width * 4 / 3)
+      fileInfo.add "height", CLng(.height * 4 / 3)
       .delete
     End With
     
     Case "bmp", "jpg", "gif", "emf", "ico", "rle", "wmf"
       Set fileObject = LoadPicture(targetFilePath)
-      fileInfo.add "width", fileObject.Width
-      fileInfo.add "height", fileObject.Height
+      fileInfo.add "width", fileObject.width
+      fileInfo.add "height", fileObject.height
 
       Set fileObject = Nothing
 
@@ -1463,8 +1459,8 @@ End Function
 Function showExpansionForm(Text As String, SetSelectTargetRows As String)
   With Frm_Zoom
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.Width / 10)
-    .Left = Application.Left + (ActiveWindow.Height / 5)
+    .Top = Application.Top + (ActiveWindow.width / 10)
+    .Left = Application.Left + (ActiveWindow.height / 5)
     .TextBox = Text
     .TextBox.MultiLine = True
     .TextBox.MultiLine = True
