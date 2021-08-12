@@ -711,6 +711,10 @@ Function OptionHelpShow(control As IRibbonControl)
   Ctl_Option.showHelp
 End Function
 
+'--------------------------------------------------------------------------------------------------
+Function initialization(control As IRibbonControl)
+  Ctl_Option.initialization
+End Function
 
 
 
@@ -830,7 +834,6 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Ctl_HighLight.showStart(ActiveCell)
   If pressed = False Then
     Call Library.delRegistry("Main", "HighLightFlg")
-
   End If
 End Function
 
@@ -876,7 +879,6 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   If pressed = False Then
     Call Application.OnKey("{F2}")
     Call Library.delRegistry("Main", "ZoomFlg")
-'    Call Ctl_DefaultVal.delVal("ZoomIn")
   Else
     Call Application.OnKey("{F2}", "Ctl_Zoom.ZoomIn")
   End If

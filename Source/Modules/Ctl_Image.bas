@@ -13,7 +13,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   Dim saveDir As String
   
   'èàóùäJén--------------------------------------
-'  On Error GoTo catchError
+  On Error GoTo catchError
 
   Call init.setting
   Call Library.startScript

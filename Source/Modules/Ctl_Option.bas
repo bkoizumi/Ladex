@@ -55,7 +55,7 @@ End Function
 
 
 '==================================================================================================
-Function èâä˙âª()
+Function initialization()
   Dim RegistryKey As String, RegistrySubKey As String, RegistryVal As String
   Dim line As Long, endLine As Long
   Dim regName As String
@@ -99,9 +99,9 @@ Function showOption()
     .Top = topPosition
     .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 0
-    .MultiPage1.Page1.Visible = True
-    .MultiPage1.Page2.Visible = True
-    .MultiPage1.Page3.Visible = True
+'    .MultiPage1.Page1.Visible = True
+'    .MultiPage1.Page2.Visible = True
+'    .MultiPage1.Page3.Visible = True
     
     '.Show vbModeless
     .Show

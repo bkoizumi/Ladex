@@ -68,14 +68,11 @@ Function detail()
   topPosition = Library.getRegistry("UserForm", "FavoriteTop")
   leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
   
+  Call Ctl_UsrForm.•\Ž¦ˆÊ’u(topPosition, leftPosition)
   With Frm_Favorite
-    If topPosition = 0 Then
-      .StartUpPosition = 2
-    Else
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
     .Show vbModeless
   End With
   Call RefreshListBox

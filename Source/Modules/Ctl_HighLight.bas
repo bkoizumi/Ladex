@@ -138,8 +138,9 @@ Function showStart_X(ByVal Target As Range, _
       ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
+      Selection.ShapeRange.Fill.Visible = msoTrue
+      Selection.ShapeRange.Fill.Solid
       Selection.ShapeRange.Fill.Transparency = HighlightTransparentRate / 100
-'      Selection.ShapeRange.Width = Range(Cells(1, 1), Cells(1, Columns.count)).Width
     
     
     'àÕÇ›ê¸
