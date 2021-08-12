@@ -4,7 +4,7 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
 
   Dim actrow As Integer
   On Error GoTo catchError
-  
+
 
   ' 選択セルが変更されたとき
   If ActiveCell.Column = 1 And ActiveCell.Value <> "" Then
@@ -28,29 +28,29 @@ End Sub
 '**************************************************************************************************
 ' * 目次生成
 ' *
-' * @author Bunpei.Koizumi<Koizumi.Bunpei@trans-cosmos.co.jp>
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Sub 目次生成()
 
   Dim line As Long, endLine As Long, mline As Long
   Dim columnName1 As String, columnName2 As String
-  
+
   On Error GoTo catchError:
-  
+
   mline = 2
-  
+
 '  ActiveWorkbook.Worksheets("Help").Select
   endLine = Cells(Rows.count, 1).End(xlUp).Row
-  
+
   Range("B2:AA28").ClearContents
   Range("AB1") = Format(Date, "yyyy/mm/dd")
-  
+
   For line = 30 To endLine
     If Range("A" & line) <> "" Then
       If Range("A" & line) = "5．運用手順" Then
         mline = 2
       End If
-      
+
       If Range("A" & line) Like "5*" Then
         columnName1 = "P"
         columnName2 = "Z"
@@ -58,7 +58,7 @@ Sub 目次生成()
         columnName1 = "B"
         columnName2 = "L"
       End If
-      
+
       With Range(columnName1 & mline)
         .Value = Range("A" & line)
         .Select
@@ -85,7 +85,7 @@ Sub 目次生成()
           .ShrinkToFit = True
           .ReadingOrder = xlContext
           .MergeCells = True
-          
+
           If Range("A" & line) Like "*-*" Then
             .InsertIndent 2
             .Font.Bold = False
@@ -93,11 +93,11 @@ Sub 目次生成()
       End With
       mline = mline + 1
     End If
-  
+
   Next
   Application.GoTo Reference:=Range("A1"), Scroll:=True
-  
-  
+
+
   Exit Sub
 '---------------------------------------------------------------------------------------
 'エラー発生時の処理
@@ -107,7 +107,3 @@ catchError:
     Call Library.endScript
 
 End Sub
-
-
-
-

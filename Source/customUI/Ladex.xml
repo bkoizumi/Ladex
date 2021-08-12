@@ -30,7 +30,8 @@
           </menu>
 
           <menuSeparator id="MS_Help" title="Help" />
-          <button id="Help" label="Help" imageMso="Help" screentip="Helpを表示" supertip="Helpを表示 &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionHelpShow" />
+          <button id="Help"     label="Help"    imageMso="Help" screentip="Helpを表示"  supertip="Helpを表示 &#13;"   onAction="Ladex.xlam!Ctl_Ribbon.OptionShowHelp" />
+          <button id="Version"  label="Version" imageMso="Help" screentip="Version情報" supertip="Version情報 &#13;"  onAction="Ladex.xlam!Ctl_Ribbon.OptionShowVersion" />
 
           <menuSeparator id="MS_initialization" title="初期化" />
           <button id="Init" label="初期化" imageMso="Undo" screentip="初期化" supertip="初期化 &#13;" onAction="Ladex.xlam!Ctl_Ribbon.initialization" />
@@ -57,9 +58,9 @@
         <menuSeparator id="画面サイズ_MS01" title="画面サイズを変更" />
         <menu id="画面サイズMenu" label="画面サイズ"  itemSize="large" imageMso="MicrosoftExcel">
         <menuSeparator id="画面サイズ_MS02" title="画面サイズを変更" />
-          <button id="disp_SVGA12"  label="800✕600"      imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6" description="12型SVGA液晶 相当 &#13;" />
-          <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6" description="15.6型FHD液晶 相当 &#13;" />
-          <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"  description="15.6型HD 液晶 相当 &#13;" />
+          <button id="disp_SVGA12"  label="800✕600"      imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_SVGA12"   description="12型SVGA液晶 相当 &#13;" />
+          <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6"  description="15.6型FHD液晶 相当 &#13;" />
+          <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"   description="15.6型HD 液晶 相当 &#13;" />
         </menu>
 
 
@@ -313,10 +314,12 @@
 
 
 
-    <!-- <group idMso="GroupOutline" visible="true"/>                               アウトライン -->
-    <group id="Group_GroupOutline" label="アウトライン">
-      <control idMso="OutlineGroupMenu"   size="normal" visible="true" />
-      <control idMso="OutlineUngroupMenu" size="normal" visible="true" />
+    <group id="G_GroupOutline" label="アウトライン">
+      <control idMso="OutlineGroup"   size="normal" visible="true" />
+      <menu id="M_GroupOutline" label="グループ解除"  imageMso="OutlineUngroup" >
+        <control idMso="OutlineUngroup" visible="true" />
+        <control idMso="OutlineClear"   visible="true" />
+      </menu>
       <control idMso="OutlineSubtotals"   size="normal" visible="true" />
 
       <control idMso="OutlineShowDetail"  size="normal" visible="true"  label="データ表示" />

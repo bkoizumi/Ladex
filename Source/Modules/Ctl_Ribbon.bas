@@ -680,7 +680,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
-Function Optionshow(control As IRibbonControl)
+Function OptionShow(control As IRibbonControl)
   Ctl_Option.showOption
 End Function
 
@@ -707,8 +707,14 @@ End Function
 
 
 '--------------------------------------------------------------------------------------------------
-Function OptionHelpShow(control As IRibbonControl)
+Function OptionShowHelp(control As IRibbonControl)
   Ctl_Option.showHelp
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function OptionShowVersion(control As IRibbonControl)
+  Ctl_Option.showVersion
 End Function
 
 '--------------------------------------------------------------------------------------------------
