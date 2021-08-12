@@ -137,18 +137,18 @@
         <menuSeparator id="罫線_クリア_MS01" title="罫線を削除 &#13;" />
           <menu id="罫線_クリアMenu" label="罫線を削除"  itemSize="large" imageMso="BorderErase" description="表形式の罫線を設定 &#13;">
           <menuSeparator id="罫線_クリア_MS02" title="罫線を削除 &#13;" />
-            <button id="罫線_クリア"            label="全方向"  imageMso="BorderErase"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_クリア"            description="全方向の罫線を削除" />
-            <button id="罫線_クリア_中央線_横"  label="横方向"  imageMso="BorderErase"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_クリア_中央線_横"  description="横方向の中央線を削除 &#13;" />
-            <button id="罫線_クリア_中央線_縦"  label="縦方向"  imageMso="BorderErase"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_クリア_中央線_縦"  description="縦方向の中央線を削除 &#13;" />
+            <button id="罫線_クリア"            label="全方向"    imageMso="BorderErase"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_クリア"            description="全方向の罫線を削除" />
+            <button id="罫線_クリア_中央線_横"  label="水平方向"  imageMso="BorderErase"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_クリア_中央線_横"  description="水平方向の中央線を削除 &#13;" />
+            <button id="罫線_クリア_中央線_縦"  label="垂直方向"  imageMso="BorderErase"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_クリア_中央線_縦"  description="垂直方向の中央線を削除 &#13;" />
         </menu>
 
         <menuSeparator id="罫線_表形式MS01" title="表形式の罫線を設定 &#13;" />
         <menu id="罫線_TableMenuN" label="表形式の罫線"  itemSize="large" imageMso="BorderDrawLine" description="表形式の罫線を設定 &#13;">
           <menuSeparator id="罫線_表形式MS02" title="表形式の罫線を設定 &#13;" />
           <button id="罫線_Table_実線"  label="実線"  imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_実線"  description="表形式の罫線を実線で設定 &#13;" />
-          <button id="罫線_Table_破線A" label="破線A" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線A" description="表形式の罫線を破線で設定 &#13;" />
-          <button id="罫線_Table_破線B" label="破線B" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線B" description="表形式の罫線を設定 &#13; 縦方向は実線、横方向は破線" />
-          <button id="罫線_Table_破線C" label="破線C" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線C" description="表形式の罫線を設定 &#13; 縦方向は破線、横方向は実線" />
+          <button id="罫線_Table_破線A" label="破線A" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線A" description="垂直、水平方向ともに破線で表形式の罫線を設定 &#13;" />
+          <button id="罫線_Table_破線B" label="破線B" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線B" description="垂直方向は実線、水平方向は破線で表形式の罫線を設定 &#13;" />
+          <button id="罫線_Table_破線C" label="破線C" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線C" description="垂直方向は破線、水平方向は実線で表形式の罫線を設定 &#13;" />
         </menu>
 
         <menuSeparator id="罫線_破線MS01" title="破線で罫線を設定 &#13;" />
@@ -223,7 +223,7 @@
 
       <group id="Group2" label="標準機能">
         <control idMso="PasteValues"               visible="true" label="値貼付" />               <!--値の貼り付け-->
-        <control idMso="WindowNew"                 visible="true" label="新ウインドウ"/>          <!--新しいウインドウ-->
+        <control idMso="WindowNew"                 visible="true" label="新画面"/>          <!--新しいウインドウ-->
 <!--新しいウインドウ-->        <menu id="M_AppointmentColorDialog" label="スタイル"  imageMso="AppointmentColorDialog" >
           <control idMso="CellStylesGallery"       visible="true" />                              <!--セルのスタイル-->
           <control idMso="FormatAsTableGallery"    visible="true" />                              <!--テーブルのスタイル-->
@@ -232,19 +232,27 @@
         <control idMso="ViewFreezePanesGallery"    visible="true" label="枠固定" />               <!--ウインドウ枠の固定-->
         <control idMso="ViewGridlinesToggleExcel"  visible="true" label="枠線表示" />             <!--枠線の表示-->
 
+        <menu id="Insert_M" label="挿入" imageMso="PictureInsertFromFile" >
         <menu id="m_GroupInsertText" label="テキスト"  imageMso="TextBoxInsert" >
           <control idMso="TextBoxInsertHorizontal"  visible="true" />                              <!--セルのスタイル-->
           <control idMso="TextBoxInsertVertical"    visible="true" />                              <!--テーブルのスタイル-->
         </menu>
-
-
         <control idMso="PictureInsertFromFile"     visible="true" label="図挿入" />               <!--図をファイルから挿入-->
         <control idMso="ShapesInsertGallery"       visible="true" label="図形" />                 <!--図形-->
+        </menu>
         <control idMso="MergeCellsAcross"          visible="true" label="横結合" />               <!--横方向に結合-->
-        <control idMso="ClearAll"                  visible="true" label="全クリア" />             <!--すべてクリア-->
         <button id="MergeCenter" imageMso="MergeCenter" label="中央揃え" onAction="Ladex.xlam!Ctl_Ribbon.setCenter" />
-        <button id="A" enabled="false"/>
-        <button id="B" enabled="false" />
+
+        <control idMso="ClearAll"                  visible="true" label="全クリア" />             <!--すべてクリア-->
+        <menu id="Calculate_M" label="更新" imageMso="DataRefreshAll" >
+          <control idMso="RefreshAll"             visible="true" />
+          <control idMso="Refresh"                visible="true" />
+
+          <control idMso="CalculateNow"           visible="true" />
+          <control idMso="CalculateSheet"         visible="true" />
+          <control idMso="CalculationOptionsMenu" visible="true" />
+        </menu>
+
         <menu id="MyMenu" label="メニュー"  imageMso="BlogHomePage" >
           <control idMso="FileSaveAsOtherFormats"  visible="true" label="別名保存" />             <!--他の形式で保存-->
           <control idMso="FilePrintPreview"        visible="true" />                              <!--印刷プレビュー-->
@@ -252,7 +260,6 @@
           <control idMso="FileOpen"                visible="true" />                              <!--開く-->
           <control idMso="FilePrepareMenu"         visible="true" />                              <!--配布準備-->
           <control idMso="ClearContents"           visible="true" />                              <!--数式と値のクリア-->
-          <control idMso="RefreshAllMenu"          visible="true" />                              <!--すべて更新-->
           <control idMso="DataValidation"          visible="true" />                              <!--入力規則-->
           <control idMso="NameManager"             visible="true" />                              <!--名前の管理-->
         </menu>
