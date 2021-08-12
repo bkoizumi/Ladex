@@ -22,15 +22,18 @@
             <button id="OptionStyleImport"  label="スタイル取込"  imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.OptionStyleImport" description="Import" />
           </menu>
 
-          <menu id="メンテナンス用_Menu" label="メンテナンス用"  itemSize="large" imageMso="CurrentViewSettings">
+          <menu id="メンテナンス用_Menu" label="メンテナンス用"  itemSize="normal" imageMso="CurrentViewSettings">
             <menuSeparator id="MS_Maintenance" title="メンテナンス用" />
-            <button id="OptionSheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"  description="リボン更新"  />
-            <button id="OptionSheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetImport" description="Import" />
-            <button id="OptionSheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetExport" description="Export" />
+            <button id="OptionSheetList_Refresh"  label="リボン更新"  imageMso="DataRefreshAll" onAction="Ladex.xlam!Ctl_Ribbon.dMenuRefresh"         supertip="リボン更新"  />
+            <button id="OptionSheetImport"        label="Import"      imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetImport"  supertip="Import" />
+            <button id="OptionSheetExport"        label="Export"      imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_RbnMaint.OptionSheetExport"  supertip="Export" />
           </menu>
 
           <menuSeparator id="MS_Help" title="Help" />
           <button id="Help" label="Help" imageMso="Help" screentip="Helpを表示" supertip="Helpを表示 &#13;" onAction="Ladex.xlam!Ctl_Ribbon.OptionHelpShow" />
+
+          <menuSeparator id="MS_initialization" title="初期化" />
+          <button id="Init" label="初期化" imageMso="Undo" screentip="初期化" supertip="初期化 &#13;" onAction="Ladex.xlam!Ctl_Ribbon.initialization" />
         </menu>
       </splitButton>
 
