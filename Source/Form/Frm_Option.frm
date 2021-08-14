@@ -72,14 +72,17 @@ Private Sub UserForm_Initialize()
     End If
     .HighLightColor.Caption = ""
     
+    
     '“§–¾“x----------------------------------------------------------------------------------------
     .HighlightTransparentRate.Min = 0
     .HighlightTransparentRate.Max = 100
     HighlightTransparentRate = Library.getRegistry("Main", "HighLightTransparentRate")
     If HighlightTransparentRate = "0" Then
-      .HighlightTransparentRate.Value = 50
+      .HighlightTransparentRate.Value = 70
+      .HighlightTransparentRate_text.Caption = 70
     Else
       .HighlightTransparentRate.Value = HighlightTransparentRate
+      .HighlightTransparentRate_text.Caption = HighlightTransparentRate
     End If
   
     '•\Ž¦•ûŒü--------------------------------------------------------------------------------------
@@ -416,6 +419,8 @@ End Sub
 Private Sub HighlightTransparentRate_Change()
   If InitializeFlg = False Then
     Call doHighLightPreview
+    
+    Me.HighlightTransparentRate_text.Caption = Me.HighlightTransparentRate.Value
   End If
 
 End Sub

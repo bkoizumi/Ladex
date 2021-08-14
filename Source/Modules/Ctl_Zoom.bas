@@ -4,44 +4,37 @@ Option Explicit
 '**************************************************************************************************
 ' * 選択セルの拡大表示/終了
 ' *
-' * @author Bunpei.Koizumi<koizumi.bunpei@trans-cosmos.co.jp>
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
   Dim topPosition As Long, leftPosition As Long
   
-  If slctCellAddress <> "" Then
-    topPosition = Library.getRegistry("UserForm", "ZoomTop")
-    leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
+  If slctCellAddress = "" Then
     
-    If ActiveCell.HasFormula = False Then
-      cellVal = ActiveCell.Text
-    Else
-      cellVal = ActiveCell.Formula
-    End If
-    
-    Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
-    With Frm_Zoom
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-      .TextBox = cellVal
-      .TextBox.MultiLine = True
-      .TextBox.MultiLine = True
-      .TextBox.EnterKeyBehavior = True
-      .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
+  End If
+  topPosition = Library.getRegistry("UserForm", "ZoomTop")
+  leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
   
-      .Show vbModeless
-    End With
-  
+  If ActiveCell.HasFormula = False Then
+    cellVal = ActiveCell.Text
   Else
-    If (Frm_Zoom.Visible = True) Then
-      'Frm_Zoom.TextBox.SelText = Ctl_DefaultVal.getVal("ZoomIn") & slctCellAddress
-'      Frm_Zoom.TextBox = Ctl_DefaultVal.getVal("ZoomIn") & slctCellAddress
-    End If
+    cellVal = ActiveCell.Formula
   End If
   
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
+  With Frm_Zoom
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
+    .TextBox = cellVal
+    .TextBox.MultiLine = True
+    .TextBox.MultiLine = True
+    .TextBox.EnterKeyBehavior = True
+    .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
 
+    .Show vbModeless
+  End With
 End Function
 
 
@@ -60,13 +53,11 @@ End Function
 Function Zoom01()
   Dim topPosition As Long, leftPosition As Long
   
-  Call Library.startScript
   Application.DisplayFullScreen = True
-  Call Library.endScript
   
   topPosition = Library.getRegistry("UserForm", "Zoom01Top")
   leftPosition = Library.getRegistry("UserForm", "Zoom01Left")
-      
+
   Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_DispFullScreenForm
     .StartUpPosition = 0

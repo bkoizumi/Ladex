@@ -44,6 +44,8 @@ Function add(Optional filePath As String)
   Dim line As Long, endLine As Long
   
   Call init.setting
+  Call getList
+  
   line = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row + 1
   
   If filePath = "" Then
@@ -68,14 +70,11 @@ Function detail()
   topPosition = Library.getRegistry("UserForm", "FavoriteTop")
   leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
   
+  Call Ctl_UsrForm.•\Ž¦ˆÊ’u(topPosition, leftPosition)
   With Frm_Favorite
-    If topPosition = 0 Then
-      .StartUpPosition = 2
-    Else
-      .StartUpPosition = 0
-      .Top = topPosition
-      .Left = leftPosition
-    End If
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
     .Show vbModeless
   End With
   Call RefreshListBox

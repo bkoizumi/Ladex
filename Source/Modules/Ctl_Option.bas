@@ -7,6 +7,42 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
+Function showVersion()
+  Dim topPosition As Long, leftPosition As Long
+'  On Error GoTo catchError
+  
+  Call init.setting
+  topPosition = Library.getRegistry("UserForm", "OptionTop")
+  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
+  
+  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
+  With Frm_Version
+    .StartUpPosition = 0
+    .Top = topPosition
+    .Left = leftPosition
+    
+    .Label1.Caption = "Ladex Addin For Excel Library"
+    .Label2.Caption = "Ver " & thisAppVersion
+    .Label3.Caption = "当ソフトはフリーソフトウェアです。" & vbNewLine & _
+                      "個人・法人に限らず利用者は自由に使用および配布することができますが、著作権は作者にあります。" & vbNewLine & _
+                      "当ソフトを使用した事によるいかなる損害も作者は一切の責任を負いません｡" & vbNewLine & _
+                      "ソースを利用する場合にはMITライセンスです｡"
+    
+    .Show
+  End With
+
+  Exit Function
+
+'エラー発生時=====================================================================================
+catchError:
+  Call Library.showNotice(Err.Number, Err.Description, True)
+End Function
+  
+
+
+
+
+'==================================================================================================
 Function showHelp()
   
   Call init.setting(True)
@@ -55,7 +91,7 @@ End Function
 
 
 '==================================================================================================
-Function 初期化()
+Function initialization()
   Dim RegistryKey As String, RegistrySubKey As String, RegistryVal As String
   Dim line As Long, endLine As Long
   Dim regName As String
@@ -99,9 +135,9 @@ Function showOption()
     .Top = topPosition
     .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 0
-    .MultiPage1.Page1.Visible = True
-    .MultiPage1.Page2.Visible = True
-    .MultiPage1.Page3.Visible = True
+'    .MultiPage1.Page1.Visible = True
+'    .MultiPage1.Page2.Visible = True
+'    .MultiPage1.Page3.Visible = True
     
     '.Show vbModeless
     .Show

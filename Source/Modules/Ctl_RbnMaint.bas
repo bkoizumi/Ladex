@@ -65,11 +65,6 @@ Function OptionSheetImport(control As IRibbonControl)
   
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsm")
-  
-'  ThisWorkbook.Sheets("Ribbon").Columns("A:G").Value = targetBook.Sheets("Ribbon").Columns("A:G").Value
-'  ThisWorkbook.Sheets("Notice").Columns("A:B").Value = targetBook.Sheets("Notice").Columns("A:B").Value
-'  ThisWorkbook.Worksheets("Style").Columns("A:J").Value = targetBook.Sheets("Style").Columns("A:J").Value
-'
 
   targetBook.Sheets("設定").Columns("A:AA").Copy ThisWorkbook.Worksheets("設定").Range("A1")
 '  targetBook.Sheets("Ribbon").Columns("A:G").Copy ThisWorkbook.Worksheets("Ribbon").Range("A1")
@@ -127,20 +122,6 @@ Function OptionSheetExport(control As IRibbonControl)
   ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
   ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
   ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
-  
-  
-'  Application.DisplayAlerts = False
-'  targetBook.Sheets("Stamp").delete
-'  targetBook.Worksheets.add.Name = "Stamp"
-'
-'  ThisWorkbook.Worksheets("Stamp").Columns("A:AP").Copy targetBook.Sheets("Stamp").Range("A1")
-'  Application.DisplayAlerts = True
-  
-  
-  
-  
-  
-  
   
 '  Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
   

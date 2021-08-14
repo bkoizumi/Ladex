@@ -71,6 +71,10 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim MenuSepa, sheetNameID
   
   On Error GoTo catchError
+  
+  If Workbooks.count = 0 Then
+    Exit Function
+  End If
   Call init.setting
   
   If BK_ribbonUI Is Nothing Then
@@ -676,7 +680,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
-Function Optionshow(control As IRibbonControl)
+Function OptionShow(control As IRibbonControl)
   Ctl_Option.showOption
 End Function
 
@@ -703,10 +707,20 @@ End Function
 
 
 '--------------------------------------------------------------------------------------------------
-Function OptionHelpShow(control As IRibbonControl)
+Function OptionShowHelp(control As IRibbonControl)
   Ctl_Option.showHelp
 End Function
 
+
+'--------------------------------------------------------------------------------------------------
+Function OptionShowVersion(control As IRibbonControl)
+  Ctl_Option.showVersion
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function initialization(control As IRibbonControl)
+  Ctl_Option.initialization
+End Function
 
 
 
@@ -766,6 +780,11 @@ End Function
 
 
 
+'**************************************************************************************************
+' * リボンメニュー[ブック管理]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function delStyle(control As IRibbonControl)
   Call Ctl_Style.スタイル削除
@@ -787,6 +806,22 @@ Function すべて表示(control As IRibbonControl)
 End Function
 
 
+'--------------------------------------------------------------------------------------------------
+Function disp_SVGA12(control As IRibbonControl)
+  Call Ctl_Window.画面サイズ変更(612, 432)
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function disp_FHD15_6(control As IRibbonControl)
+  Call Ctl_Window.画面サイズ変更(1920, 1080)
+End Function
+
+
+'--------------------------------------------------------------------------------------------------
+Function disp_HD15_6(control As IRibbonControl)
+  Call Ctl_Window.画面サイズ変更(1366, 764)
+End Function
 
 
 
@@ -805,7 +840,6 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Ctl_HighLight.showStart(ActiveCell)
   If pressed = False Then
     Call Library.delRegistry("Main", "HighLightFlg")
-
   End If
 End Function
 
@@ -851,7 +885,6 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   If pressed = False Then
     Call Application.OnKey("{F2}")
     Call Library.delRegistry("Main", "ZoomFlg")
-'    Call Ctl_DefaultVal.delVal("ZoomIn")
   Else
     Call Application.OnKey("{F2}", "Ctl_Zoom.ZoomIn")
   End If

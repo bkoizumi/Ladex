@@ -21,27 +21,30 @@ Function 表示位置(t, l)
 '  Call Library.showDebugForm("displayY        ：" & MachineInfo("displayY"))
 '  Call Library.showDebugForm("displayVirtualX ：" & MachineInfo("displayVirtualX"))
 '  Call Library.showDebugForm("displayVirtualY ：" & MachineInfo("displayVirtualY"))
+'
+'  Call Library.showDebugForm("appWidth ：" & MachineInfo("appWidth"))
+'  Call Library.showDebugForm("appHeight ：" & MachineInfo("appHeight"))
+
   
-  
-  
-  If topPosition > MachineInfo("displayVirtualY") Then
-    t = CInt(MachineInfo("displayVirtualY") / 4)
+  If topPosition > MachineInfo("appHeight") Then
+    t = CInt(MachineInfo("appHeight") / 4)
   ElseIf topPosition = 0 Then
-    t = CInt(MachineInfo("displayVirtualY") / 4)
+    t = CInt(MachineInfo("appHeight") / 4)
   Else
     t = topPosition
   End If
   
-  If leftPosition > MachineInfo("displayVirtualX") Then
-    l = CInt(MachineInfo("displayVirtualX") / 4)
+  If leftPosition > MachineInfo("appWidth") Then
+    l = CInt(MachineInfo("appWidth") / 4)
   ElseIf leftPosition = 0 Then
-    l = CInt(MachineInfo("displayVirtualX") / 4)
+    l = CInt(MachineInfo("appWidth") / 4)
   Else
     l = leftPosition
   End If
   
-'  Call Library.showDebugForm("t：" & t)
-'  Call Library.showDebugForm("l：" & l)
+'  Call Library.showDebugForm("t               ：" & t)
+'  Call Library.showDebugForm("l               ：" & l)
+
 
 End Function
 
