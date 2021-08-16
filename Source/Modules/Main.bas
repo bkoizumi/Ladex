@@ -201,27 +201,7 @@ Function ハイライト()
 
 End Function
 
-'**************************************************************************************************
-' * コメント整形
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function コメント整形()
-  
-  On Error GoTo catchError
-  
-  If TypeName(ActiveCell) = "Range" Then
-    Call Library.setComment(Library.getRegistry("Main", "CommentBgColor"))
-  
-  End If
-  
-  
-  Exit Function
 
-'エラー発生時=====================================================================================
-catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
-End Function
 
 
 

@@ -1,6 +1,50 @@
 Attribute VB_Name = "Ctl_UsrFunction"
 Option Explicit
 
+'// Win32API用定数
+Private Const GWL_STYLE = (-16)
+Private Const WS_MAXIMIZEBOX = &H10000
+Private Const WS_MINIMIZEBOX = &H20000
+Private Const WS_THICKFRAME = &H40000
+'// Win32API参照宣言
+'// 64bit版
+#If VBA7 And Win64 Then
+    Private Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As Long
+    Private Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+    Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As LongPtr
+    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hwnd As LongPtr) As Long
+'// 32bit版
+#Else
+    Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+    Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+    Private Declare Function GetActiveWindow Lib "user32" () As Long
+    Private Declare Function DrawMenuBar Lib "user32" (ByVal hwnd As Long) As Long
+#End If
+
+
+'**************************************************************************************************
+' * フォームサイズ変更
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function FormResize()
+    Dim hwnd                    As Long         '// ウインドウハンドル
+    Dim style                   As Long         '// ウインドウスタイル
+ 
+    '// ウインドウハンドル取得
+    hwnd = GetActiveWindow()
+    
+    '// ウインドウのスタイルを取得
+    style = GetWindowLong(hwnd, GWL_STYLE)
+    
+    '// ウインドウのスタイルにウインドウサイズ可変＋最小ボタン＋最大ボタンを追加
+    style = style Or WS_THICKFRAME Or WS_MAXIMIZEBOX
+ 
+    '// ウインドウのスタイルを再設定
+    Call SetWindowLong(hwnd, GWL_STYLE, style)
+End Function
+
+
 '**************************************************************************************************
 ' * ユーザー定義関数
 ' *

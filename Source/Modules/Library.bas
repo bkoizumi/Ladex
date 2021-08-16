@@ -728,11 +728,11 @@ Function delSheetData(Optional line As Long)
     Rows(line & ":" & Rows.count).delete Shift:=xlUp
     Rows(line & ":" & Rows.count).Select
     Rows(line & ":" & Rows.count).NumberFormatLocal = "G/ïWèÄ"
-    Rows(line & ":" & Rows.count).Style = "Normal"
+    Rows(line & ":" & Rows.count).style = "Normal"
   Else
     Cells.delete Shift:=xlUp
     Cells.NumberFormatLocal = "G/ïWèÄ"
-    Cells.Style = "Normal"
+    Cells.style = "Normal"
   End If
   DoEvents
 

@@ -54,12 +54,11 @@
         <menuSeparator id="削除" title="設定を削除" />
         <button id="del_Style"      label="スタイルの初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除 &#13;" />
         <button id="del_CellNames"  label="名前定義削除"      image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除 &#13;" />
-        <button id="set_Images"     label="画像設定"   enabled="false"       imageMso="ControlImage"           onAction="Ladex.xlam!Ctl_Ribbon.画像設定"      description="画像設定 &#13;" />
         <menuSeparator id="画面サイズ_MS01" title="画面サイズを変更" />
         <menu id="画面サイズMenu" label="画面サイズ"  itemSize="large" imageMso="MicrosoftExcel">
         <menuSeparator id="画面サイズ_MS02" title="画面サイズを変更" />
           <button id="disp_SVGA12"  label="800✕600"      imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_SVGA12"   description="12型SVGA液晶 相当 &#13;" />
-          <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6"  description="15.6型FHD液晶 相当 &#13;" />
+          <!-- <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6"  description="15.6型FHD液晶 相当 &#13;" /> -->
           <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"   description="15.6型HD 液晶 相当 &#13;" />
         </menu>
 
@@ -112,13 +111,27 @@
         <button id="OptionStamp"  label="設定"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.OptionStamp" description="電子印鑑 &#13;" />
       </menu> -->
 
-      <splitButton id="SB_Comment" size="normal">
-        <button id="formatComment"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
-          <menu id="Comment_Menu"  screentip="コメント整形メニュー"  supertip="コメント整形メニュー" itemSize="normal">
-            <menuSeparator id="コメント整形_SP1" title="コメント整形 書式設定" />
-            <button id="OptionComment"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionComment" description="コメント整形の設定を &#13;" />
-          </menu>
-      </splitButton>
+      <menu id="整形" label="整形"  itemSize="large" imageMso="GroupChartShapes" >
+        <menuSeparator id="整形_SP1" title="コメント整形" />
+        <splitButton id="SB_Comment" >
+          <button id="整形_Comment"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.formatComment" />
+            <menu id="Comment_Menu"  screentip="コメント整形メニュー"  supertip="コメント整形メニュー" itemSize="normal">
+              <menuSeparator id="コメント整形_SP1" title="コメント整形 書式設定" />
+              <button id="OptionComment"   label="設定"   imageMso="CurrentViewSettings" onAction="Ladex.xlam!Ctl_Ribbon.OptionComment" description="コメント整形の設定を &#13;" />
+            </menu>
+        </splitButton>
+
+        <menuSeparator id="整形_SP2" title="移動・サイズ変更" />
+        <button id="整形_1" label="移動やサイズ変更をする"    imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.formatMoveAndSize"  description="セルに合わせて移動やサイズ変更をする &#13;" />
+        <button id="整形_2" label="移動する"                  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.formatMove"         description="セルに合わせて移動するがサイズ変更はしない &#13;" />
+        <button id="整形_3" label="移動やサイズ変更をしない"  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.formatFreeFloating" description="セルに合わせて移動やサイズ変更をしない &#13;" />
+
+        <menuSeparator id="整形_SP3" title="その他" />
+        <button id="余白ゼロ" label="上下の余白をゼロにする"    imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.MarginZero"  description="テキストボックスの上下の余白をゼロにする" />
+      </menu>
+
+
+
 
 
 

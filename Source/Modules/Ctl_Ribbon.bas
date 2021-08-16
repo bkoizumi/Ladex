@@ -934,8 +934,28 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function formatComment(control As IRibbonControl)
-  Call Main.コメント整形
+  Call Ctl_format.コメント整形
 End Function
+
+'--------------------------------------------------------------------------------------------------
+Function formatMoveAndSize(control As IRibbonControl)
+  Call Ctl_format.移動やサイズ変更をする
+End Function
+'--------------------------------------------------------------------------------------------------
+Function formatMove(control As IRibbonControl)
+  Call Ctl_format.移動する
+End Function
+'--------------------------------------------------------------------------------------------------
+Function formatFreeFloating(control As IRibbonControl)
+  Call Ctl_format.移動やサイズ変更をしない
+End Function
+'--------------------------------------------------------------------------------------------------
+Function MarginZero(control As IRibbonControl)
+  Call Ctl_format.余白ゼロ
+End Function
+
+
+
 
 
 
