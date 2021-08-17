@@ -125,7 +125,7 @@ Function showStart_X(ByVal Target As Range, _
     'Cells(Rows.count, Columns.Count)
     
     Set HighLight_X = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
-      Left:=Rng.Left, Top:=Rng.Top, width:=MaxWidth, height:=Rng.height)
+      Left:=Rng.Left, Top:=Rng.Top, Width:=MaxWidth, height:=Rng.height)
     HighLight_X.Name = "HighLight_X"
     HighLight_X.OnAction = "getCursorPosition"
     
@@ -195,7 +195,7 @@ Function showStart_Y(ByVal Target As Range, _
     Set Rng = Cells(1, Target.Column)
     
     Set HighLight_Y = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
-      Left:=Rng.Left, Top:=Rng.Top, width:=Rng.width, height:=MaxHeight)
+      Left:=Rng.Left, Top:=Rng.Top, Width:=Rng.Width, height:=MaxHeight)
       
     HighLight_Y.Name = "HighLight_Y"
     HighLight_Y.OnAction = "getCursorPosition"
@@ -231,7 +231,7 @@ Function showStart_Y(ByVal Target As Range, _
       Selection.ShapeRange.line.Transparency = HighlightTransparentRate / 100
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.height = MaxHeight
-      Selection.ShapeRange.width = 0
+      Selection.ShapeRange.Width = 0
 '      Selection.ShapeRange.Top = Rng.Top
     
     End If
@@ -257,7 +257,7 @@ Sub Sample()
     'セルのLeft、Top、Widthプロパティを利用して位置決め
     BX = rngStart.Left
     BY = rngStart.Top
-    EX = rngEnd.Left + rngEnd.width
+    EX = rngEnd.Left + rngEnd.Width
     EY = rngEnd.Top
     
     '直線

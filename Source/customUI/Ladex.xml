@@ -61,6 +61,8 @@
           <!-- <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6"  description="15.6型FHD液晶 相当 &#13;" /> -->
           <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"   description="15.6型HD 液晶 相当 &#13;" />
         </menu>
+        <menuSeparator id="シート情報" title="シート一覧" />
+        <button id="シート一覧取得"      label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.getSheetList"      description="シート一覧を取得 &#13;" />
 
 
       </menu>
@@ -79,7 +81,7 @@
       </menu>
 
       <splitButton id="SB_ZoomIn" size="normal">
-        <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるように &#13;F2キーにも対応" />
+        <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"   supertip="セルのダブルクリックで、別画面で編集できるように &#13;F2キーにも対応" />
           <menu id="ZoomIn_Menu"  screentip="ズームメニュー"  supertip="ズームメニュー" itemSize="large">
             <menuSeparator id="ZoomIn_SP1" title="ズーム" />
             <button id="Zoom01"   label="全画面表示"   imageMso="ZoomIn" onAction="Ladex.xlam!Ctl_Ribbon.Zoom01" description="画面を最大化します。 &#13; Escキーで元に戻ります" />
@@ -99,9 +101,13 @@
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
         <menuSeparator id="Adjust_SP1" title="サイズ調整" />
-        <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="セル幅調整 &#13;30ポイント以上には広げません" />
+        <button id="AdjustWidth"          label="幅"      imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.AdjustWidth"          description="30ポイント以上には広げません&#13; 1行目が数値であればその値に設定します " />
         <button id="AdjustHeight"         label="高さ"    imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeight"         description="セル高さ調整 &#13;" />
         <button id="AdjustHeightAndWidth" label="両方"    imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.AdjustHeightAndWidth" description="セル幅、高さ両方を調整 &#13;" />
+
+        <menuSeparator id="getAdjust_SP1" title="列幅取得" />
+        <button id="getAdjustWidth"  label="列幅取得" imageMso="SizeToControlWidth" onAction="Ladex.xlam!Ctl_Ribbon.getAdjustWidth"  description="選択範囲のセル幅を取得、設定" />
+
       </menu>
       <!-- <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool" screentip="電子印鑑" supertip="電子印鑑">
         <button id="stamp01"  label="電子印鑑【済印】"    imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.stamp01" description="電子印鑑 &#13;" />
@@ -147,6 +153,11 @@
         <menuSeparator id="セル編集_SP2" title="文字追加" />
         <button id="中黒点付与" label="文頭に・を追加"      imageMso="CalculatedText"   onAction="Ladex.xlam!Ctl_Ribbon.中黒点付与"  description="文頭に「・」を追加&#13;" />
         <button id="連番付与"   label="文頭に連番を追加"    imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番付与"    description="文頭に1から始まる連番を追加 &#13;" />
+
+        <menuSeparator id="セル編集_SP3" title="文字編集" />
+        <button id="全半角変換" label="全角を半角に変換"      imageMso="CalculatedText"   onAction="Ladex.xlam!Ctl_Ribbon.英数字全半角変換"  description="英数字の全角を半角に変換 &#13;" />
+
+
       </menu>
 
       <button id="saveImage"  label="画像保存"  imageMso="RestorePicture" size="normal" screentip="選択範囲を画像として保存" supertip="選択範囲を画像として保存" onAction="Ladex.xlam!Ctl_Ribbon.saveSelectArea2Image" />
@@ -163,9 +174,8 @@
         <menu id="罫線_TableMenuN" label="表形式の罫線"  itemSize="large" imageMso="BorderDrawLine" description="表形式の罫線を設定 &#13;">
           <menuSeparator id="罫線_表形式MS02" title="表形式の罫線を設定 &#13;" />
           <button id="罫線_Table_実線"  label="実線"  imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_実線"  description="表形式の罫線を実線で設定 &#13;" />
-          <button id="罫線_Table_破線A" label="破線A" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線A" description="垂直、水平方向ともに破線で表形式の罫線を設定 &#13;" />
-          <button id="罫線_Table_破線B" label="破線B" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線B" description="垂直方向は実線、水平方向は破線で表形式の罫線を設定 &#13;" />
-          <button id="罫線_Table_破線C" label="破線C" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線C" description="垂直方向は破線、水平方向は実線で表形式の罫線を設定 &#13;" />
+          <button id="罫線_Table_破線B" label="破線A" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線A" description="垂直方向は実線、水平方向は破線で表形式の罫線を設定 &#13;" />
+          <button id="罫線_Table_破線C" label="破線B" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_表_破線B" description="垂直方向は破線、水平方向は実線で表形式の罫線を設定 &#13;" />
         </menu>
 
         <menuSeparator id="罫線_破線MS01" title="破線で罫線を設定 &#13;" />
@@ -212,7 +222,8 @@
         <menuSeparator id="データ生成_MS" title="データ生成" />
         <menu id="数値Menu" label="数値生成"  itemSize="large" imageMso="ResetToTemplate" supertip="サンプルデータ生成 &#13;">
           <menuSeparator id="数値生成" title="数値生成" />
-          <button id="連番生成"     label="文頭に連番を追加"  imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番付与"                 description="文頭に1から始まる連番を追加 &#13;" />
+          <button id="連番設定"     label="文頭に連番を設定"  imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番設定"                 description="1から始まる連番を設定(上書き) &#13;" />
+          <button id="連番生成"     label="文頭に連番を追加"  imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番追加"                 description="文頭に1から始まる連番を追加 &#13;" />
           <button id="mkSmpDt_Int"  label="桁数固定数値"      imageMso="ResetToTemplate"  onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_DigitsInt" description="ランダムな数値(桁数固定)を生成 &#13;"   />
           <button id="mkSmpDt_Rng"  label="範囲指定数値"      imageMso="ResetToTemplate"  onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_RangeInt"  description="ランダムな数値(範囲指定)を生成 &#13;" />
         </menu>
@@ -301,7 +312,15 @@
       </box>
       <separator id="sbAlignment01" />
       <box id="bAlignment04"  boxStyle="vertical">
-        <control idMso="WrapText"                   label="折り返し" visible="true" />
+        <menu id="M_Shrink" label="セルの配置"  imageMso="WrapText" >
+          <control idMso="WrapText" showLabel="true" visible="true" />
+          <menu id="M_ShrinkToFit" label="セルの配置"  imageMso="DistributeAllLinesParagraph" >
+            <button id="ShrinkToFit"    imageMso="DistributeAllLinesParagraph"  label="設定" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToFit" />
+            <button id="ShrinkToUnfit"  image="unDistributeAllLinesParagraph"   label="解除" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToUnfit" />
+          </menu>
+        </menu>
+
+
         <menu id="M_MergeCenter" label="セルの結合"  imageMso="MergeCenter" >
           <control idMso="MergeCenter"  showLabel="true" visible="true" />
           <control idMso="MergeCells"   showLabel="true" visible="true" />

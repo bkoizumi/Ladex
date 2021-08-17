@@ -48,7 +48,7 @@ Function Export()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -68,7 +68,7 @@ Function Import()
   
   '----------------------------------------------
   If setStyleBook Is Nothing Then
-    Call Library.showNotice(400, FuncName, True)
+    Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
   End If
   
   Call Library.startScript
@@ -93,7 +93,7 @@ Function Import()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 

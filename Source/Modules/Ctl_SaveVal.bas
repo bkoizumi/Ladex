@@ -39,7 +39,7 @@ Function setVal(pType As String, pText As String)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -76,7 +76,7 @@ Function getVal(pType As String) As String
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
   Set resetObjVal = Nothing
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 '==================================================================================================
@@ -106,6 +106,6 @@ Function delVal(pType As String)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 

@@ -36,7 +36,7 @@ Public Function showStart()
       .Top = 15
       .Left = 12
       .height = 15
-      .width = 250
+      .Width = 250
     End With
 
     'プログレスバーのバーの部分
@@ -47,7 +47,7 @@ Public Function showStart()
       .Top = 16
       .Left = 13
       .height = 13
-      .width = 0
+      .Width = 0
     End With
 
     '進捗状況表示の部分 ( % )
@@ -59,7 +59,7 @@ Public Function showStart()
       .Top = 17
       .Left = 12
       .height = 14
-      .width = 250
+      .Width = 250
       .Font.Size = 10
       .Font.Bold = False
     End With
@@ -73,7 +73,7 @@ Public Function showStart()
       .Top = 45
       .Left = 12
       .height = 15
-      .width = 250
+      .Width = 250
     End With
 
     'プログレスバーのバーの部分
@@ -84,7 +84,7 @@ Public Function showStart()
       .Top = 46
       .Left = 13
       .height = 13
-      .width = 0
+      .Width = 0
     End With
 
     '進捗状況表示の部分 ( % )
@@ -95,7 +95,7 @@ Public Function showStart()
       .Top = 47
       .Left = 12
       .height = 14
-      .width = 250
+      .Width = 250
       .Font.Size = 10
       .Font.Bold = False
     End With
@@ -107,13 +107,13 @@ Public Function showStart()
       .Top = 70
       .Left = 12
       .height = 30
-      .width = 270
+      .Width = 270
       .Font.Size = 9
       .Font.Bold = False
     End With
 
-    PrgP_Barsize = .PrgP_Area.width
-    PrgC_Barsize = .PrgP_Area.width
+    PrgP_Barsize = .PrgP_Area.Width
+    PrgC_Barsize = .PrgP_Area.Width
   End With
 
   Frm_Progress.Show vbModeless
@@ -176,10 +176,10 @@ Public Function showBar( _
   
   With Frm_Progress
     .Caption = Prg_Title
-    .PrgP_Bar.width = Int(PrgP_Barsize * PrgP_Prg / 100)
+    .PrgP_Bar.Width = Int(PrgP_Barsize * PrgP_Prg / 100)
     .PrgP_Progress.Caption = PrgP_Meg
     
-    .PrgC_Bar.width = Int(PrgC_Barsize * PrgC_Prg / 100)
+    .PrgC_Bar.Width = Int(PrgC_Barsize * PrgC_Prg / 100)
     .PrgC_Progress.Caption = PrgC_Meg
     
     If PrgMeg = "" Then

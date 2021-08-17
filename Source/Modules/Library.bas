@@ -832,6 +832,108 @@ End Function
 
 
 '**************************************************************************************************
+' * ファイルコピー
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execCopy(srcPath As String, dstPaht As String)
+  Dim FSO As Object
+  
+  On Error GoTo catchError
+  
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call showDebugForm("コピー元：" & srcPath)
+  Call showDebugForm("コピー先：" & dstPaht)
+  
+  If chkFileExists(srcPath) = False Then
+    Call showNotice(404, "コピー元", True)
+  End If
+  
+'  If chkFileExists(Library.getFileInfo(dstPaht, , "CurrentDir")) = False Then
+'    Call showNotice(403, "コピー先", True)
+'  End If
+  
+  
+  FSO.CopyFile srcPath, dstPaht
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
+' * ファイル移動
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execMove(srcPath As String, dstPath As String)
+  Dim FSO As Object
+  
+  On Error GoTo catchError
+  
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call showDebugForm("移動元：" & srcPath)
+  Call showDebugForm("移動先：" & dstPath)
+  
+  If chkFileExists(srcPath) = False Then
+    Call showNotice(404, "移動元", True)
+  End If
+  
+'  If chkFileExists(Library.getFileInfo(dstPath, , "CurrentDir")) = False Then
+'    Call showNotice(403, "移動先", True)
+'  End If
+  
+  
+  FSO.MoveFile srcPath, dstPath
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
+' * MkDirで階層の深いフォルダーを作る
+' *
+' * @link http://officetanaka.net/excel/vba/filesystemobject/sample10.htm
+'**************************************************************************************************
+Function execMkdir(fullPath As String)
+  
+  If chkDirExists(fullPath) Then
+    Exit Function
+  End If
+  Call chkParentDir(fullPath)
+End Function
+'==================================================================================================
+Private Function chkParentDir(TargetFolder)
+  Dim ParentFolder As String, FSO As Object
+
+  On Error GoTo catchError
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+
+  ParentFolder = FSO.GetParentFolderName(TargetFolder)
+  If Not FSO.FolderExists(ParentFolder) Then
+    Call chkParentDir(ParentFolder)
+  End If
+
+  FSO.CreateFolder TargetFolder
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "ディレクトリの作成に失敗しました" & vbNewLine & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
 ' * PC、Office等の情報取得
 ' * 連想配列を利用しているので、Microsoft Scripting Runtimeが必須
 ' * MachineInfo.Item ("Excel") で呼び出し
@@ -895,7 +997,7 @@ Function getMachineInfo() As Object
   MachineInfo.add "displayVirtualY", GetSystemMetrics(79)
   MachineInfo.add "appTop", ActiveWindow.Top
   MachineInfo.add "appLeft", ActiveWindow.Left
-  MachineInfo.add "appWidth", ActiveWindow.width
+  MachineInfo.add "appWidth", ActiveWindow.Width
   MachineInfo.add "appHeight", ActiveWindow.height
   
 
@@ -1127,7 +1229,11 @@ Function getFilePath(CurrentDirectory As String, saveFileName As String, title A
     .FilterIndex = FileTypeNo
 
     '表示するフォルダ
+    If chkDirExists(CurrentDirectory) = True Then
     .InitialFileName = CurrentDirectory & "\" & saveFileName
+    Else
+      .InitialFileName = ActiveWorkbook.Path & "\" & saveFileName
+    End If
 
     '表示形式の設定
     .InitialView = msoFileDialogViewWebView
@@ -1255,6 +1361,9 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
 
   '拡張子
   fileInfo.add "extension", FSO.GetExtensionName(targetFilePath)
+  
+  'ファイル名
+  fileInfo.add "fileName", FSO.GetFile(targetFilePath).Name
 
   'ファイルが存在するフォルダ
   fileInfo.add "CurrentDir", FSO.GetFile(targetFilePath).ParentFolder
@@ -1269,7 +1378,7 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
               SaveWithDocument:=True, _
               Left:=0, _
               Top:=0, _
-              width:=0, _
+              Width:=0, _
               height:=0 _
               )
     With sp
@@ -1277,14 +1386,14 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
       .ScaleHeight 1, msoTrue
       .ScaleWidth 1, msoTrue
 
-      fileInfo.add "width", CLng(.width * 4 / 3)
+      fileInfo.add "width", CLng(.Width * 4 / 3)
       fileInfo.add "height", CLng(.height * 4 / 3)
       .delete
     End With
     
     Case "bmp", "jpg", "gif", "emf", "ico", "rle", "wmf"
       Set fileObject = LoadPicture(targetFilePath)
-      fileInfo.add "width", fileObject.width
+      fileInfo.add "width", fileObject.Width
       fileInfo.add "height", fileObject.height
 
       Set fileObject = Nothing
@@ -1459,7 +1568,7 @@ End Function
 Function showExpansionForm(Text As String, SetSelectTargetRows As String)
   With Frm_Zoom
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.width / 10)
+    .Top = Application.Top + (ActiveWindow.Width / 10)
     .Left = Application.Left + (ActiveWindow.height / 5)
     .TextBox = Text
     .TextBox.MultiLine = True
@@ -1764,43 +1873,11 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
-'**************************************************************************************************
-' * MkDirで階層の深いフォルダーを作る
-' *
-' * @link http://officetanaka.net/excel/vba/filesystemobject/sample10.htm
-'**************************************************************************************************
-Function makeDir(fullPath As String)
 
-  If chkDirExists(fullPath) Then
-    Exit Function
-  End If
-  Call chkParentDir(fullPath)
-End Function
-
-'==================================================================================================
-Private Function chkParentDir(TargetFolder)
-  Dim ParentFolder As String, FSO As Object
-
-  On Error GoTo catchError
-  Set FSO = CreateObject("Scripting.FileSystemObject")
-
-  ParentFolder = FSO.GetParentFolderName(TargetFolder)
-  If Not FSO.FolderExists(ParentFolder) Then
-    Call chkParentDir(ParentFolder)
-  End If
-
-  FSO.CreateFolder TargetFolder
-  Set FSO = Nothing
-
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Call Library.showNotice(400, "ディレクトリの作成に失敗しました" & vbNewLine & Err.Description, True)
-End Function
 
 
 '**************************************************************************************************
@@ -3182,12 +3259,11 @@ End Function
 Function getColumnWidth()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
-  endColLine = Cells(5, Columns.count).End(xlToLeft).Column
 
-  For colLine = 1 To endColLine
-    Cells(1, colLine) = Cells(1, colLine).ColumnWidth
+  For colLine = Selection(1).Column To Selection(Selection.count).Column
+    Cells(Selection(1).Row, colLine) = Columns(colLine).ColumnWidth
   Next
-
+  
 End Function
 
 '==================================================================================================
@@ -3197,9 +3273,7 @@ Function setColumnWidth()
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
   For colLine = 1 To endColLine
-    Cells(1, colLine).ColumnWidth = Cells(1, colLine)
+    Columns(colLine).ColumnWidth = Cells(1, colLine)
   Next
 
 End Function
-
-
