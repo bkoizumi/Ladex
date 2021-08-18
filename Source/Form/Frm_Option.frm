@@ -30,8 +30,9 @@ Private Sub UserForm_Initialize()
   Dim zoomLevelVal  As Variant
   Dim setZoomLevel As String
   Dim endLine As Long
-  Dim indexCnt As Integer
+  Dim indexCnt As Integer, i As Variant
   Dim previewImgPath As String
+  Dim cBox As CommandBarComboBox
   
   InitializeFlg = True
   
@@ -119,6 +120,8 @@ Private Sub UserForm_Initialize()
     If Library.chkFileExists(previewImgPath) = False Then
       imageName = thisAppName & "NoHighLightImg" & ".jpg"
       previewImgPath = LadexDir & "\RibbonImg\" & imageName
+    Else
+      Call doHighLightPreview
     End If
     HighLightImg.Picture = LoadPicture(previewImgPath)
     
@@ -126,38 +129,51 @@ Private Sub UserForm_Initialize()
     
     'コメント 背景色-------------------------------------------------------------------------------
     CommentBgColor = Library.getRegistry("Main", "CommentBgColor")
-    If CommentBgColor = "0" Then
-      .CommentColor.BackColor = 10222585
-    Else
-      .CommentColor.BackColor = CommentBgColor
-    End If
+    .CommentColor.BackColor = CommentBgColor
     .CommentColor.Caption = ""
     
     'コメント フォント-------------------------------------------------------------------------------
-'    Dim cBox As CommandBarComboBox
-'    CommentFont = Library.getRegistry("Main", "CommentFont")
-'
-'    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
-'
-'      For i = 1 To cBox.ListCount
-'        .CommentFont.AddItem cBox.list(i)
-'        If cBox.list(i) = CommentFont Then
-'          ListIndex = i - 1
-'        End If
-'      Next
-'    .CommentFont.ListIndex = ListIndex
-
+    CommentFontColor = Library.getRegistry("Main", "CommentFontColor")
+    .CommentFontColor.BackColor = CommentFontColor
+    .CommentFontColor.Caption = ""
     
+    CommentFont = Library.getRegistry("Main", "CommentFont")
+    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
+    indexCnt = 0
+    For i = 1 To cBox.ListCount
+      .CommentFont.AddItem cBox.list(i)
+      If cBox.list(i) = CommentFont Then
+        ListIndex = indexCnt
+      End If
+      indexCnt = indexCnt + 1
+    Next
+    .CommentFont.ListIndex = ListIndex
+
+    'フォントサイズ
+    indexCnt = 0
+    CommentFontSize = Library.getRegistry("Main", "CommentFontSize")
+    For Each i In Split("6,7,8,9,10,11,12,14,16,18,20", ",")
+      .CommentFontSize.AddItem i
+      If i = CommentFontSize Then
+        ListIndex = indexCnt
+      End If
+      indexCnt = indexCnt + 1
+    Next
+    .CommentFont.ListIndex = ListIndex
+
+
     imageName = thisAppName & "CommentImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
       imageName = thisAppName & "NoCommentImg" & ".jpg"
       previewImgPath = LadexDir & "\RibbonImg\" & imageName
+    Else
+      Call doCommentPreview
     End If
     .CommentImg.Picture = LoadPicture(previewImgPath)
+    Set cBox = Nothing
     
     '電子印鑑 フォント-------------------------------------------------------------------------------
-    Dim cBox As CommandBarComboBox
     StampVal = Library.getRegistry("Main", "StampVal")
     StampFont = Library.getRegistry("Main", "StampFont")
   
@@ -179,13 +195,7 @@ Private Sub UserForm_Initialize()
       previewImgPath = LadexDir & "\RibbonImg\" & imageName
     End If
     .StampImg.Picture = LoadPicture(previewImgPath)
-    
-    
-    
-    
-    
-    
-    
+    Set cBox = Nothing
     
     '電子印鑑非表示(公開一時停止)
     .MultiPage1.Page4.Visible = False
@@ -296,6 +306,8 @@ End Function
 '==================================================================================================
 Function doCommentPreview()
   Dim previewImgPath As String
+  
+  Dim CommentBgColor, CommentFontColor, CommentFont, CommentFontSize
 
   Call init.setting
 '  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
@@ -304,9 +316,11 @@ Function doCommentPreview()
   BK_sheetHighLight.Range("N5").Activate
   
   CommentBgColor = Me.CommentColor.BackColor
-  CommentFont = Me.StampFont.Value
+  CommentFontColor = Me.CommentFontColor.BackColor
+  CommentFont = Me.CommentFont.Value
+  CommentFontSize = Me.CommentFontSize.Value
   
-  Call Library.setComment(CommentBgColor, CommentFont)
+  Call Library.setComment(CommentBgColor, CommentFont, CommentFontColor, CommentFontSize)
   
   imageName = thisAppName & "CommentImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
@@ -462,6 +476,37 @@ Private Sub CommentColor_Click()
 End Sub
 
 '==================================================================================================
+Private Sub CommentFontColor_Click()
+
+  colorValue = Library.getColor(Me.CommentFontColor.BackColor)
+  Me.CommentFontColor.BackColor = colorValue
+  Me.CommentFontColor.Caption = ""
+  
+  If InitializeFlg = False Then
+    Call doCommentPreview
+  End If
+  Me.CommentFontColor.Caption = ""
+End Sub
+
+'==================================================================================================
+Private Sub CommentFont_Change()
+
+  Me.CommentFontColor.Caption = ""
+  If InitializeFlg = False Then
+    Call doCommentPreview
+  End If
+End Sub
+'==================================================================================================
+Private Sub CommentFontSize_Change()
+
+  Me.CommentFontColor.Caption = ""
+  If InitializeFlg = False Then
+    Call doCommentPreview
+  End If
+End Sub
+
+
+'==================================================================================================
 Private Sub StampFont_Exit(ByVal Cancel As MSForms.ReturnBoolean)
   
   If InitializeFlg = False Then
@@ -538,8 +583,12 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "HighLightDspMethod", HighLightDspMethod)
   BKh_rbPressed = old_BKh_rbPressed
 
-
+  'コメント----------------------------------------------------------------------------------------
   Call Library.setRegistry("Main", "CommentBgColor", Me.CommentColor.BackColor)
+  Call Library.setRegistry("Main", "CommentFont", Me.CommentFont.Value)
+  
+  Call Library.setRegistry("Main", "CommentFontColor", Me.CommentFontColor.BackColor)
+  Call Library.setRegistry("Main", "CommentFontSize", Me.CommentFontSize.Value)
 
 
   Call Library.setRegistry("Main", "StampVal", Me.StampVal.Value)

@@ -11,8 +11,14 @@ Function ÉRÉÅÉìÉgêÆå`()
   On Error GoTo catchError
   
   If TypeName(ActiveCell) = "Range" Then
-    Call Library.setComment(Library.getRegistry("Main", "CommentBgColor"))
-  
+    Call Library.startScript
+    Call Library.setComment(Library.getRegistry("Main", "CommentBgColor") _
+                          , Library.getRegistry("Main", "CommentFont") _
+                          , Library.getRegistry("Main", "CommentFontColor") _
+                          , Library.getRegistry("Main", "CommentFontSize") _
+                          )
+    
+    Call Library.endScript
   End If
   
   

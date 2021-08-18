@@ -30,7 +30,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   End If
   
   If Library.chkDirExists(saveDir) = "" Then
-    Call Library.makeDir(saveDir)
+    Call Library.execMkdir(saveDir)
   End If
   
   Select Case TypeName(slctArea)

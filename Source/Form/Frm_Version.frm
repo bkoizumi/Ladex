@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Version 
    Caption         =   "Version"
-   ClientHeight    =   4560
+   ClientHeight    =   5130
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   6030
@@ -13,3 +13,26 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+'**************************************************************************************************
+' * 初期設定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Private Sub UserForm_Initialize()
+
+End Sub
+
+
+'**************************************************************************************************
+' * ボタン押下時処理
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+
+'==================================================================================================
+'キャンセル処理
+Private Sub CancelButton_Click()
+  
+  Unload Me
+End Sub

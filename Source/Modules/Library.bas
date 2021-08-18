@@ -943,6 +943,8 @@ End Function
 Function getMachineInfo() As Object
   Dim WshNetworkObject As Object
 
+  On Error Resume Next
+  
   Set MachineInfo = CreateObject("Scripting.Dictionary")
   Set WshNetworkObject = CreateObject("WScript.Network")
 
@@ -2250,7 +2252,7 @@ End Function
 ' *
 ' * @Link   http://techoh.net/customize-excel-comment-by-vba/
 '**************************************************************************************************
-Function setComment(Optional BgColorVal, Optional FontVal)
+Function setComment(Optional BgColorVal, Optional FontVal, Optional FontColorVal = 8421504, Optional FontSizeVal = 9)
     Dim cl As Range
     Dim count As Long
 
@@ -2262,14 +2264,14 @@ Function setComment(Optional BgColorVal, Optional FontVal)
         With cl.Comment.Shape
           'サイズ設定
           .TextFrame.AutoSize = True
-          .TextFrame.Characters.Font.Size = 9
+          .TextFrame.Characters.Font.Size = FontSizeVal
+          .TextFrame.Characters.Font.Color = FontColorVal
 
           '形状を角丸四角形に変更
           .AutoShapeType = msoShapeRectangle
 
           '色
           .line.ForeColor.RGB = RGB(128, 128, 128)
-          '.Fill.ForeColor.RGB = RGB(240, 240, 240)
           .Fill.ForeColor.RGB = BgColorVal
 
           '影 透過率 30%、オフセット量 x:1px,y:1px
@@ -2281,7 +2283,7 @@ Function setComment(Optional BgColorVal, Optional FontVal)
           .TextFrame.Characters.Font.Bold = False
           .TextFrame.HorizontalAlignment = xlLeft
 
-'          .TextFrame.Characters.Font = FontVal
+          .TextFrame.Characters.Font.Name = FontVal
 
           ' セルに合わせて移動する
           .Placement = xlMove
