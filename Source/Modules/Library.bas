@@ -352,6 +352,79 @@ catchError:
 
 End Function
 
+
+
+'**************************************************************************************************
+' * ƒtƒ@ƒCƒ‹‚Ì•Û‘¶êŠ‚ªƒ[ƒJƒ‹ƒfƒBƒXƒN‚©‚Ç‚¤‚©”»’è
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function chkLocalDrive(targetPath As String)
+  Dim FSO As Object
+  Dim driveName As String
+  Dim driveType As Long
+  Dim retVal As Boolean
+
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  driveName = FSO.GetDriveName(targetPath)
+  
+  'ƒhƒ‰ƒCƒu‚Ìí—Ş‚ğ”»•Ê
+  If driveName = "" Then
+      driveType = 0 '•s–¾
+  Else
+      driveType = FSO.GetDrive(driveName).driveType
+  End If
+
+  Select Case driveType
+    Case 1
+      retVal = True
+      Call Library.showDebugForm("ƒŠƒ€[ƒoƒuƒ‹ƒfƒBƒXƒN")
+    Case 2
+      retVal = True
+      Call Library.showDebugForm("ƒn[ƒhƒfƒBƒXƒN")
+    Case Else
+      retVal = False
+      Call Library.showDebugForm("•s–¾Aƒlƒbƒgƒ[ƒNƒhƒ‰ƒCƒuACDƒhƒ‰ƒCƒu‚È‚Ç")
+  End Select
+
+  If setVal("debugMode") = "develop" Then
+    retVal = False
+  End If
+  chkLocalDrive = retVal
+
+
+  Exit Function
+'ƒGƒ‰[”­¶--------------------------------------------------------------------------------------
+catchError:
+End Function
+
+
+'**************************************************************************************************
+' * ƒpƒX‚©‚çƒtƒ@ƒCƒ‹‚©ƒfƒBƒŒƒNƒgƒŠ‚©‚ğ”»’è
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function chkPathDecision(targetPath As String)
+  Dim FSO As Object
+  Dim retVal As String
+  Dim targetType
+
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+
+  If FSO.FolderExists(targetPath) Then
+    retVal = "dir"
+  Else
+    If FSO.FileExists(targetPath) Then
+      targetType = objFso.GetExtensionName(arg)
+      retVal = UCase(targetType)
+    End If
+  End If
+  Set FSO = Nothing
+  
+  chkFileExists = retVal
+End Function
+
+
 '**************************************************************************************************
 ' * ƒtƒ@ƒCƒ‹‚Ì‘¶İŠm”F
 ' *
@@ -836,29 +909,34 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function execCopy(srcPath As String, dstPaht As String)
+Function execCopy(srcPath As String, dstPath As String)
   Dim FSO As Object
   
   On Error GoTo catchError
   
   Set FSO = CreateObject("Scripting.FileSystemObject")
   
-  Call showDebugForm("ƒRƒs[Œ³F" & srcPath)
-  Call showDebugForm("ƒRƒs[æF" & dstPaht)
+  Call showDebugForm("  ƒRƒs[Œ³F" & srcPath)
+  Call showDebugForm("  ƒRƒs[æF" & dstPath)
   
   If chkFileExists(srcPath) = False Then
     Call showNotice(404, "ƒRƒs[Œ³", True)
   End If
   
-'  If chkFileExists(Library.getFileInfo(dstPaht, , "CurrentDir")) = False Then
+  If chkDirExists(getParentDir(dstPath)) = False Then
+    Call Library.execMkdir(getParentDir(dstPath))
+  End If
+  
+'  If chkFileExists(Library.getFileInfo(dstPath, , "CurrentDir")) = False Then
 '    Call showNotice(403, "ƒRƒs[æ", True)
 '  End If
   
   
-  FSO.CopyFile srcPath, dstPaht
+  FSO.CopyFile srcPath, dstPath
   Set FSO = Nothing
 
   Exit Function
+
 'ƒGƒ‰[”­¶--------------------------------------------------------------------------------------
 catchError:
   Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "F" & Err.Description, True)
@@ -913,7 +991,9 @@ Function execDel(srcPath As String)
   
   Call showDebugForm("  íœ‘ÎÛF" & srcPath)
   
-  If chkFileExists(srcPath) = False Then
+  If srcPath Like "*[*]*" Then
+  
+  ElseIf chkFileExists(srcPath) = False Then
     Call showNotice(404, "íœ‘ÎÛ", True)
   End If
   
@@ -1031,9 +1111,7 @@ Function getMachineInfo() As Object
   MachineInfo.add "appHeight", ActiveWindow.height
   
 
-  
-  
-  
+  Set WshNetworkObject = Nothing
 End Function
 
 
@@ -1438,6 +1516,21 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
     Set fileInfo = Nothing
   End If
   
+End Function
+
+
+'**************************************************************************************************
+' * ƒtƒ@ƒCƒ‹‚ÌeƒtƒHƒ‹ƒ_æ“¾
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getParentDir(targetPath As String) As String
+  Dim parentDir As String
+  
+  parentDir = Left(targetPath, InStrRev(targetPath, "\") - 1)
+  Call Library.showDebugForm(" parentDirF" & parentDir)
+  
+  getParentDir = parentDir
 End Function
 
 
@@ -1937,8 +2030,29 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setHighLight(ByVal Target As Range)
+Function setHighLight(SetArea As String, DisType As Boolean, SetColor As String)
 
+  Range(SetArea).Select
+
+  'ğŒ•t‚«‘®‚ğƒNƒŠƒA
+  Selection.FormatConditions.delete
+
+  If DisType = False Then
+    's‚¾‚¯İ’è
+    Selection.FormatConditions.add Type:=xlExpression, Formula1:="=CELL(""row"")=ROW()"
+  Else
+    's‚Æ—ñ‚Éİ’è
+    Selection.FormatConditions.add Type:=xlExpression, Formula1:="=OR(CELL(""row"")=ROW(), CELL(""col"")=COLUMN())"
+  End If
+
+  Selection.FormatConditions(Selection.FormatConditions.count).SetFirstPriority
+  With Selection.FormatConditions(1)
+    .Interior.PatternColorIndex = xlAutomatic
+    .Interior.Color = SetColor
+'    .Interior.TintAndShade = 0
+'    .Font.ColorIndex = 1
+  End With
+  Selection.FormatConditions(1).StopIfTrue = False
 
 
 End Function
@@ -2165,9 +2279,9 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setLineColor(setArea As String, DisType As Boolean, SetColor As String)
+Function setLineColor(SetArea As String, DisType As Boolean, SetColor As String)
 
-  Range(setArea).Select
+  Range(SetArea).Select
 
   'ğŒ•t‚«‘®‚ğƒNƒŠƒA
   Selection.FormatConditions.delete
@@ -2340,8 +2454,8 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function unsetLineColor(setArea As String)
-  ActiveWorkbook.ActiveSheet.Range(setArea).Select
+Function unsetLineColor(SetArea As String)
+  ActiveWorkbook.ActiveSheet.Range(SetArea).Select
 
   'ğŒ•t‚«‘®‚ğƒNƒŠƒA
   Selection.FormatConditions.delete
@@ -2393,9 +2507,9 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function Œrü_ƒNƒŠƒA(Optional setArea As Range)
-  If TypeName(setArea) = "Range" Then
-    With setArea
+Function Œrü_ƒNƒŠƒA(Optional SetArea As Range)
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlNone
       .Borders(xlInsideHorizontal).LineStyle = xlNone
       .Borders(xlEdgeLeft).LineStyle = xlNone
@@ -2420,13 +2534,13 @@ Function Œrü_ƒNƒŠƒA(Optional setArea As Range)
 End Function
 
 '==================================================================================================
-Function Œrü_•\(Optional setArea As Range, Optional LineColor As Long)
+Function Œrü_•\(Optional SetArea As Range, Optional LineColor As Long)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       .Borders(xlEdgeTop).LineStyle = xlContinuous
@@ -2485,13 +2599,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_ˆÍ‚İ(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeRight).LineStyle = xlDash
       .Borders(xlEdgeTop).LineStyle = xlDash
@@ -2531,36 +2645,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_Šiq(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_Šiq(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
-      .Borders(xlEdgeLeft).LineStyle = xlDash
-      .Borders(xlEdgeRight).LineStyle = xlDash
-      .Borders(xlEdgeTop).LineStyle = xlDash
-      .Borders(xlEdgeBottom).LineStyle = xlDash
-      .Borders(xlInsideVertical).LineStyle = xlDash
-      .Borders(xlInsideHorizontal).LineStyle = xlDash
-
-      .Borders(xlEdgeLeft).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
-      .Borders(xlEdgeTop).Weight = WeightVal
-      .Borders(xlEdgeBottom).Weight = WeightVal
-      .Borders(xlInsideVertical).Weight = WeightVal
-      .Borders(xlInsideHorizontal).Weight = WeightVal
-
-      If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-      End If
-    End With
-  Else
-    With Selection
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeRight).LineStyle = xlDash
       .Borders(xlEdgeTop).LineStyle = xlDash
@@ -2582,19 +2673,42 @@ Function Œrü_”jü_Šiq(Optional setArea As Range, Optional LineColor As Long, O
         .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
   End If
 End Function
 
 
 
 '==================================================================================================
-Function Œrü_”jü_¶(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_¶(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeLeft).Weight = WeightVal
 
@@ -2617,13 +2731,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_‰E(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_‰E(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeRight).LineStyle = xlDash
       .Borders(xlEdgeRight).Weight = WeightVal
 
@@ -2646,13 +2760,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_¶‰E(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_¶‰E(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeRight).LineStyle = xlDash
 
@@ -2684,13 +2798,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_ã(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_ã(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDash
       .Borders(xlEdgeTop).Weight = WeightVal
 
@@ -2712,13 +2826,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_‰º(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_‰º(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeBottom).LineStyle = xlDash
       .Borders(xlEdgeBottom).Weight = WeightVal
 
@@ -2740,13 +2854,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_ã‰º(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_ã‰º(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDash
       .Borders(xlEdgeBottom).LineStyle = xlDash
 
@@ -2776,13 +2890,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_‚’¼(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_‚’¼(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlDash
       .Borders(xlInsideVertical).Weight = WeightVal
       If Not (IsMissing(Red)) Then
@@ -2802,13 +2916,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_…•½(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function Œrü_”jü_…•½(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideHorizontal).LineStyle = xlDash
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
@@ -2835,13 +2949,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_Àü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_Àü_ˆÍ‚İ(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       .Borders(xlEdgeTop).LineStyle = xlContinuous
@@ -2882,13 +2996,13 @@ Function Œrü_Àü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function Œrü_Àü_Šiq(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_Àü_Šiq(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       .Borders(xlEdgeTop).LineStyle = xlContinuous
@@ -2941,13 +3055,13 @@ Function Œrü_Àü_Šiq(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function Œrü_Àü_¶‰E(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_Àü_¶‰E(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
 
@@ -2977,13 +3091,13 @@ Function Œrü_Àü_¶‰E(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function Œrü_Àü_ã‰º(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_Àü_ã‰º(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlContinuous
       .Borders(xlEdgeBottom).LineStyle = xlContinuous
 
@@ -3012,13 +3126,13 @@ Function Œrü_Àü_ã‰º(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function Œrü_Àü_‚’¼(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_Àü_‚’¼(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlContinuous
       .Borders(xlInsideVertical).Weight = WeightVal
 
@@ -3039,13 +3153,13 @@ Function Œrü_Àü_‚’¼(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function Œrü_Àü_…•½(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_Àü_…•½(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideHorizontal).LineStyle = xlContinuous
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
@@ -3069,13 +3183,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_“ñdü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_“ñdü_ˆÍ‚İ(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDouble
       .Borders(xlEdgeRight).LineStyle = xlDouble
       .Borders(xlEdgeTop).LineStyle = xlDouble
@@ -3116,13 +3230,13 @@ Function Œrü_“ñdü_ˆÍ‚İ(Optional setArea As Range, Optional LineColor As Long,
 End Function
 
 '==================================================================================================
-Function Œrü_“ñdü_¶(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_“ñdü_¶(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDouble
 
       If Not (IsMissing(Red)) Then
@@ -3141,13 +3255,13 @@ Function Œrü_“ñdü_¶(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function Œrü_“ñdü_¶‰E(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_“ñdü_¶‰E(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDouble
       .Borders(xlEdgeRight).LineStyle = xlDouble
 
@@ -3171,13 +3285,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_“ñdü_‰º(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_“ñdü_‰º(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeBottom).LineStyle = xlDouble
 
       If Not (IsMissing(Red)) Then
@@ -3197,13 +3311,13 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_“ñdü_ã‰º(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_“ñdü_ã‰º(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDouble
       .Borders(xlEdgeBottom).LineStyle = xlDouble
 
@@ -3225,20 +3339,20 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_”jü_‹tLš(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function Œrü_”jü_‹tLš(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
-  Call Œrü_”jü_ˆÍ‚İ(setArea, LineColor, WeightVal)
+  Call Œrü_”jü_ˆÍ‚İ(SetArea, LineColor, WeightVal)
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    Set setArea = setArea.Offset(1, 1).Resize(setArea.Rows.count - 1, setArea.Columns.count - 1)
-    Call Œrü_”jü_…•½(setArea, LineColor, WeightVal)
-    Call Œrü_”jü_ˆÍ‚İ(setArea, LineColor, WeightVal)
+  If TypeName(SetArea) = "Range" Then
+    Set SetArea = SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1)
+    Call Œrü_”jü_…•½(SetArea, LineColor, WeightVal)
+    Call Œrü_”jü_ˆÍ‚İ(SetArea, LineColor, WeightVal)
   Else
-    setArea.Offset(1, 1).Resize(setArea.Rows.count - 1, setArea.Columns.count - 1).Select
-    Call Œrü_”jü_…•½(setArea, LineColor, WeightVal)
-    Call Œrü_”jü_ˆÍ‚İ(setArea, LineColor, WeightVal)
+    SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1).Select
+    Call Œrü_”jü_…•½(SetArea, LineColor, WeightVal)
+    Call Œrü_”jü_ˆÍ‚İ(SetArea, LineColor, WeightVal)
 
   End If
 End Function
@@ -3246,10 +3360,10 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_’†‰›üíœ_‰¡(Optional setArea As Range)
+Function Œrü_’†‰›üíœ_‰¡(Optional SetArea As Range)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideHorizontal).LineStyle = xlNone
     End With
   Else
@@ -3263,10 +3377,10 @@ End Function
 
 
 '==================================================================================================
-Function Œrü_’†‰›üíœ_c(Optional setArea As Range)
+Function Œrü_’†‰›üíœ_c(Optional SetArea As Range)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlNone
     End With
   Else
