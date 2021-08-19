@@ -38,8 +38,6 @@ Function ZoomIn(Optional slctCellAddress As String)
     .Left = leftPosition
     .Width = cellWidth + 100
     
-    Debug.Print cellWidth + 100
-    
     .TextBox.Width = cellWidth + 50
     .TextBox = cellVal
     .TextBox.MultiLine = True

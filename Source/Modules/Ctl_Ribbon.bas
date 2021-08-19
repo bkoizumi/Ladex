@@ -786,9 +786,21 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
+Function resetStyle(control As IRibbonControl)
+  Call Ctl_Style.スタイル初期化
+End Function
+
+'--------------------------------------------------------------------------------------------------
 Function delStyle(control As IRibbonControl)
   Call Ctl_Style.スタイル削除
 End Function
+
+'--------------------------------------------------------------------------------------------------
+Function setStyle(control As IRibbonControl)
+  Call Ctl_Style.スタイル設定
+End Function
+
+
 
 '--------------------------------------------------------------------------------------------------
 Function 名前定義削除(control As IRibbonControl)

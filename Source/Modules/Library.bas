@@ -900,6 +900,34 @@ End Function
 
 
 '**************************************************************************************************
+' * ファイル削除
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execDel(srcPath As String)
+  Dim FSO As Object
+  
+  On Error GoTo catchError
+  
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call showDebugForm("  削除対象：" & srcPath)
+  
+  If chkFileExists(srcPath) = False Then
+    Call showNotice(404, "削除対象", True)
+  End If
+  
+  FSO.DeleteFile srcPath
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
 ' * MkDirで階層の深いフォルダーを作る
 ' *
 ' * @link http://officetanaka.net/excel/vba/filesystemobject/sample10.htm

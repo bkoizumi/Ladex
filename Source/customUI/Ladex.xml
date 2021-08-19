@@ -53,13 +53,19 @@
       <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
 
       <menu id="ブック管理Menu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
+        <menuSeparator id="スタイル設定_MS01" title="スタイル設定" />
+        <menu id="スタイル設定Menu" label="スタイル設定"  itemSize="large" imageMso="AppointmentColorDialog">
+          <menuSeparator id="スタイル設定_MS02" title="スタイル設定" />
+          <button id="style_reset"  label="初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.resetStyle" description="スタイルの初期化 &#13;" />
+          <button id="style_del"    label="削除"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"   description="スタイルの削除 &#13;" />
+          <button id="style_set"    label="設定"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.setStyle"   description="スタイルの設定 &#13;" />
+        </menu>
         <menuSeparator id="削除" title="設定を削除" />
-        <button id="del_Style"      label="スタイルの初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.delStyle"      description="スタイルを削除 &#13;" />
         <button id="del_CellNames"  label="名前定義削除"      image="del_CellNames"             onAction="Ladex.xlam!Ctl_Ribbon.名前定義削除"  description="名前定義を削除 &#13;" />
 
-        <menuSeparator id="画面サイズ_MS01" title="画面サイズを変更" />
+        <menuSeparator id="画面サイズ_MS01" title="画面サイズ変更" />
         <menu id="画面サイズMenu" label="画面サイズ"  itemSize="large" imageMso="MicrosoftExcel">
-          <menuSeparator id="画面サイズ_MS02" title="画面サイズを変更" />
+          <menuSeparator id="画面サイズ_MS02" title="画面サイズ変更" />
           <button id="disp_SVGA12"  label="800✕600"      imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_SVGA12"   description="12型SVGA液晶 相当 &#13;" />
           <!-- <button id="disp_FHD15_6" label="1,920✕1,080"  imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_FHD15_6"  description="15.6型FHD液晶 相当 &#13;" /> -->
           <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"   description="15.6型HD 液晶 相当 &#13;" />
@@ -79,7 +85,7 @@
         <menuSeparator id="シート管理_Book" title="アクティブブックを対象とした処理" />
         <button id="dspDefaultViewSelect2"      label="セルとシート選択"    image="dspDefaultCellSelectAllSheet"      onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect2"        description="全シートをA1セルを選択&#13;"      />
         <button id="dspDefaultViewSelect2Save"  label="セルとシート＆保存"  image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect2AndSave" description="全シートをA1セルを選択後、上書き保存 &#13;"      />
-        <button id="dspDefault"                 label="標準画面"            imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.defaultView"                  description="標準画面&#13;" />
+        <button id="dspDefault"                 label="標準画面"            imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.defaultView"                  description="オプション設定の基本で設定した内容を反映させます &#13;" />
       </menu>
 
       <splitButton id="SB_ZoomIn" size="normal">
@@ -307,7 +313,7 @@
       <box id="bAlignment04"  boxStyle="vertical">
         <menu id="M_Shrink" label="セルの配置"  imageMso="WrapText" >
           <control idMso="WrapText" showLabel="true" visible="true" />
-          <menu id="M_ShrinkToFit" label="セルの配置"  imageMso="DistributeAllLinesParagraph" >
+          <menu id="M_ShrinkToFit" label="縮小して全体を表示"  imageMso="DistributeAllLinesParagraph" >
             <button id="ShrinkToFit"    imageMso="DistributeAllLinesParagraph"  label="設定" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToFit" />
             <button id="ShrinkToUnfit"  image="unDistributeAllLinesParagraph"   label="解除" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToUnfit" />
           </menu>

@@ -79,7 +79,7 @@
         <menuSeparator id="シート管理_Book" title="アクティブブックを対象とした処理" />
         <button id="dspDefaultViewSelect2"      label="セルとシート選択"    image="dspDefaultCellSelectAllSheet"      onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect2"        description="全シートをA1セルを選択&#13;"      />
         <button id="dspDefaultViewSelect2Save"  label="セルとシート＆保存"  image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect2AndSave" description="全シートをA1セルを選択後、上書き保存 &#13;"      />
-        <button id="dspDefault"                 label="標準画面"            imageMso="ViewNormalViewExcel"  onAction="Ladex.xlam!Ctl_Ribbon.defaultView"                  description="標準画面&#13;" />
+        <button id="dspDefault"                 label="標準画面"            imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.defaultView"                  description="オプション設定の基本で設定した内容を反映させます &#13;" />
       </menu>
 
       <splitButton id="SB_ZoomIn" size="normal">
@@ -307,7 +307,7 @@
       <box id="bAlignment04"  boxStyle="vertical">
         <menu id="M_Shrink" label="セルの配置"  imageMso="WrapText" >
           <control idMso="WrapText" showLabel="true" visible="true" />
-          <menu id="M_ShrinkToFit" label="セルの配置"  imageMso="DistributeAllLinesParagraph" >
+          <menu id="M_ShrinkToFit" label="縮小して全体を表示"  imageMso="DistributeAllLinesParagraph" >
             <button id="ShrinkToFit"    imageMso="DistributeAllLinesParagraph"  label="設定" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToFit" />
             <button id="ShrinkToUnfit"  image="unDistributeAllLinesParagraph"   label="解除" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToUnfit" />
           </menu>
