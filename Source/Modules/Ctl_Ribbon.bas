@@ -786,18 +786,30 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
+Function resetStyle(control As IRibbonControl)
+  Call Ctl_Style.スタイル初期化
+End Function
+
+'--------------------------------------------------------------------------------------------------
 Function delStyle(control As IRibbonControl)
   Call Ctl_Style.スタイル削除
 End Function
 
 '--------------------------------------------------------------------------------------------------
+Function setStyle(control As IRibbonControl)
+  Call Ctl_Style.スタイル設定
+End Function
+
+
+
+'--------------------------------------------------------------------------------------------------
 Function 名前定義削除(control As IRibbonControl)
-  Call Main.名前定義削除
+  Call Ctl_Book.名前定義削除
 End Function
 
 '--------------------------------------------------------------------------------------------------
-Function 画像設定(control As IRibbonControl)
-  'Call Main.すべて表示
+Function getSheetList(control As IRibbonControl)
+  Call Ctl_Book.シートリスト取得
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -863,9 +875,13 @@ End Function
 Function AdjustHeightAndWidth(control As IRibbonControl)
   Call Ctl_Sheet.セル幅調整
   Call Ctl_Sheet.セル高さ調整
-  
 End Function
 
+
+'--------------------------------------------------------------------------------------------------
+Function getAdjustWidth(control As IRibbonControl)
+  Call Library.getColumnWidth
+End Function
 
 
 
@@ -934,8 +950,28 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function formatComment(control As IRibbonControl)
-  Call Main.コメント整形
+  Call Ctl_format.コメント整形
 End Function
+
+'--------------------------------------------------------------------------------------------------
+Function formatMoveAndSize(control As IRibbonControl)
+  Call Ctl_format.移動やサイズ変更をする
+End Function
+'--------------------------------------------------------------------------------------------------
+Function formatMove(control As IRibbonControl)
+  Call Ctl_format.移動する
+End Function
+'--------------------------------------------------------------------------------------------------
+Function formatFreeFloating(control As IRibbonControl)
+  Call Ctl_format.移動やサイズ変更をしない
+End Function
+'--------------------------------------------------------------------------------------------------
+Function MarginZero(control As IRibbonControl)
+  Call Ctl_format.余白ゼロ
+End Function
+
+
+
 
 
 
@@ -960,8 +996,9 @@ Function saveSelectArea2Image(control As IRibbonControl)
   Call Ctl_Image.saveSelectArea2Image
 End Function
 
+
 '**************************************************************************************************
-' * リボンメニュー[文字編集]
+' * リボンメニュー[セル編集]
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
@@ -976,11 +1013,19 @@ Function 中黒点付与(control As IRibbonControl)
 End Function
 
 '--------------------------------------------------------------------------------------------------
-Function 連番付与(control As IRibbonControl)
-  Call Ctl_String.連番付与
+Function 連番設定(control As IRibbonControl)
+  Call Ctl_String.連番設定
 End Function
 
+'--------------------------------------------------------------------------------------------------
+Function 連番追加(control As IRibbonControl)
+  Call Ctl_String.連番追加
+End Function
 
+'--------------------------------------------------------------------------------------------------
+Function 英数字全半角変換(control As IRibbonControl)
+  Call Ctl_String.英数字全半角変換
+End Function
 
 '--------------------------------------------------------------------------------------------------
 Function xxxxxxxxxx(control As IRibbonControl)
@@ -1019,16 +1064,11 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function 罫線_表_破線A(control As IRibbonControl)
-  Call Library.罫線_破線_格子
-End Function
-
-'--------------------------------------------------------------------------------------------------
-Function 罫線_表_破線B(control As IRibbonControl)
   Call Library.罫線_表
 End Function
 
 '--------------------------------------------------------------------------------------------------
-Function 罫線_表_破線C(control As IRibbonControl)
+Function 罫線_表_破線B(control As IRibbonControl)
   Call Library.罫線_破線_格子
   Call Library.罫線_実線_水平
   Call Library.罫線_実線_囲み
@@ -1230,6 +1270,19 @@ Function setCenter(control As IRibbonControl)
   End If
 End Function
 
+'--------------------------------------------------------------------------------------------------
+Function ShrinkToFit(control As IRibbonControl)
+  If TypeName(Selection) = "Range" Then
+    Selection.ShrinkToFit = True
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function ShrinkToUnfit(control As IRibbonControl)
+  If TypeName(Selection) = "Range" Then
+    Selection.ShrinkToFit = False
+  End If
+End Function
 
 
 '**************************************************************************************************

@@ -352,6 +352,79 @@ catchError:
 
 End Function
 
+
+
+'**************************************************************************************************
+' * ファイルの保存場所がローカルディスクかどうか判定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function chkLocalDrive(targetPath As String)
+  Dim FSO As Object
+  Dim driveName As String
+  Dim driveType As Long
+  Dim retVal As Boolean
+
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  driveName = FSO.GetDriveName(targetPath)
+  
+  'ドライブの種類を判別
+  If driveName = "" Then
+      driveType = 0 '不明
+  Else
+      driveType = FSO.GetDrive(driveName).driveType
+  End If
+
+  Select Case driveType
+    Case 1
+      retVal = True
+      Call Library.showDebugForm("リムーバブルディスク")
+    Case 2
+      retVal = True
+      Call Library.showDebugForm("ハードディスク")
+    Case Else
+      retVal = False
+      Call Library.showDebugForm("不明、ネットワークドライブ、CDドライブなど")
+  End Select
+
+  If setVal("debugMode") = "develop" Then
+    retVal = False
+  End If
+  chkLocalDrive = retVal
+
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+End Function
+
+
+'**************************************************************************************************
+' * パスからファイルかディレクトリかを判定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function chkPathDecision(targetPath As String)
+  Dim FSO As Object
+  Dim retVal As String
+  Dim targetType
+
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+
+  If FSO.FolderExists(targetPath) Then
+    retVal = "dir"
+  Else
+    If FSO.FileExists(targetPath) Then
+      targetType = objFso.GetExtensionName(arg)
+      retVal = UCase(targetType)
+    End If
+  End If
+  Set FSO = Nothing
+  
+  chkFileExists = retVal
+End Function
+
+
 '**************************************************************************************************
 ' * ファイルの存在確認
 ' *
@@ -728,11 +801,11 @@ Function delSheetData(Optional line As Long)
     Rows(line & ":" & Rows.count).delete Shift:=xlUp
     Rows(line & ":" & Rows.count).Select
     Rows(line & ":" & Rows.count).NumberFormatLocal = "G/標準"
-    Rows(line & ":" & Rows.count).Style = "Normal"
+    Rows(line & ":" & Rows.count).style = "Normal"
   Else
     Cells.delete Shift:=xlUp
     Cells.NumberFormatLocal = "G/標準"
-    Cells.Style = "Normal"
+    Cells.style = "Normal"
   End If
   DoEvents
 
@@ -832,6 +905,143 @@ End Function
 
 
 '**************************************************************************************************
+' * ファイルコピー
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execCopy(srcPath As String, dstPath As String)
+  Dim FSO As Object
+  
+  On Error GoTo catchError
+  
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call showDebugForm("  コピー元：" & srcPath)
+  Call showDebugForm("  コピー先：" & dstPath)
+  
+  If chkFileExists(srcPath) = False Then
+    Call showNotice(404, "コピー元", True)
+  End If
+  
+  If chkDirExists(getParentDir(dstPath)) = False Then
+    Call Library.execMkdir(getParentDir(dstPath))
+  End If
+  
+'  If chkFileExists(Library.getFileInfo(dstPath, , "CurrentDir")) = False Then
+'    Call showNotice(403, "コピー先", True)
+'  End If
+  
+  
+  FSO.CopyFile srcPath, dstPath
+  Set FSO = Nothing
+
+  Exit Function
+
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
+' * ファイル移動
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execMove(srcPath As String, dstPath As String)
+  Dim FSO As Object
+  
+  On Error GoTo catchError
+  
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call showDebugForm("移動元：" & srcPath)
+  Call showDebugForm("移動先：" & dstPath)
+  
+  If chkFileExists(srcPath) = False Then
+    Call showNotice(404, "移動元", True)
+  End If
+  
+'  If chkFileExists(Library.getFileInfo(dstPath, , "CurrentDir")) = False Then
+'    Call showNotice(403, "移動先", True)
+'  End If
+  
+  
+  FSO.MoveFile srcPath, dstPath
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
+' * ファイル削除
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execDel(srcPath As String)
+  Dim FSO As Object
+  
+  On Error GoTo catchError
+  
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+  
+  Call showDebugForm("  削除対象：" & srcPath)
+  
+  If srcPath Like "*[*]*" Then
+  
+  ElseIf chkFileExists(srcPath) = False Then
+    Call showNotice(404, "削除対象", True)
+  End If
+  
+  FSO.DeleteFile srcPath
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
+' * MkDirで階層の深いフォルダーを作る
+' *
+' * @link http://officetanaka.net/excel/vba/filesystemobject/sample10.htm
+'**************************************************************************************************
+Function execMkdir(fullPath As String)
+  
+  If chkDirExists(fullPath) Then
+    Exit Function
+  End If
+  Call chkParentDir(fullPath)
+End Function
+'==================================================================================================
+Private Function chkParentDir(TargetFolder)
+  Dim ParentFolder As String, FSO As Object
+
+  On Error GoTo catchError
+  Set FSO = CreateObject("Scripting.FileSystemObject")
+
+  ParentFolder = FSO.GetParentFolderName(TargetFolder)
+  If Not FSO.FolderExists(ParentFolder) Then
+    Call chkParentDir(ParentFolder)
+  End If
+
+  FSO.CreateFolder TargetFolder
+  Set FSO = Nothing
+
+  Exit Function
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "ディレクトリの作成に失敗しました" & vbNewLine & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
 ' * PC、Office等の情報取得
 ' * 連想配列を利用しているので、Microsoft Scripting Runtimeが必須
 ' * MachineInfo.Item ("Excel") で呼び出し
@@ -841,6 +1051,8 @@ End Function
 Function getMachineInfo() As Object
   Dim WshNetworkObject As Object
 
+  On Error Resume Next
+  
   Set MachineInfo = CreateObject("Scripting.Dictionary")
   Set WshNetworkObject = CreateObject("WScript.Network")
 
@@ -895,13 +1107,11 @@ Function getMachineInfo() As Object
   MachineInfo.add "displayVirtualY", GetSystemMetrics(79)
   MachineInfo.add "appTop", ActiveWindow.Top
   MachineInfo.add "appLeft", ActiveWindow.Left
-  MachineInfo.add "appWidth", ActiveWindow.width
+  MachineInfo.add "appWidth", ActiveWindow.Width
   MachineInfo.add "appHeight", ActiveWindow.height
   
 
-  
-  
-  
+  Set WshNetworkObject = Nothing
 End Function
 
 
@@ -1127,7 +1337,11 @@ Function getFilePath(CurrentDirectory As String, saveFileName As String, title A
     .FilterIndex = FileTypeNo
 
     '表示するフォルダ
+    If chkDirExists(CurrentDirectory) = True Then
     .InitialFileName = CurrentDirectory & "\" & saveFileName
+    Else
+      .InitialFileName = ActiveWorkbook.Path & "\" & saveFileName
+    End If
 
     '表示形式の設定
     .InitialView = msoFileDialogViewWebView
@@ -1255,6 +1469,9 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
 
   '拡張子
   fileInfo.add "extension", FSO.GetExtensionName(targetFilePath)
+  
+  'ファイル名
+  fileInfo.add "fileName", FSO.GetFile(targetFilePath).Name
 
   'ファイルが存在するフォルダ
   fileInfo.add "CurrentDir", FSO.GetFile(targetFilePath).ParentFolder
@@ -1269,7 +1486,7 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
               SaveWithDocument:=True, _
               Left:=0, _
               Top:=0, _
-              width:=0, _
+              Width:=0, _
               height:=0 _
               )
     With sp
@@ -1277,14 +1494,14 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
       .ScaleHeight 1, msoTrue
       .ScaleWidth 1, msoTrue
 
-      fileInfo.add "width", CLng(.width * 4 / 3)
+      fileInfo.add "width", CLng(.Width * 4 / 3)
       fileInfo.add "height", CLng(.height * 4 / 3)
       .delete
     End With
     
     Case "bmp", "jpg", "gif", "emf", "ico", "rle", "wmf"
       Set fileObject = LoadPicture(targetFilePath)
-      fileInfo.add "width", fileObject.width
+      fileInfo.add "width", fileObject.Width
       fileInfo.add "height", fileObject.height
 
       Set fileObject = Nothing
@@ -1299,6 +1516,21 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
     Set fileInfo = Nothing
   End If
   
+End Function
+
+
+'**************************************************************************************************
+' * ファイルの親フォルダ取得
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getParentDir(targetPath As String) As String
+  Dim parentDir As String
+  
+  parentDir = Left(targetPath, InStrRev(targetPath, "\") - 1)
+  Call Library.showDebugForm(" parentDir：" & parentDir)
+  
+  getParentDir = parentDir
 End Function
 
 
@@ -1459,7 +1691,7 @@ End Function
 Function showExpansionForm(Text As String, SetSelectTargetRows As String)
   With Frm_Zoom
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.width / 10)
+    .Top = Application.Top + (ActiveWindow.Width / 10)
     .Left = Application.Left + (ActiveWindow.height / 5)
     .TextBox = Text
     .TextBox.MultiLine = True
@@ -1764,43 +1996,11 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName, True)
+  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
-'**************************************************************************************************
-' * MkDirで階層の深いフォルダーを作る
-' *
-' * @link http://officetanaka.net/excel/vba/filesystemobject/sample10.htm
-'**************************************************************************************************
-Function makeDir(fullPath As String)
 
-  If chkDirExists(fullPath) Then
-    Exit Function
-  End If
-  Call chkParentDir(fullPath)
-End Function
-
-'==================================================================================================
-Private Function chkParentDir(TargetFolder)
-  Dim ParentFolder As String, FSO As Object
-
-  On Error GoTo catchError
-  Set FSO = CreateObject("Scripting.FileSystemObject")
-
-  ParentFolder = FSO.GetParentFolderName(TargetFolder)
-  If Not FSO.FolderExists(ParentFolder) Then
-    Call chkParentDir(ParentFolder)
-  End If
-
-  FSO.CreateFolder TargetFolder
-  Set FSO = Nothing
-
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Call Library.showNotice(400, "ディレクトリの作成に失敗しました" & vbNewLine & Err.Description, True)
-End Function
 
 
 '**************************************************************************************************
@@ -1830,8 +2030,29 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setHighLight(ByVal Target As Range)
+Function setHighLight(SetArea As String, DisType As Boolean, SetColor As String)
 
+  Range(SetArea).Select
+
+  '条件付き書式をクリア
+  Selection.FormatConditions.delete
+
+  If DisType = False Then
+    '行だけ設定
+    Selection.FormatConditions.add Type:=xlExpression, Formula1:="=CELL(""row"")=ROW()"
+  Else
+    '行と列に設定
+    Selection.FormatConditions.add Type:=xlExpression, Formula1:="=OR(CELL(""row"")=ROW(), CELL(""col"")=COLUMN())"
+  End If
+
+  Selection.FormatConditions(Selection.FormatConditions.count).SetFirstPriority
+  With Selection.FormatConditions(1)
+    .Interior.PatternColorIndex = xlAutomatic
+    .Interior.Color = SetColor
+'    .Interior.TintAndShade = 0
+'    .Font.ColorIndex = 1
+  End With
+  Selection.FormatConditions(1).StopIfTrue = False
 
 
 End Function
@@ -2058,9 +2279,9 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function setLineColor(setArea As String, DisType As Boolean, SetColor As String)
+Function setLineColor(SetArea As String, DisType As Boolean, SetColor As String)
 
-  Range(setArea).Select
+  Range(SetArea).Select
 
   '条件付き書式をクリア
   Selection.FormatConditions.delete
@@ -2173,7 +2394,7 @@ End Function
 ' *
 ' * @Link   http://techoh.net/customize-excel-comment-by-vba/
 '**************************************************************************************************
-Function setComment(Optional BgColorVal, Optional FontVal)
+Function setComment(Optional BgColorVal, Optional FontVal, Optional FontColorVal = 8421504, Optional FontSizeVal = 9)
     Dim cl As Range
     Dim count As Long
 
@@ -2185,14 +2406,14 @@ Function setComment(Optional BgColorVal, Optional FontVal)
         With cl.Comment.Shape
           'サイズ設定
           .TextFrame.AutoSize = True
-          .TextFrame.Characters.Font.Size = 9
+          .TextFrame.Characters.Font.Size = FontSizeVal
+          .TextFrame.Characters.Font.Color = FontColorVal
 
           '形状を角丸四角形に変更
           .AutoShapeType = msoShapeRectangle
 
           '色
           .line.ForeColor.RGB = RGB(128, 128, 128)
-          '.Fill.ForeColor.RGB = RGB(240, 240, 240)
           .Fill.ForeColor.RGB = BgColorVal
 
           '影 透過率 30%、オフセット量 x:1px,y:1px
@@ -2204,7 +2425,7 @@ Function setComment(Optional BgColorVal, Optional FontVal)
           .TextFrame.Characters.Font.Bold = False
           .TextFrame.HorizontalAlignment = xlLeft
 
-'          .TextFrame.Characters.Font = FontVal
+          .TextFrame.Characters.Font.Name = FontVal
 
           ' セルに合わせて移動する
           .Placement = xlMove
@@ -2233,8 +2454,8 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function unsetLineColor(setArea As String)
-  ActiveWorkbook.ActiveSheet.Range(setArea).Select
+Function unsetLineColor(SetArea As String)
+  ActiveWorkbook.ActiveSheet.Range(SetArea).Select
 
   '条件付き書式をクリア
   Selection.FormatConditions.delete
@@ -2286,9 +2507,9 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function 罫線_クリア(Optional setArea As Range)
-  If TypeName(setArea) = "Range" Then
-    With setArea
+Function 罫線_クリア(Optional SetArea As Range)
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlNone
       .Borders(xlInsideHorizontal).LineStyle = xlNone
       .Borders(xlEdgeLeft).LineStyle = xlNone
@@ -2313,13 +2534,13 @@ Function 罫線_クリア(Optional setArea As Range)
 End Function
 
 '==================================================================================================
-Function 罫線_表(Optional setArea As Range, Optional LineColor As Long)
+Function 罫線_表(Optional SetArea As Range, Optional LineColor As Long)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       .Borders(xlEdgeTop).LineStyle = xlContinuous
@@ -2378,13 +2599,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_囲み(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeRight).LineStyle = xlDash
       .Borders(xlEdgeTop).LineStyle = xlDash
@@ -2424,36 +2645,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_格子(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_格子(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
-      .Borders(xlEdgeLeft).LineStyle = xlDash
-      .Borders(xlEdgeRight).LineStyle = xlDash
-      .Borders(xlEdgeTop).LineStyle = xlDash
-      .Borders(xlEdgeBottom).LineStyle = xlDash
-      .Borders(xlInsideVertical).LineStyle = xlDash
-      .Borders(xlInsideHorizontal).LineStyle = xlDash
-
-      .Borders(xlEdgeLeft).Weight = WeightVal
-      .Borders(xlEdgeRight).Weight = WeightVal
-      .Borders(xlEdgeTop).Weight = WeightVal
-      .Borders(xlEdgeBottom).Weight = WeightVal
-      .Borders(xlInsideVertical).Weight = WeightVal
-      .Borders(xlInsideHorizontal).Weight = WeightVal
-
-      If Not (IsMissing(Red)) Then
-        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
-        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-      End If
-    End With
-  Else
-    With Selection
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeRight).LineStyle = xlDash
       .Borders(xlEdgeTop).LineStyle = xlDash
@@ -2475,19 +2673,42 @@ Function 罫線_破線_格子(Optional setArea As Range, Optional LineColor As Long, O
         .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
     End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlDash
+      .Borders(xlEdgeRight).LineStyle = xlDash
+      .Borders(xlEdgeTop).LineStyle = xlDash
+      .Borders(xlEdgeBottom).LineStyle = xlDash
+      .Borders(xlInsideVertical).LineStyle = xlDash
+      .Borders(xlInsideHorizontal).LineStyle = xlDash
+
+      .Borders(xlEdgeLeft).Weight = WeightVal
+      .Borders(xlEdgeRight).Weight = WeightVal
+      .Borders(xlEdgeTop).Weight = WeightVal
+      .Borders(xlEdgeBottom).Weight = WeightVal
+      .Borders(xlInsideVertical).Weight = WeightVal
+      .Borders(xlInsideHorizontal).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
   End If
 End Function
 
 
 
 '==================================================================================================
-Function 罫線_破線_左(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_左(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeLeft).Weight = WeightVal
 
@@ -2510,13 +2731,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_右(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeRight).LineStyle = xlDash
       .Borders(xlEdgeRight).Weight = WeightVal
 
@@ -2539,13 +2760,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_左右(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDash
       .Borders(xlEdgeRight).LineStyle = xlDash
 
@@ -2577,13 +2798,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_上(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_上(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDash
       .Borders(xlEdgeTop).Weight = WeightVal
 
@@ -2605,13 +2826,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeBottom).LineStyle = xlDash
       .Borders(xlEdgeBottom).Weight = WeightVal
 
@@ -2633,13 +2854,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_上下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDash
       .Borders(xlEdgeBottom).LineStyle = xlDash
 
@@ -2669,13 +2890,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_垂直(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_垂直(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlDash
       .Borders(xlInsideVertical).Weight = WeightVal
       If Not (IsMissing(Red)) Then
@@ -2695,13 +2916,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_水平(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
+Function 罫線_破線_水平(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlHairline)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideHorizontal).LineStyle = xlDash
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
@@ -2728,13 +2949,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_実線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_実線_囲み(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       .Borders(xlEdgeTop).LineStyle = xlContinuous
@@ -2775,13 +2996,13 @@ Function 罫線_実線_囲み(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function 罫線_実線_格子(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_実線_格子(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
       .Borders(xlEdgeTop).LineStyle = xlContinuous
@@ -2834,13 +3055,13 @@ Function 罫線_実線_格子(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_実線_左右(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlContinuous
       .Borders(xlEdgeRight).LineStyle = xlContinuous
 
@@ -2870,13 +3091,13 @@ Function 罫線_実線_左右(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function 罫線_実線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_実線_上下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlContinuous
       .Borders(xlEdgeBottom).LineStyle = xlContinuous
 
@@ -2905,13 +3126,13 @@ Function 罫線_実線_上下(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_実線_垂直(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlContinuous
       .Borders(xlInsideVertical).Weight = WeightVal
 
@@ -2932,13 +3153,13 @@ Function 罫線_実線_垂直(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function 罫線_実線_水平(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_実線_水平(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideHorizontal).LineStyle = xlContinuous
       .Borders(xlInsideHorizontal).Weight = WeightVal
 
@@ -2962,13 +3183,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_二重線_囲み(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_二重線_囲み(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDouble
       .Borders(xlEdgeRight).LineStyle = xlDouble
       .Borders(xlEdgeTop).LineStyle = xlDouble
@@ -3009,13 +3230,13 @@ Function 罫線_二重線_囲み(Optional setArea As Range, Optional LineColor As Long,
 End Function
 
 '==================================================================================================
-Function 罫線_二重線_左(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_二重線_左(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDouble
 
       If Not (IsMissing(Red)) Then
@@ -3034,13 +3255,13 @@ Function 罫線_二重線_左(Optional setArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
-Function 罫線_二重線_左右(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_二重線_左右(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeLeft).LineStyle = xlDouble
       .Borders(xlEdgeRight).LineStyle = xlDouble
 
@@ -3064,13 +3285,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_二重線_下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_二重線_下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeBottom).LineStyle = xlDouble
 
       If Not (IsMissing(Red)) Then
@@ -3090,13 +3311,13 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_二重線_上下(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_二重線_上下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDouble
       .Borders(xlEdgeBottom).LineStyle = xlDouble
 
@@ -3118,20 +3339,20 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_破線_逆L字(Optional setArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+Function 罫線_破線_逆L字(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
-  Call 罫線_破線_囲み(setArea, LineColor, WeightVal)
+  Call 罫線_破線_囲み(SetArea, LineColor, WeightVal)
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
-  If TypeName(setArea) = "Range" Then
-    Set setArea = setArea.Offset(1, 1).Resize(setArea.Rows.count - 1, setArea.Columns.count - 1)
-    Call 罫線_破線_水平(setArea, LineColor, WeightVal)
-    Call 罫線_破線_囲み(setArea, LineColor, WeightVal)
+  If TypeName(SetArea) = "Range" Then
+    Set SetArea = SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1)
+    Call 罫線_破線_水平(SetArea, LineColor, WeightVal)
+    Call 罫線_破線_囲み(SetArea, LineColor, WeightVal)
   Else
-    setArea.Offset(1, 1).Resize(setArea.Rows.count - 1, setArea.Columns.count - 1).Select
-    Call 罫線_破線_水平(setArea, LineColor, WeightVal)
-    Call 罫線_破線_囲み(setArea, LineColor, WeightVal)
+    SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1).Select
+    Call 罫線_破線_水平(SetArea, LineColor, WeightVal)
+    Call 罫線_破線_囲み(SetArea, LineColor, WeightVal)
 
   End If
 End Function
@@ -3139,10 +3360,10 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_中央線削除_横(Optional setArea As Range)
+Function 罫線_中央線削除_横(Optional SetArea As Range)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideHorizontal).LineStyle = xlNone
     End With
   Else
@@ -3156,10 +3377,10 @@ End Function
 
 
 '==================================================================================================
-Function 罫線_中央線削除_縦(Optional setArea As Range)
+Function 罫線_中央線削除_縦(Optional SetArea As Range)
 
-  If TypeName(setArea) = "Range" Then
-    With setArea
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
       .Borders(xlInsideVertical).LineStyle = xlNone
     End With
   Else
@@ -3182,12 +3403,11 @@ End Function
 Function getColumnWidth()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
-  endColLine = Cells(5, Columns.count).End(xlToLeft).Column
 
-  For colLine = 1 To endColLine
-    Cells(1, colLine) = Cells(1, colLine).ColumnWidth
+  For colLine = Selection(1).Column To Selection(Selection.count).Column
+    Cells(Selection(1).Row, colLine) = Columns(colLine).ColumnWidth
   Next
-
+  
 End Function
 
 '==================================================================================================
@@ -3197,9 +3417,7 @@ Function setColumnWidth()
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
   For colLine = 1 To endColLine
-    Cells(1, colLine).ColumnWidth = Cells(1, colLine)
+    Columns(colLine).ColumnWidth = Cells(1, colLine)
   Next
 
 End Function
-
-

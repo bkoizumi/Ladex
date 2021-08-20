@@ -20,7 +20,7 @@ Public BK_sheetHelp       As Worksheet
 
 'ƒOƒ[ƒoƒ‹•Ï”----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "0.2.0.7"
+Public Const thisAppVersion As String = "0.2.0.8"
 Public FuncName             As String
 Public resetVal             As String
 

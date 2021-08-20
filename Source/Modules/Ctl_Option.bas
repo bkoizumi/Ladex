@@ -17,9 +17,11 @@ Function showVersion()
   
   Call Ctl_UsrForm.•\Ž¦ˆÊ’u(topPosition, leftPosition)
   With Frm_Version
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
+    .StartUpPosition = 1
+'    .StartUpPosition = 0
+'    .Top = topPosition
+'    .Left = leftPosition
+    
     
     .Label1.Caption = "Ladex Addin For Excel Library"
     .Label2.Caption = "Ver " & thisAppVersion

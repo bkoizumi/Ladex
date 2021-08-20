@@ -119,30 +119,6 @@ Function A1セル選択()
   Call Library.endScript
   
 End Function
-'==================================================================================================
-
-
-
-
-'**************************************************************************************************
-' * 名前定義削除
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function 名前定義削除()
-  Dim wb As Workbook, tmp As String
-  
-  Call Library.startScript
-  
-  For Each wb In Workbooks
-    Workbooks(wb.Name).Activate
-    Call Library.delVisibleNames
-  Next wb
-  
-  Call Library.endScript
-
-End Function
-
 
 '**************************************************************************************************
 ' * 画像設定
@@ -201,27 +177,7 @@ Function ハイライト()
 
 End Function
 
-'**************************************************************************************************
-' * コメント整形
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function コメント整形()
-  
-  On Error GoTo catchError
-  
-  If TypeName(ActiveCell) = "Range" Then
-    Call Library.setComment(Library.getRegistry("Main", "CommentBgColor"))
-  
-  End If
-  
-  
-  Exit Function
 
-'エラー発生時=====================================================================================
-catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
-End Function
 
 
 

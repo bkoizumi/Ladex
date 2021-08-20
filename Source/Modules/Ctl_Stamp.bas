@@ -48,7 +48,7 @@ Function ‰Ÿˆó_Ïˆó()
   Selection.Placement = xlMoveAndSize
   Selection.ShapeRange.LockAspectRatio = msoFalse
   
-  Selection.ShapeRange.width = 15
+  Selection.ShapeRange.Width = 15
   Selection.ShapeRange.height = 15
   Selection.ShapeRange.Name = ShapeName
 '  Selection.ShapeRange.IncrementLeft 2.8 + addShapeLeft
@@ -110,7 +110,7 @@ Function ‰Ÿˆó_Šm”Fˆó(Optional nameVal As String, Optional FontName As String, Op
   Selection.Placement = xlMoveAndSize
   Selection.ShapeRange.LockAspectRatio = msoFalse
   
-  Selection.ShapeRange.width = 45
+  Selection.ShapeRange.Width = 45
   Selection.ShapeRange.height = 45
   Selection.ShapeRange.Name = ShapeName
 '  Selection.ShapeRange.IncrementLeft 2.8 + addShapeLeft

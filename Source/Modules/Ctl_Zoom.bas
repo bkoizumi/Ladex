@@ -9,6 +9,7 @@ Option Explicit
 Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
   Dim topPosition As Long, leftPosition As Long
+  Dim cellWidth As Long
   
   If slctCellAddress = "" Then
     
@@ -23,14 +24,35 @@ Function ZoomIn(Optional slctCellAddress As String)
   End If
   
   Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
+  
+  cellWidth = ActiveCell.Width
+  If cellWidth <= 280 Then
+    cellWidth = 280
+  ElseIf cellWidth >= 400 Then
+    cellWidth = 400
+  End If
+  
   With Frm_Zoom
     .StartUpPosition = 0
     .Top = topPosition
     .Left = leftPosition
+    .Width = cellWidth + 100
+    
+    .TextBox.Width = cellWidth + 50
     .TextBox = cellVal
     .TextBox.MultiLine = True
     .TextBox.MultiLine = True
     .TextBox.EnterKeyBehavior = True
+    
+    If cellVal = StrConv(cellVal, vbNarrow) Then
+      '半角の場合
+      .TextBox.IMEMode = fmIMEModeOff
+    Else
+      '全角の場合
+      .TextBox.IMEMode = fmIMEModeOn
+    End If
+    
+    
     .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
 
     .Show vbModeless

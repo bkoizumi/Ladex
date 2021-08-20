@@ -6,6 +6,7 @@ Function 画面サイズ変更(Optional widthVal As Long, Optional heightVal As Long)
   Dim actWinTop
   Dim actWinLeft
 
+  Call Library.startScript
   Set actWin = Application.Windows(ActiveWorkbook.Name)
   
   actWinTop = actWin.Top
@@ -21,9 +22,11 @@ Function 画面サイズ変更(Optional widthVal As Long, Optional heightVal As Long)
   
   actWin.WindowState = xlNormal
   actWin.height = heightVal
-  actWin.width = widthVal
+  actWin.Width = widthVal
   
   actWin.Top = actWinTop
   actWin.Left = actWinLeft
   Set actWin = Nothing
+  
+  Call Library.endScript
 End Function

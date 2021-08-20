@@ -1,14 +1,14 @@
 VERSION 5.00
-Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Version 
-   Caption         =   "Version"
-   ClientHeight    =   5130
+Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Info 
+   Caption         =   "情報"
+   ClientHeight    =   4095
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   6030
-   OleObjectBlob   =   "Frm_Version.frx":0000
+   ClientWidth     =   6480
+   OleObjectBlob   =   "Frm_Info.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
-Attribute VB_Name = "Frm_Version"
+Attribute VB_Name = "Frm_Info"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
@@ -33,6 +33,15 @@ End Sub
 '==================================================================================================
 'キャンセル処理
 Private Sub CancelButton_Click()
+
+  Call Library.setRegistry("UserForm", "InfoTop", Me.Top)
+  Call Library.setRegistry("UserForm", "InfoLeft", Me.Left)
   
   Unload Me
 End Sub
+
+
+
+
+  
+

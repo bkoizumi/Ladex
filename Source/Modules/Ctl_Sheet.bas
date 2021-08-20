@@ -31,13 +31,17 @@ Function ƒZƒ‹•’²®()
   Call Library.startScript
   Cells.EntireColumn.AutoFit
   
-  For colLine = 1 To Columns.count
-    If Cells(1, colLine).ColumnWidth > 30 Then
-      colName = Library.getColumnName(colLine)
-      Columns(colName & ":" & colName).ColumnWidth = 30
-    End If
-  Next
+  If IsNumeric(Range("A1")) Then
+    Call Library.setColumnWidth
   
+  Else
+    For colLine = 1 To Columns.count
+      If Cells(1, colLine).ColumnWidth > 30 Then
+        colName = Library.getColumnName(colLine)
+        Columns(colName & ":" & colName).ColumnWidth = 30
+      End If
+    Next
+  End If
   Call Library.endScript(True)
 End Function
 
