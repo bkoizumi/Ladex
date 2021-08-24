@@ -20,13 +20,13 @@ Private ctlEvent As New clsEvent
 Function onLoad(ribbon As IRibbonUI)
   On Error GoTo catchError
   
-  
   Call init.setting
+  
+  Set BK_ribbonUI = ribbon
   
   BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg")
   BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg")
-  
-  Set BK_ribbonUI = ribbon
+  BKT_rbPressed = Library.getRegistry("Main", "CustomRibbon")
   
   Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
   
@@ -59,6 +59,26 @@ End Function
 Function confFormulaPressed(control As IRibbonControl, ByRef returnedVal)
   
   returnedVal = BKcf_rbPressed
+End Function
+
+'==================================================================================================
+Function noDispTab(control As IRibbonControl)
+  Call Library.setRegistry("Main", "CustomRibbon", False)
+  Call RefreshRibbon
+End Function
+
+'==================================================================================================
+Function setDispTab(control As IRibbonControl, pressed As Boolean)
+  
+  BKT_rbPressed = pressed
+  Call Library.setRegistry("Main", "CustomRibbon", pressed)
+  Call RefreshRibbon
+End Function
+
+'==================================================================================================
+Function getDispTab(control As IRibbonControl, ByRef returnedVal)
+  
+  returnedVal = Library.getRegistry("Main", "CustomRibbon")
 End Function
 
  
@@ -631,37 +651,19 @@ Function getVisible(control As IRibbonControl, ByRef returnedVal)
     
 End Function
 
-'==================================================================================================
-Function noDispTab(control As IRibbonControl)
-  Call Library.setRegistry("Main", "CustomRibbon", False)
-  Call RefreshRibbon
-End Function
-
-'==================================================================================================
-Function setDispTab(control As IRibbonControl, pressed As Boolean)
-  
-  BKT_rbPressed = pressed
-  Call Library.setRegistry("Main", "CustomRibbon", BKT_rbPressed)
-  
-  If pressed = True Then
-    Call RefreshRibbon
-  Else
-    Call Library.setRegistry("Main", "CustomRibbon", False)
-    Call RefreshRibbon
-  End If
-  
-End Function
-
 
 '==================================================================================================
 Function RefreshRibbon()
   On Error GoTo catchError
 
-  #If VBA7 And Win64 Then
-    Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
-  #Else
-    Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
-  #End If
+  If BK_ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
+    #Else
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
+    #End If
+  End If
+
   BK_ribbonUI.Invalidate
 
   Exit Function
