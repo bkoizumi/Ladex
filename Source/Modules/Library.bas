@@ -1807,8 +1807,10 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     Case Else
       Call MsgBox(Message, vbCritical, thisAppName)
   End Select
-'  Stop
-
+  
+  Message = Replace(Message, vbNewLine & "ˆ—‚ð’†Ž~‚µ‚Ü‚·", "Bˆ—‚ð’†Ž~‚µ‚Ü‚·")
+  Message = "[" & Code & "]" & Message
+  
   '‰æ–Ê•`ŽÊ§ŒäI—¹ˆ—
   If runEndflg = True Then
     Call endScript
@@ -1894,7 +1896,7 @@ Function outputLog(runTime As Date, Message As String)
       .LoadFromFile logFile
       .Position = .Size
     End If
-    .WriteText runTime & Message, 1
+    .WriteText runTime & vbTab & Message, 1
     .SaveToFile logFile, 2
     .Close
   End With
@@ -3416,8 +3418,18 @@ Function setColumnWidth()
   Dim colName As String
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
-  For colLine = 1 To endColLine
-    Columns(colLine).ColumnWidth = Cells(1, colLine)
-  Next
+  If IsNumeric(Range("A1").Text) And IsNumeric(Range("B1").Text) Then
+    For colLine = 1 To endColLine
+      Columns(colLine).ColumnWidth = Cells(1, colLine)
+    Next
+  Else
+    For colLine = 1 To endColLine
+      Columns(colLine).EntireColumn.AutoFit
+      If Columns(colLine).ColumnWidth >= 30 Then
+        Columns(colLine).ColumnWidth = 30
+      End If
+    Next
+  End If
+  
 
 End Function
