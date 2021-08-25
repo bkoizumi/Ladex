@@ -4,7 +4,7 @@
  <tabs>
       <tab idMso="TabView">
         <group id="dispGroup" label="Ladexタブ表示">
-          <checkBox id="Ladex"  label="Ladex"  onAction="Ladex.xlam!Ctl_Ribbon.setDispTab" supertip="Ladexタブの表示/非表示を切り替えます"  />
+          <checkBox id="Ladex"  label="Ladex"  onAction="Ladex.xlam!Ctl_Ribbon.setDispTab" getPressed="getDispTab" supertip="Ladexタブの表示/非表示を切り替えます"  />
         </group>
       </tab>
 
@@ -319,6 +319,7 @@
           </menu>
         </menu>
 
+        <!-- <control idMso="MergeCenterMenu"  label="セルの結合" visible="true" /> -->
         <menu id="M_MergeCenter" label="セルの結合"  imageMso="MergeCenter" >
           <control idMso="MergeCenter"  showLabel="true" visible="true" />
           <control idMso="MergeCells"   showLabel="true" visible="true" />
