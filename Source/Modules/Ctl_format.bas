@@ -9,6 +9,7 @@ Option Explicit
 Function コメント整形()
   
   On Error GoTo catchError
+  Call init.setting
   
   If TypeName(ActiveCell) = "Range" Then
     Call Library.startScript
@@ -33,6 +34,7 @@ End Function
 Function 移動やサイズ変更をする()
   
   On Error GoTo catchError
+  Call init.setting
   
   Select Case TypeName(Selection)
     Case "TextBox", "Rectangle", "Picture"
@@ -51,6 +53,8 @@ End Function
 Function 移動する()
   
   On Error GoTo catchError
+  Call init.setting
+  
   Select Case TypeName(Selection)
     Case "TextBox", "Rectangle", "Picture"
       Selection.Placement = xlMove
@@ -87,6 +91,7 @@ End Function
 Function 余白ゼロ()
   
   On Error GoTo catchError
+  Call init.setting
   
   Select Case TypeName(Selection)
     Case "TextBox"

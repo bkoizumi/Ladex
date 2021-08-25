@@ -71,7 +71,7 @@
           <button id="disp_HD15_6"  label="1,366✕768"    imageMso="WindowMoveSplit" onAction="Ladex.xlam!Ctl_Ribbon.disp_HD15_6"  description="15.6型HD 液晶 相当 &#13;" />
         </menu>
         <menuSeparator id="シート情報" title="シート一覧" />
-        <button id="シート一覧取得"      label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.getSheetList"      description="シート一覧を取得 &#13;" />
+        <button id="シート一覧取得"      label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.getSheetList"      description="シート名のコピー用に表示 &#13;" />
       </menu>
 
       <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />

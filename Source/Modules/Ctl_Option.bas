@@ -127,6 +127,7 @@ Function showOption()
   Dim topPosition As Long, leftPosition As Long
 '  On Error GoTo catchError
   
+ 
   Call init.setting(True)
   topPosition = Library.getRegistry("UserForm", "OptionTop")
   leftPosition = Library.getRegistry("UserForm", "OptionLeft")

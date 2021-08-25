@@ -66,6 +66,11 @@ Function detail()
   Dim topPosition As Long, leftPosition As Long
   
   On Error GoTo catchError
+  If Workbooks.count = 0 Then
+    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
+    Exit Function
+  End If
+  
   Call getList
   topPosition = Library.getRegistry("UserForm", "FavoriteTop")
   leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")

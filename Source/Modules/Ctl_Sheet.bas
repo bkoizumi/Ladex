@@ -10,6 +10,7 @@ Function R1C1表記()
 
   On Error Resume Next
   
+  Call init.setting
   If Application.ReferenceStyle = xlA1 Then
     Application.ReferenceStyle = xlR1C1
   Else
@@ -29,6 +30,7 @@ Function セル幅調整()
   Dim colName As String
   
   Call Library.startScript
+  Call init.setting
   Cells.EntireColumn.AutoFit
   
   If IsNumeric(Range("A1")) Then
@@ -49,6 +51,8 @@ End Function
 '==================================================================================================
 Function セル高さ調整()
   Call Library.startScript
+  Call init.setting
+  
   Cells.EntireRow.AutoFit
   Call Library.endScript(True)
 End Function

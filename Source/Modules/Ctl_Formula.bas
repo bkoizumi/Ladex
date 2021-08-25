@@ -210,10 +210,10 @@ Function formula01()
   
   'On Error GoTo catchError
   
+  Call init.setting
   If ActiveCell.HasFormula = False Then
     Exit Function
   End If
-  Call init.setting
   
   formulaVal = ActiveCell.Formula
   formulaVal = Replace(formulaVal, "=", "")

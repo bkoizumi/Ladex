@@ -8,6 +8,8 @@ Option Explicit
 '**************************************************************************************************
 '==================================================================================================
 Function Trim01()
+  
+  Call init.setting
   ActiveCell = Trim(ActiveCell.Text)
   
   Exit Function
@@ -92,7 +94,7 @@ Function òAî‘í«â¡()
   '----------------------------------------------
   line = 1
   For Each slctCells In Selection
-    slctCells.Value = line & "ÅD" & slctCells.Value
+    slctCells.Value = line & "." & slctCells.Value
     line = line + 1
     DoEvents
   Next

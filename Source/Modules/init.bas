@@ -102,6 +102,11 @@ Function setting(Optional reCheckFlg As Boolean)
   
   On Error GoTo catchError
 '  ThisWorkbook.Save
+  If Workbooks.count = 0 Then
+    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
+    Call Library.endScript
+    End
+  End If
 
   'レジストリ関連設定------------------------------------------------------------------------------
   RegistrySubKey = "Main"

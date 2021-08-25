@@ -92,9 +92,6 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   On Error GoTo catchError
   
-  If Workbooks.count = 0 Then
-    Exit Function
-  End If
   Call init.setting
   
   If BK_ribbonUI Is Nothing Then
@@ -846,9 +843,9 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Set ctlEvent.ExcelApplication = Application
   ctlEvent.InitializeBookSheets
   
-  BKh_rbPressed = pressed
-  
   Call init.setting
+  
+  BKh_rbPressed = pressed
   Call Library.setRegistry("Main", "HighLightFlg", pressed)
   
   Call Ctl_HighLight.showStart(ActiveCell)
@@ -1046,15 +1043,18 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function Œrü_ƒNƒŠƒA(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_ƒNƒŠƒA
 End Function
 '--------------------------------------------------------------------------------------------------
 Function Œrü_ƒNƒŠƒA_’†‰›ü_‰¡(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_’†‰›üíœ_‰¡
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_ƒNƒŠƒA_’†‰›ü_c(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_’†‰›üíœ_c
 End Function
 
@@ -1066,11 +1066,13 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function Œrü_•\_”jüA(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_•\
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_•\_”jüB(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_Šiq
   Call Library.Œrü_Àü_…•½
   Call Library.Œrü_Àü_ˆÍ‚İ
@@ -1078,6 +1080,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_•\_Àü(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_Šiq
 End Function
 
@@ -1089,51 +1092,61 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_…•½(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_…•½
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_‚’¼(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_‚’¼
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_¶(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_¶
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_‰E(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_‰E
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_¶‰E(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_¶‰E
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_ã(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_ã
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_‰º(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_‰º
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_ã‰º(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_ã‰º
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_ˆÍ‚İ(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_ˆÍ‚İ
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_”jü_Šiq(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_”jü_Šiq
 End Function
 
@@ -1145,31 +1158,37 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function Œrü_Àü_…•½(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_…•½
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_Àü_‚’¼(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_‚’¼
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_Àü_¶‰E(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_¶‰E
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_Àü_ã‰º(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_ã‰º
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_Àü_ˆÍ‚İ(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_ˆÍ‚İ
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function Œrü_Àü_Šiq(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_Àü_Šiq
 End Function
 
@@ -1183,24 +1202,29 @@ End Function
 '**************************************************************************************************
 '==================================================================================================
 Function Œrü_“ñdü_¶(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_“ñdü_¶
 End Function
 '==================================================================================================
 Function Œrü_“ñdü_¶‰E(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_“ñdü_¶‰E
 End Function
 
 '==================================================================================================
 Function Œrü_“ñdü_‰º(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_“ñdü_‰º
 End Function
 
 '==================================================================================================
 Function Œrü_“ñdü_ã‰º(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_“ñdü_ã‰º
 End Function
 '==================================================================================================
 Function Œrü_“ñdü_ˆÍ‚İ(control As IRibbonControl)
+  Call init.setting
   Call Library.Œrü_“ñdü_ˆÍ‚İ
 End Function
 
@@ -1215,46 +1239,55 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_SelectPattern(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.ƒpƒ^[ƒ“‘I‘ğ
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_DigitsInt(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.”’l_Œ…”ŒÅ’è(Selection.count)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_RangeInt(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.”’l_”ÍˆÍ
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_FamilyName(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.–¼‘O_©(Selection.count)
 End Function
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Name(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.–¼‘O_–¼(Selection.count)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_FullName(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.–¼‘O_ƒtƒ‹ƒl[ƒ€(Selection.count)
 End Function
 
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Date(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.“ú•t_“ú(Selection.count)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Time(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.“ú•t_ŠÔ(Selection.count)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Datetime(control As IRibbonControl)
+  Call init.setting
   Call Ctl_sampleData.“ú(Selection.count)
 End Function
 
@@ -1267,6 +1300,7 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function setCenter(control As IRibbonControl)
+  Call init.setting
   If TypeName(Selection) = "Range" Then
     Selection.HorizontalAlignment = xlCenterAcrossSelection
   End If
@@ -1274,6 +1308,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function ShrinkToFit(control As IRibbonControl)
+  Call init.setting
   If TypeName(Selection) = "Range" Then
     Selection.ShrinkToFit = True
   End If
@@ -1281,6 +1316,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function ShrinkToUnfit(control As IRibbonControl)
+  Call init.setting
   If TypeName(Selection) = "Range" Then
     Selection.ShrinkToFit = False
   End If
@@ -1300,29 +1336,33 @@ End Function
 
 '==================================================================================================
 Function actRelaxSheetManager(control As IRibbonControl)
+  Call init.setting
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
 End Function
 
 '==================================================================================================
 Function RelaxTools01(control As IRibbonControl)
-  
+  Call init.setting
 End Function
 
 '==================================================================================================
 'ƒTƒCƒY‡‚í‚¹
 Function RelaxShapes01(control As IRibbonControl)
+  Call init.setting
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
 End Function
 
 '==================================================================================================
 'ãˆÊ’u‡‚í‚¹
 Function RelaxShapes02(control As IRibbonControl)
+  Call init.setting
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
 End Function
 
 '==================================================================================================
 '¶ˆÊ’u‡‚í‚¹
 Function RelaxShapes03(control As IRibbonControl)
+  Call init.setting
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
 End Function
 
@@ -1330,6 +1370,7 @@ End Function
 '==================================================================================================
 '‹t‚kŒrü
 Function RelaxApps01(control As IRibbonControl)
+  Call init.setting
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
 End Function
 
