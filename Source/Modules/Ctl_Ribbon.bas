@@ -226,6 +226,25 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "itemSize", "normal"
   
   If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
+    'RelaxToolsŽæ“¾------------------------------------------------------------------------------------
+    Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "M_RelaxToolsGet"
+      .SetAttribute "title", "RelaxTool‚ð“üŽè"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxTools_get"
+      .SetAttribute "label", "RelaxTool‚ð“üŽè"
+      .SetAttribute "image", "RelaxToolsLogo"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxTools_get"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
     'RelaxTools------------------------------------------------------------------------------------
     Set MenuSepa = DOMDoc.createElement("menuSeparator")
     With MenuSepa
@@ -321,8 +340,6 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
     End With
     Menu.AppendChild Button
     Set Button = Nothing
-  
-    
   End If
 
   DOMDoc.AppendChild Menu
@@ -1329,7 +1346,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function RelaxTools_get()
+Function RelaxTools_get(control As IRibbonControl)
   CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
 End Function
 
