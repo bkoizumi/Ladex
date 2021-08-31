@@ -44,7 +44,6 @@ Function add(Optional filePath As String)
   Dim line As Long, endLine As Long
   
   Call init.setting
-  Call getList
   
   line = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row + 1
   
@@ -105,9 +104,12 @@ Function RefreshListBox()
   Frm_Favorite.Lst_Favorite.Clear
   For line = 2 To endLine
     Frm_Favorite.Lst_Favorite.AddItem FSO.GetBaseName(BK_sheetFavorite.Range("A" & line))
+    
+    Call Library.showDebugForm(BK_sheetFavorite.Range("A" & line))
   Next
   Set FSO = Nothing
   
+  Call Library.showDebugForm("--------------------")
   ThisWorkbook.Save
 End Function
 
