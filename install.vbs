@@ -13,6 +13,7 @@ Option Explicit
 On Error Resume Next
 
 Dim installPath
+Dim UnIstallPath
 Dim addInName
 Dim addInFileName
 Dim Old_addInName
@@ -48,9 +49,9 @@ IF Not objFileSys.FileExists(addInFileName) THEN
     WScript.Quit
 END IF
 
-installPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & Old_addInFileName
+UnIstallPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & Old_addInFileName
 
-If objFileSys.FileExists(installPath) = True Then
+If objFileSys.FileExists(UnIstallPath) = True Then
   'Excel インスタンス化
   Set objExcel = CreateObject("Excel.Application")
   objExcel.Workbooks.Add
@@ -64,7 +65,7 @@ If objFileSys.FileExists(installPath) = True Then
   objExcel.Quit
 
   'ファイル削除
-  objFileSys.DeleteFile installPath , True
+  objFileSys.DeleteFile UnIstallPath , True
   IF Err.Number = 0 THEN
   ELSE
     MsgBox "アンインストールに失敗しました" & vbCrLF & "Excelが起動している場合は終了してください。", vbExclamation, Old_addInName
