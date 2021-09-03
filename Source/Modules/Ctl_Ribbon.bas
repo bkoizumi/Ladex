@@ -1043,6 +1043,13 @@ Function ‰p”š‘S”¼Šp•ÏŠ·(control As IRibbonControl)
   Call Ctl_String.‰p”š‘S”¼Šp•ÏŠ·
 End Function
 
+
+'--------------------------------------------------------------------------------------------------
+Function æ‚èÁ‚µü(control As IRibbonControl)
+  Call Ctl_String.æ‚èÁ‚µü
+End Function
+
+
 '--------------------------------------------------------------------------------------------------
 Function xxxxxxxxxx(control As IRibbonControl)
   Call Main.xxxxxxxxxx

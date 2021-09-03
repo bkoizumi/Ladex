@@ -124,6 +124,11 @@
 
         <menuSeparator id="セル編集_SP3" title="文字編集" />
         <button id="全半角変換" label="全角を半角に変換"      imageMso="MessageFormatHtml"   onAction="Ladex.xlam!Ctl_Ribbon.英数字全半角変換"  description="英数字の全角を半角に変換 &#13;" />
+
+        <menuSeparator id="セル編集_SP4" title="取り消し線" />
+        <button id="Strikethrough"    imageMso="Strikethrough"  label="取り消し線" onAction="Ladex.xlam!Ctl_Ribbon.取り消し線" />
+
+
       </menu>
 
       <!-- <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool" screentip="電子印鑑" supertip="電子印鑑">
