@@ -3,11 +3,13 @@ Option Explicit
 
 
 'ワークブック用変数------------------------------
-Public BK_ThisBook    As Workbook
-Public targetBook     As Workbook
+Public BK_ThisBook        As Workbook
+Public targetBook         As Workbook
 
 
 'ワークシート用変数------------------------------
+Public targetsheet        As Worksheet
+
 Public BK_sheetSetting    As Worksheet
 Public BK_sheetNotice     As Worksheet
 Public BK_sheetStyle      As Worksheet

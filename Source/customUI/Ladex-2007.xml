@@ -114,16 +114,21 @@
         <button id="getAdjustWidth"  label="列幅取得" imageMso="SizeToControlWidth" onAction="Ladex.xlam!Ctl_Ribbon.getAdjustWidth"  description="選択範囲のセル幅を取得、設定" />
       </menu>
 
-      <menu id="セル編集" label="セル編集"  itemSize="large" imageMso="AsianTypography" >
+      <menu id="セル編集" label="セル編集"  itemSize="large" imageMso="TableInsertDialog" >
         <menuSeparator id="セル編集_SP1" title="スペース削除" />
         <button id="Trim"  label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Trim01" description="文頭、文末にあるスペースを取り除きます &#13;" />
 
         <menuSeparator id="セル編集_SP2" title="文字追加" />
-        <button id="中黒点付与" label="文頭に・を追加"      imageMso="CalculatedText"   onAction="Ladex.xlam!Ctl_Ribbon.中黒点付与"  description="文頭に「・」を追加&#13;" />
-        <button id="連番付与"   label="文頭に連番を追加"    imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番付与"    description="文頭に1から始まる連番を追加 &#13;" />
+        <button id="中黒点付与" label="文頭に・を追加"    image="Sunspot"       onAction="Ladex.xlam!Ctl_Ribbon.中黒点付与" description="文頭に「・」を追加&#13;" />
+        <button id="連番生成1"  label="文頭に連番を追加"  imageMso="Numbering"  onAction="Ladex.xlam!Ctl_Ribbon.連番追加"   description="文頭に1.から始まる連番を追加 &#13;" />
 
         <menuSeparator id="セル編集_SP3" title="文字編集" />
         <button id="全半角変換" label="全角を半角に変換"      imageMso="MessageFormatHtml"   onAction="Ladex.xlam!Ctl_Ribbon.英数字全半角変換"  description="英数字の全角を半角に変換 &#13;" />
+
+        <menuSeparator id="セル編集_SP4" title="取り消し線" />
+        <button id="Strikethrough"    imageMso="Strikethrough"  label="取り消し線" onAction="Ladex.xlam!Ctl_Ribbon.取り消し線" description="取り消し線を設定・解除します &#13;" />
+
+
       </menu>
 
       <!-- <menu id="stampMenu" label="電子印鑑"  itemSize="large" imageMso="StampTool" screentip="電子印鑑" supertip="電子印鑑">
@@ -220,8 +225,9 @@
         <menuSeparator id="データ生成_MS" title="データ生成" />
         <menu id="数値Menu" label="数値生成"  itemSize="large" imageMso="ResetToTemplate" supertip="サンプルデータ生成 &#13;">
           <menuSeparator id="数値生成" title="数値生成" />
-          <button id="連番設定"     label="文頭に連番を設定"  imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番設定"                 description="1から始まる連番を設定(上書き) &#13;" />
-          <button id="連番生成"     label="文頭に連番を追加"  imageMso="CalculatedNumber" onAction="Ladex.xlam!Ctl_Ribbon.連番追加"                 description="文頭に1から始まる連番を追加 &#13;" />
+          <button id="連番設定2"    label="文頭に連番を設定"  imageMso="Numbering" onAction="Ladex.xlam!Ctl_Ribbon.連番設定"  description="1から始まる連番を設定(上書き) &#13;" />
+          <button id="連番生成2"    label="文頭に連番を追加"  imageMso="Numbering" onAction="Ladex.xlam!Ctl_Ribbon.連番追加"  description="文頭に1.から始まる連番を追加 &#13;" />
+
           <button id="mkSmpDt_Int"  label="桁数固定数値"      imageMso="ResetToTemplate"  onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_DigitsInt" description="ランダムな数値(桁数固定)を生成 &#13;"   />
           <button id="mkSmpDt_Rng"  label="範囲指定数値"      imageMso="ResetToTemplate"  onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_RangeInt"  description="ランダムな数値(範囲指定)を生成 &#13;" />
         </menu>

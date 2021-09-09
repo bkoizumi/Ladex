@@ -71,8 +71,8 @@ Function òAî‘ê›íË()
   '----------------------------------------------
   line = 1
   For Each slctCells In Selection
-    slctCells.NumberFormatLocal = "@"
-    slctCells.Value = line & "ÅD"
+    'slctCells.NumberFormatLocal = "@"
+    slctCells.Value = line
     line = line + 1
     DoEvents
   Next
