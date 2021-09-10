@@ -387,7 +387,7 @@ Function chkLocalDrive(targetPath As String)
       Call Library.showDebugForm("不明、ネットワークドライブ、CDドライブなど")
   End Select
 
-  If setVal("debugMode") = "develop" Then
+  If BK_setVal("debugMode") = "develop" Then
     retVal = False
   End If
   chkLocalDrive = retVal
@@ -415,13 +415,13 @@ Function chkPathDecision(targetPath As String)
     retVal = "dir"
   Else
     If FSO.FileExists(targetPath) Then
-      targetType = objFso.GetExtensionName(arg)
+      targetType = FSO.GetExtensionName(targetPath)
       retVal = UCase(targetType)
     End If
   End If
   Set FSO = Nothing
   
-  chkFileExists = retVal
+  chkPathDecision = retVal
 End Function
 
 
