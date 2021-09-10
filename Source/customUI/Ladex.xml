@@ -221,7 +221,7 @@
 
       </menu>
 
-      <menu id="データ生成Menu" label="データ生成"  itemSize="large" imageMso="ResetToTemplate" supertip="サンプルデータ生成 &#13;">
+      <menu id="データ生成Menu" label="データ生成"  itemSize="normal" imageMso="ResetToTemplate" supertip="サンプルデータ生成 &#13;">
         <menuSeparator id="データ生成_MS" title="データ生成" />
         <menu id="数値Menu" label="数値生成"  itemSize="large" imageMso="ResetToTemplate" supertip="サンプルデータ生成 &#13;">
           <menuSeparator id="数値生成" title="数値生成" />

@@ -1046,7 +1046,7 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function æ‚èÁ‚µü(control As IRibbonControl)
-  Call Ctl_String.æ‚èÁ‚µü
+  Call Ctl_String.æ‚èÁ‚µüİ’è
 End Function
 
 
