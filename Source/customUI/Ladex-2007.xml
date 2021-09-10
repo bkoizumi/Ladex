@@ -50,8 +50,6 @@
 
       <separator id="Sprt01" />
 
-      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
-
       <menu id="ブック管理Menu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
         <menuSeparator id="スタイル設定_MS01" title="スタイル設定" />
         <menu id="スタイル設定Menu" label="スタイル設定"  itemSize="large" imageMso="AppointmentColorDialog">
@@ -74,8 +72,6 @@
         <button id="シート一覧取得"      label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.getSheetList"      description="シート名のコピー用に表示 &#13;" />
       </menu>
 
-      <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
-
       <menu id="シート管理_Menu" label="シート管理"  itemSize="large" image="dspDefaultCellSelect">
         <menuSeparator id="シート管理_sheet" title="アクティブシートのみを対象とした処理" />
         <button id="dspDefaultViewSelect"       label="セル選択"            image="dspDefaultCellSelect"  onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect"         description="アクティブシートをA1セルを選択 &#13;"      />
@@ -87,6 +83,10 @@
         <button id="dspDefaultViewSelect2Save"  label="セルとシート＆保存"  image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.dspDefaultViewSelect2AndSave" description="全シートをA1セルを選択後、上書き保存 &#13;"      />
         <button id="dspDefault"                 label="標準画面"            imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.defaultView"                  description="オプション設定の基本で設定した内容を反映させます &#13;" />
       </menu>
+
+      <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
+
+      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.dispR1C1"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
 
       <splitButton id="SB_ZoomIn" size="normal">
         <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="ZoomInPressed"     screentip="ズーム"      supertip="セルのダブルクリックで、別画面で編集できるように &#13;F2キーにも対応" />
