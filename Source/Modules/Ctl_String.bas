@@ -33,7 +33,7 @@ Function 中黒点付与()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_String.中黒点付与"
+  funcName = "Ctl_String.中黒点付与"
 
   Call Library.startScript
   Call init.setting
@@ -52,7 +52,7 @@ Function 中黒点付与()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -64,7 +64,7 @@ Function 連番設定()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_String.連番設定"
+  funcName = "Ctl_String.連番設定"
 
   Call Library.startScript
   Call init.setting
@@ -84,7 +84,7 @@ Function 連番設定()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -104,7 +104,7 @@ Function 連番追加()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_String.連番追加"
+  funcName = "Ctl_String.連番追加"
 
   Call Library.startScript
   Call init.setting
@@ -124,7 +124,7 @@ Function 連番追加()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -137,7 +137,7 @@ Function 英数字全半角変換()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_String.英数字全半角変換"
+  funcName = "Ctl_String.英数字全半角変換"
 
   Call Library.startScript
   Call init.setting
@@ -154,7 +154,7 @@ Function 英数字全半角変換()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -166,7 +166,7 @@ Function 取り消し線設定()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_String.取り消し線設定"
+  funcName = "Ctl_String.取り消し線設定"
 
   Call Library.startScript
   Call init.setting
@@ -187,5 +187,5 @@ Function 取り消し線設定()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function

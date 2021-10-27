@@ -1236,6 +1236,12 @@ Function 罫線_二重線_左右(control As IRibbonControl)
 End Function
 
 '==================================================================================================
+Function 罫線_二重線_上(control As IRibbonControl)
+  Call init.setting
+  Call Library.罫線_二重線_上
+End Function
+
+'==================================================================================================
 Function 罫線_二重線_下(control As IRibbonControl)
   Call init.setting
   Call Library.罫線_二重線_下

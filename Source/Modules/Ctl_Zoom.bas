@@ -23,7 +23,7 @@ Function ZoomIn(Optional slctCellAddress As String)
     cellVal = ActiveCell.Formula
   End If
   Set targetBook = ActiveWorkbook
-  Set targetsheet = ActiveSheet
+  Set targetSheet = ActiveSheet
   
   Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   
@@ -67,7 +67,7 @@ Function ZoomOut(Text As String, SetTargetAddress As String)
   SetTargetAddress = Replace(SetTargetAddress, "選択セル：", "")
   
   targetBook.Activate
-  targetsheet.Activate
+  targetSheet.Activate
   
   Range(SetTargetAddress).Value = Text
   Call endScript

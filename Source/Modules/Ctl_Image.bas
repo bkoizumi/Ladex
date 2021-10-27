@@ -49,7 +49,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   ActiveSheet.Select
 '  Call Library.waitTime(1000)
   
-  Set targetImg = ActiveSheet.ChartObjects.add(0, 0, slctArea.Width, slctArea.height).Chart
+  Set targetImg = ActiveSheet.ChartObjects.add(0, 0, slctArea.Width, slctArea.Height).Chart
   With targetImg
     .Parent.Select
     .Paste

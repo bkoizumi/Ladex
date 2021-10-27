@@ -197,10 +197,10 @@ End Sub
 
 '==================================================================================================
 'シートがアクティブになったときに発生
-Private Sub xlApp_SheetActivate(ByVal Sh As Object)
+Private Sub xlApp_SheetActivate(ByVal sh As Object)
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
+  If Not CheckSheet(sh) Then Exit Sub
 
     'メッセージボックスでイベント補足を確認
 '    MsgBox "SheetActivate : [" & Sh.Parent.Name & "]" & Sh.Name
@@ -213,9 +213,9 @@ End Sub
 
 '==================================================================================================
 'ワークシートのセルが変更されたときに発生
-Private Sub xlApp_SheetChange(ByVal Sh As Object, ByVal Target As Range)
+Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
     If Me.StopEvent Then Exit Sub
-    If Not CheckSheet(Sh) Then Exit Sub
+    If Not CheckSheet(sh) Then Exit Sub
 
 
 
@@ -225,9 +225,9 @@ End Sub
 
 
 '==================================================================================================
-Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
+Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range)
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
+  If Not CheckSheet(sh) Then Exit Sub
   
   'ハイライト機能----------------------------------------------------------------------------------
   If Library.getRegistry("Main", "HighLightFlg") = True Then
@@ -252,9 +252,9 @@ End Sub
 
 '==================================================================================================
 'セルがダブルクリックされたときに発生
-Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
+Private Sub xlApp_SheetBeforeDoubleClick(ByVal sh As Object, ByVal Target As Range, Cancel As Boolean)
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
+  If Not CheckSheet(sh) Then Exit Sub
 
   'ズーム機能--------------------------------------------------------------------------------------
   If Library.getRegistry("Main", "ZoomFlg") = True Then

@@ -306,7 +306,6 @@ End Function
 '==================================================================================================
 Function doCommentPreview()
   Dim previewImgPath As String
-  
   Dim CommentBgColor, CommentFontColor, CommentFont, CommentFontSize
 
   Call init.setting
@@ -326,13 +325,11 @@ Function doCommentPreview()
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
   Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N4:S8"), imageName)
   
-  
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
   End If
     CommentImg.Picture = LoadPicture(previewImgPath)
-  
 End Function
 
 
@@ -341,7 +338,6 @@ Function doStampPreview()
   Dim previewImgPath As String
   Dim StampVal As String, StampFont As String
   
-
   Call init.setting(True)
   Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
   
@@ -365,14 +361,7 @@ Function doStampPreview()
   StampImg.Picture = LoadPicture(previewImgPath)
   
   BK_sheetHighLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
-  
-  
 End Function
-
-
-
-
-
 
 
 '**************************************************************************************************
@@ -496,47 +485,38 @@ Private Sub CommentFont_Change()
     Call doCommentPreview
   End If
 End Sub
+
 '==================================================================================================
 Private Sub CommentFontSize_Change()
-
   Me.CommentFontColor.Caption = ""
   If InitializeFlg = False Then
     Call doCommentPreview
   End If
 End Sub
 
-
 '==================================================================================================
 Private Sub StampFont_Exit(ByVal Cancel As MSForms.ReturnBoolean)
-  
   If InitializeFlg = False Then
     Call doStampPreview
   End If
-
 End Sub
 
 '==================================================================================================
 Private Sub StampFont_Change()
-  
   If InitializeFlg = False Then
     Call doStampPreview
   End If
-
 End Sub
-
 
 
 '==================================================================================================
 'キャンセル処理
 Private Sub Cancel_Click()
-
   Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
   Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
   
-  
   Unload Me
 End Sub
-
 
 '==================================================================================================
 ' 実行
@@ -545,7 +525,6 @@ Private Sub run_Click()
   
   Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
   Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
-  
   
   Call Library.setRegistry("Main", "ZoomLevel", Me.ZoomLevel.Text)
   Call Library.setRegistry("Main", "GridLine", Me.GridLine.Value)
@@ -590,17 +569,13 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "CommentFontColor", Me.CommentFontColor.BackColor)
   Call Library.setRegistry("Main", "CommentFontSize", Me.CommentFontSize.Value)
 
-
   Call Library.setRegistry("Main", "StampVal", Me.StampVal.Value)
   Call Library.setRegistry("Main", "StampFont", Me.StampFont.Value)
-  
   
   'スタイルシートをスタイル2シートへコピー
 '  endLine = sheetStyle2.Cells(Rows.count, 2).End(xlUp).Row
 '  sheetStyle2.Range("A1:J" & endLine).Copy Destination:=sheetStyle.Range("A1")
-
-
+  
   Unload Me
 End Sub
 
-  

@@ -13,7 +13,7 @@ Function 名前定義削除()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_Book.名前定義削除"
+  funcName = "Ctl_Book.名前定義削除"
 
   Call Library.startScript
   Call init.setting
@@ -31,7 +31,7 @@ Function 名前定義削除()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 '==================================================================================================
@@ -42,7 +42,7 @@ Function シートリスト取得()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_Book.シートリスト取得"
+  funcName = "Ctl_Book.シートリスト取得"
 
   Call Library.startScript
   Call init.setting
@@ -77,5 +77,5 @@ Function シートリスト取得()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function

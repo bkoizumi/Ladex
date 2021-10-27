@@ -24,7 +24,7 @@ Public Function showStart()
     .StartUpPosition = 0
     .Top = Application.Top + 10
     .Left = Application.Left + 120
-    .Caption = PrgMeg
+    .Caption = thisAppName
     
     
     '親進捗バー------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ Public Function showStart()
       .Caption = ""
       .Top = 15
       .Left = 12
-      .height = 15
+      .Height = 15
       .Width = 250
     End With
 
@@ -46,7 +46,7 @@ Public Function showStart()
       .Caption = ""
       .Top = 16
       .Left = 13
-      .height = 13
+      .Height = 13
       .Width = 0
     End With
 
@@ -58,7 +58,7 @@ Public Function showStart()
       .Caption = ""
       .Top = 17
       .Left = 12
-      .height = 14
+      .Height = 14
       .Width = 250
       .Font.Size = 10
       .Font.Bold = False
@@ -72,7 +72,7 @@ Public Function showStart()
       .Caption = ""
       .Top = 45
       .Left = 12
-      .height = 15
+      .Height = 15
       .Width = 250
     End With
 
@@ -83,7 +83,7 @@ Public Function showStart()
       .Caption = ""
       .Top = 46
       .Left = 13
-      .height = 13
+      .Height = 13
       .Width = 0
     End With
 
@@ -94,7 +94,7 @@ Public Function showStart()
       .BackStyle = 0
       .Top = 47
       .Left = 12
-      .height = 14
+      .Height = 14
       .Width = 250
       .Font.Size = 10
       .Font.Bold = False
@@ -106,7 +106,7 @@ Public Function showStart()
       .Caption = "待機中"
       .Top = 70
       .Left = 12
-      .height = 30
+      .Height = 30
       .Width = 270
       .Font.Size = 9
       .Font.Bold = False

@@ -17,7 +17,7 @@ Function Export()
      
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_Style.Export"
+  funcName = "Ctl_Style.Export"
 
   Call Library.startScript
   Call init.setting
@@ -48,7 +48,7 @@ Function Export()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -64,14 +64,14 @@ Function Import()
      
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_Style.Import"
+  funcName = "Ctl_Style.Import"
 
   Call Library.startScript
   Call init.setting
   
   '----------------------------------------------
   If setStyleBook Is Nothing Then
-    Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+    Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
   End If
   
   Call Library.startScript
@@ -101,7 +101,7 @@ Function Import()
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -145,6 +145,11 @@ Function スタイル削除()
     Select Case s.Name
       Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
         Call Library.showDebugForm("定義済スタイル    ：" & s.Name)
+      
+      'Ladexの初期設定
+      Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準"
+        Call Library.showDebugForm("Ladexスタイル    ：" & s.Name)
+      
       Case Else
         Call Library.showDebugForm("定義済スタイル削除：" & s.Name)
         s.delete
@@ -280,11 +285,11 @@ Function スタイル初期化()
   
   '処理開始--------------------------------------
   'On Error GoTo catchError
-  FuncName = "Ctl_Style.スタイル初期化"
+  funcName = "Ctl_Style.スタイル初期化"
 
   Call Library.startScript
   Call init.setting
-  Call Library.showDebugForm(FuncName & "開始==========================================")
+  Call Library.showDebugForm(funcName & "開始==========================================")
   '----------------------------------------------
   Call Ctl_Style.スタイル削除
 
@@ -309,12 +314,12 @@ Function スタイル初期化()
   
   '処理終了--------------------------------------
   Application.GoTo Reference:=Range("A1"), Scroll:=True
-  Call Library.showDebugForm(FuncName & "終了==========================================")
+  Call Library.showDebugForm(funcName & "終了==========================================")
   Call Library.endScript
   '----------------------------------------------
 
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function

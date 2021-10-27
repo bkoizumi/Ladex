@@ -138,8 +138,8 @@
         <menuSeparator id="電子印鑑_SP1" title="設定" />
         <button id="OptionStamp"  label="設定"  imageMso="StampTool" onAction="Ladex.xlam!Ctl_Ribbon.OptionStamp" description="電子印鑑 &#13;" />
       </menu> -->
-
       <toggleButton id="confirmFormula"      label="数式確認"  imageMso="ShapeSheetShowFormulas" size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.confirmFormula" getPressed="confFormulaPressed"  screentip="数式確認"  supertip="数式確認" />
+
       <menu id="formulaMenu" label="数式編集"  itemSize="large" imageMso="Formula" screentip="数式編集" supertip="数式編集">
         <menuSeparator id="数式編集_SP1" title="エラー防止" />
         <button id="formula01"  label="エラー防止"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.formula01" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加する" />
@@ -160,8 +160,12 @@
         <button id="整形_2" label="移動する"                  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.formatMove"         description="セルに合わせて移動するがサイズ変更はしない &#13;" />
         <button id="整形_3" label="移動やサイズ変更をしない"  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.formatFreeFloating" description="セルに合わせて移動やサイズ変更をしない &#13;" />
 
-        <menuSeparator id="整形_SP3" title="その他" />
+        <menuSeparator id="整形_SP3" title="図形の配置" />
+        <control idMso="ObjectAlignMenu"   visible="true"  label="配置" />
+
+        <menuSeparator id="整形_SP4" title="その他" />
         <button id="余白ゼロ" label="上下の余白をゼロにする"    imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.MarginZero"  description="テキストボックスの上下の余白をゼロにする" />
+
       </menu>
 
       <button id="saveImage"  label="画像保存"  imageMso="RestorePicture" size="normal" screentip="選択範囲を画像として保存" supertip="選択範囲を画像として保存" onAction="Ladex.xlam!Ctl_Ribbon.saveSelectArea2Image" />
@@ -194,8 +198,8 @@
           <button id="罫線_破線_上"   label="上"   imageMso="BorderTop"                 onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_上"    description="破線で上方向に罫線を設定 &#13;" />
           <button id="罫線_破線_下"   label="下"   imageMso="BorderBottom"              onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_下"    description="破線で下方向に罫線を設定 &#13;" />
           <button id="罫線_破線_上下" label="上下" imageMso="BordersAndShadingInfoPath" onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_上下"  description="破線で上下方向に罫線を設定 &#13;" />
-          <button id="罫線_破線_囲み" label="囲み" imageMso="BorderOutside"             onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_囲み"  description="破線で囲み方向に罫線を設定 &#13;" />
-          <button id="罫線_破線_格子" label="格子" imageMso="BordersAll"                onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_格子"  description="破線で格子方向に罫線を設定 &#13;" />
+          <button id="罫線_破線_囲み" label="囲み" imageMso="BorderOutside"             onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_囲み"  description="破線で囲みに罫線を設定 &#13;" />
+          <button id="罫線_破線_格子" label="格子" imageMso="BordersAll"                onAction="Ladex.xlam!Ctl_Ribbon.罫線_破線_格子"  description="破線で格子に罫線を設定 &#13;" />
         </menu>
 
         <menuSeparator id="罫線_実線MS01" title="実線で罫線を設定 &#13;" />
@@ -203,20 +207,21 @@
           <menuSeparator id="罫線_実線MS02" title="実線で罫線を設定 &#13;" />
           <button id="罫線_実線_水平" label="水平" imageMso="BorderInsideHorizontal"    onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_水平" description="実線で水平方向に罫線を設定 &#13;" />
           <button id="罫線_実線_垂直" label="垂直" imageMso="BorderInsideVertical"      onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_垂直" description="実線で垂直方向に罫線を設定 &#13;" />
-          <button id="罫線_実線_左右" label="左右" image="BorderLeftAndRight"           onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_左右" description="実線で左右に罫線を設定 &#13;" />
-          <button id="罫線_実線_上下" label="上下" imageMso="BordersAndShadingInfoPath" onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_上下" description="実線で上下に罫線を設定 &#13;" />
+          <button id="罫線_実線_左右" label="左右" image="BorderLeftAndRight"           onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_左右" description="実線で左右方向に罫線を設定 &#13;" />
+          <button id="罫線_実線_上下" label="上下" imageMso="BordersAndShadingInfoPath" onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_上下" description="実線で上下方向に罫線を設定 &#13;" />
           <button id="罫線_実線_囲み" label="囲み" imageMso="BorderOutside"             onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_囲み" description="実線で囲みに罫線を設定 &#13;" />
-          <button id="罫線_実線_格子" label="格子" imageMso="BordersAll"                onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_格子" description="実線で格子方向に罫線を設定 &#13;" />
+          <button id="罫線_実線_格子" label="格子" imageMso="BordersAll"                onAction="Ladex.xlam!Ctl_Ribbon.罫線_実線_格子" description="実線で格子に罫線を設定 &#13;" />
         </menu>
 
         <menuSeparator id="罫線_二重線MS01" title="二重線で罫線を設定 &#13;" />
         <menu id="罫線_二重線Menu" label="二重線で罫線"  itemSize="large" image="BorderDrawGrid_Double" description="二重線で罫線を設定 &#13;">
           <menuSeparator id="罫線_二重線MS02" title="二重線で罫線を設定 &#13;" />
-          <button id="罫線_二重線_左"   label="左"    imageMso="BorderLeft"                 onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_左"    description="二重線で左側に罫線を設定 &#13;" />
-          <button id="罫線_二重線_左右" label="左右"  image="BorderLeftAndRight"            onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_左右"  description="二重線で左右に罫線を設定 &#13;" />
-          <button id="罫線_二重線_下"   label="下"    imageMso="BorderBottom"               onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_下"    description="二重線で下部に罫線を設定 &#13;" />
-          <button id="罫線_二重線_上下" label="上下"  imageMso="BordersAndShadingInfoPath"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_上下"  description="二重線で上下に罫線を設定 &#13;" />
-          <button id="罫線_二重線_囲み" label="囲み"  imageMso="BorderOutside"              onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_囲み"  description="二重線で囲みに罫線を設定 &#13;" />
+          <button id="罫線_二重線_左"   label="左"    imageMso="BorderLeft"                 onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_左"   description="二重線で左方向に罫線を設定 &#13;" />
+          <button id="罫線_二重線_左右" label="左右"  image="BorderLeftAndRight"            onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_左右" description="二重線で左右方向に罫線を設定 &#13;" />
+          <button id="罫線_二重線_上"   label="上"    imageMso="BorderTop"                  onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_上"   description="二重線で上方向に罫線を設定 &#13;" />
+          <button id="罫線_二重線_下"   label="下"    imageMso="BorderBottom"               onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_下"   description="二重線で下方向に罫線を設定 &#13;" />
+          <button id="罫線_二重線_上下" label="上下"  imageMso="BordersAndShadingInfoPath"  onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_上下" description="二重線で上下方向に罫線を設定 &#13;" />
+          <button id="罫線_二重線_囲み" label="囲み"  imageMso="BorderOutside"              onAction="Ladex.xlam!Ctl_Ribbon.罫線_二重線_囲み" description="二重線で囲みに罫線を設定 &#13;" />
         </menu>
 
       </menu>
@@ -287,14 +292,17 @@
         </menu>
 
         <menu id="MyMenu" label="メニュー"  imageMso="BlogHomePage" >
-          <control idMso="FileSaveAsOtherFormats"  visible="true" label="別名保存" />             <!--他の形式で保存-->
-          <control idMso="FilePrintPreview"        visible="true" />                              <!--印刷プレビュー-->
-          <control idMso="FileSaveAsPdfOrXps"      visible="true" />                              <!--PDF生成-->
-          <control idMso="FileOpen"                visible="true" />                              <!--開く-->
-          <control idMso="FilePrepareMenu"         visible="true" />                              <!--配布準備-->
-          <control idMso="ClearContents"           visible="true" />                              <!--数式と値のクリア-->
-          <control idMso="DataValidation"          visible="true" />                              <!--入力規則-->
-          <control idMso="NameManager"             visible="true" />                              <!--名前の管理-->
+          <control idMso="FileSaveAsOtherFormats" visible="true" label="別名保存" />             <!--他の形式で保存-->
+          <control idMso="FilePrintPreview"       visible="true" />                              <!--印刷プレビュー-->
+          <control idMso="FileSaveAsPdfOrXps"     visible="true" />                              <!--PDF生成-->
+          <control idMso="FileOpen"               visible="true" />                              <!--開く-->
+          <control idMso="FilePrepareMenu"        visible="true" />                              <!--配布準備-->
+          <control idMso="ClearContents"          visible="true" />                              <!--数式と値のクリア-->
+          <control idMso="DataValidation"         visible="true" />                              <!--入力規則-->
+          <control idMso="NameManager"            visible="true" />                              <!--名前の管理-->
+          <control idMso="ObjectAlignMenu"        visible="true"  label="配置" />
+          <control idMso="ObjectRotateGallery"    visible="true"  label="回転" />
+
         </menu>
     </group>
     <group idMso="GroupFont"                       visible="true"/>                               <!--フォント-->

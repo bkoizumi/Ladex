@@ -13,7 +13,7 @@ Function setVal(pType As String, pText As String)
   
   '処理開始--------------------------------------
 '  On Error GoTo catchError
-  FuncName = "Ctl_SaveVal.setVal"
+  funcName = "Ctl_SaveVal.setVal"
 
   Call init.setting
   chkFlg = False
@@ -39,7 +39,7 @@ Function setVal(pType As String, pText As String)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -50,7 +50,7 @@ Function getVal(pType As String) As String
   
   '処理開始--------------------------------------
   On Error GoTo catchError
-  FuncName = "Ctl_SaveVal.setVal"
+  funcName = "Ctl_SaveVal.setVal"
 
   Call init.setting
 '  Set BK_sheetSetting = ActiveWorkbook.Worksheets("設定")
@@ -76,7 +76,7 @@ Function getVal(pType As String) As String
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
   Set resetObjVal = Nothing
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 '==================================================================================================
@@ -85,7 +85,7 @@ Function delVal(pType As String)
   
   '処理開始--------------------------------------
   On Error GoTo catchError
-  FuncName = "Ctl_SaveVal.setVal"
+  funcName = "Ctl_SaveVal.setVal"
   
   Call Library.startScript
   Call init.setting
@@ -106,6 +106,6 @@ Function delVal(pType As String)
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 

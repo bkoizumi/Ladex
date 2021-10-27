@@ -78,7 +78,6 @@ Public Const SymbolCharacters = "!""#$%&'()=~|@[`{;:]+*},./\<>?_-^\"
 'Public Const JapaneseCharactersCommonUse = "雨学空金青林画岩京国姉知長直店東歩妹明門夜委育泳岸苦具幸始使事実者昔取受所注定波板表服物放味命油和英果芽官季泣協径固刷参治周松卒底的典毒念府法牧例易往価河居券効妻枝舎述承招性制版肥非武沿延拡供呼刻若宗垂担宙忠届乳拝並宝枚依押奇祈拠況屈肩刺沼征姓拓抵到突杯泊拍迫彼怖抱肪茂炎欧殴"
 'Public Const MachineDependentCharacters = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ㍉纊褜鍈銈蓜俉炻昱棈鋹曻彅丨仡仼伀伃伹佖侒侊侚侔俍偀倢俿倞偆偰偂傔"
 
-
 Public ThisBook As Workbook
 
 
@@ -93,37 +92,14 @@ End Function
 
 
 '**************************************************************************************************
-' * エラー時の処理
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function errorHandle(FuncName As String, ByRef objErr As Object)
-
-  Dim Message As String
-  Dim runTime As Date
-  Dim endLine As Long
-
-  runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
-  Message = FuncName & vbCrLf & objErr.Description
-
-  '音声認識発話
-  Application.Speech.Speak Text:="エラーが発生しました", SpeakAsync:=True
-  Message = Application.WorksheetFunction.VLookup(objErr.Number, BK_sheetNotice.Range("A2:B" & endLine), 2, False)
-
-  Call MsgBox(Message, vbCritical)
-  Call endScript
-  Call Ctl_ProgressBar.showEnd
-
-  Call outputLog(runTime, objErr.Number & vbTab & objErr.Description)
-End Function
-
-
-'**************************************************************************************************
 ' * 画面描写制御開始
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function startScript()
+  
+  Const funcName As String = "Library.startScript"
+  
   On Error Resume Next
   'アクティブセルの取得
   If TypeName(Selection) = "Range" Then
@@ -149,6 +125,7 @@ Function startScript()
   '確認メッセージを出さない
   Application.DisplayAlerts = False
 
+  'Call Library.showDebugForm("funcName", funcName)
 End Function
 
 
@@ -158,8 +135,10 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function endScript(Optional reCalflg As Boolean = False, Optional flg As Boolean = False)
+  Const funcName As String = "Library.endScript"
+  
   On Error Resume Next
-
+  
   '強制的に再計算させる
   If reCalflg = True Then
     Application.CalculateFull
@@ -170,7 +149,7 @@ Function endScript(Optional reCalflg As Boolean = False, Optional flg As Boolean
     ActiveWorkbook.Worksheets(SelectionSheet).Select
     ActiveWorkbook.Range(SelectionCell).Select
   End If
-  Call unsetClipboard
+'  Call unsetClipboard
 
   'マクロ動作でシートやウィンドウが切り替わるのを見せないようにします
   Application.ScreenUpdating = True
@@ -192,6 +171,8 @@ Function endScript(Optional reCalflg As Boolean = False, Optional flg As Boolean
 
   '確認メッセージを出さない
   Application.DisplayAlerts = True
+  
+  'Call Library.showDebugForm("funcName", funcName)
 End Function
 
 
@@ -201,7 +182,6 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function chkSheetExists(sheetName) As Boolean
-
   Dim tempSheet As Object
   Dim result As Boolean
 
@@ -241,7 +221,6 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function chkShapeName(ShapeName As String) As Boolean
-
   Dim objShp As Shape
   Dim result As Boolean
 
@@ -262,8 +241,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function chkExcludeSheet(chkSheetName As String) As Boolean
-
- Dim result As Boolean
+  Dim result As Boolean
   Dim sheetName As Variant
 
   For Each sheetName In Range("ExcludeSheet")
@@ -294,7 +272,7 @@ End Function
   End If
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   chkArrayEmpty = True
 
@@ -306,10 +284,9 @@ End Function
 ' * @Link https://www.moug.net/tech/exvba/0060042.html
 '**************************************************************************************************
 Function chkBookOpened(chkFile) As Boolean
-
   Dim myChkBook As Workbook
+  
   On Error Resume Next
-
   Set myChkBook = Workbooks(chkFile)
 
   If Err.Number > 0 Then
@@ -329,7 +306,7 @@ Function chkHeader(baseNameArray As Variant, chkNameArray As Variant)
   Dim errMeg As String
   Dim i As Integer
 
-On Error GoTo catchError
+  On Error GoTo catchError
   errMeg = ""
 
   If UBound(baseNameArray) <> UBound(chkNameArray) Then
@@ -342,17 +319,37 @@ On Error GoTo catchError
       End If
     Next
   End If
-
   chkHeader = errMeg
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   chkHeader = "エラーが発生しました"
-
 End Function
 
-
+'**************************************************************************************************
+' * データチェック
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+'日付
+Function chkIsDate(chkVal As Date, startDay As Date, endDay As Date)
+  Dim chkFlg As Boolean
+  chkFlg = False
+  
+  If IsDate(chkVal) = True Then
+    If startDay <= chkVal And chkVal <= endDay Then
+      chkFlg = True
+    Else
+      chkFlg = False
+    End If
+  Else
+    chkFlg = False
+  End If
+  
+  chkIsDate = chkFlg
+End Function
 
 '**************************************************************************************************
 ' * ファイルの保存場所がローカルディスクかどうか判定
@@ -378,13 +375,13 @@ Function chkLocalDrive(targetPath As String)
   Select Case driveType
     Case 1
       retVal = True
-      Call Library.showDebugForm("リムーバブルディスク")
+      Call Library.showDebugForm("Library.chkLocalDrive", "リムーバブルディスク")
     Case 2
       retVal = True
-      Call Library.showDebugForm("ハードディスク")
+      Call Library.showDebugForm("Library.chkLocalDrive", "ハードディスク")
     Case Else
       retVal = False
-      Call Library.showDebugForm("不明、ネットワークドライブ、CDドライブなど")
+      Call Library.showDebugForm("Library.chkLocalDrive", "不明、ネットワークドライブ、CDドライブなど")
   End Select
 
   If BK_setVal("debugMode") = "develop" Then
@@ -392,9 +389,8 @@ Function chkLocalDrive(targetPath As String)
   End If
   chkLocalDrive = retVal
 
-
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
 End Function
 
@@ -461,7 +457,6 @@ Function chkDirExists(targetPath As String)
     chkDirExists = False
   End If
   Set FSO = Nothing
-
 End Function
 
 
@@ -515,7 +510,6 @@ Function covCamelToSnake(ByVal val As String, Optional ByVal isUpper As Boolean 
   Dim i      As Long, Length As Long
 
   Length = Len(val)
-
   For i = 1 To Length
     If UCase(Mid(val, i, 1)) = Mid(val, i, 1) Then
       If i = 1 Then
@@ -544,7 +538,6 @@ End Function
 ' * @Link https://ameblo.jp/i-devdev-beginner/entry-12225328059.html
 '**************************************************************************************************
 Function convSnakeToCamel(ByVal val As String, Optional ByVal isFirstUpper As Boolean = False) As String
-
   Dim ret As String
   Dim i   As Long
   Dim snakeSplit As Variant
@@ -570,7 +563,6 @@ End Function
 '**************************************************************************************************
 Function convHan2Zen(Text As String) As String
   Dim i As Long, buf As String
-
   Dim c As Range
   Dim rData As Variant, ansData As Variant
 
@@ -607,7 +599,6 @@ Function convPipe2Comma(strText As String) As String
     End If
   Next i
   convPipe2Comma = covString
-
 End Function
 
 
@@ -645,10 +636,8 @@ End Function
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
 Function convBase64EncodeForString(ByVal str As String) As String
-
   Dim ret As String
   Dim d() As Byte
-
   Const adTypeBinary = 1
   Const adTypeText = 2
 
@@ -795,17 +784,25 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function delSheetData(Optional line As Long)
+Function delSheetData(targetSheet As Worksheet, Optional line As Long)
 
+  Call Library.showDebugForm("funcName", "Library.delSheetData")
+  Call Library.showDebugForm("delLine  ", line)
+  
+  If targetSheet Is Nothing Then
+    Set targetSheet = ActiveSheet
+  End If
+  Call Library.showDebugForm("sheetName", targetSheet.Name)
+  
   If line <> 0 Then
-    Rows(line & ":" & Rows.count).delete Shift:=xlUp
-    Rows(line & ":" & Rows.count).Select
-    Rows(line & ":" & Rows.count).NumberFormatLocal = "G/標準"
-    Rows(line & ":" & Rows.count).style = "Normal"
+    targetSheet.Rows(line & ":" & Rows.count).delete Shift:=xlUp
+    targetSheet.Rows(line & ":" & Rows.count).Select
+    targetSheet.Rows(line & ":" & Rows.count).NumberFormatLocal = "G/標準"
+    targetSheet.Rows(line & ":" & Rows.count).style = "Normal"
   Else
-    Cells.delete Shift:=xlUp
-    Cells.NumberFormatLocal = "G/標準"
-    Cells.style = "Normal"
+    targetSheet.Cells.delete Shift:=xlUp
+    targetSheet.Cells.NumberFormatLocal = "G/標準"
+    targetSheet.Cells.style = "Normal"
   End If
   DoEvents
 
@@ -926,20 +923,14 @@ Function execCopy(srcPath As String, dstPath As String)
   If chkDirExists(getParentDir(dstPath)) = False Then
     Call Library.execMkdir(getParentDir(dstPath))
   End If
-  
-'  If chkFileExists(Library.getFileInfo(dstPath, , "CurrentDir")) = False Then
-'    Call showNotice(403, "コピー先", True)
-'  End If
-  
-  
   FSO.CopyFile srcPath, dstPath
   Set FSO = Nothing
 
   Exit Function
 
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -961,19 +952,13 @@ Function execMove(srcPath As String, dstPath As String)
   If chkFileExists(srcPath) = False Then
     Call showNotice(404, "移動元", True)
   End If
-  
-'  If chkFileExists(Library.getFileInfo(dstPath, , "CurrentDir")) = False Then
-'    Call showNotice(403, "移動先", True)
-'  End If
-  
-  
   FSO.MoveFile srcPath, dstPath
   Set FSO = Nothing
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
 
@@ -1001,11 +986,65 @@ Function execDel(srcPath As String)
   Set FSO = Nothing
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
 
+'**************************************************************************************************
+' * ファイル名変更
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execRename(srcPath As String, oldFileName As String, fileName As String, Optional errMeg As String)
+  Dim FSO As Object
+  Dim errFlg As Boolean
+  Const funcName As String = "Library.execReName"
+
+  On Error GoTo catchError
+
+  errFlg = False
+  Call showDebugForm("変更元", srcPath)
+  Call showDebugForm("旧名称", oldFileName)
+  Call showDebugForm("新名称", fileName)
+  
+  If chkFileExists(srcPath & "\" & oldFileName) = False Then
+    If IsMissing(errMeg) Then
+      Call showNotice(404, "変更元", True)
+    Else
+      errMeg = "変更元のファイルがありません[" & oldFileName & "]"
+      errFlg = True
+    End If
+    
+  End If
+  If chkFileExists(srcPath & "\" & fileName) = True Then
+    If IsMissing(errMeg) Then
+      Call showNotice(414, fileName, True)
+    Else
+      errMeg = "同名のファイルが存在します[" & fileName & "]"
+      errFlg = True
+    End If
+  End If
+  If errFlg = False Then
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    FSO.GetFile(srcPath & "\" & oldFileName).Name = fileName
+    Set FSO = Nothing
+    
+    execRename = True
+  Else
+    execRename = False
+  End If
+  
+    
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, "[" & Err.Number & "] " & Err.Description)
+  errMeg = Err.Description
+  
+  execRename = False
+End Function
 
 '**************************************************************************************************
 ' * MkDirで階層の深いフォルダーを作る
@@ -1035,9 +1074,82 @@ Private Function chkParentDir(TargetFolder)
   Set FSO = Nothing
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, "ディレクトリの作成に失敗しました" & vbNewLine & Err.Description, True)
+End Function
+
+
+'**************************************************************************************************
+' * zip圧縮/解凍
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function execCompress(srcPath As String, zipFilePath As String) As Boolean
+  Dim sh  As New IWshRuntimeLibrary.WshShell
+  Dim ex  As WshExec
+  Dim cmd As String
+  
+  Call showDebugForm("対象ディレクトリ：" & srcPath)
+  Call showDebugForm("zipファイル     ：" & zipFilePath)
+  
+  If chkDirExists(srcPath) = False Then
+    Call showNotice(403, "対象ディレクトリ", True)
+  End If
+  
+  '// 半角スペースをバッククォートでエスケープ
+  srcPath = Replace(srcPath, " ", "` ")
+  zipFilePath = Replace(zipFilePath, " ", "` ")
+  
+  cmd = "Compress-Archive -Path " & srcPath & " -DestinationPath " & zipFilePath & " -Force"
+  Call showDebugForm("cmd：" & cmd)
+  Set ex = sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
+  
+  If ex.Status = WshFailed Then
+    execCompress = False
+    Exit Function
+  End If
+  
+  Do While ex.Status = WshRunning
+    DoEvents
+  Loop
+  
+  execCompress = True
+End Function
+
+
+'==================================================================================================
+Function execUncompress(zipFilePath As String, dstPath As String) As Boolean
+  Dim sh As New IWshRuntimeLibrary.WshShell
+  Dim ex As WshExec
+  Dim cmd As String
+  
+  Call showDebugForm("zipファイル　　 ：" & zipFilePath)
+  Call showDebugForm("対象ディレクトリ：" & dstPath)
+  
+  If chkFileExists(zipFilePath) = False Then
+    Call showNotice(404, "解凍対象", True)
+  End If
+  If chkDirExists(dstPath) = False Then
+    Call showNotice(403, "解凍先", True)
+  End If
+  
+  '// 半角スペースをバッククォートでエスケープ
+  zipFilePath = Replace(zipFilePath, " ", "` ")
+  dstPath = Replace(dstPath, " ", "` ")
+  
+  cmd = "Expand-Archive -Path " & zipFilePath & " -DestinationPath " & dstPath & " -Force"
+  Call showDebugForm("cmd：" & cmd)
+  Set ex = sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
+  
+  If ex.Status = WshFailed Then
+    execUncompress = False
+    Exit Function
+  End If
+  Do While ex.Status = WshRunning
+    DoEvents
+  Loop
+  execUncompress = True
 End Function
 
 
@@ -1108,9 +1220,8 @@ Function getMachineInfo() As Object
   MachineInfo.add "appTop", ActiveWindow.Top
   MachineInfo.add "appLeft", ActiveWindow.Left
   MachineInfo.add "appWidth", ActiveWindow.Width
-  MachineInfo.add "appHeight", ActiveWindow.height
+  MachineInfo.add "appHeight", ActiveWindow.Height
   
-
   Set WshNetworkObject = Nothing
 End Function
 
@@ -1163,8 +1274,8 @@ Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long
 '  End If
 
   Call Library.showDebugForm("-------------------------")
-  Call Library.showDebugForm("R1C1Top     ：" & R1C1Top)
-  Call Library.showDebugForm("R1C1Left    ：" & R1C1Left)
+  Call Library.showDebugForm("R1C1Top ：" & R1C1Top)
+  Call Library.showDebugForm("R1C1Left ：" & R1C1Left)
   Call Library.showDebugForm("-------------------------")
   Call Library.showDebugForm("Rng.Address ：" & Rng.Address)
   Call Library.showDebugForm("ActvCellTop ：" & ActvCellTop)
@@ -1178,8 +1289,7 @@ End Function
 ' * @link   http://www.happy2-island.com/excelsmile/smile03/capter00717.shtml
 '**************************************************************************************************
 Function getColumnNo(targetCell As String) As Long
-
-  getColumnNo = Range(targetCell & ":" & targetCell).Column
+  getColumnNo = Range(targetCell, targetCell).Column
 End Function
 
 
@@ -1189,9 +1299,9 @@ End Function
 ' * @link   http://www.happy2-island.com/excelsmile/smile03/capter00717.shtml
 '**************************************************************************************************
 Function getColumnName(targetCell As Long) As String
-
   getColumnName = Split(Cells(, targetCell).Address, "$")(1)
 End Function
+
 
 '**************************************************************************************************
 ' * カラーパレットを表示し、色コードを取得
@@ -1211,7 +1321,6 @@ Function getColor(colorValue As Long)
   End If
 
   getColor = setColorValue
-
 End Function
 
 '**************************************************************************************************
@@ -1224,8 +1333,6 @@ Function getFont(FontName As String, fontSize As Long)
   Dim setColorValue As Long
 
   Application.Dialogs(xlDialogActiveCellFont).Show FontName, "レギュラー", fontSize
-
-
 End Function
 
 
@@ -1257,9 +1364,6 @@ Function getRGB(colorValue As Long, Red As Long, Green As Long, Blue As Long)
   Green = Int(colorValue / 256) Mod 256
   Blue = Int(colorValue / 256 / 256)
 End Function
-
-
-
 
 
 '**************************************************************************************************
@@ -1294,10 +1398,8 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function getSaveFilePath(CurrentDirectory As String, saveFileName As String, FileTypeNo As Long)
-
   Dim filePath As String
   Dim result As Long
-
   Dim fileName As Variant
 
   fileName = Application.GetSaveAsFilename( _
@@ -1317,7 +1419,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getFilePath(CurrentDirectory As String, saveFileName As String, title As String, FileTypeNo As Long)
+Function getFilePath(CurrentDirectory As String, fileName As String, title As String, fileType As String)
 
   Dim filePath As String
   Dim result As Long
@@ -1326,28 +1428,54 @@ Function getFilePath(CurrentDirectory As String, saveFileName As String, title A
 
     ' ファイルの種類を設定
     .Filters.Clear
-    .Filters.add "Excelブック", "*.xls; *.xlsx; *.xlsm"
-    .Filters.add "CSVファイル", "*.csv"
-    .Filters.add "SQLファイル", "*.sql"
-    .Filters.add "テキストファイル", "*.txt"
-    .Filters.add "JSONファイル", "*.json"
-    .Filters.add "Accesssデータベース", "*.mdb"
-    .Filters.add "すべてのファイル", "*.*"
+    Select Case fileType
+      Case "Excel"
+            .Filters.add "Excelブック", "*.xls; *.xlsx; *.xlsm"
+      Case "txt"
+        .Filters.add "テキストファイル", "*.txt"
+      
+      Case "csv"
+        .Filters.add "CSVファイル", "*.csv"
+      
+      Case "json"
+        .Filters.add "JSONファイル", "*.json"
+      
+      Case "sql"
+        .Filters.add "SQLファイル", "*.sql"
+      
+      Case "mdb"
+        .Filters.add "Accesssデータベース", "*.mdb;*.accdb"
+      
+      Case "img"
+        .Filters.add "イメージファイル", "*.bmp;*.jpg;*.gif;*.png"
+      
+      Case "psd"
+        .Filters.add "Photoshop Data", "*.psd"
+      
+      Case "クリエイティブ"
+        .Filters.add "クリエイティブ", "*.jpg;*.gif;*.png;*.mp4"
+      
+      Case "mov"
+        .Filters.add "動画ファイル", "*.mp4"
 
-    .FilterIndex = FileTypeNo
+      
+      Case Else
+        .Filters.add "すべてのファイル", "*.*"
+    End Select
+    '.FilterIndex = FileTypeNo
 
     '表示するフォルダ
     If chkDirExists(CurrentDirectory) = True Then
-    .InitialFileName = CurrentDirectory & "\" & saveFileName
+      .InitialFileName = CurrentDirectory & "\" & fileName
     Else
-      .InitialFileName = ActiveWorkbook.Path & "\" & saveFileName
+      .InitialFileName = ActiveWorkbook.Path & "\" & fileName
     End If
-
+    
     '表示形式の設定
     .InitialView = msoFileDialogViewWebView
 
     'ダイアログ ボックスのタイトル設定
-    .title = title
+    .title = title & "を選択してください"
 
 
     If .Show = -1 Then
@@ -1367,37 +1495,61 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getFilesPath(CurrentDirectory As String, saveFileName As String, title As String, FileTypeNo As Long)
+Function getFilesPath(CurrentDirectory As String, fileName As String, title As String, fileType As String)
 
   Dim filePath() As Variant
   Dim result As Long
   Dim i As Integer
-  
+
   With Application.FileDialog(msoFileDialogFilePicker)
     '複数選択を許可
     .AllowMultiSelect = True
 
     ' ファイルの種類を設定
     .Filters.Clear
-    .Filters.add "Excelブック", "*.xls; *.xlsx; *.xlsm"
-    .Filters.add "CSVファイル", "*.csv"
-    .Filters.add "SQLファイル", "*.sql"
-    .Filters.add "テキストファイル", "*.txt"
-    .Filters.add "JSONファイル", "*.json"
-    .Filters.add "Accesssデータベース", "*.mdb"
-    .Filters.add "すべてのファイル", "*.*"
-
-    .FilterIndex = FileTypeNo
+    Select Case fileType
+      Case "Excel"
+            .Filters.add "Excelブック", "*.xls; *.xlsx; *.xlsm"
+      Case "txt"
+        .Filters.add "テキストファイル", "*.txt"
+      
+      Case "csv"
+        .Filters.add "CSVファイル", "*.csv"
+      
+      Case "json"
+        .Filters.add "JSONファイル", "*.json"
+      
+      Case "sql"
+        .Filters.add "SQLファイル", "*.sql"
+      
+      Case "mdb"
+        .Filters.add "Accesssデータベース", "*.mdb;*.accdb"
+      
+      Case "img"
+        .Filters.add "イメージファイル", "*.bmp;*.jpg;*.gif;*.png"
+      
+      Case "psd"
+        .Filters.add "Photoshop Data", "*.psd"
+      
+      Case "クリエイティブ"
+        .Filters.add "クリエイティブ", "*.jpg;*.gif;*.png;*.mp4"
+      
+      Case "mov"
+        .Filters.add "動画ファイル", "*.mp4"
+        
+      Case Else
+        .Filters.add "すべてのファイル", "*.*"
+    End Select
+    '.FilterIndex = FileTypeNo
 
     '表示するフォルダ
-    .InitialFileName = CurrentDirectory & "\" & saveFileName
+    .InitialFileName = CurrentDirectory & "\" & fileName
 
     '表示形式の設定
     .InitialView = msoFileDialogViewWebView
 
     'ダイアログ ボックスのタイトル設定
     .title = title
-
 
     If .Show = -1 Then
       ReDim Preserve filePath(.SelectedItems.count - 1)
@@ -1447,77 +1599,74 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
   Dim FSO As Object
   Dim fileObject As Object
   Dim sp As Shape
-
+  
   Set FSO = CreateObject("Scripting.FileSystemObject")
-
+  
   Set fileInfo = Nothing
   Set fileInfo = CreateObject("Scripting.Dictionary")
-
-
-
+  
   '作成日時
-  fileInfo.add "create_at", FSO.GetFile(targetFilePath).DateCreated
-
+  fileInfo.add "createAt", Format(FSO.GetFile(targetFilePath).DateCreated, "yyyy/mm/dd hh:nn:ss")
+  
   '更新日時
-  fileInfo.add "update_at", FSO.GetFile(targetFilePath).DateLastModified
-
+  fileInfo.add "updateAt", Format(FSO.GetFile(targetFilePath).DateLastModified, "yyyy/mm/dd hh:nn:ss")
+  
   'ファイルサイズ
   fileInfo.add "size", FSO.GetFile(targetFilePath).Size
-
+  
   'ファイルの種類
   fileInfo.add "type", FSO.GetFile(targetFilePath).Type
-
+  
   '拡張子
   fileInfo.add "extension", FSO.GetExtensionName(targetFilePath)
   
   'ファイル名
   fileInfo.add "fileName", FSO.GetFile(targetFilePath).Name
-
+  
   'ファイルが存在するフォルダ
   fileInfo.add "CurrentDir", FSO.GetFile(targetFilePath).ParentFolder
-
+  
   Select Case FSO.GetExtensionName(targetFilePath)
     Case "mp4"
-
-    Case "png"
-    Set sp = ActiveSheet.Shapes.AddPicture( _
-              fileName:=targetFilePath, _
-              LinkToFile:=False, _
-              SaveWithDocument:=True, _
-              Left:=0, _
-              Top:=0, _
-              Width:=0, _
-              height:=0 _
-              )
-    With sp
-      .LockAspectRatio = msoTrue
-      .ScaleHeight 1, msoTrue
-      .ScaleWidth 1, msoTrue
-
-      fileInfo.add "width", CLng(.Width * 4 / 3)
-      fileInfo.add "height", CLng(.height * 4 / 3)
-      .delete
-    End With
     
-    Case "bmp", "jpg", "gif", "emf", "ico", "rle", "wmf"
+    Case "png"
+      Set sp = ActiveSheet.Shapes.AddPicture( _
+                fileName:=targetFilePath, _
+                LinkToFile:=False, _
+                SaveWithDocument:=True, _
+                Left:=0, _
+                Top:=0, _
+                Width:=0, _
+                Height:=0 _
+                )
+      With sp
+        .LockAspectRatio = msoTrue
+        .ScaleHeight 1, msoTrue
+        .ScaleWidth 1, msoTrue
+        
+        fileInfo.add "width", CLng(.Width * 4 / 3)
+        fileInfo.add "height", CLng(.Height * 4 / 3)
+        .delete
+      End With
+            
+    Case "bmp", "jpg", "jpeg", "gif", "emf", "ico", "rle", "wmf"
       Set fileObject = LoadPicture(targetFilePath)
       fileInfo.add "width", fileObject.Width
-      fileInfo.add "height", fileObject.height
-
+      fileInfo.add "height", fileObject.Height
+      
       Set fileObject = Nothing
-
+    
     Case Else
   End Select
   
   Set FSO = Nothing
-  
+
   If getType <> "" Then
     getFileInfo = fileInfo(getType)
     Set fileInfo = Nothing
   End If
   
 End Function
-
 
 '**************************************************************************************************
 ' * ファイルの親フォルダ取得
@@ -1528,7 +1677,7 @@ Function getParentDir(targetPath As String) As String
   Dim parentDir As String
   
   parentDir = Left(targetPath, InStrRev(targetPath, "\") - 1)
-  Call Library.showDebugForm(" parentDir：" & parentDir)
+'  Call Library.showDebugForm(" parentDir：" & parentDir)
   
   getParentDir = parentDir
 End Function
@@ -1692,7 +1841,7 @@ Function showExpansionForm(Text As String, SetSelectTargetRows As String)
   With Frm_Zoom
     .StartUpPosition = 0
     .Top = Application.Top + (ActiveWindow.Width / 10)
-    .Left = Application.Left + (ActiveWindow.height / 5)
+    .Left = Application.Left + (ActiveWindow.Height / 5)
     .TextBox = Text
     .TextBox.MultiLine = True
     .TextBox.MultiLine = True
@@ -1709,11 +1858,12 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function showDebugForm(ByVal meg1 As String, Optional meg2 As String)
+Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant)
   Dim runTime As Date
   Dim StartUpPosition As Long
-
-'  On Error GoTo catchError
+  Const funcName As String = "Library.showDebugForm"
+  
+  On Error GoTo catchError
 
   runTime = Format(Now(), "yyyy/mm/dd hh:nn:ss")
 
@@ -1722,6 +1872,9 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As String)
   End If
 
   meg1 = Replace(meg1, vbNewLine, " ")
+  If IsMissing(meg2) = False Then
+    meg1 = "  " & meg1 & "：" & Application.WorksheetFunction.Trim(Replace(CStr(meg2), vbNewLine, " "))
+  End If
   
   Select Case BK_setVal("debugMode")
     Case "file"
@@ -1738,20 +1891,20 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As String)
 
     Case "develop"
       If meg1 <> "" Then
-        Call outputLog(runTime, meg1)
         Debug.Print runTime & vbTab & meg1
+        Call outputLog(runTime, meg1)
       End If
 
     Case Else
       Exit Function
   End Select
-  
+
   DoEvents
   Exit Function
 
 'エラー発生時=====================================================================================
 catchError:
-  Exit Function
+  Debug.Print (funcName & " [" & Err.Number & "]" & Err.Description)
 End Function
 
 '**************************************************************************************************
@@ -1764,7 +1917,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   Dim Message As String
   Dim runTime As Date
   Dim endLine As Long
-
+  
   On Error GoTo catchError
 
 
@@ -1780,18 +1933,18 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     Message = Message & vbNewLine & "処理を中止します"
   End If
 
-  If StopTime <> 0 Then
-    Message = Message & vbNewLine & "<処理時間：" & StopTime & ">"
-  End If
 
   If Message <> "" Then
     Message = Replace(Message, "<BR>", vbNewLine)
   End If
-
+  
   If BK_setVal("debugMode") = "speak" Or BK_setVal("debugMode") = "develop" Or BK_setVal("debugMode") = "all" Then
     Application.Speech.Speak Text:=Message, SpeakAsync:=True, SpeakXML:=True
   End If
 
+  Message = Replace(Message, "<", "[")
+  Message = Replace(Message, ">", "]")
+  
   Select Case Code
     Case 0 To 399
       Call MsgBox(Message, vbInformation, thisAppName)
@@ -1803,28 +1956,28 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
       Call MsgBox(Message, vbExclamation, thisAppName)
 
     Case 999
-
+    
     Case Else
       Call MsgBox(Message, vbCritical, thisAppName)
   End Select
   
   Message = Replace(Message, vbNewLine & "処理を中止します", "。処理を中止します")
-  Message = "[" & Code & "]" & Message
+  Message = "  [" & Code & "]" & Message
+  Call Library.showDebugForm(Message)
   
   '画面描写制御終了処理
   If runEndflg = True Then
-    Call endScript
+    Call Library.endScript
     Call Ctl_ProgressBar.showEnd
+    Call init.unsetting
     End
-  Else
-    Call Library.showDebugForm(Message)
   End If
-
+  
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
+  Call Library.showDebugForm(Message)
   Call MsgBox(Message, vbCritical, thisAppName)
-
 End Function
 
 
@@ -1836,25 +1989,21 @@ End Function
 Function makeRandomString(ByVal setString As String, ByVal setStringCnt As Integer) As String
   Dim i, n
   Dim str1 As String
-  
+
   For i = 1 To setStringCnt
+    '乱数ジェネレータを初期化
     Randomize
     n = Int((Len(setString) - 1 + 1) * Rnd + 1)
     str1 = str1 + Mid(setString, n, 1)
   Next i
-  
   makeRandomString = str1
-
 End Function
 
 '==================================================================================================
 Function makeRandomNo(minNo As Long, maxNo As Long) As String
-
   Randomize
   makeRandomNo = Int((maxNo - minNo + 1) * Rnd + minNo)
-
 End Function
-
 
 '==================================================================================================
 Function makeRandomDigits(maxCount As Long) As String
@@ -1865,16 +2014,16 @@ Function makeRandomDigits(maxCount As Long) As String
   For count = 1 To maxCount
     Randomize
     tmpVal = CStr(Int(10 * Rnd))
-
+    
     If count = 1 And tmpVal = 0 Then
       tmpVal = 1
     End If
     makeVal = makeVal & tmpVal
   Next
-
   makeRandomDigits = makeVal
-
 End Function
+
+
 '**************************************************************************************************
 ' * ログ出力
 ' *
@@ -1883,10 +2032,16 @@ End Function
 Function outputLog(runTime As Date, Message As String)
   Dim fileTimestamp As Date
 
-  If chkFileExists(logFile) Then
+  On Error GoTo catchError
+  
+  If logFile = "" Then
+    Debug.Print "ログファイルが設定されていません"
+    End
+    
+  ElseIf chkFileExists(logFile) Then
     fileTimestamp = FileDateTime(logFile)
   Else
-      fileTimestamp = DateAdd("d", -1, Date)
+    fileTimestamp = DateAdd("d", -1, Date)
   End If
 
   With CreateObject("ADODB.Stream")
@@ -1900,16 +2055,20 @@ Function outputLog(runTime As Date, Message As String)
     .SaveToFile logFile, 2
     .Close
   End With
-
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print "ログ出力失敗" & Err.Number & "：" & Err.Description
+  Debug.Print logFile
 End Function
+
 
 '==================================================================================================
 Function outputText(Message As String, outputFilePath)
-
   Open outputFilePath For Output As #1
   Print #1, Message
   Close #1
-
 End Function
 
 '**************************************************************************************************
@@ -1918,8 +2077,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 ' * @link   https://www.tipsfound.com/vba/18014
 '**************************************************************************************************
-Function importCsv(filePath As String, Optional readLine As Long, Optional TextFormat As Variant)
-
+Function importCsv(filePath As String, Optional readLine As Long, Optional TextFormat As Variant, Optional charCode As String = "sjis")
   Dim ws As Worksheet
   Dim qt As QueryTable
   Dim count As Long, line As Long, endLine As Long
@@ -1938,7 +2096,11 @@ Function importCsv(filePath As String, Optional readLine As Long, Optional TextF
   Set ws = ActiveSheet
   Set qt = ws.QueryTables.add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A" & endLine))
   With qt
-    .TextFilePlatform = 932          ' Shift-JIS を開く
+    If charCode = "sjis" Then
+      .TextFilePlatform = 932          ' Shift-JIS を開く
+    Else
+      .TextFilePlatform = 65001        ' UTF-8
+    End If
     .TextFileParseType = xlDelimited ' 文字で区切った形式
     .TextFileCommaDelimiter = True   ' 区切り文字はカンマ
     .TextFileStartRow = readLine     ' 1 行目から読み込み
@@ -1991,18 +2153,15 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
   Application.CutCopyMode = False
   ActiveWorkbook.Close SaveChanges:=False
   dictSheet.Range("A1").Select
-
+  
   DoEvents
   Call Library.startScript
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, FuncName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
 End Function
-
-
-
 
 
 '**************************************************************************************************
@@ -2015,10 +2174,11 @@ Function makePasswd() As String
   Dim i As Integer
   Dim n
   
-  
+
   halfChar = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&"
 
   For i = 1 To 12
+    '乱数ジェネレータを初期化
     Randomize
     n = Int((Len(halfChar) - 1 + 1) * Rnd + 1)
     str1 = str1 + Mid(halfChar, n, 1)
@@ -2063,7 +2223,6 @@ End Function
 Function unsetHighLight()
   Static xRow
   Static xColumn
-
   Dim pRow, pColumn
   
   pRow = Selection.Row
@@ -2078,9 +2237,7 @@ Function unsetHighLight()
       .ColorIndex = xlNone
     End With
   End If
-
 End Function
-
 
 
 '**************************************************************************************************
@@ -2179,7 +2336,7 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String)
   End If
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, Err.Description)
 End Function
@@ -2187,7 +2344,6 @@ End Function
 
 '==================================================================================================
 Function delRegistry(RegistrySubKey As String, Optional RegistryKey As String)
-
   Dim regVal As String
 
   On Error GoTo catchError
@@ -2198,7 +2354,7 @@ Function delRegistry(RegistrySubKey As String, Optional RegistryKey As String)
   End If
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
 '  Call Library.showNotice(400, Err.Description, True)
 End Function
@@ -2344,6 +2500,41 @@ End Function
 
 
 '**************************************************************************************************
+' * 値の設定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function setValandRange(keyName As String, val As String)
+  Range(keyName) = val
+
+  If setVal Is Nothing Then
+    Call init.setting
+  Else
+    setVal(keyName) = val
+  End If
+End Function
+
+
+'**************************************************************************************************
+' * バッチファイル実行
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function runBat(fileName As String)
+  Dim obj As WshShell
+  Dim rtnVal As String
+  
+  Set obj = New WshShell
+  rtnVal = obj.run(fileName, WaitOnReturn:=True)
+
+  Call Library.showDebugForm("実行ファイル：" & fileName)
+  Call Library.showDebugForm("戻り値　　　：" & rtnVal)
+
+  runBat = rtnVal
+End Function
+    
+    
+'**************************************************************************************************
 ' * ファイル全体の文字列置換
 ' *
 ' * @Link   https://www.moug.net/tech/acvba/0090005.html
@@ -2397,46 +2588,40 @@ End Function
 ' * @Link   http://techoh.net/customize-excel-comment-by-vba/
 '**************************************************************************************************
 Function setComment(Optional BgColorVal, Optional FontVal, Optional FontColorVal = 8421504, Optional FontSizeVal = 9)
-    Dim cl As Range
-    Dim count As Long
+  Dim cl As Range
+  
+  For Each cl In Selection
+    DoEvents
+    If Not cl.Comment Is Nothing Then
+      With cl.Comment.Shape
+        'サイズ設定
+        .TextFrame.AutoSize = True
+        .TextFrame.Characters.Font.Size = FontSizeVal
+        '.TextFrame.Characters.Font.Color = FontColorVal
 
-    count = 0
-    For Each cl In Selection
-      count = count + 1
-      DoEvents
-      If Not cl.Comment Is Nothing Then
-        With cl.Comment.Shape
-          'サイズ設定
-          .TextFrame.AutoSize = True
-          .TextFrame.Characters.Font.Size = FontSizeVal
-          .TextFrame.Characters.Font.Color = FontColorVal
+        '形状を角丸四角形に変更
+        .AutoShapeType = msoShapeRectangle
 
-          '形状を角丸四角形に変更
-          .AutoShapeType = msoShapeRectangle
+        '色
+        .line.ForeColor.RGB = RGB(128, 128, 128)
+        .Fill.ForeColor.RGB = BgColorVal
 
-          '色
-          .line.ForeColor.RGB = RGB(128, 128, 128)
-          .Fill.ForeColor.RGB = BgColorVal
+        '影 透過率 30%、オフセット量 x:1px,y:1px
+        .Shadow.Transparency = 0.3
+        .Shadow.OffsetX = 1
+        .Shadow.OffsetY = 1
 
-          '影 透過率 30%、オフセット量 x:1px,y:1px
-          .Shadow.Transparency = 0.3
-          .Shadow.OffsetX = 1
-          .Shadow.OffsetY = 1
+        ' 太字解除、中央揃え
+        .TextFrame.Characters.Font.Bold = False
+        .TextFrame.HorizontalAlignment = xlLeft
+        .TextFrame.Characters.Font.Name = FontVal
 
-          ' 太字解除、中央揃え
-          .TextFrame.Characters.Font.Bold = False
-          .TextFrame.HorizontalAlignment = xlLeft
-
-          .TextFrame.Characters.Font.Name = FontVal
-
-          ' セルに合わせて移動する
-          .Placement = xlMove
-        End With
-      End If
-    Next cl
-
+        ' セルに合わせて移動する
+        .Placement = xlMove
+      End With
+    End If
+  Next cl
 End Function
-
 
 
 '**************************************************************************************************
@@ -2494,7 +2679,7 @@ End Function
 Function waitTime(timeVal As Long)
   DoEvents
   'Sleep timeVal
-
+  
   Application.Wait [Now()] + timeVal / 86400000
   DoEvents
 End Function
@@ -2554,7 +2739,7 @@ Function 罫線_表(Optional SetArea As Range, Optional LineColor As Long)
       .Borders(xlEdgeRight).Weight = xlThin
       .Borders(xlEdgeTop).Weight = xlThin
       .Borders(xlEdgeBottom).Weight = xlThin
-
+      
       .Borders(xlInsideVertical).Weight = xlThin
       .Borders(xlInsideHorizontal).Weight = xlHairline
 
@@ -2563,7 +2748,7 @@ Function 罫線_表(Optional SetArea As Range, Optional LineColor As Long)
         .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
         .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
         .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
-
+        
         .Borders(xlInsideVertical).Color = RGB(Red, Green, Blue)
         .Borders(xlInsideHorizontal).Color = RGB(Red, Green, Blue)
       End If
@@ -3057,6 +3242,64 @@ Function 罫線_実線_格子(Optional SetArea As Range, Optional LineColor As Long, O
 End Function
 
 '==================================================================================================
+Function 罫線_実線_左(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeLeft).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+    With Selection
+      .Borders(xlEdgeLeft).LineStyle = xlContinuous
+      .Borders(xlEdgeLeft).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeLeft).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+
+  End If
+End Function
+
+
+'==================================================================================================
+Function 罫線_実線_右(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+  Else
+    With Selection
+      .Borders(xlEdgeRight).LineStyle = xlContinuous
+      .Borders(xlEdgeRight).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeRight).Color = RGB(Red, Green, Blue)
+      End If
+     End With
+
+  End If
+End Function
+
+
+'==================================================================================================
 Function 罫線_実線_左右(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -3089,6 +3332,61 @@ Function 罫線_実線_左右(Optional SetArea As Range, Optional LineColor As Long, O
       End If
      End With
 
+  End If
+End Function
+
+'==================================================================================================
+Function 罫線_実線_上(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlContinuous
+      .Borders(xlEdgeTop).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+
+'==================================================================================================
+Function 罫線_実線_下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeBottom).LineStyle = xlContinuous
+      .Borders(xlEdgeBottom).Weight = WeightVal
+
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
+      End If
+    End With
   End If
 End Function
 
@@ -3287,6 +3585,29 @@ End Function
 
 
 '==================================================================================================
+Function 罫線_二重線_上(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
+  Dim Red As Long, Green As Long, Blue As Long
+
+  Call Library.getRGB(LineColor, Red, Green, Blue)
+
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  Else
+    With Selection
+      .Borders(xlEdgeTop).LineStyle = xlDouble
+      If Not (IsMissing(Red)) Then
+        .Borders(xlEdgeTop).Color = RGB(Red, Green, Blue)
+      End If
+    End With
+  End If
+End Function
+
+'==================================================================================================
 Function 罫線_二重線_下(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
 
@@ -3295,7 +3616,7 @@ Function 罫線_二重線_下(Optional SetArea As Range, Optional LineColor As Long, O
   If TypeName(SetArea) = "Range" Then
     With SetArea
       .Borders(xlEdgeBottom).LineStyle = xlDouble
-
+  
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
@@ -3322,7 +3643,7 @@ Function 罫線_二重線_上下(Optional SetArea As Range, Optional LineColor As Long,
     With SetArea
       .Borders(xlEdgeTop).LineStyle = xlDouble
       .Borders(xlEdgeBottom).LineStyle = xlDouble
-
+  
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
@@ -3331,7 +3652,7 @@ Function 罫線_二重線_上下(Optional SetArea As Range, Optional LineColor As Long,
     With Selection
       .Borders(xlEdgeTop).LineStyle = xlDouble
       .Borders(xlEdgeBottom).LineStyle = xlDouble
-
+  
       If Not (IsMissing(Red)) Then
         .Borders(xlEdgeBottom).Color = RGB(Red, Green, Blue)
       End If
@@ -3343,7 +3664,7 @@ End Function
 '==================================================================================================
 Function 罫線_破線_逆L字(Optional SetArea As Range, Optional LineColor As Long, Optional WeightVal = xlThin)
   Dim Red As Long, Green As Long, Blue As Long
-
+  
   Call 罫線_破線_囲み(SetArea, LineColor, WeightVal)
   Call Library.getRGB(LineColor, Red, Green, Blue)
 
@@ -3355,7 +3676,7 @@ Function 罫線_破線_逆L字(Optional SetArea As Range, Optional LineColor As Long, 
     SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1).Select
     Call 罫線_破線_水平(SetArea, LineColor, WeightVal)
     Call 罫線_破線_囲み(SetArea, LineColor, WeightVal)
-
+  
   End If
 End Function
 
@@ -3406,30 +3727,73 @@ Function getColumnWidth()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
 
-  For colLine = Selection(1).Column To Selection(Selection.count).Column
-    Cells(Selection(1).Row, colLine) = Columns(colLine).ColumnWidth
-  Next
+  endColLine = Cells(5, Columns.count).End(xlToLeft).Column
   
+  For colLine = 1 To endColLine
+    Cells(1, colLine) = Cells(1, colLine).ColumnWidth
+  Next
 End Function
 
 '==================================================================================================
 Function setColumnWidth()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
-  endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
-  If IsNumeric(Range("A1").Text) And IsNumeric(Range("B1").Text) Then
-    For colLine = 1 To endColLine
-      Columns(colLine).ColumnWidth = Cells(1, colLine)
-    Next
-  Else
-    For colLine = 1 To endColLine
-      Columns(colLine).EntireColumn.AutoFit
-      If Columns(colLine).ColumnWidth >= 30 Then
-        Columns(colLine).ColumnWidth = 30
-      End If
-    Next
+  endColLine = Cells(1, Columns.count).End(xlToLeft).Column
+  
+  For colLine = 1 To endColLine
+    Cells(1, colLine).ColumnWidth = Cells(1, colLine)
+  Next
+  
+End Function
+
+
+'**************************************************************************************************
+' * ページのステータス確認
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getPageStatusCode(ByVal strURL As String) As Integer
+  'Dim Http As New WinHttpRequest
+  Dim Http As Object
+  Dim statusCode As Integer
+  
+  Set Http = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+  
+  On Error GoTo catchError
+  Call Library.showDebugForm("URL：" & strURL)
+  If strURL = "" Then
+    Exit Function
   End If
   
-
+  With Http
+    .Open "HEAD", strURL, False
+    
+    If setVal("proxyURL") <> "" Then
+      .SetProxy 2, setVal("proxyURL") & ":" & setVal("proxyPort")
+    End If
+    If setVal("proxyUser") <> "" Then
+      .setProxyCredentials setVal("proxyUser"), setVal("proxyPasswd")
+    End If
+    
+    .Send
+    Call Library.showDebugForm("Status：" & .Status)
+    If .Status = 301 Or .Status = 302 Then
+      Call Library.showDebugForm("GetAllResponseHeaders：" & .GetAllResponseHeaders)
+    Else
+      statusCode = .Status
+    End If
+  End With
+  getPageStatusCode = statusCode
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(Err.Number & "：" & Err.Description)
+  
+  getPageStatusCode = 404
+  Set objHTTP = Nothing
+  
 End Function
+
+

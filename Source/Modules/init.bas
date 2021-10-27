@@ -8,7 +8,7 @@ Public targetBook         As Workbook
 
 
 'ワークシート用変数------------------------------
-Public targetsheet        As Worksheet
+Public targetSheet        As Worksheet
 
 Public BK_sheetSetting    As Worksheet
 Public BK_sheetNotice     As Worksheet
@@ -23,7 +23,7 @@ Public BK_sheetHelp       As Worksheet
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
 Public Const thisAppVersion As String = "V1.0-beta.2"
-Public FuncName             As String
+Public funcName             As String
 Public resetVal             As String
 
 Public Const RelaxTools     As String = "Relaxtools.xlam"
@@ -74,7 +74,7 @@ Public defaultZoomInVal   As String
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function usetting()
+Function unsetting()
 
   Set BK_ThisBook = Nothing
   
@@ -114,7 +114,7 @@ Function setting(Optional reCheckFlg As Boolean)
   RegistrySubKey = "Main"
   
   If LadexDir = "" Or reCheckFlg = True Then
-    Call usetting
+    Call init.unsetting
   Else
     Exit Function
   End If

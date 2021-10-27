@@ -21,7 +21,7 @@ Function 画面サイズ変更(Optional widthVal As Long, Optional heightVal As Long)
   
   
   actWin.WindowState = xlNormal
-  actWin.height = heightVal
+  actWin.Height = heightVal
   actWin.Width = widthVal
   
   actWin.Top = actWinTop
