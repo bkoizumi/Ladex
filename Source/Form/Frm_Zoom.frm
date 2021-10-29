@@ -16,6 +16,14 @@ Attribute VB_Exposed = False
 
 
 '==================================================================================================
+Private Sub UserForm_Initialize()
+  StartUpPosition = 0
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
+
+End Sub
+
+'==================================================================================================
 Private Sub CancelButton_Click()
   Call Library.setRegistry("UserForm", "ZoomTop", Me.Top)
   Call Library.setRegistry("UserForm", "ZoomLeft", Me.Left)

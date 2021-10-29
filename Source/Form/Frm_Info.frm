@@ -20,6 +20,9 @@ Attribute VB_Exposed = False
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Private Sub UserForm_Initialize()
+  StartUpPosition = 0
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
 
 End Sub
 

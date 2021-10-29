@@ -238,15 +238,6 @@ Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range
   If BKcf_rbPressed = True Then
     Call Ctl_Formula.数式確認
   End If
-
-'  ズーム機能--------------------------------------------------------------------------------------
-'  If Library.getRegistry("Main", "ZoomFlg") = True Then
-'
-'    Call Ctl_DefaultVal.setVal("reSetZoomIn", Frm_Zoom.TextBox.Text)
-'    Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
-'  End If
-  
-  
 End Sub
 
 

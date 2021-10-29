@@ -71,14 +71,7 @@ Function detail()
   End If
   
   Call getList
-  topPosition = Library.getRegistry("UserForm", "FavoriteTop")
-  leftPosition = Library.getRegistry("UserForm", "FavoriteLeft")
-  
-  Call Ctl_UsrForm.•\Ž¦ˆÊ’u(topPosition, leftPosition)
   With Frm_Favorite
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
     .Show vbModeless
   End With
   Call RefreshListBox

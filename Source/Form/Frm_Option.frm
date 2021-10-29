@@ -41,6 +41,10 @@ Private Sub UserForm_Initialize()
   indexCnt = 0
   old_BKh_rbPressed = BKh_rbPressed
   
+  StartUpPosition = 0
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
+    
   setZoomLevel = Library.getRegistry("Main", "ZoomLevel")
   
   With Frm_Option
