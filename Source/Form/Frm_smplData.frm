@@ -28,6 +28,10 @@ Private Sub UserForm_Initialize()
   Application.Cursor = xlDefault
   indexCnt = 0
   
+  StartUpPosition = 0
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
+  
   With Frm_smplData
     For Each cmdVal In BK_sheetSetting.Range(BK_setVal("Cells_sampleData") & "3:" & BK_setVal("Cells_sampleData") & "22")
       ListBox1.AddItem indexCnt & "." & cmdVal

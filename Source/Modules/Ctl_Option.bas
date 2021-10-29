@@ -8,21 +8,10 @@ Option Explicit
 '**************************************************************************************************
 '==================================================================================================
 Function showVersion()
-  Dim topPosition As Long, leftPosition As Long
 '  On Error GoTo catchError
   
   Call init.setting
-  topPosition = Library.getRegistry("UserForm", "OptionTop")
-  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
-  
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Version
-    .StartUpPosition = 1
-'    .StartUpPosition = 0
-'    .Top = topPosition
-'    .Left = leftPosition
-    
-    
     .Label1.Caption = "Ladex Addin For Excel Library"
     .Label2.Caption = "Ver " & thisAppVersion
     .Label3.Caption = "当ソフトはフリーソフトウェアです。" & vbNewLine & _
@@ -39,9 +28,6 @@ Function showVersion()
 catchError:
   Call Library.showNotice(Err.Number, Err.Description, True)
 End Function
-  
-
-
 
 
 '==================================================================================================
@@ -124,19 +110,11 @@ End Function
 
 '==================================================================================================
 Function showOption()
-  Dim topPosition As Long, leftPosition As Long
+
 '  On Error GoTo catchError
-  
- 
   Call init.setting(True)
-  topPosition = Library.getRegistry("UserForm", "OptionTop")
-  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
   
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Option
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 0
 '    .MultiPage1.Page1.Visible = True
 '    .MultiPage1.Page2.Visible = True
@@ -156,17 +134,9 @@ End Function
 
 '==================================================================================================
 Function HighLight()
-  Dim topPosition As Long, leftPosition As Long
   On Error GoTo catchError
   
-  topPosition = Library.getRegistry("UserForm", "OptionTop")
-  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
-  
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Option
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 1
     .MultiPage1.Page1.Visible = False
     .MultiPage1.Page3.Visible = False
@@ -184,17 +154,8 @@ End Function
 
 '==================================================================================================
 Function Comment()
-  Dim topPosition As Long, leftPosition As Long
   On Error GoTo catchError
-  
-  topPosition = Library.getRegistry("UserForm", "OptionTop")
-  leftPosition = Library.getRegistry("UserForm", "OptionLeft")
-  
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Option
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
     .MultiPage1.SelectedItem.Index = 2
     .MultiPage1.Page1.Visible = False
     .MultiPage1.Page2.Visible = False

@@ -25,7 +25,7 @@ Function ZoomIn(Optional slctCellAddress As String)
   Set targetBook = ActiveWorkbook
   Set targetSheet = ActiveSheet
   
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
+'  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   
   cellWidth = ActiveCell.Width
   If cellWidth <= 330 Then
@@ -35,9 +35,9 @@ Function ZoomIn(Optional slctCellAddress As String)
   End If
   
   With Frm_Zoom
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
+'    .StartUpPosition = 0
+'    .Top = topPosition
+'    .Left = leftPosition
     .Width = cellWidth + 40
     
     .TextBox.Width = cellWidth
