@@ -82,7 +82,7 @@ With CreateObject("Excel.Application")
   strPath = .UserLibraryPath
   installPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & addInFileName
 
-  imageFolder = objWshShell.SpecialFolders("Appdata") & "\Ladex\"
+  imageFolder = objWshShell.SpecialFolders("Appdata") & "\Bkoizumi\Ladex\"
 
   'インストールフォルダがない場合は作成
   IF Not objFileSys.FolderExists(strPath) THEN

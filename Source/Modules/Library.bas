@@ -3587,7 +3587,9 @@ Function setColumnWidth()
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
   
   For colLine = 1 To endColLine
-    Cells(1, colLine).ColumnWidth = Cells(1, colLine)
+    If IsNumeric(Cells(1, colLine)) Then
+      Cells(1, colLine).ColumnWidth = Cells(1, colLine)
+    End If
   Next
 End Function
 

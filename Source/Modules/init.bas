@@ -149,23 +149,8 @@ Function setting(Optional reCheckFlg As Boolean)
   Dim wsh As Object
   Set wsh = CreateObject("WScript.Shell")
 
-  LadexDir = wsh.SpecialFolders("AppData") & "\Ladex"
+  LadexDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex"
   logFile = LadexDir & "\log\ExcelMacro.log"
-  
-  
-'  Set BK_ribbonVal = Nothing
-'  Set BK_ribbonVal = CreateObject("Scripting.Dictionary")
-'  For line = 2 To BK_sheetRibbon.Cells(Rows.count, 1).End(xlUp).Row
-'    If BK_sheetRibbon.Range("A" & line) <> "" Then
-'      BK_ribbonVal.add "Lbl_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("B" & line).Text
-'      BK_ribbonVal.add "Act_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("C" & line).Text
-'      BK_ribbonVal.add "Sup_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("D" & line).Text
-'      BK_ribbonVal.add "Dec_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("E" & line).Text
-'      BK_ribbonVal.add "Siz_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("F" & line).Text
-'      BK_ribbonVal.add "Img_" & BK_sheetRibbon.Range("A" & line).Text, BK_sheetRibbon.Range("G" & line).Text
-'    End If
-'  Next
-  
   
   Exit Function
   
