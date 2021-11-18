@@ -207,10 +207,14 @@ End Function
 '==================================================================================================
 Function formula01()
   Dim formulaVal As String
+  Const funcName As String = "Ctl_Formula.formula01"
   
-  'On Error GoTo catchError
-  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
   Call init.setting
+  Call Library.showDebugForm("" & funcName, , "function")
+  '----------------------------------------------
+  
   If ActiveCell.HasFormula = False Then
     Exit Function
   End If
@@ -226,10 +230,12 @@ Function formula01()
   ActiveCell.Formula = "=" & formulaVal
   
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
 End Function
+
 
 '==================================================================================================
 Function formula02()

@@ -98,11 +98,10 @@ Function RefreshListBox()
   For line = 2 To endLine
     Frm_Favorite.Lst_Favorite.AddItem FSO.GetBaseName(BK_sheetFavorite.Range("A" & line))
     
-    Call Library.showDebugForm(BK_sheetFavorite.Range("A" & line))
+    Call Library.showDebugForm(BK_sheetFavorite.Range("A" & line), , "debug")
   Next
   Set FSO = Nothing
   
-  Call Library.showDebugForm("--------------------")
   ThisWorkbook.Save
 End Function
 

@@ -29,13 +29,18 @@ Function セル幅調整()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
   
-  Call Library.startScript
+  Const funcName As String = "Ctl_Sheet.セル幅調整"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
   Call init.setting
+  Call Library.startScript
+  Call Library.showDebugForm("" & funcName, , "function")
+  '----------------------------------------------
   Cells.EntireColumn.AutoFit
   
-  If IsNumeric(Range("A1")) Then
+  If IsNumeric(Range("A1").Text) Then
     Call Library.setColumnWidth
-  
   Else
     For colLine = 1 To Columns.count
       If Cells(1, colLine).ColumnWidth > 30 Then
@@ -45,6 +50,12 @@ Function セル幅調整()
     Next
   End If
   Call Library.endScript(True)
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
 End Function
 
 '==================================================================================================

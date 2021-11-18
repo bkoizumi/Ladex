@@ -40,12 +40,12 @@ Function シートリスト取得()
   Dim infoVal As String
   Dim topPosition As Long, leftPosition As Long
   
+  Const funcName As String = "Ctl_Book.シートリスト取得"
+  
   '処理開始--------------------------------------
-  'On Error GoTo catchError
-  funcName = "Ctl_Book.シートリスト取得"
-
-  Call Library.startScript
+  On Error GoTo catchError
   Call init.setting
+  Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   
   For Each tempSheet In Sheets
@@ -54,28 +54,20 @@ Function シートリスト取得()
     Else
       infoVal = infoVal & vbNewLine & tempSheet.Name
     End If
-    
   Next
-
-  topPosition = Library.getRegistry("UserForm", "InfoTop")
-  leftPosition = Library.getRegistry("UserForm", "InfoLeft")
   
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_Info
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
     .TextBox.Value = infoVal
     .Show
   End With
-
 
   '処理終了--------------------------------------
   Call Library.endScript
   '----------------------------------------------
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
 End Function

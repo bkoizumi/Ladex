@@ -1,4 +1,4 @@
-Attribute VB_Name = "Ctl_Ribbon"
+Attribute VB_Name = "Ctl_Ribbon_old"
 Option Explicit
 
 Private ctlEvent As New clsEvent
@@ -18,9 +18,16 @@ Private ctlEvent As New clsEvent
 '==================================================================================================
 '読み込み時処理
 Function onLoad(ribbon As IRibbonUI)
-  On Error GoTo catchError
   
+  Const funcName As String = "Ctl_Ribbon.Ctl_Function"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
   Call init.setting
+  Call Library.showDebugForm("" & funcName, , "function")
+  '----------------------------------------------
+  
+  
   
   Set BK_ribbonUI = ribbon
   
@@ -33,10 +40,12 @@ Function onLoad(ribbon As IRibbonUI)
   BK_ribbonUI.ActivateTab ("Ladex")
   BK_ribbonUI.Invalidate
   
+  
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "リボンメニュー読込", True)
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
 End Function
 
 

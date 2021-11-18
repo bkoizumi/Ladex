@@ -15,7 +15,7 @@
   // エディター設定---------------------------------------------------------------------------------------
   "editor.cursorBlinking": "phase",
   "editor.folding": true,
-  "editor.fontFamily": "'Ricty Diminished with Fira Code','Meiryo UI'",
+  "editor.fontFamily": "'Ricty Diminished','Meiryo UI'",
   "editor.fontLigatures": true,
   "editor.fontSize": 15,
   "editor.links": true,

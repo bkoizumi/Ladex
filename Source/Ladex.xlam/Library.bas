@@ -2356,11 +2356,28 @@ End Function
 '**************************************************************************************************
 '==================================================================================================
 Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As Variant)
+  Const funcName As String = "Library.setRegistry"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm("  " & funcName, , "function")
+  '----------------------------------------------
+  
   If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
+    Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
+    Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
+    Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
+    Call Library.showDebugForm("setVal        ", setVal, "debug")
+    
     Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
   End If
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
 End Function
-
 '==================================================================================================
 Function getRegistry(RegistrySubKey As String, RegistryKey As String)
   Dim regVal As String
@@ -3608,6 +3625,13 @@ End Function
 Function setColumnWidth()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
+  Const funcName As String = "Library.setColumnWidth"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call init.setting
+  Call Library.showDebugForm("  " & funcName, , "function")
+  '----------------------------------------------
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
   For colLine = 1 To endColLine
@@ -3615,6 +3639,11 @@ Function setColumnWidth()
       Cells(1, colLine).ColumnWidth = Cells(1, colLine)
       End If
   Next
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
 End Function
 
 '**************************************************************************************************
