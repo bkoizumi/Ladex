@@ -120,14 +120,17 @@
 
         <menuSeparator id="セル編集_SP2" title="文字追加" />
         <button id="中黒点付与" label="文頭に・を追加"      image="Sunspot"       onAction="Ladex.xlam!Ctl_Ribbon.中黒点付与"  description="文頭に「・」を追加&#13;" />
-        <button id="連番生成1"  label="文頭に連番を追加"  imageMso="Numbering"  onAction="Ladex.xlam!Ctl_Ribbon.連番追加"   description="文頭に1.から始まる連番を追加 &#13;" />
+        <button id="連番追加"  label="文頭に連番を追加"  imageMso="Numbering"  onAction="Ladex.xlam!Ctl_Ribbon.連番追加"   description="文頭に1.から始まる連番を追加 &#13;" />
 
         <menuSeparator id="セル編集_SP3" title="文字編集" />
         <button id="全半角変換" label="全角を半角に変換"      imageMso="MessageFormatHtml"   onAction="Ladex.xlam!Ctl_Ribbon.英数字全半角変換" description="英数字の全角を半角に変換 &#13;" />
 
         <menuSeparator id="セル編集_SP4" title="取り消し線" />
-        <button id="Strikethrough"    imageMso="Strikethrough"  label="取り消し線" onAction="Ladex.xlam!Ctl_Ribbon.取り消し線" description="取り消し線を設定・解除します &#13;" />
+        <button id="取り消し線"    imageMso="Strikethrough"  label="取り消し線" onAction="Ladex.xlam!Ctl_Ribbon.取り消し線" description="取り消し線を設定・解除します &#13;" />
 
+        <menuSeparator id="セル編集_SP5" title="コメント挿入/削除" />
+        <button id="コメント挿入"    imageMso="ReviewInkCommentNew"  label="コメント挿入" onAction="Ladex.xlam!Ctl_Ribbon.FuncCtl_Cells" description="コメント挿入 &#13;" />
+        <button id="コメント削除"    imageMso="ReviewDeleteComment"  label="コメント削除" onAction="Ladex.xlam!Ctl_Ribbon.FuncCtl_Cells" description="コメント削除 &#13;" />
 
       </menu>
 
@@ -248,7 +251,7 @@
           <menuSeparator id="日時" title="ランダムな日時を生成" />
           <button id="mkSmpDt_Date"     label="日付"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Date"      description="ランダムな「日付」を生成 &#13;" />
           <button id="mkSmpDt_Time"     label="時間"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Time"      description="ランダムな「時間」を生成 &#13;" />
-          <button id="mkSmpDt_DateTime" label="日時"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Datetime"  description="ランダムな「時間」を生成 &#13;" />
+          <button id="mkSmpDt_DateTime" label="日時"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Datetime"  description="ランダムな「日時」を生成 &#13;" />
         </menu>
       </menu>
 

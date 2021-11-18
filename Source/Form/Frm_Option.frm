@@ -470,7 +470,6 @@ End Sub
 
 '==================================================================================================
 Private Sub CommentFontColor_Click()
-
   colorValue = Library.getColor(Me.CommentFontColor.BackColor)
   Me.CommentFontColor.BackColor = colorValue
   Me.CommentFontColor.Caption = ""
@@ -483,7 +482,6 @@ End Sub
 
 '==================================================================================================
 Private Sub CommentFont_Change()
-
   Me.CommentFontColor.Caption = ""
   If InitializeFlg = False Then
     Call doCommentPreview

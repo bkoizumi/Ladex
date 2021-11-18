@@ -248,7 +248,7 @@
           <menuSeparator id="日時" title="ランダムな日時を生成" />
           <button id="mkSmpDt_Date"     label="日付"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Date"      description="ランダムな「日付」を生成 &#13;" />
           <button id="mkSmpDt_Time"     label="時間"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Time"      description="ランダムな「時間」を生成 &#13;" />
-          <button id="mkSmpDt_DateTime" label="日時"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Datetime"  description="ランダムな「時間」を生成 &#13;" />
+          <button id="mkSmpDt_DateTime" label="日時"  imageMso="ResetToTemplate" onAction="Ladex.xlam!Ctl_Ribbon.makeSampleData_Datetime"  description="ランダムな「日時」を生成 &#13;" />
         </menu>
       </menu>
 

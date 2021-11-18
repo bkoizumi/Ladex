@@ -126,7 +126,7 @@ Public Function showCount( _
                             Prg_Title As String _
                           , PrgC_Cnt As Long, PrgC_Max As Long _
                           , PrgMeg As String _
-                          , Optional flg As Boolean = False _
+                          , Optional Flg As Boolean = False _
                         )
 
   Call showBar(Prg_Title, 2, 2, PrgC_Cnt, PrgC_Max, PrgMeg)

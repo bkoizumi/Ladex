@@ -10,12 +10,11 @@ Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
   Dim topPosition As Long, leftPosition As Long
   Dim cellWidth As Long
+  Dim targetBook As Workbook
+  Dim targetSheet As Worksheet
   
   If slctCellAddress = "" Then
-    
   End If
-  topPosition = Library.getRegistry("UserForm", "ZoomTop")
-  leftPosition = Library.getRegistry("UserForm", "ZoomLeft")
   
   If ActiveCell.HasFormula = False Then
     cellVal = ActiveCell.Text
@@ -25,8 +24,6 @@ Function ZoomIn(Optional slctCellAddress As String)
   Set targetBook = ActiveWorkbook
   Set targetSheet = ActiveSheet
   
-'  Call Ctl_UsrForm.•\Ž¦ˆÊ’u(topPosition, leftPosition)
-  
   cellWidth = ActiveCell.Width
   If cellWidth <= 330 Then
     cellWidth = 330
@@ -35,11 +32,7 @@ Function ZoomIn(Optional slctCellAddress As String)
   End If
   
   With Frm_Zoom
-'    .StartUpPosition = 0
-'    .Top = topPosition
-'    .Left = leftPosition
     .Width = cellWidth + 40
-    
     .TextBox.Width = cellWidth
     .TextBox = cellVal
     .TextBox.MultiLine = True

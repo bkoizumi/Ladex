@@ -1018,47 +1018,24 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'--------------------------------------------------------------------------------------------------
-Function Trim01(control As IRibbonControl)
-  Call Ctl_String.Trim01
-  
+Function FuncCtl_Cells(control As IRibbonControl)
+  Select Case control.ID
+    Case "Trim"
+        Call Ctl_Cells.Trim01
+    Case "中黒点付与"
+      Call Ctl_Cells.中黒点付与
+    Case "連番追加"
+      Call Ctl_Cells.連番追加
+    Case "全半角変換"
+      Call Ctl_Cells.英数字全半角変換
+    Case "取り消し線"
+      Call Ctl_Cells.取り消し線設定
+    Case "コメント挿入"
+      Call Ctl_Cells.コメント挿入
+    Case "コメント削除"
+      Call Ctl_Cells.コメント削除
+  End Select
 End Function
-'--------------------------------------------------------------------------------------------------
-Function 中黒点付与(control As IRibbonControl)
-  Call Ctl_String.中黒点付与
-End Function
-
-'--------------------------------------------------------------------------------------------------
-Function 連番設定(control As IRibbonControl)
-  Call Ctl_String.連番設定
-End Function
-
-'--------------------------------------------------------------------------------------------------
-Function 連番追加(control As IRibbonControl)
-  Call Ctl_String.連番追加
-End Function
-
-'--------------------------------------------------------------------------------------------------
-Function 英数字全半角変換(control As IRibbonControl)
-  Call Ctl_String.英数字全半角変換
-End Function
-
-
-'--------------------------------------------------------------------------------------------------
-Function 取り消し線(control As IRibbonControl)
-  Call Ctl_String.取り消し線設定
-End Function
-
-
-'--------------------------------------------------------------------------------------------------
-Function xxxxxxxxxx(control As IRibbonControl)
-  Call Main.xxxxxxxxxx
-End Function
-
-
-
-
-
 
 '**************************************************************************************************
 ' * リボンメニュー[罫線]

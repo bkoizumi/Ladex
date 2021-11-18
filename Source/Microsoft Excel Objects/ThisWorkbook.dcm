@@ -22,7 +22,12 @@ Private Sub Workbook_Open()
   Call InitializeBook
   Call Ctl_UsrFunction.InitializeUsrFunction
   
+  'ショートカットキーの設定----------------------
   Call Application.OnKey("{F1}", "")
+  
+  'Ctrl+Shift+C
+  Call Application.OnKey("^+C", "Menu.ladex_コメント挿入")
+  
 End Sub
 
 
