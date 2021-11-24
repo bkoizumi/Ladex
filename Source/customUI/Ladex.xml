@@ -78,9 +78,9 @@
         <button id="全セル表示"     label="全セル表示"      imageMso="ViewNormalViewExcel"    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="非表示セルの表示 &#13;フィルターの解除 &#13;アウトラインの解除 &#13;" />
 
         <menuSeparator id="シート管理_Book" title="アクティブブックを対象とした処理" />
-        <button id="セルとシート選択"   label="セルとシート選択"    image="dspDefaultCellSelectAllSheet"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートをA1セルを選択&#13;"      />
-        <button id="セルとシート_保存"  label="セルとシート＆保存"  image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートをA1セルを選択後、上書き保存 &#13;"      />
-        <button id="標準画面"           label="標準画面"            imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプション設定の基本で設定した内容を反映させます &#13;" />
+        <button id="セルとシート選択"   label="全シート選択"    image="dspDefaultCellSelectAllSheet"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートをA1セルを選択&#13;"      />
+        <button id="セルとシート_保存"  label="全シート＆保存"  image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートをA1セルを選択後、上書き保存 &#13;"      />
+        <button id="標準画面"           label="標準画面"        imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプション設定の基本で設定した内容を反映させます &#13;" />
       </menu>
 
       <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" />
@@ -128,8 +128,8 @@
         <button id="取り消し線" label="取り消し線"  imageMso="Strikethrough"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="取り消し線を設定・解除します &#13;" />
 
         <menuSeparator id="セル編集_SP5" title="コメント挿入/削除" />
-        <button id="コメント挿入" label="コメント挿入"  imageMso="ReviewInkCommentNew" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメント挿入 &#13;" />
-        <button id="コメント削除" label="コメント削除"  imageMso="ReviewDeleteComment" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメント削除 &#13;" />
+        <button id="コメント挿入" label="コメント挿入"  imageMso="ReviewInkCommentNew" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントを挿入します &#13;" />
+        <button id="コメント削除" label="コメント削除"  imageMso="ReviewDeleteComment" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントを削除します &#13;" />
         <splitButton id="SB_Comment" >
           <button id="コメント整形"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
             <menu id="Comment_Menu"  screentip="コメント整形メニュー"  supertip="コメント整形メニュー" itemSize="normal">
@@ -143,7 +143,7 @@
 
       <menu id="formulaMenu" label="数式編集"  itemSize="large" imageMso="Formula" screentip="数式編集" supertip="数式編集">
         <menuSeparator id="数式編集_SP1" title="エラー防止" />
-        <button id="formula01"  label="エラー防止"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加する" />
+        <button id="formula01"  label="エラー防止"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加します" />
       </menu>
 
       <menu id="整形" label="整形"  itemSize="large" imageMso="GroupChartShapes" >

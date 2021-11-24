@@ -9,7 +9,7 @@ Option Explicit
 '==================================================================================================
 Function ÉVÅ[Égí«â¡()
   Call init.setting
-  ThisWorkbook.Worksheets.add.Name = "HighLight"
+  ThisWorkbook.Worksheets.add.Name = "Function"
   ThisWorkbook.Save
 End Function
 

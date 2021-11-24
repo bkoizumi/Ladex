@@ -14,17 +14,7 @@ Public maxCount  As Long
 '**************************************************************************************************
 '==================================================================================================
 Function showFrm_sampleData(showType As String)
-  Dim topPosition As Long, leftPosition As Long
-  
-  topPosition = Library.getRegistry("UserForm", "mkSmpDtTop")
-  leftPosition = Library.getRegistry("UserForm", "mkSmpDtLeft")
-  
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
-  
   With Frm_smplData
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
     .Caption = showType
     
     '各ページ、パーツの有効/無効切り替え

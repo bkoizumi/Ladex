@@ -882,3 +882,56 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
+'**************************************************************************************************
+' * リボンメニュー[RelaxTools]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function RelaxTools_get(control As IRibbonControl)
+  CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
+End Function
+
+
+'==================================================================================================
+Function actRelaxSheetManager(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
+End Function
+
+'==================================================================================================
+Function RelaxTools01(control As IRibbonControl)
+  Call init.setting
+End Function
+
+'==================================================================================================
+'サイズ合わせ
+Function RelaxShapes01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
+End Function
+
+'==================================================================================================
+'上位置合わせ
+Function RelaxShapes02(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
+End Function
+
+'==================================================================================================
+'左位置合わせ
+Function RelaxShapes03(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
+End Function
+
+
+'==================================================================================================
+'逆Ｌ罫線
+Function RelaxApps01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
+End Function
+
+

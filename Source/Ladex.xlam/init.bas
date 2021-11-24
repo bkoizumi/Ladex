@@ -19,6 +19,7 @@ Public BK_sheetFavorite   As Worksheet
 Public BK_sheetStamp      As Worksheet
 Public BK_sheetHighLight  As Worksheet
 Public BK_sheetHelp       As Worksheet
+Public BK_sheetFunction   As Worksheet
 
 'ÉOÉçÅ[ÉoÉãïœêî----------------------------------
 Public Const thisAppName    As String = "Ladex"
@@ -132,6 +133,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetStamp = BK_ThisBook.Worksheets("Stamp")
   Set BK_sheetHighLight = BK_ThisBook.Worksheets("HighLight")
   Set BK_sheetHelp = BK_ThisBook.Worksheets("Help")
+  Set BK_sheetFunction = BK_ThisBook.Worksheets("Function")
  
   
         

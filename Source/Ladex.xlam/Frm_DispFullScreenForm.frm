@@ -17,9 +17,6 @@ Attribute VB_Exposed = False
 
 Private Sub CommandButton1_Click()
   
-  Call Library.setRegistry("UserForm", "Zoom01Top", Me.Top)
-  Call Library.setRegistry("UserForm", "Zoom01Left", Me.Left)
-  
   Application.DisplayFullScreen = False
   Unload Me
 End Sub
