@@ -847,7 +847,7 @@ Function delSheetData(Optional targetSheet As Worksheet, Optional line As Long)
   End If
   DoEvents
 
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 '**************************************************************************************************
@@ -931,7 +931,7 @@ Function delTableData()
   Cells.Select
   Selection.NumberFormatLocal = "G/ïWèÄ"
 
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 
@@ -3628,12 +3628,10 @@ End Function
 '**************************************************************************************************
 '==================================================================================================
 Function getColumnWidth()
-  Dim colLine As Long, endColLine As Long
-  Dim colName As String
+  Dim slctCells As Range
 
-  endColLine = Cells(5, Columns.count).End(xlToLeft).Column
-  For colLine = 1 To endColLine
-    Cells(1, colLine) = Cells(1, colLine).ColumnWidth
+  For Each slctCells In Selection
+    slctCells = slctCells.ColumnWidth
   Next
 End Function
 

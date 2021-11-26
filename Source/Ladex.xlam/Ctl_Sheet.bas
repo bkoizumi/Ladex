@@ -28,19 +28,25 @@ End Function
 Function セル幅調整()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
-  
+  Dim slctCells As Range
   Const funcName As String = "Ctl_Sheet.セル幅調整"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
+  'On Error GoTo catchError
   Call init.setting
   Call Library.startScript
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   Cells.EntireColumn.AutoFit
   
-  If IsNumeric(Range("A1").Text) Then
-    Call Library.setColumnWidth
+  If Selection.count > 1 Then
+    For Each slctCells In Selection
+      colName = Library.getColumnName(slctCells.Column)
+      If IsNumeric(slctCells.Value) And CInt(slctCells.Value) > 1 Then
+        Columns(colName & ":" & colName).ColumnWidth = slctCells.Value
+      End If
+    Next
+
   Else
     For colLine = 1 To Columns.count
       If Cells(1, colLine).ColumnWidth > 30 Then
@@ -96,7 +102,7 @@ Function A1セル選択()
     sheetName = objSheet.Name
     If Worksheets(sheetName).Visible = True Then
       Call Library.showDebugForm("sheetName", sheetName, "debug")
-      Application.Goto Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
     End If
     
     Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, sheetCount + 1, sheetMaxCount + 1, sheetName & "A1セル選択")
@@ -215,7 +221,7 @@ Function 標準画面()
         End With
         Cells.Replace What:="", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=True, ReplaceFormat:=True
       End If
-      Application.Goto Reference:=Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
     End If
     
     sheetCount = sheetCount + 1

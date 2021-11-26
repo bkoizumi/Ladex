@@ -74,7 +74,7 @@ Public defaultZoomInVal     As String
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function unsetting()
+Function unsetting(Optional Flg As Boolean = True)
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Const funcName As String = "init.unsetting"
 
@@ -97,6 +97,10 @@ Function unsetting()
   
   logFile = ""
   LadexDir = ""
+  
+  If Flg = True Then
+    runFlg = False
+  End If
   
   Exit Function
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
@@ -130,7 +134,7 @@ Function setting(Optional reCheckFlg As Boolean)
 '  End If
 
   If LadexDir = "" Or BK_setVal Is Nothing Or reCheckFlg = True Then
-    Call init.unsetting
+    Call init.unsetting(False)
   Else
     Exit Function
   End If

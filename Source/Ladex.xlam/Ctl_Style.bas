@@ -313,7 +313,7 @@ Function スタイル初期化()
   Call Library.execDel(filePath)
   
   '処理終了--------------------------------------
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   Call Library.showDebugForm(funcName & "終了==========================================")
   Call Library.endScript
   '----------------------------------------------

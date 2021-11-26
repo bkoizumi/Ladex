@@ -105,7 +105,7 @@
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
         <menuSeparator id="Adjust_SP1" title="サイズ調整" />
-        <button id="セル調整_幅"    label="幅"        imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="30ポイント以上には広げません&#13; 1行目が数値であればその値に設定します " />
+        <button id="セル調整_幅"    label="幅"        imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="30ポイント以上には広げません&#13; 選択範囲が数値であればその値に設定します " />
         <button id="セル調整_高さ"  label="高さ"      imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さ調整 &#13;" />
         <button id="セル調整_両方"  label="両方"      imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル幅、高さ両方を調整 &#13;" />
 

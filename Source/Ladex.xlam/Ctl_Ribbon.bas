@@ -643,7 +643,7 @@ Function selectActiveSheet(control As IRibbonControl)
   ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
   
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   
 '  If BK_ribbonUI Is Nothing Then
 '  Else
@@ -750,9 +750,9 @@ Function Ctl_Function(control As IRibbonControl)
     
     'シート管理----------------------------------
     Case "セル選択"
-      Application.Goto Reference:=Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
     Case "セル選択_保存"
-      Application.Goto Reference:=Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
       ActiveWorkbook.Save
     Case "全セル表示"
       Call Ctl_Sheet.すべて表示

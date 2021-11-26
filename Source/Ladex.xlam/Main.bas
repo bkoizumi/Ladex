@@ -48,8 +48,8 @@ Function setShortcutKey()
     End If
   Next
   
+  'Call Application.OnKey("{F1}", "Ctl_Option.showVersion")
   Call Application.OnKey("{F1}", "")
-    
 
   'èàóùèIóπ--------------------------------------
   If runFlg = False Then

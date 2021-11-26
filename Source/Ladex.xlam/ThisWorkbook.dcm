@@ -25,6 +25,7 @@ Private Sub Workbook_Open()
   
   'ショートカットキーの設定----------------------
   runFlg = True
+  Call init.setting
   Call Library.startScript
   Call Main.setShortcutKey
   Call Library.endScript
