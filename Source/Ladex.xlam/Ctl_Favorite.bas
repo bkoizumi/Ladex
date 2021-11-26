@@ -79,7 +79,7 @@ Function detail()
   Exit Function
 'ÉGÉâÅ[î≠ê∂éû--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 

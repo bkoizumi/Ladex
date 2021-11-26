@@ -11,12 +11,18 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   Dim slctArea
   Dim targetImg As Chart
   Dim saveDir As String
-  
-  '処理開始--------------------------------------
-  On Error GoTo catchError
+  Const funcName As String = "Ctl_Image.saveSelectArea2Image"
 
-  Call init.setting
-  Call Library.startScript
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
 
   If IsMissing(defSlctArea) Then
@@ -60,16 +66,23 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   Set targetImg = Nothing
   Set slctArea = Nothing
 
-  '処理終了--------------------------------------
-  Call Library.endScript
   If IsMissing(defSlctArea) Then
     Call Shell("Explorer.exe /select, " & saveDir & imageName, vbNormalFocus)
   End If
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
   '----------------------------------------------
-
+  
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(400, "", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
 

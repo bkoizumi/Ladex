@@ -231,11 +231,13 @@ Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range
   
   'ハイライト機能----------------------------------------------------------------------------------
   If Library.getRegistry("Main", "HighLightFlg") = True Then
+    runFlg = True
     Call Ctl_HighLight.showStart(Target)
   End If
   
   '数式確認機能------------------------------------------------------------------------------------
   If BKcf_rbPressed = True Then
+    runFlg = True
     Call Ctl_Formula.数式確認
   End If
 End Sub
@@ -250,6 +252,7 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal sh As Object, ByVal Target As Ran
   'ズーム機能--------------------------------------------------------------------------------------
   If Library.getRegistry("Main", "ZoomFlg") = True Then
     Cancel = True
+    runFlg = True
     Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
   End If
 

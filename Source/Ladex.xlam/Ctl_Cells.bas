@@ -13,15 +13,89 @@ Option Explicit
 '**************************************************************************************************
 '==================================================================================================
 Function Trim01()
-  
-  Call init.setting
-  ActiveCell = Trim(ActiveCell.Text)
-  
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.Trim01"
 
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  For Each slctCells In Selection
+    slctCells.Text = Trim(slctCells.Text)
+    DoEvents
+  Next
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
+'==================================================================================================
+Function 全空白削除()
+  Dim slctCells As Range
+  Dim resVal As String
+  Const funcName As String = "Ctl_Cells.Trim01"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  For Each slctCells In Selection
+    resVal = slctCells.Text
+    
+    If resVal <> "" Then
+      resVal = Replace(resVal, " ", "")
+      resVal = Replace(resVal, "　", "")
+      slctCells.Value = resVal
+      DoEvents
+    End If
+  Next
+  
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+
 
 '==================================================================================================
 Function 中黒点付与()
@@ -138,22 +212,31 @@ End Function
 Function 英数字全半角変換()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
-  
-  
-  '処理開始--------------------------------------
-  'On Error GoTo catchError
-  funcName = "Ctl_Cells.英数字全半角変換"
+  Const funcName As String = "Ctl_Cells.英数字全半角変換"
 
-  Call Library.startScript
-  Call init.setting
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  
   For Each slctCells In Selection
     slctCells.Value = Library.convHan2Zen(slctCells.Value)
     DoEvents
   Next
 
   '処理終了--------------------------------------
-  Call Library.endScript
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
   '----------------------------------------------
 
   Exit Function

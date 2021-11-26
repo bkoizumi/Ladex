@@ -3,71 +3,70 @@ Option Explicit
 
 
 'ワークブック用変数------------------------------
-Public BK_ThisBook        As Workbook
-Public targetBook         As Workbook
-
+Public BK_ThisBook          As Workbook
+Public targetBook           As Workbook
 
 'ワークシート用変数------------------------------
-Public targetSheet        As Worksheet
+Public targetSheet          As Worksheet
 
-Public BK_sheetSetting    As Worksheet
-Public BK_sheetNotice     As Worksheet
-Public BK_sheetStyle      As Worksheet
-Public BK_sheetTestData   As Worksheet
-Public BK_sheetRibbon     As Worksheet
-Public BK_sheetFavorite   As Worksheet
-Public BK_sheetStamp      As Worksheet
-Public BK_sheetHighLight  As Worksheet
-Public BK_sheetHelp       As Worksheet
-Public BK_sheetFunction   As Worksheet
+Public BK_sheetSetting      As Worksheet
+Public BK_sheetNotice       As Worksheet
+Public BK_sheetStyle        As Worksheet
+Public BK_sheetTestData     As Worksheet
+Public BK_sheetRibbon       As Worksheet
+Public BK_sheetFavorite     As Worksheet
+Public BK_sheetStamp        As Worksheet
+Public BK_sheetHighLight    As Worksheet
+Public BK_sheetHelp         As Worksheet
+Public BK_sheetFunction     As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
 Public Const thisAppVersion As String = "V1.0.0"
 Public funcName             As String
 Public resetVal             As String
+Public runFlg               As Boolean
 
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 
-
-'レジストリ登録用サブキー
-Public Const RegistryKey  As String = "Ladex"
-Public RegistrySubKey     As String
-
-
-'設定値保持
-Public BK_setVal          As Object
-Public sampleDataList     As Object
+'レジストリ登録用キー----------------------------
+Public Const RegistryKey    As String = "Ladex"
+Public RegistrySubKey       As String
 
 
-'ファイル/ディレクトリ関連
-Public logFile            As String
-Public LadexDir           As String
+'設定値保持--------------------------------------
+Public BK_setVal            As Object
+Public sampleDataList       As Object
 
 
-'処理時間計測用
-Public StartTime          As Date
-Public StopTime           As Date
+'ファイル/ディレクトリ関連-----------------------
+Public logFile              As String
+Public LadexDir             As String
+
+
+'処理時間計測用----------------------------------
+Public StartTime            As Date
+Public StopTime             As Date
 
 
 
 'リボン関連--------------------------------------
-Public BK_ribbonUI        As Office.IRibbonUI
-Public BK_ribbonVal       As Object
-Public BKT_rbPressed      As Boolean
+Public BK_ribbonUI          As Office.IRibbonUI
+Public BK_ribbonVal         As Object
+Public BKT_rbPressed        As Boolean
 
-Public BKh_rbPressed      As Boolean
-Public BKz_rbPressed      As Boolean
-Public BKcf_rbPressed     As Boolean
+Public BKh_rbPressed        As Boolean
+Public BKz_rbPressed        As Boolean
+Public BKcf_rbPressed       As Boolean
 
 
 
 'ユーザー関数関連--------------------------------
-Public arryHollyday()     As Date
+Public arryHollyday()       As Date
 
 'ズーム関連--------------------------------------
-Public defaultZoomInVal   As String
+Public defaultZoomInVal     As String
 
 
 '**************************************************************************************************
@@ -76,7 +75,12 @@ Public defaultZoomInVal   As String
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function unsetting()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Const funcName As String = "init.unsetting"
 
+  If Not (BK_setVal Is Nothing) Then
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
   Set BK_ThisBook = Nothing
   
   'ワークシート名の設定
@@ -92,8 +96,14 @@ Function unsetting()
   Set BK_ribbonVal = Nothing
   
   logFile = ""
+  LadexDir = ""
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
-
 
 '**************************************************************************************************
 ' * 設定
@@ -102,8 +112,16 @@ End Function
 '**************************************************************************************************
 Function setting(Optional reCheckFlg As Boolean)
   Dim line As Long, endLine As Long
+  Const funcName As String = "init.setting"
   
+  '処理開始--------------------------------------
   On Error GoTo catchError
+  If Not (BK_setVal Is Nothing) Then
+    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm("reCheckFlg", reCheckFlg, "debug")
+    Call Library.showDebugForm("runFlg", runFlg, "debug")
+  End If
+  '----------------------------------------------
 '  ThisWorkbook.Save
 '  If Workbooks.count = 0 Then
 '    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
@@ -111,15 +129,15 @@ Function setting(Optional reCheckFlg As Boolean)
 '    End
 '  End If
 
-  'レジストリ関連設定------------------------------------------------------------------------------
-  RegistrySubKey = "Main"
-  
-  If LadexDir = "" Or reCheckFlg = True Then
+  If LadexDir = "" Or BK_setVal Is Nothing Or reCheckFlg = True Then
     Call init.unsetting
   Else
     Exit Function
   End If
 
+  'レジストリ関連
+  RegistrySubKey = "Main"
+  
   'ブックの設定
   Set BK_ThisBook = ThisWorkbook
   
@@ -135,19 +153,17 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetHelp = BK_ThisBook.Worksheets("Help")
   Set BK_sheetFunction = BK_ThisBook.Worksheets("Function")
  
-  
-        
-  '設定値読み込み----------------------------------------------------------------------------------
+ 
+  '設定値読み込み--------------------------------
   Set BK_setVal = Nothing
   Set BK_setVal = CreateObject("Scripting.Dictionary")
-  BK_setVal.add "debugMode", "develop"
   
   For line = 3 To BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
     If BK_sheetSetting.Range("A" & line) <> "" Then
       BK_setVal.add BK_sheetSetting.Range("A" & line).Text, BK_sheetSetting.Range("B" & line).Text
     End If
   Next
-  
+    
   Dim wsh As Object
   Set wsh = CreateObject("WScript.Shell")
 
@@ -156,7 +172,7 @@ Function setting(Optional reCheckFlg As Boolean)
   
   Exit Function
   
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
   
 End Function
@@ -196,9 +212,9 @@ Function 名前定義()
   
 
   Exit Function
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   
 End Function
 

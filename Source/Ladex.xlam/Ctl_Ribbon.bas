@@ -30,19 +30,19 @@ Function onLoad(ribbon As IRibbonUI)
   BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg")
   BKT_rbPressed = Library.getRegistry("Main", "CustomRibbon")
   
-  Call Library.showDebugForm("BKh_rbPressed", BKh_rbPressed, "debug")
-  Call Library.showDebugForm("BKz_rbPressed", BKz_rbPressed, "debug")
-  Call Library.showDebugForm("BKT_rbPressed", BKT_rbPressed, "debug")
+  Call Library.showDebugForm("BKh_rbPressed", CStr(BKh_rbPressed), "debug")
+  Call Library.showDebugForm("BKz_rbPressed", CStr(BKz_rbPressed), "debug")
+  Call Library.showDebugForm("BKT_rbPressed", CStr(BKT_rbPressed), "debug")
   
   Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
   
-  BK_ribbonUI.ActivateTab ("Ladex")
+  'BK_ribbonUI.ActivateTab ("Ladex")
   BK_ribbonUI.Invalidate
   
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
@@ -72,7 +72,7 @@ Function RefreshRibbon()
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "function")
+  'Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   If BK_ribbonUI Is Nothing Then
     #If VBA7 And Win64 Then
@@ -86,7 +86,7 @@ Function RefreshRibbon()
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description & ">", "Error")
   Call Library.errorHandle
 End Function
 
@@ -118,7 +118,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 'ハイライト
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function HighLight(control As IRibbonControl, pressed As Boolean)
   Const funcName As String = "Ctl_Ribbon.HighLight"
   
@@ -143,17 +143,17 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function HighLightPressed(control As IRibbonControl, ByRef returnedVal)
   returnedVal = BKh_rbPressed
 End Function
 
 ' ズーム
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function Zoom(control As IRibbonControl, pressed As Boolean)
   Const funcName As String = "Ctl_Ribbon.Zoom"
   
@@ -179,17 +179,17 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function ZoomInPressed(control As IRibbonControl, ByRef returnedVal)
   returnedVal = BKz_rbPressed
 End Function
 
+'==================================================================================================
 ' 計算式確認
-'--------------------------------------------------------------------------------------------------
 Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Const funcName As String = "Ctl_Ribbon.confirmFormula"
   
@@ -208,14 +208,30 @@ Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
-
-'--------------------------------------------------------------------------------------------------
+'==================================================================================================
 Function confFormulaPressed(control As IRibbonControl, ByRef returnedVal)
   returnedVal = BKcf_rbPressed
+End Function
+
+
+'==================================================================================================
+'お気に入りファイルを開く
+Function OpenFavoriteList(control As IRibbonControl)
+  Dim fileNamePath As String
+  Dim line As Long
+  
+  line = Replace(control.ID, "Favorite_", "")
+  fileNamePath = BK_sheetFavorite.Range("A" & line)
+  
+  If Library.chkFileExists(fileNamePath) Then
+    Workbooks.Open fileName:=fileNamePath
+  Else
+    MsgBox "ファイルが存在しません" & vbNewLine & fileNamePath, vbExclamation
+  End If
 End Function
 
 '**************************************************************************************************
@@ -253,8 +269,12 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim sheetName As Worksheet
   Dim MenuSepa, sheetNameID
   
-  On Error GoTo catchError
-  
+'  On Error GoTo catchError
+  If Workbooks.count = 0 Then
+    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
+    Call Library.endScript
+    End
+  End If
   Call init.setting
   
   If BK_ribbonUI Is Nothing Then
@@ -335,14 +355,11 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Next
 
   DOMDoc.AppendChild Menu
-  
-'  Debug.Print DOMDoc.XML
+  'Debug.Print DOMDoc.XML
   
   returnedVal = DOMDoc.XML
   Set Menu = Nothing
   Set DOMDoc = Nothing
-
-  BK_ribbonUI.Invalidate
 
   Exit Function
 'エラー発生時------------------------------------
@@ -422,7 +439,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
 catchError:
   Set Menu = Nothing
   Set DOMDoc = Nothing
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
@@ -584,7 +601,7 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
@@ -626,18 +643,18 @@ Function selectActiveSheet(control As IRibbonControl)
   ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
   
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
   
-  If BK_ribbonUI Is Nothing Then
-  Else
-    BK_ribbonUI.Invalidate
-  End If
+'  If BK_ribbonUI Is Nothing Then
+'  Else
+'    BK_ribbonUI.Invalidate
+'  End If
   
   Call Library.endScript
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
@@ -671,7 +688,13 @@ Function decode(strVal As String)
   decode = strVal
 End Function
 
-
+'--------------------------------------------------------------------------------------------------
+Function setCenter(control As IRibbonControl)
+  Call init.setting
+  If TypeName(Selection) = "Range" Then
+    Selection.HorizontalAlignment = xlCenterAcrossSelection
+  End If
+End Function
 '**************************************************************************************************
 ' * リボンメニュー
 ' *
@@ -681,11 +704,13 @@ Function Ctl_Function(control As IRibbonControl)
   Const funcName As String = "Ctl_Ribbon.Ctl_Function"
   
   '処理開始--------------------------------------
+  runFlg = True
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "function")
+  Call Library.showDebugForm("" & funcName, , "start")
+  Call Library.startScript
   '----------------------------------------------
-  
+  Call Library.showDebugForm("control.ID", control.ID, "debug")
   
   Select Case control.ID
     Case "Option"
@@ -696,6 +721,16 @@ Function Ctl_Function(control As IRibbonControl)
     
     Case "Notation_R1C1"
       Call Ctl_Sheet.R1C1表記
+    
+    'Option--------------------------------------
+    Case "Version"
+      Call Ctl_Option.showVersion
+    Case "Help"
+      Call Ctl_Option.showHelp
+    Case "OptionSheetImport"
+      Call Ctl_RbnMaint.OptionSheetImport
+    Case "OptionSheetExport"
+      Call Ctl_RbnMaint.OptionSheetExport
     
     'ブック管理----------------------------------
     Case "resetStyle"
@@ -715,19 +750,19 @@ Function Ctl_Function(control As IRibbonControl)
     
     'シート管理----------------------------------
     Case "セル選択"
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Application.Goto Reference:=Range("A1"), Scroll:=True
     Case "セル選択_保存"
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Application.Goto Reference:=Range("A1"), Scroll:=True
       ActiveWorkbook.Save
     Case "全セル表示"
-      Call Main.すべて表示
+      Call Ctl_Sheet.すべて表示
     Case "セルとシート選択"
-      Call Main.A1セル選択
+      Call Ctl_Sheet.A1セル選択
     Case "セルとシート_保存"
-      Call Main.A1セル選択
+      Call Ctl_Sheet.A1セル選択
       ActiveWorkbook.Save
     Case "標準画面"
-      Call Main.標準画面
+      Call Ctl_Sheet.標準画面
     
     'ズーム--------------------------------------
     Case "Zoom01"
@@ -745,8 +780,10 @@ Function Ctl_Function(control As IRibbonControl)
       Call Library.getColumnWidth
     
     'セル編集------------------------------------
-    Case "Trim"
+    Case "Trim01"
         Call Ctl_Cells.Trim01
+    Case "Trim02"
+        Call Ctl_Cells.全空白削除
     Case "中黒点付与"
       Call Ctl_Cells.中黒点付与
     Case "連番追加"
@@ -872,13 +909,19 @@ Function Ctl_Function(control As IRibbonControl)
     
     
     Case Else
-      Call Library.showDebugForm("control.ID", control.ID, "debug")
+      Call Library.showDebugForm("リボンメニューなし", control.ID, "Error")
   End Select
+  
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Call Library.showDebugForm("  ", , "end")
+  Call init.unsetting
+  '----------------------------------------------
   Exit Function
   
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 

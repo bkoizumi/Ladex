@@ -62,8 +62,8 @@ End Sub
 '==================================================================================================
 Private Sub Cancel_Click()
 
-  Call Library.setRegistry("UserForm", "mkSmpDtTop", Me.Top)
-  Call Library.setRegistry("UserForm", "mkSmpDtLeft", Me.Left)
+'  Call Library.setRegistry("UserForm", "mkSmpDtTop", Me.Top)
+'  Call Library.setRegistry("UserForm", "mkSmpDtLeft", Me.Left)
   
 '  BK_setVal.add "mkSmpDtCancel", "True"
   
@@ -76,8 +76,8 @@ End Sub
 Private Sub run_Click()
   
   Call init.setting(True)
-  Call Library.setRegistry("UserForm", "mkSmpDtTop", Me.Top)
-  Call Library.setRegistry("UserForm", "mkSmpDtLeft", Me.Left)
+'  Call Library.setRegistry("UserForm", "mkSmpDtTop", Me.Top)
+'  Call Library.setRegistry("UserForm", "mkSmpDtLeft", Me.Left)
   
   With Me
     Select Case .Caption

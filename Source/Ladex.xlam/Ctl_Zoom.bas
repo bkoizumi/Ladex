@@ -10,8 +10,7 @@ Function ZoomIn(Optional slctCellAddress As String)
   Dim cellVal As String
   Dim topPosition As Long, leftPosition As Long
   Dim cellWidth As Long
-  Dim targetBook As Workbook
-  Dim targetSheet As Worksheet
+
   
   If slctCellAddress = "" Then
   End If
@@ -46,6 +45,7 @@ Function ZoomIn(Optional slctCellAddress As String)
       '全角の場合
       .TextBox.IMEMode = fmIMEModeOn
     End If
+    .TextBox.Font.Name = ActiveCell.Font.Name
     
     .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
     .Show vbModeless
@@ -63,7 +63,7 @@ Function ZoomOut(Text As String, SetTargetAddress As String)
   targetSheet.Activate
   
   Range(SetTargetAddress).Value = Text
-  Call endScript
+  Call Library.endScript
 End Function
 
 
@@ -73,15 +73,8 @@ Function Zoom01()
   Dim topPosition As Long, leftPosition As Long
   
   Application.DisplayFullScreen = True
-  
-  topPosition = Library.getRegistry("UserForm", "Zoom01Top")
-  leftPosition = Library.getRegistry("UserForm", "Zoom01Left")
-
-  Call Ctl_UsrForm.表示位置(topPosition, leftPosition)
   With Frm_DispFullScreenForm
-    .StartUpPosition = 0
-    .Top = topPosition
-    .Left = leftPosition
+    .StartUpPosition = 3
     .Show vbModeless
   End With
   

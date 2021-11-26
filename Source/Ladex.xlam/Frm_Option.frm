@@ -21,6 +21,10 @@ Public InitializeFlg   As Boolean
 
 
 
+
+
+
+
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -29,18 +33,31 @@ Public InitializeFlg   As Boolean
 Private Sub UserForm_Initialize()
   Dim zoomLevelVal  As Variant
   Dim setZoomLevel As String
-  Dim endLine As Long
+  Dim line As Long, endLine As Long
   Dim indexCnt As Integer, i As Variant
   Dim previewImgPath As String
   Dim cBox As CommandBarComboBox
   
-  InitializeFlg = True
+  Const funcName As String = "Frm_Option.UserForm_Initialize"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
-  Call init.setting
   Application.Cursor = xlDefault
+  InitializeFlg = True
   indexCnt = 0
   old_BKh_rbPressed = BKh_rbPressed
   
+  '表示位置指定
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
@@ -48,9 +65,9 @@ Private Sub UserForm_Initialize()
   setZoomLevel = Library.getRegistry("Main", "ZoomLevel")
   
   With Frm_Option
+    '基本タブ-----------------------------------
     For Each zoomLevelVal In Split("25,50,75,85,100", ",")
       .ZoomLevel.AddItem zoomLevelVal
-      
       If zoomLevelVal = setZoomLevel Then
         .ZoomLevel.ListIndex = indexCnt
       End If
@@ -66,9 +83,8 @@ Private Sub UserForm_Initialize()
       .LineColor.BackColor = LineColor
     End If
     .LineColor.Caption = ""
-    
   
-    'Highlight設定---------------------------------------------------------------------------------
+    'ハイライトタブ------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
     If HighLightColor = "0" Then
       .HighLightColor.BackColor = 10222585
@@ -77,8 +93,7 @@ Private Sub UserForm_Initialize()
     End If
     .HighLightColor.Caption = ""
     
-    
-    '透明度----------------------------------------------------------------------------------------
+    '透明度
     .HighlightTransparentRate.Min = 0
     .HighlightTransparentRate.Max = 100
     HighlightTransparentRate = Library.getRegistry("Main", "HighLightTransparentRate")
@@ -90,7 +105,7 @@ Private Sub UserForm_Initialize()
       .HighlightTransparentRate_text.Caption = HighlightTransparentRate
     End If
   
-    '表示方向--------------------------------------------------------------------------------------
+    '表示方向
     HighLightDspDirection = Library.getRegistry("Main", "HighLightDspDirection")
     If HighLightDspDirection = "X" Then
       .HighlightDspDirection_X.Value = True
@@ -103,7 +118,7 @@ Private Sub UserForm_Initialize()
     
     End If
   
-    '表示方法--------------------------------------------------------------------------------------
+    '表示方法
     HighLightDspMethod = Library.getRegistry("Main", "HighLightDspMethod")
     If HighLightDspMethod = "0" Then
       .HighlightDspMethod_0.Value = True
@@ -116,9 +131,9 @@ Private Sub UserForm_Initialize()
     
     ElseIf HighLightDspMethod = "2" Then
       .HighlightDspMethod_2.Value = True
-    
     End If
     
+    'プレビュー
     imageName = thisAppName & "HighLightImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
@@ -130,13 +145,12 @@ Private Sub UserForm_Initialize()
     HighLightImg.Picture = LoadPicture(previewImgPath)
     
     
-    
-    'コメント 背景色-------------------------------------------------------------------------------
+    'コメントタブ--------------------------------
     CommentBgColor = Library.getRegistry("Main", "CommentBgColor")
     .CommentColor.BackColor = CommentBgColor
     .CommentColor.Caption = ""
     
-    'コメント フォント-------------------------------------------------------------------------------
+    'コメント フォント
     CommentFontColor = Library.getRegistry("Main", "CommentFontColor")
     .CommentFontColor.BackColor = CommentFontColor
     .CommentFontColor.Caption = ""
@@ -153,7 +167,7 @@ Private Sub UserForm_Initialize()
     Next
     .CommentFont.ListIndex = ListIndex
 
-    'フォントサイズ
+    'コメント フォントサイズ
     indexCnt = 0
     CommentFontSize = Library.getRegistry("Main", "CommentFontSize")
     For Each i In Split("6,7,8,9,10,11,12,14,16,18,20", ",")
@@ -165,7 +179,7 @@ Private Sub UserForm_Initialize()
     Next
     .CommentFont.ListIndex = ListIndex
 
-
+    'コメント プレビュー
     imageName = thisAppName & "CommentImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
@@ -177,37 +191,75 @@ Private Sub UserForm_Initialize()
     .CommentImg.Picture = LoadPicture(previewImgPath)
     Set cBox = Nothing
     
-    '電子印鑑 フォント-------------------------------------------------------------------------------
-    StampVal = Library.getRegistry("Main", "StampVal")
-    StampFont = Library.getRegistry("Main", "StampFont")
-  
-    .StampVal.Value = StampVal
-    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
-      
-      For i = 1 To cBox.ListCount
-        .StampFont.AddItem cBox.list(i)
-        If cBox.list(i) = StampFont Then
-          ListIndex = i - 1
-        End If
-      Next
-    .StampFont.ListIndex = ListIndex
-    
-    imageName = thisAppName & "StampImg" & ".jpg"
-    previewImgPath = LadexDir & "\RibbonImg\" & imageName
-    If Library.chkFileExists(previewImgPath) = False Then
-      imageName = thisAppName & "NoStampImg" & ".jpg"
-      previewImgPath = LadexDir & "\RibbonImg\" & imageName
-    End If
-    .StampImg.Picture = LoadPicture(previewImgPath)
-    Set cBox = Nothing
-    
+    '電子印鑑タブ--------------------------------
     '電子印鑑非表示(公開一時停止)
     .MultiPage1.Page4.Visible = False
+
+'    StampVal = Library.getRegistry("Main", "StampVal")
+'    StampFont = Library.getRegistry("Main", "StampFont")
+'
+'    .StampVal.Value = StampVal
+'    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
+'
+'      For i = 1 To cBox.ListCount
+'        .StampFont.AddItem cBox.list(i)
+'        If cBox.list(i) = StampFont Then
+'          ListIndex = i - 1
+'        End If
+'      Next
+'    .StampFont.ListIndex = ListIndex
+'
+'    'プレビュー
+'    imageName = thisAppName & "StampImg" & ".jpg"
+'    previewImgPath = LadexDir & "\RibbonImg\" & imageName
+'    If Library.chkFileExists(previewImgPath) = False Then
+'      imageName = thisAppName & "NoStampImg" & ".jpg"
+'      previewImgPath = LadexDir & "\RibbonImg\" & imageName
+'    End If
+'    .StampImg.Picture = LoadPicture(previewImgPath)
+'    Set cBox = Nothing
+    
+    'ショートカットタブ-------------------------
+    onAlt.Value = True
+    With funcList
+      .View = lvwReport
+      .LabelEdit = lvwManual
+      .HideSelection = False
+      .AllowColumnReorder = True
+      .FullRowSelect = True
+      .Gridlines = True
+      .ColumnHeaders.add , "_ID", "#", 30
+      .ColumnHeaders.add , "_ShortcutKey", "キー"
+      .ColumnHeaders.add , "_Label", "機能名称", 100
+      .ColumnHeaders.add , "_description", "説明", 100
+      
+      endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
+      For line = 2 To endLine
+        If BK_sheetFunction.Range("C" & line).Value <> "" Then
+          With .ListItems.add
+            .Text = BK_sheetFunction.Range("A" & line).Value
+            .SubItems(1) = BK_sheetFunction.Range("B" & line).Value
+            .SubItems(2) = BK_sheetFunction.Range("C" & line).Value
+            .SubItems(3) = BK_sheetFunction.Range("D" & line).Value
+          End With
+        End If
+      Next
+    End With
+    
+    
+    
+    
     
   End With
   
   InitializeFlg = False
+  Exit Sub
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
+
 
 '**************************************************************************************************
 ' * スタイル設定
@@ -510,12 +562,134 @@ Private Sub StampFont_Change()
   End If
 End Sub
 
+''==================================================================================================
+Private Sub setShortcutKey_Click()
+  Dim keyVal As String
+  
+  Call init.setting
+  
+  Call Library.showDebugForm("funcList.Item", funcList.SelectedItem.Text, "debug")
+  Call Library.showDebugForm("funcList.SubItem1", funcList.SelectedItem.SubItems(1), "debug")
+  Call Library.showDebugForm("funcList.SubItem2", funcList.SelectedItem.SubItems(2), "debug")
+  Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
+
+  Call Library.showDebugForm("onCtrl", onCtrl.Value, "debug")
+  Call Library.showDebugForm("onAlt", onAlt.Value, "debug")
+  Call Library.showDebugForm("onShift", onShift.Value, "debug")
+  Call Library.showDebugForm("ShortcutKey", ShortcutKey.Value, "debug")
+
+  keyVal = ""
+  If onCtrl.Value = True Then
+    keyVal = "Ctrl"
+  End If
+  
+  If onAlt.Value = True Then
+    If keyVal = "" Then
+      keyVal = "Alt"
+    Else
+      keyVal = keyVal & "+Alt"
+    End If
+  End If
+  
+  If onShift.Value = True Then
+    If keyVal = "" Then
+      keyVal = "Shift"
+    Else
+      keyVal = keyVal & "+Shift"
+    End If
+  End If
+  
+  If keyVal = "" Then
+    keyVal = "Alt"
+  End If
+  keyVal = keyVal & "+" & ShortcutKey.Value
+  
+  Call Library.showDebugForm("keyVal", keyVal, "debug")
+  BK_sheetFunction.Range("B" & CInt(funcList.SelectedItem.Text) + 1) = keyVal
+  
+  Call reLoadFuncList
+End Sub
+
+'==================================================================================================
+Function reLoadFuncList()
+
+  funcList.ListItems.Clear
+  funcList.ColumnHeaders.Clear
+  With funcList
+    .View = lvwReport
+    .LabelEdit = lvwManual
+    .HideSelection = False
+    .AllowColumnReorder = True
+    .FullRowSelect = True
+    .Gridlines = True
+    .ColumnHeaders.add , "_ID", "#", 30
+    .ColumnHeaders.add , "_ShortcutKey", "キー"
+    .ColumnHeaders.add , "_Label", "機能名称", 100
+    .ColumnHeaders.add , "_description", "説明", 100
+    
+    endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
+    For line = 2 To endLine
+      If BK_sheetFunction.Range("C" & line).Value <> "" Then
+        With .ListItems.add
+          .Text = BK_sheetFunction.Range("A" & line).Value
+          .SubItems(1) = BK_sheetFunction.Range("B" & line).Value
+          .SubItems(2) = BK_sheetFunction.Range("C" & line).Value
+          .SubItems(3) = BK_sheetFunction.Range("D" & line).Value
+        End With
+      End If
+    Next
+  End With
+    
+End Function
+
+'==================================================================================================
+Private Sub funcList_Click()
+  Dim keyVal As Variant
+  
+  Call Library.showDebugForm("funcList.Item", funcList.SelectedItem.Text, "debug")
+  Call Library.showDebugForm("funcList.SubItem1", funcList.SelectedItem.SubItems(1), "debug")
+  Call Library.showDebugForm("funcList.SubItem2", funcList.SelectedItem.SubItems(2), "debug")
+  Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
+  
+  If funcList.SelectedItem.SubItems(1) <> "" Then
+    For Each keyVal In Split(funcList.SelectedItem.SubItems(1), "+")
+      If keyVal = "Ctrl" Then
+        onCtrl.Value = True
+      ElseIf keyVal = "Alt" Then
+        onAlt.Value = True
+      ElseIf keyVal = "Shift" Then
+        onShift.Value = True
+      Else
+        ShortcutKey.Value = keyVal
+      End If
+    Next
+  Else
+    onCtrl.Value = False
+    onAlt.Value = True
+    onShift.Value = False
+    ShortcutKey.Value = ""
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub Del_ShortcutKey_Click()
+  
+  Call init.setting
+  BK_sheetFunction.Range("B" & CInt(funcList.SelectedItem.Text) + 1) = ""
+  
+  Call reLoadFuncList
+End Sub
+
+
+
+
+
 
 '==================================================================================================
 'キャンセル処理
 Private Sub Cancel_Click()
-  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
-  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+'  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
+'  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
   
   Unload Me
 End Sub
@@ -525,8 +699,8 @@ End Sub
 Private Sub run_Click()
   Dim execDay As Date
   
-  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
-  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+'  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
+'  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
   
   Call Library.setRegistry("Main", "ZoomLevel", Me.ZoomLevel.Text)
   Call Library.setRegistry("Main", "GridLine", Me.GridLine.Value)

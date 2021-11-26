@@ -8,7 +8,7 @@ Dim fstDate As Date, lstDate As Date
 Public maxCount  As Long
 
 '**************************************************************************************************
-' * xxxxxxxxxx
+' * データ生成
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
@@ -57,10 +57,7 @@ Function showFrm_sampleData(showType As String)
         
         .minVal4 = #4/1/2021#
         .maxVal4 = #3/31/2022#
-  
-
-
-
+        
         .Frame4.Caption = showType
       Case Else
     End Select
@@ -79,15 +76,16 @@ Function showFrm_sampleData(showType As String)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
 '==================================================================================================
 Function パターン選択()
-  Dim line As Long, endLine As Long
-  Dim count As Long
+  Dim line As Long, endLine As Long, count As Long
   Dim varDic
+  Const funcName As String = "Library.パターン選択"
   
   
 '  On Error GoTo catchError
@@ -116,22 +114,18 @@ Function パターン選択()
         
       Case "1.氏名(フルネーム)"
         Call 名前_フルネーム(maxCount)
-        
-        
+      
       Case Else
     End Select
     '次のセルに移動
     ActiveCell.Offset(0, 1).Select
-    
   Next
-    
-  
-  
   
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+    Call Library.errorHandle
 End Function
 
 
@@ -156,7 +150,8 @@ Function 数値_桁数固定(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 '==================================================================================================
@@ -183,7 +178,7 @@ Function 数値_範囲()
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '==================================================================================================
@@ -216,7 +211,7 @@ Function 名前_姓(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '==================================================================================================
@@ -246,7 +241,7 @@ Function 名前_名(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '==================================================================================================
@@ -278,7 +273,7 @@ Function 名前_フルネーム(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 
@@ -309,7 +304,7 @@ Function 日付_日(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 
@@ -343,7 +338,7 @@ Function 日付_時間(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 
@@ -383,7 +378,7 @@ Function 日時(Optional maxCount As Long)
   Exit Function
 'エラー発生時====================================
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 

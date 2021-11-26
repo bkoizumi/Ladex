@@ -115,7 +115,8 @@
 
       <menu id="セル編集" label="セル編集"  itemSize="large" imageMso="TableInsertDialog" >
         <menuSeparator id="セル編集_SP1" title="スペース削除" />
-        <button id="Trim" label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="文頭、文末にあるスペースを取り除きます &#13;" />
+        <button id="Trim01" label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="文頭、文末にあるスペースを取り除きます &#13;" />
+        <button id="Trim02" label="全スペース削除"      imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="すべてのスペースを取り除きます &#13;" />
 
         <menuSeparator id="セル編集_SP2" title="文字追加" />
         <button id="中黒点付与" label="文頭に・を追加"  image="Sunspot"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="文頭に「・」を追加&#13;" />
@@ -151,9 +152,6 @@
         <button id="整形_1" label="移動やサイズ変更をする"    imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をする &#13;" />
         <button id="整形_2" label="移動する"                  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動するがサイズ変更はしない &#13;" />
         <button id="整形_3" label="移動やサイズ変更をしない"  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をしない &#13;" />
-
-        <menuSeparator id="整形_SP2" title="図形の配置" />
-        <control idMso="ObjectAlignMenu"   visible="true"  label="配置" />
 
         <menuSeparator id="整形_SP3" title="その他" />
         <button id="余白ゼロ" label="上下の余白をゼロにする"    imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="テキストボックスの上下の余白をゼロにする" />
@@ -285,11 +283,11 @@
           <control idMso="FileSaveAsPdfOrXps"     visible="true" />                              <!--PDF生成-->
           <control idMso="FileOpen"               visible="true" />                              <!--開く-->
           <control idMso="FilePrepareMenu"        visible="true" />                              <!--配布準備-->
+          <control idMso="ObjectAlignMenu"        visible="true"  label="配置" />
+          <control idMso="ObjectRotateGallery"    visible="true"  label="回転" />
           <control idMso="ClearContents"          visible="true" />                              <!--数式と値のクリア-->
           <control idMso="DataValidation"         visible="true" />                              <!--入力規則-->
           <control idMso="NameManager"            visible="true" />                              <!--名前の管理-->
-          <control idMso="ObjectAlignMenu"        visible="true"  label="配置" />
-          <control idMso="ObjectRotateGallery"    visible="true"  label="回転" />
 
         </menu>
     </group>

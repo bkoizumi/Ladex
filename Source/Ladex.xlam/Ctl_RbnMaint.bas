@@ -59,7 +59,7 @@ Function その他()
 End Function
 
 '==================================================================================================
-Function OptionSheetImport(control As IRibbonControl)
+Function OptionSheetImport()
   Dim line As Long, endLine As Long
   Dim objShp
   
@@ -72,6 +72,7 @@ Function OptionSheetImport(control As IRibbonControl)
   targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
   targetBook.Sheets("testData").Columns("A:P").Copy ThisWorkbook.Worksheets("testData").Range("A1")
   targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
+  targetBook.Sheets("Function").Columns("A:E").Copy ThisWorkbook.Worksheets("Function").Range("A1")
   
   
   Application.DisplayAlerts = False
@@ -111,17 +112,17 @@ End Function
 
 
 '==================================================================================================
-Function OptionSheetExport(control As IRibbonControl)
+Function OptionSheetExport()
 
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsm")
   
-  ThisWorkbook.Sheets("設定").Columns("A:AA").Copy targetBook.Worksheets("設定").Range("A1")
-'  ThisWorkbook.Sheets("Ribbon").Columns("A:G").Copy targetBook.Worksheets("Ribbon").Range("A1")
-  ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
-  ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
-  ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
-  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+'  ThisWorkbook.Sheets("設定").Columns("A:AA").Copy targetBook.Worksheets("設定").Range("A1")
+'  ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
+'  ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
+'  ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
+'  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  ThisWorkbook.Worksheets("Function").Columns("A:C").Copy targetBook.Sheets("Function").Range("A1")
   
 '  Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
   

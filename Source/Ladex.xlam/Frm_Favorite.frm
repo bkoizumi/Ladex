@@ -82,9 +82,9 @@ End Sub
 '•Â‚¶‚é
 Private Sub Submit_Click()
 
-  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
-  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
-  
+'  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
+'  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
+
   Call Ctl_Favorite.addList
   Unload Me
 End Sub

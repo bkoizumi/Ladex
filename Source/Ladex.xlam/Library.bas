@@ -73,6 +73,8 @@ Public ThisBook As Workbook
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function errorHandle()
+  On Error Resume Next
+  
   Call Library.endScript
   Call Ctl_ProgressBar.showEnd
   Call Library.showDebugForm("  ", , "end")
@@ -106,9 +108,7 @@ Function startScript()
   Application.Calculation = xlCalculationManual
 
   'マクロ動作中に一切のキーやマウス操作を制限する
-  If BK_setVal("debugMode") <> "develop" Then
-  Application.Interactive = False
-  End If
+  'Application.Interactive = False
 
   'マクロ動作中はマウスカーソルを「砂時計」にする
   'Application.Cursor = xlWait
@@ -117,7 +117,7 @@ Function startScript()
   Application.DisplayAlerts = False
 
   'ステータスバーに処理中を表示
-   Application.StatusBar = "処理中・・・"
+  'Application.StatusBar = "処理中・・・"
 End Function
 
 '**************************************************************************************************
@@ -304,7 +304,7 @@ Function chkHeader(baseNameArray As Variant, chkNameArray As Variant)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 
@@ -523,7 +523,7 @@ Lbl_endSelect:
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -615,7 +615,7 @@ Function convSnakeToCamel(ByVal val As String, Optional ByVal isFirstUpper As Bo
 End Function
 
 '**************************************************************************************************
-' * 半角のカタカナを全角のカタカナに変換する(ただし英数字は半角にする)
+' * 半角を全角に変換する(英数字、カタカナ)
 ' *
 ' * @link   http://officetanaka.net/excel/function/tips/tips45.htm
 '**************************************************************************************************
@@ -623,11 +623,12 @@ Function convHan2Zen(Text As String) As String
   Dim i As Long, buf As String
   Dim c As Range
   Dim rData As Variant, ansData As Variant
-
+  Const funcName As String = "Library.convHan2Zen"
+  
   For i = 1 To Len(Text)
     DoEvents
     rData = StrConv(Text, vbWide)
-    If Mid(rData, i, 1) Like "[Ａ-ｚ]" Or Mid(rData, i, 1) Like "[０-９]" Or Mid(rData, i, 1) Like "[－！（）／]" Then
+    If Mid(rData, i, 1) Like "[Ａ-ｚ]" Or Mid(rData, i, 1) Like "[０-９]" Or Mid(rData, i, 1) Like "[－！（）／]" Or Mid(rData, i, 1) Like "ｱ-ﾝ" Then
       ansData = ansData & StrConv(Mid(rData, i, 1), vbNarrow)
     Else
       ansData = ansData & Mid(rData, i, 1)
@@ -846,7 +847,7 @@ Function delSheetData(Optional targetSheet As Worksheet, Optional line As Long)
   End If
   DoEvents
 
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
 End Function
 
 '**************************************************************************************************
@@ -930,7 +931,7 @@ Function delTableData()
   Cells.Select
   Selection.NumberFormatLocal = "G/標準"
 
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
 End Function
 
 
@@ -962,7 +963,7 @@ Function execCopy(srcPath As String, dstPath As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -990,7 +991,7 @@ Function execMove(srcPath As String, dstPath As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -1018,7 +1019,7 @@ Function execDeldir(srcPath As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -1046,7 +1047,7 @@ Function execDel(srcPath As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -1094,7 +1095,7 @@ Function execRename(srcPath As String, oldFileName As String, fileName As String
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   errMeg = Err.Description
   execRename = False
 End Function
@@ -1134,7 +1135,7 @@ Private Function chkParentDir(TargetFolder)
 
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -1281,19 +1282,32 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getByteString(arryColumn As String, Optional line As Long) As Long
-  Dim colLineName As Variant
-  Dim count As Long
-
-  count = 0
-  For Each colLineName In Split(arryColumn, ",")
-    If line > 0 Then
-      count = count + LenB(Range(colLineName & line).Value)
-    Else
-      count = count + LenB(Range(colLineName).Value)
-    End If
-  Next colLineName
-  getByteString = count
+Function getLength(targetVal As String, Optional charType As String = "半角")
+  Dim inputLen As Long
+  Const funcName As String = "Library.chkMaxlength"
+  
+  Call Library.showDebugForm(funcName, , "start")
+  Call Library.showDebugForm("targetVal", targetVal, "debug")
+  Call Library.showDebugForm("charType ", charType, "debug")
+  
+  Call Library.showDebugForm("文字数   [Len]", Len(targetVal), "debug")
+  Call Library.showDebugForm("バイト数[LenB]", LenB(StrConv(targetVal, vbFromUnicode)), "debug")
+  
+  Select Case charType
+    Case "半角", "全角"
+      inputLen = LenB(StrConv(targetVal, vbFromUnicode))
+    Case "文字数"
+      inputLen = Len(targetVal)
+  End Select
+  
+  Call Library.showDebugForm("inputLen", inputLen, "debug")
+  getLength = inputLen
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 '**************************************************************************************************
@@ -1863,7 +1877,7 @@ Function getSheetList(columnName As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -1930,10 +1944,10 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
   End Select
 
   If IsMissing(meg2) = False Then
-    meg1 = meg1 & "：" & Application.WorksheetFunction.Trim(CStr(meg2))
+    meg1 = meg1 & "：" & Application.WorksheetFunction.Trim(Replace(CStr(meg2), vbNewLine, " "))
   End If
 
-  If CInt(LogLevel) <= CInt(BK_setVal("LogLevel")) Then
+  If CInt(LogLevel) <= CInt(Split(BK_setVal("LogLevel"), ".")(0)) Then
     Call outputLog(runTime, meg1)
     Debug.Print runTime & "  " & meg1
   Else
@@ -1946,8 +1960,10 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
   End If
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
+  Debug.Print runTime & "  [ERROR] " & Err.Description
+  Debug.Print runTime & "  " & meg1
   Exit Function
 End Function
 
@@ -2219,7 +2235,7 @@ Function importXlsx(filePath As String, targeSheet As String, targeArea As Strin
     Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -2367,7 +2383,7 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
     Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
     Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
     Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
-    Call Library.showDebugForm("setVal        ", setVal, "debug")
+    Call Library.showDebugForm("setVal        ", CStr(setVal), "debug")
     
     Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
   End If
@@ -2375,7 +2391,7 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 '==================================================================================================
@@ -2397,7 +2413,7 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String)
 
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '==================================================================================================
@@ -2417,7 +2433,7 @@ Function delRegistry(RegistrySubKey As String, Optional RegistryKey As String)
 
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -2436,7 +2452,7 @@ Function setProtectSheet(Optional thisAppPasswd As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '==================================================================================================
@@ -2449,7 +2465,7 @@ Function unsetProtectSheet(Optional thisAppPasswd As String)
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -2548,7 +2564,7 @@ catchError:
   FSO.DeleteFile fileName & "_"
   Set Txt = Nothing
   Set FSO = Nothing
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
 
 '**************************************************************************************************
@@ -3642,7 +3658,7 @@ Function setColumnWidth()
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 

@@ -25,9 +25,10 @@ Function コメント整形()
   
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 '==================================================================================================
@@ -43,9 +44,10 @@ Function 移動やサイズ変更をする()
   
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
@@ -63,9 +65,10 @@ Function 移動する()
   
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
@@ -81,9 +84,10 @@ Function 移動やサイズ変更をしない()
   
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
@@ -104,9 +108,10 @@ Function 余白ゼロ()
   
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 

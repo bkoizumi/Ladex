@@ -154,13 +154,7 @@ End Sub
 Private Sub OK_Button_Click()
   Dim execDay As Date
   
-  'コメント----------------------------------------------------------------------------------------
-'  Call Library.setRegistry("Main", "CommentBgColor", CommentColor.BackColor)
-'  Call Library.setRegistry("Main", "CommentFont", CommentFont.Value)
-'
-'  Call Library.setRegistry("Main", "CommentFontColor", CommentFontColor.BackColor)
-'  Call Library.setRegistry("Main", "CommentFontSize", CommentFontSize.Value)
-
+  On Error GoTo catchError
   If TextBox.Value <> "" Then
     If TypeName(ActiveCell.Comment) = "Comment" Then
       ActiveCell.ClearComments
@@ -170,6 +164,10 @@ Private Sub OK_Button_Click()
   End If
   
   Unload Me
+  Exit Sub
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, " [" & Err.Number & "]" & Err.Description & ">", True)
 End Sub
 
 

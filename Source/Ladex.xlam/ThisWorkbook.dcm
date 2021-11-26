@@ -12,6 +12,7 @@ Private ctlEvent As New clsEvent
 
 '==================================================================================================
 Private Sub Workbook_Open()
+
   Set ctlEvent = New clsEvent
   Set ctlEvent.ExcelApplication = Application
   ctlEvent.InitializeBookSheets
@@ -23,11 +24,10 @@ Private Sub Workbook_Open()
   Call Ctl_UsrFunction.InitializeUsrFunction
   
   'ショートカットキーの設定----------------------
-  Call Application.OnKey("{F1}", "")
-  
-  'Ctrl+Shift+C
-  Call Application.OnKey("^+C", "Menu.ladex_コメント挿入")
-  
+  runFlg = True
+  Call Library.startScript
+  Call Main.setShortcutKey
+  Call Library.endScript
 End Sub
 
 

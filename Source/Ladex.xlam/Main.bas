@@ -6,118 +6,80 @@ Option Explicit
 'グローバル変数----------------------------------
 
 '==================================================================================================
-Function xxxxxxxxxx()
-End Function
-
-
-
-
-
-'**************************************************************************************************
-' * 標準画面
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function 標準画面()
-  Dim objSheet As Object
-  Dim sheetName As String, SetActiveSheet As String
-  Dim sheetCount As Long, sheetMaxCount As Long
-  Dim SelectAddress, setZoomLevel, resetBgColor, setGgridLine
+'ショートカットキーの設定
+Function setShortcutKey()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim keyVal As Variant
+  Dim ShortcutKey As String, ShortcutFunc As String
+  Const funcName As String = "Main.setShortcutKey"
   
-  'On Error Resume Next
+  '処理開始--------------------------------------
+  'runFlg = True
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
   
-  Call Library.startScript
-  Call Ctl_ProgressBar.showStart
-  
-  SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
-  SelectAddress = Selection.Address
-  
-  setZoomLevel = Library.getRegistry("Main", "zoomLevel")
-  resetBgColor = Library.getRegistry("Main", "bgColor")
-  setGgridLine = Library.getRegistry("Main", "gridLine")
-  
-  sheetCount = 0
-  sheetMaxCount = ActiveWorkbook.Sheets.count
-  For Each objSheet In ActiveWorkbook.Sheets
-    sheetName = objSheet.Name
-    
-    Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 0, 4, sheetName)
-    
-    If Worksheets(sheetName).Visible = True Then
-      Worksheets(sheetName).Select
+  endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
+  For line = 2 To endLine
+    If BK_sheetFunction.Range("B" & line) <> "" Then
+      ShortcutKey = ""
+      For Each keyVal In Split(BK_sheetFunction.Range("B" & line), "+")
+        If keyVal = "Ctrl" Then
+          ShortcutKey = "^"
+        ElseIf keyVal = "Alt" Then
+          ShortcutKey = ShortcutKey & "%"
+        ElseIf keyVal = "Shift" Then
+          ShortcutKey = ShortcutKey & "^"
+        Else
+          ShortcutKey = ShortcutKey & keyVal
+        End If
+      Next
+      ShortcutFunc = "Menu.ladex_" & BK_sheetFunction.Range("D" & line)
+      Call Library.showDebugForm("ShortcutKey", ShortcutKey, "debug")
+      Call Library.showDebugForm("Function", ShortcutFunc, "debug")
       
-      '標準画面に設定
-      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 1, 4, sheetName)
-      ActiveWindow.View = xlNormalView
-      
-      '表示倍率の指定
-      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 2, 4, sheetName)
-      ActiveWindow.Zoom = setZoomLevel
-      
-      'ガイドラインの表示/非表示
-      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 3, 4, sheetName)
-      ActiveWindow.DisplayGridlines = setGgridLine
-  
-      '背景白をなしにする
-      Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 4, 4, sheetName)
-      If resetBgColor = True Then
-        With Application.FindFormat.Interior
-          .PatternColorIndex = xlAutomatic
-          .ThemeColor = xlThemeColorDark1
-          .TintAndShade = 0
-          .PatternTintAndShade = 0
-        End With
-        With Application.ReplaceFormat.Interior
-          .Pattern = xlNone
-          .TintAndShade = 0
-          .PatternTintAndShade = 0
-        End With
-        Cells.Replace What:="", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=True, ReplaceFormat:=True
-      End If
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Call Application.OnKey(ShortcutKey, ShortcutFunc)
     End If
-    
-    sheetCount = sheetCount + 1
   Next
   
-  Worksheets(SetActiveSheet).Select
-  Range(SelectAddress).Select
-  Call Ctl_ProgressBar.showEnd
-  Call Library.endScript
-  
+  Call Application.OnKey("{F1}", "")
+    
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("  ", , "end")
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showNotice(400, "xxxx.xxxxxxxxxx[" & Err.Number & "]" & Err.Description, True)
+  Call Library.showDebugForm("[" & Err.Number & "]" & Err.Description, , "Error")
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
+
+
+
+
+
+
 
 '==================================================================================================
-Function A1セル選択()
-
-  Dim objSheet As Object
-  Dim sheetName As String, SetActiveSheet As String
-  Dim sheetCount As Long, sheetMaxCount As Long
-  
-  'On Error Resume Next
-  
-  Call Library.startScript
-  Call Ctl_ProgressBar.showStart
-  
-  SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
-  
-  sheetCount = 0
-  sheetMaxCount = ActiveWorkbook.Sheets.count
-  For Each objSheet In ActiveWorkbook.Sheets
-    sheetName = objSheet.Name
-    
-    If Worksheets(sheetName).Visible = True Then
-      Worksheets(sheetName).Select
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
-    End If
-    
-    sheetCount = sheetCount + 1
-  Next
-  
-  Worksheets(SetActiveSheet).Select
-  Call Ctl_ProgressBar.showEnd
-  Call Library.endScript
-  
+Function xxxxxxxxxx()
 End Function
 
 '**************************************************************************************************
@@ -175,51 +137,6 @@ Function ハイライト()
 '
 '  Call Library.endScript(True)
 
-End Function
-
-
-
-
-
-'**************************************************************************************************
-' * すべて表示
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function すべて表示()
-  Dim rowOutlineLevel As Long, colOutlineLevel As Long
-  
-  On Error Resume Next
-  
-  Call Library.startScript
-  Call init.setting
-
-  If ActiveSheet.FilterMode = True Then
-    ActiveSheet.ShowAllData
-  End If
-  If ActiveWindow.DisplayOutline = True Then
-    For rowOutlineLevel = 1 To 15
-      DoEvents
-      ActiveSheet.Outline.ShowLevels rowLevels:=rowOutlineLevel
-      If Err.Number <> 0 Then
-        Err.Clear
-        Exit For
-      End If
-    Next
-    
-    For colOutlineLevel = 1 To 15
-      DoEvents
-      ActiveSheet.Outline.ShowLevels columnLevels:=colOutlineLevel
-      If Err.Number <> 0 Then
-        Err.Clear
-        Exit For
-      End If
-    Next
-  End If
-  ActiveSheet.Cells.EntireColumn.Hidden = False
-  ActiveSheet.Cells.EntireRow.Hidden = False
-  
-  Call Library.endScript(, True)
 End Function
 
 

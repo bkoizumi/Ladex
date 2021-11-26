@@ -21,13 +21,8 @@ Public PrgMeg   As String
 Public Function showStart()
   
   With Frm_Progress
-    .StartUpPosition = 0
-    .Top = Application.Top + 10
-    .Left = Application.Left + 120
-    .Caption = thisAppName
     
-    
-    '親進捗バー------------------------------------------------------------------------------------
+    '親進捗バー----------------------------------
     'プログレスバーの枠の部分
     With .PrgP_Area
       .BorderStyle = fmBorderStyleSingle
@@ -64,7 +59,7 @@ Public Function showStart()
       .Font.Bold = False
     End With
     
-    '子進捗バー------------------------------------------------------------------------------------
+    '子進捗バー----------------------------------
     'プログレスバーの枠の部分
     With .PrgC_Area
       .BorderStyle = fmBorderStyleSingle
@@ -120,8 +115,8 @@ Public Function showStart()
 End Function
 
 
-'プログレスバー表示更新
 '==================================================================================================
+'プログレスバー表示更新
 Public Function showCount( _
                             Prg_Title As String _
                           , PrgC_Cnt As Long, PrgC_Max As Long _
@@ -132,6 +127,7 @@ Public Function showCount( _
   Call showBar(Prg_Title, 2, 2, PrgC_Cnt, PrgC_Max, PrgMeg)
                 
 End Function
+
 '==================================================================================================
 Public Function showBar( _
                             Prg_Title As String _
@@ -189,27 +185,11 @@ Public Function showBar( _
     End If
   End With
   DoEvents
-  
-  
-  
 End Function
 
-
-'**************************************************************************************************
-' * プログレスバー表示終了
-' *
-'**************************************************************************************************
+'==================================================================================================
+'プログレスバー表示終了
 Public Function showEnd()
-  
-  'ダイアログを閉じる
   Unload Frm_Progress
-  
 End Function
-
-
-
-
-
-
-
 

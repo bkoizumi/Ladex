@@ -18,34 +18,43 @@ Function showVersion()
                       "個人・法人に限らず利用者は自由に使用および配布することができますが、著作権は作者にあります。" & vbNewLine & _
                       "当ソフトを使用した事によるいかなる損害も作者は一切の責任を負いません｡" & vbNewLine & _
                       "ソースを利用する場合にはMITライセンスです｡"
-    
     .Show
   End With
-
   Exit Function
 
-'エラー発生時=====================================================================================
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
 '==================================================================================================
 Function showHelp()
+  Const funcName As String = "Library.showHelp"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
-  Call init.setting(True)
   BK_ThisBook.Activate
   BK_sheetHelp.Activate
   Sheets("Help").Copy
   ActiveWindow.DisplayGridlines = False
   Set targetBook = ActiveWorkbook
   
-  
   With targetBook.VBProject
     .VBComponents.Import (LadexDir & "\RibbonSrc\Ctl_Help.bas")
   End With
   
-    'マクロ埋め込み-----------------------------------------------------------------------
+  'マクロ埋め込み-----------------------------------------------------------------------
   With targetBook.VBProject.VBComponents.Item("Help").CodeModule
     .InsertLines 1, "Private Sub Worksheet_SelectionChange(ByVal Target As Range)"
     .InsertLines 2, ""
@@ -62,7 +71,7 @@ Function showHelp()
     .InsertLines 13, ""
     .InsertLines 14, "End Sub"
   End With
-
+  
   With targetBook.VBProject.VBComponents.Item("ThisWorkbook").CodeModule
     .InsertLines 1, "Private Sub Workbook_Activate()"
     .InsertLines 2, ""
@@ -70,13 +79,24 @@ Function showHelp()
     .InsertLines 4, ""
     .InsertLines 5, "End Sub"
   End With
-
-
+  
   targetBook.Activate
   Set targetBook = Nothing
   
-End Function
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
 
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
 '==================================================================================================
 Function initialization()
@@ -84,15 +104,23 @@ Function initialization()
   Dim line As Long, endLine As Long
   Dim regName As String
 
-  Call init.setting(True)
+  Const funcName As String = "Library.initialization"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
   BK_ThisBook.Activate
   endLine = BK_sheetSetting.Cells(Rows.count, Library.getColumnNo(BK_setVal("Cells_RegistryKey"))).End(xlUp).Row
   
   Call Library.delRegistry("Main")
-  Call Library.delRegistry("UserForm")
-
-  
   For line = 3 To endLine
     RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
     RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
@@ -102,71 +130,145 @@ Function initialization()
      Call Library.setRegistry(RegistryKey, RegistrySubKey, RegistryVal)
     End If
   Next
-  
   Call Ctl_Hollyday.InitializeHollyday
 
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
 
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
 
 '==================================================================================================
 Function showOption()
+  Dim line As Long, endLine As Long
+  Const funcName As String = "Library.showOption"
 
-'  On Error GoTo catchError
-  Call init.setting(True)
-  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   With Frm_Option
     .MultiPage1.SelectedItem.Index = 0
-'    .MultiPage1.Page1.Visible = True
-'    .MultiPage1.Page2.Visible = True
-'    .MultiPage1.Page3.Visible = True
-    
     '.Show vbModeless
     .Show
   End With
 
+  Call Main.setShortcutKey
+
+
   Exit Function
 
-'エラー発生時=====================================================================================
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
 
 
 '==================================================================================================
 Function HighLight()
-  On Error GoTo catchError
+  Const funcName As String = "Library.HighLight"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
   With Frm_Option
     .MultiPage1.SelectedItem.Index = 1
     .MultiPage1.Page1.Visible = False
     .MultiPage1.Page3.Visible = False
-    
+    .MultiPage1.Page4.Visible = False
+    .MultiPage1.Page5.Visible = False
     .Show
   End With
 
-  Exit Function
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
 
-'エラー発生時=====================================================================================
+  Exit Function
+'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
 
 
 '==================================================================================================
 Function Comment()
-  On Error GoTo catchError
+  Const funcName As String = "Library.Comment"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  
   With Frm_Option
     .MultiPage1.SelectedItem.Index = 2
     .MultiPage1.Page1.Visible = False
     .MultiPage1.Page2.Visible = False
-    
+    .MultiPage1.Page4.Visible = False
+    .MultiPage1.Page5.Visible = False
     .Show
   End With
 
-  Exit Function
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
 
-'エラー発生時=====================================================================================
+  Exit Function
+'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(Err.Number, Err.Description, True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
