@@ -21,14 +21,14 @@ Function onLoad(ribbon As IRibbonUI)
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "function")
+  Call Library.showDebugForm("" & funcName, , "start")
   '----------------------------------------------
   
   Set BK_ribbonUI = ribbon
   
-  BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg")
-  BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg")
-  BKT_rbPressed = Library.getRegistry("Main", "CustomRibbon")
+  BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg", "Boolean")
+  BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg", "Boolean")
+  BKT_rbPressed = Library.getRegistry("Main", "CustomRibbon", "Boolean")
   
   Call Library.showDebugForm("BKh_rbPressed", CStr(BKh_rbPressed), "debug")
   Call Library.showDebugForm("BKz_rbPressed", CStr(BKz_rbPressed), "debug")
@@ -40,6 +40,7 @@ Function onLoad(ribbon As IRibbonUI)
   BK_ribbonUI.Invalidate
   
   Call Main.InitializeBook
+  
   
   Exit Function
 'エラー発生時------------------------------------
@@ -690,6 +691,11 @@ Function decode(strVal As String)
   decode = strVal
 End Function
 
+'**************************************************************************************************
+' * リボンメニュー[その他]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function setCenter(control As IRibbonControl)
   Call init.setting
@@ -697,11 +703,80 @@ Function setCenter(control As IRibbonControl)
     Selection.HorizontalAlignment = xlCenterAcrossSelection
   End If
 End Function
+
+'--------------------------------------------------------------------------------------------------
+Function setShrinkToFit(control As IRibbonControl)
+  Call init.setting
+  If TypeName(Selection) = "Range" Then
+    Selection.ShrinkToFit = True
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function unsetShrinkToFit(control As IRibbonControl)
+  Call init.setting
+  If TypeName(Selection) = "Range" Then
+    Selection.ShrinkToFit = False
+  End If
+End Function
+
 '**************************************************************************************************
-' * リボンメニュー
+' * リボンメニュー[RelaxTools]
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+Function RelaxTools_get(control As IRibbonControl)
+  CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
+End Function
+
+
+'==================================================================================================
+Function actRelaxSheetManager(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
+End Function
+
+'==================================================================================================
+Function RelaxTools01(control As IRibbonControl)
+  Call init.setting
+End Function
+
+'==================================================================================================
+'サイズ合わせ
+Function RelaxShapes01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
+End Function
+
+'==================================================================================================
+'上位置合わせ
+Function RelaxShapes02(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
+End Function
+
+'==================================================================================================
+'左位置合わせ
+Function RelaxShapes03(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
+End Function
+
+
+'==================================================================================================
+'逆Ｌ罫線
+Function RelaxApps01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
+End Function
+
+'**************************************************************************************************
+' * リボンメニュー[カスタマイズ]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'--------------------------------------------------------------------------------------------------
 Function Ctl_Function(control As IRibbonControl)
   Const funcName As String = "Ctl_Ribbon.Ctl_Function"
   
@@ -715,8 +790,6 @@ Function Ctl_Function(control As IRibbonControl)
   Call Library.showDebugForm("control.ID", control.ID, "debug")
   
   Select Case control.ID
-    Case "Option"
-      Ctl_Option.showOption
       
     Case "Favorite_detail"
       Call Ctl_Favorite.detail
@@ -725,10 +798,21 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Sheet.R1C1表記
     
     'Option--------------------------------------
+    Case "Option"
+      Ctl_Option.showOption
+    
+    Case "OptionHighLight"
+      Ctl_Option.HighLight
+    
+    Case "OptionComment"
+      Ctl_Option.Comment
+    
     Case "Version"
       Call Ctl_Option.showVersion
+    
     Case "Help"
       Call Ctl_Option.showHelp
+    
     Case "OptionSheetImport"
       Call Ctl_RbnMaint.OptionSheetImport
     Case "OptionSheetExport"
@@ -926,57 +1010,4 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
-
-'**************************************************************************************************
-' * リボンメニュー[RelaxTools]
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-'==================================================================================================
-Function RelaxTools_get(control As IRibbonControl)
-  CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
-End Function
-
-
-'==================================================================================================
-Function actRelaxSheetManager(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
-End Function
-
-'==================================================================================================
-Function RelaxTools01(control As IRibbonControl)
-  Call init.setting
-End Function
-
-'==================================================================================================
-'サイズ合わせ
-Function RelaxShapes01(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
-End Function
-
-'==================================================================================================
-'上位置合わせ
-Function RelaxShapes02(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
-End Function
-
-'==================================================================================================
-'左位置合わせ
-Function RelaxShapes03(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
-End Function
-
-
-'==================================================================================================
-'逆Ｌ罫線
-Function RelaxApps01(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
-End Function
-
 

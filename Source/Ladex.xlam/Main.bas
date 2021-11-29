@@ -18,33 +18,26 @@ Function InitializeBook()
   Const funcName As String = "Main.InitializeBook"
 
   '処理開始--------------------------------------
+  On Error GoTo catchError
   runFlg = True
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
-    PrgP_Max = 4
-  Else
-    On Error GoTo catchError
-    Call Library.startScript
-    Call Library.showDebugForm("" & funcName, , "function")
-  End If
+  Call init.setting
+  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.startScript
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   BK_ThisBook.Activate
   endLine = BK_sheetSetting.Cells(Rows.count, 7).End(xlUp).Row
   
-  For line = 3 To endLine
-    RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
-    RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
-    val = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
-    
-    If RegistryKey <> "" Then
-     Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
-    End If
-  Next
+'  For line = 3 To endLine
+'    RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
+'    RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
+'    val = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
+'
+'    If RegistryKey <> "" Then
+'     Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
+'    End If
+'  Next
   
   '独自関数設定----------------------------------
   Call Ctl_Hollyday.InitializeHollyday
@@ -55,13 +48,9 @@ Function InitializeBook()
 
 
   '処理終了--------------------------------------
-  If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
-    Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
-    Call init.unsetting
-  End If
+  Call Library.endScript
+  Call Library.showDebugForm("  ", , "end")
+  'Call init.unsetting
   '----------------------------------------------
 
   Exit Function
@@ -84,13 +73,13 @@ Function setShortcutKey()
   Const funcName As String = "Main.setShortcutKey"
   
   '処理開始--------------------------------------
-  'runFlg = True
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm("  " & funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "start")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -105,7 +94,7 @@ Function setShortcutKey()
         ElseIf keyVal = "Alt" Then
           ShortcutKey = ShortcutKey & "%"
         ElseIf keyVal = "Shift" Then
-          ShortcutKey = ShortcutKey & "^"
+          ShortcutKey = ShortcutKey & "+"
         Else
           ShortcutKey = ShortcutKey & keyVal
         End If
@@ -134,9 +123,6 @@ Function setShortcutKey()
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
-  Call Library.showNotice(400, "xxxx.xxxxxxxxxx[" & Err.Number & "]" & Err.Description, True)
-  Call Library.showDebugForm("[" & Err.Number & "]" & Err.Description, , "Error")
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function

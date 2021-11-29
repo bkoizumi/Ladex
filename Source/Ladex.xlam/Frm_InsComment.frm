@@ -20,9 +20,6 @@ Dim old_BKh_rbPressed  As Boolean
 Public InitializeFlg   As Boolean
 
 
-
-
-
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -76,7 +73,7 @@ Private Sub UserForm_Initialize()
       End If
       indexCnt = indexCnt + 1
     Next
-    .CommentFont.ListIndex = ListIndex
+    .CommentFontSize.ListIndex = ListIndex
 
   End With
   
@@ -153,16 +150,18 @@ End Sub
 ' 実行
 Private Sub OK_Button_Click()
   Dim execDay As Date
+  Dim slctCells As Range
   
+  Set slctCells = Range(Replace(Label1.Caption, "選択セル：", ""))
   On Error GoTo catchError
   If TextBox.Value <> "" Then
-    If TypeName(ActiveCell.Comment) = "Comment" Then
-      ActiveCell.ClearComments
+    If TypeName(slctCells.Comment) = "Comment" Then
+      slctCells.ClearComments
     End If
-    ActiveCell.AddComment TextBox.Value
+    slctCells.AddComment TextBox.Value
     Call Library.setComment(CommentColor.BackColor, CommentFont.Value, CommentFontColor.BackColor, CommentFontSize.Value)
   End If
-  
+  Set slctCells = Nothing
   Unload Me
   Exit Sub
 'エラー発生時------------------------------------

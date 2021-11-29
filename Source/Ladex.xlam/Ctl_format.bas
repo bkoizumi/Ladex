@@ -74,12 +74,17 @@ End Function
 
 '==================================================================================================
 Function 移動やサイズ変更をしない()
+  Const funcName As String = "Ctl_Format.移動やサイズ変更をしない"
   
   On Error GoTo catchError
+  Call init.setting
   
   Select Case TypeName(Selection)
     Case "TextBox", "Rectangle", "Picture"
       Selection.Placement = xlFreeFloating
+    Case "ChartArea"
+    
+    
   End Select
   
   Exit Function

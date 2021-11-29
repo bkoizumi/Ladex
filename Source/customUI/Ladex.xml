@@ -105,7 +105,7 @@
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
         <menuSeparator id="Adjust_SP1" title="サイズ調整" />
-        <button id="セル調整_幅"    label="幅"        imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="30ポイント以上には広げません&#13; 選択範囲が数値であればその値に設定します " />
+        <button id="セル調整_幅"    label="幅"        imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="30ポイント以上には広げません&#13; 1行目が数値であればその値に設定します " />
         <button id="セル調整_高さ"  label="高さ"      imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さ調整 &#13;" />
         <button id="セル調整_両方"  label="両方"      imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル幅、高さ両方を調整 &#13;" />
 
@@ -314,8 +314,8 @@
         <menu id="M_Shrink" label="セルの配置"  imageMso="WrapText" >
           <control idMso="WrapText" showLabel="true" visible="true" />
           <menu id="M_ShrinkToFit" label="縮小して全体を表示"  imageMso="DistributeAllLinesParagraph" >
-            <button id="ShrinkToFit"    imageMso="DistributeAllLinesParagraph"  label="設定" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToFit" />
-            <button id="ShrinkToUnfit"  image="unDistributeAllLinesParagraph"   label="解除" onAction="Ladex.xlam!Ctl_Ribbon.ShrinkToUnfit" />
+            <button id="ShrinkToFit"    imageMso="DistributeAllLinesParagraph"  label="設定" onAction="Ladex.xlam!Ctl_Ribbon.setShrinkToFit" />
+            <button id="ShrinkToUnfit"  image="unDistributeAllLinesParagraph"   label="解除" onAction="Ladex.xlam!Ctl_Ribbon.unsetShrinkToFit" />
           </menu>
         </menu>
 

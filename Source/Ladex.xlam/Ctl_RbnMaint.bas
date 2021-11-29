@@ -68,7 +68,7 @@ Function OptionSheetImport()
 
   targetBook.Sheets("設定").Columns("A:AA").Copy ThisWorkbook.Worksheets("設定").Range("A1")
 '  targetBook.Sheets("Ribbon").Columns("A:G").Copy ThisWorkbook.Worksheets("Ribbon").Range("A1")
-  targetBook.Sheets("Notice").Columns("A:B").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
+  targetBook.Sheets("Notice").Columns("A:C").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
   targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
   targetBook.Sheets("testData").Columns("A:P").Copy ThisWorkbook.Worksheets("testData").Range("A1")
   targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
@@ -77,7 +77,15 @@ Function OptionSheetImport()
   
   Application.DisplayAlerts = False
   
-  'ヘルプシート編集--------------------------------------------------------------------------------
+  'ハイライト、コメントプレビュー用--------------
+  ThisWorkbook.Sheets("HighLight").delete
+  ThisWorkbook.Worksheets.add.Name = "HighLight"
+  ThisWorkbook.Sheets("HighLight").Cells.ColumnWidth = 3.86
+  ThisWorkbook.Sheets("HighLight").Cells.RowHeight = 15
+  targetBook.Sheets("HighLight").Columns("A:AA").Copy ThisWorkbook.Worksheets("HighLight").Range("A1")
+  
+  
+  'ヘルプシート編集------------------------------
   'ThisWorkbook.Sheets("Help").delete
   'ThisWorkbook.Worksheets.add.Name = "Help"
   ThisWorkbook.Sheets("Help").Cells.ColumnWidth = 3
@@ -97,12 +105,13 @@ Function OptionSheetImport()
 '    End If
 '  Next
   
-  'スタンプシート編集------------------------------------------------------------------------------
+  'スタンプシート編集----------------------------
   ThisWorkbook.Sheets("Stamp").delete
   ThisWorkbook.Worksheets.add.Name = "Stamp"
   targetBook.Sheets("Stamp").Columns("A:AP").Copy ThisWorkbook.Worksheets("Stamp").Range("A1")
-  Application.DisplayAlerts = True
   
+  
+  Application.DisplayAlerts = True
   ThisWorkbook.Save
   
   'Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("C39"))

@@ -187,9 +187,6 @@ Function 標準画面()
   sheetMaxCount = ActiveWorkbook.Sheets.count
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
-    
-    Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 0, 4, sheetName)
-    
     If Worksheets(sheetName).Visible = True Then
       Worksheets(sheetName).Select
       
@@ -223,7 +220,7 @@ Function 標準画面()
       End If
       Application.GoTo Reference:=Range("A1"), Scroll:=True
     End If
-    
+    Call Ctl_ProgressBar.showBar("標準画面設定", sheetCount, sheetMaxCount, 0, 4, sheetName)
     sheetCount = sheetCount + 1
   Next
   

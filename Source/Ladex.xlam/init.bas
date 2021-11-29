@@ -72,6 +72,8 @@ Public arryHollyday()       As Date
 Public defaultZoomInVal     As String
 
 
+
+
 '**************************************************************************************************
 ' * 設定解除
 ' *
@@ -119,7 +121,7 @@ Function setting(Optional reCheckFlg As Boolean)
   Const funcName As String = "init.setting"
   
   '処理開始--------------------------------------
-  'On Error GoTo catchError
+  On Error GoTo catchError
 '  ThisWorkbook.Save
 '  If Workbooks.count = 0 Then
 '    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
@@ -157,7 +159,12 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_setVal = Nothing
   Set BK_setVal = CreateObject("Scripting.Dictionary")
   
-  For line = 3 To BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
+  If endLine = 0 Then
+    endLine = 11
+  End If
+  
+  For line = 3 To endLine
     If BK_sheetSetting.Range("A" & line) <> "" Then
       BK_setVal.add BK_sheetSetting.Range("A" & line).Text, BK_sheetSetting.Range("B" & line).Text
     End If

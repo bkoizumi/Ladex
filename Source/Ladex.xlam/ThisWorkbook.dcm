@@ -20,6 +20,5 @@ Private Sub Workbook_Open()
   
   'イベント発生再開
 '  clsEvent.StopEvent = False
-
-  'Call Main.InitializeBook
+  
 End Sub

@@ -320,9 +320,9 @@ Function “ú•t_ŽžŠÔ(Optional maxCount As Long)
   
   If maxCount <= 1 Then
     Call showFrm_sampleData("y“ú•tzŽžŠÔ")
+    maxCount = BK_setVal("maxCount")
   End If
   
-  maxCount = BK_setVal("maxCount")
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
     Randomize

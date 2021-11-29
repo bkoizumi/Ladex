@@ -2378,15 +2378,12 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   Call Library.showDebugForm("  " & funcName, , "function")
   '----------------------------------------------
   
-  Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
-  Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
-  Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
-  Call Library.showDebugForm("setVal        ", CStr(setVal), "debug")
+  Call Library.showDebugForm("Key", thisAppName & "|" & RegistrySubKey & "|" & RegistryKey & "|" & CStr(setVal), "debug")
   
   If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
     Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
   Else
-    Call Library.showDebugForm("setRegistry ", "同一のため未実行", "debug")
+    Call Library.showDebugForm("setRegistry   ", "同一のため未実行", "debug")
   End If
   
   Exit Function
@@ -2396,20 +2393,32 @@ catchError:
   Call Library.errorHandle
 End Function
 '==================================================================================================
-Function getRegistry(RegistrySubKey As String, RegistryKey As String)
+Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional typeVal As String = "String")
   Dim regVal As String
   Const funcName As String = "Library.getRegistry"
 
   On Error GoTo catchError
-  'Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm("  " & funcName, , "function")
+  
   If RegistryKey <> "" Then
     regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
   End If
-  If regVal = "" Then
-    getRegistry = 0
-  Else
-    getRegistry = regVal
-  End If
+  
+  Call Library.showDebugForm("Key", thisAppName & "|" & RegistrySubKey & "|" & RegistryKey & "|" & CStr(regVal) & "|" & typeVal, "debug")
+  
+  Select Case typeVal
+    Case "Boolean", "Long"
+      If regVal = "" Then
+        getRegistry = 0
+      Else
+        getRegistry = regVal
+      End If
+      
+    Case "String"
+      getRegistry = regVal
+    Case Else
+  End Select
+
   Exit Function
 
 'エラー発生時------------------------------------
@@ -2586,7 +2595,7 @@ Function setComment(Optional BgColorVal = 14811135, Optional FontVal = "MS UI Go
         'サイズ設定
         .TextFrame.AutoSize = True
         .TextFrame.Characters.Font.Size = FontSizeVal
-        '.TextFrame.Characters.Font.Color = FontColorVal
+        .TextFrame.Characters.Font.Color = FontColorVal
 
         '形状を角丸四角形に変更
         .AutoShapeType = msoShapeRectangle

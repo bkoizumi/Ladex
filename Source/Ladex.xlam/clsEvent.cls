@@ -26,6 +26,7 @@ Private pCntBS As Integer
 'イベント停止（一時的に停止させる）
 Private pStopEvent As Boolean
 
+
 '==================================================================================================
 ' 公開プロパティ
 '==================================================================================================
@@ -229,8 +230,9 @@ Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(sh) Then Exit Sub
   
+'  Call init.setting
   'ハイライト機能----------------------------------------------------------------------------------
-  If Library.getRegistry("Main", "HighLightFlg") = True Then
+  If BKh_rbPressed = True Then
     runFlg = True
     Call Ctl_HighLight.showStart(Target)
   End If
@@ -249,16 +251,13 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal sh As Object, ByVal Target As Ran
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(sh) Then Exit Sub
 
+'  Call init.setting
   'ズーム機能--------------------------------------------------------------------------------------
-  If Library.getRegistry("Main", "ZoomFlg") = True Then
+  If BKz_rbPressed = True Then
     Cancel = True
     runFlg = True
     Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
   End If
-
-
-
-
 End Sub
 
 '==================================================================================================

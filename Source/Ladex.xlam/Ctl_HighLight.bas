@@ -2,35 +2,23 @@ Attribute VB_Name = "Ctl_HighLight"
 Option Explicit
 
 #If VBA7 And Win64 Then
-  Public Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+    Public Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 #Else
-  Public Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+    Public Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 
 #End If
 
 Public Type POINTAPI
-  X As Long
-  Y As Long
+    X As Long
+    Y As Long
 End Type
 
 
 '==================================================================================================
 Sub getCursorPosition()
+
   Dim p    As POINTAPI 'API用変数
   Dim Rng  As Range
-  Const funcName As String = "Ctl_HighLight.getCursorPosition"
-
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
-  End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
-  '----------------------------------------------
   
   If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
     ActiveSheet.Shapes("HighLight_X").Visible = False
@@ -39,6 +27,7 @@ Sub getCursorPosition()
     ActiveSheet.Shapes("HighLight_Y").Visible = False
   End If
   Call Library.waitTime(50)
+  Call Library.startScript
   
   'カーソル位置取得
   GetCursorPos p
@@ -52,22 +41,11 @@ Sub getCursorPosition()
   If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[Y,B]" Then
     ActiveSheet.Shapes("HighLight_Y").Visible = True
   End If
+  
+  Call Library.endScript
 
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
-    Call init.unsetting
-  End If
-  '----------------------------------------------
 
-  Exit Sub
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
 End Sub
-
 
 '==================================================================================================
 Function showStart(ByVal Target As Range, _
@@ -79,15 +57,8 @@ Function showStart(ByVal Target As Range, _
                   
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
-  Const funcName As String = "Ctl_HighLight.showStart"
-
-  '処理開始--------------------------------------
-  Call init.setting
-  Call Library.showDebugForm("" & funcName, , "start")
-  Call Library.startScript
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
-  '----------------------------------------------
   
+  Call Library.startScript
   If Library.chkShapeName("HighLight_X") = True Then
     ActiveSheet.Shapes("HighLight_X").delete
   End If
@@ -98,6 +69,7 @@ Function showStart(ByVal Target As Range, _
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
+        
     If HighLightColor = "" Then
       HighLightColor = Library.getRegistry("Main", "HighLightColor")
     End If
@@ -114,6 +86,7 @@ Function showStart(ByVal Target As Range, _
       HighlightTransparentRate = CLng(Library.getRegistry("Main", "HighLightTransparentRate"))
     End If
     
+    
     If HighLightDspDirection Like "[X,B]" Then
       Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
     End If
@@ -126,20 +99,9 @@ Function showStart(ByVal Target As Range, _
   Target.Activate
   Set Rng = Nothing
 
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
-    Call init.unsetting
-  End If
-  '----------------------------------------------
-
-  Exit Function
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
+  Call Library.endScript
 End Function
+
 
 '==================================================================================================
 Function showStart_X(ByVal Target As Range, _
@@ -152,19 +114,6 @@ Function showStart_X(ByVal Target As Range, _
   Dim ActvCellTop As Long, ActvCellLeft As Long
   Dim MaxWidth As Long
   Dim HighLight_X
-  Const funcName As String = "Ctl_HighLight.showStart_X"
-
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm("  " & funcName, , "function")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
-  End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
-  '----------------------------------------------
   
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
@@ -217,24 +166,15 @@ Function showStart_X(ByVal Target As Range, _
       Selection.ShapeRange.line.Weight = 3
       Selection.ShapeRange.Height = 1
 '      Selection.ShapeRange.Top = Rng.Top
+    
     End If
+    
+  
   End If
   Set Rng = Nothing
-  
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
-    Call init.unsetting
-  End If
-  '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
 End Function
+
 
 '==================================================================================================
 Function showStart_Y(ByVal Target As Range, _
@@ -247,29 +187,21 @@ Function showStart_Y(ByVal Target As Range, _
   Dim ActvCellTop As Long, ActvCellLeft As Long
   Dim MaxHeight As Long
   Dim HighLight_Y
-  Const funcName As String = "Ctl_HighLight.showStart_Y"
-
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm("  " & funcName, , "function")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
-  End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
-  '----------------------------------------------
   
   If BKh_rbPressed = True Then
     MaxHeight = 169056
+    
+    
     Set Rng = Cells(1, Target.Column)
+    
     Set HighLight_Y = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
       Left:=Rng.Left, Top:=Rng.Top, Width:=Rng.Width, Height:=MaxHeight)
+      
     HighLight_Y.Name = "HighLight_Y"
     HighLight_Y.OnAction = "getCursorPosition"
     
-    '表示方法------------------------------------
+    
+    '表示方法--------------------------------------------------------------------------------------
     '帯(塗りつぶし)
     If HighLightDspMethod = "0" Then
       HighLight_Y.Fill.ForeColor.RGB = HighLightColor
@@ -301,26 +233,16 @@ Function showStart_Y(ByVal Target As Range, _
       Selection.ShapeRange.Height = MaxHeight
       Selection.ShapeRange.Width = 0
 '      Selection.ShapeRange.Top = Rng.Top
+    
     End If
   
   End If
   Set Rng = Nothing
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
-    Call init.unsetting
-  End If
-  '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
 End Function
 
-'==================================================================================================
+
+
 Sub Sample()
     Dim rngStart As Range, rngEnd As Range
     Dim BX As Single, BY As Single, ex As Single, EY As Single
@@ -343,3 +265,4 @@ Sub Sample()
 
     rngEnd.Select
 End Sub
+
