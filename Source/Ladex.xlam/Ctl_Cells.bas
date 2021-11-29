@@ -288,6 +288,7 @@ End Function
 '==================================================================================================
 Function コメント挿入()
   Dim commentVal As String
+  Dim slctCells As Range
   Const funcName As String = "Ctl_Cells.コメント挿入"
 
   '処理開始--------------------------------------
@@ -295,15 +296,18 @@ Function コメント挿入()
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
-  commentVal = ""
-  If TypeName(ActiveCell.Comment) = "Comment" Then
-    commentVal = ActiveCell.Comment.Text
-  End If
-  With Frm_InsComment
-    .TextBox = commentVal
-    .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
-    .Show
-  End With
+  For Each slctCells In Selection
+    commentVal = ""
+    If TypeName(slctCells.Comment) = "Comment" Then
+      commentVal = slctCells.Comment.Text
+    End If
+    With Frm_InsComment
+      .TextBox = commentVal
+      .Label1.Caption = "選択セル：" & slctCells.Address(RowAbsolute:=False, ColumnAbsolute:=False)
+      .Show
+    End With
+    DoEvents
+  Next
   
   '処理終了--------------------------------------
   Call Library.showDebugForm("  ", , "end")
@@ -317,17 +321,24 @@ End Function
 
 '==================================================================================================
 Function コメント削除()
+  Dim slctCells As Range
   Const funcName As String = "Ctl_Cells.コメント削除"
-
+  
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   
-  If TypeName(ActiveCell.Comment) = "Comment" Then
-    ActiveCell.ClearComments
+  If ActiveSheet.ProtectContents = True Then
+    Call Library.showNotice(413, , True)
   End If
+  For Each slctCells In Selection
+    If TypeName(slctCells.Comment) = "Comment" Then
+      slctCells.ClearComments
+    End If
+    DoEvents
+  Next
   
   '処理終了--------------------------------------
   Call Library.showDebugForm("  ", , "end")

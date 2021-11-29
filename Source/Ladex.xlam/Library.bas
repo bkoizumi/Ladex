@@ -2386,7 +2386,7 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
     Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
   Else
-    Call Library.showDebugForm("setRegistry ", "同一のため未実行", "debug")
+    Call Library.showDebugForm("setRegistry   ", "同一のため未実行", "debug")
   End If
   
   Exit Function
@@ -2401,10 +2401,15 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String)
   Const funcName As String = "Library.getRegistry"
 
   On Error GoTo catchError
-  'Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm("  " & funcName, , "function")
   If RegistryKey <> "" Then
     regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
   End If
+  Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
+  Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
+  Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
+  Call Library.showDebugForm("regVal        ", CStr(regVal), "debug")
+  
   If regVal = "" Then
     getRegistry = 0
   Else
@@ -2586,7 +2591,7 @@ Function setComment(Optional BgColorVal = 14811135, Optional FontVal = "MS UI Go
         'サイズ設定
         .TextFrame.AutoSize = True
         .TextFrame.Characters.Font.Size = FontSizeVal
-        '.TextFrame.Characters.Font.Color = FontColorVal
+        .TextFrame.Characters.Font.Color = FontColorVal
 
         '形状を角丸四角形に変更
         .AutoShapeType = msoShapeRectangle

@@ -20,11 +20,6 @@ Dim old_BKh_rbPressed  As Boolean
 Public InitializeFlg   As Boolean
 
 
-
-
-
-
-
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -41,14 +36,9 @@ Private Sub UserForm_Initialize()
   Const funcName As String = "Frm_Option.UserForm_Initialize"
 
   '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
-  End If
+'  On Error GoTo catchError
+  Call init.setting
+  Call Library.showDebugForm("" & funcName, , "function")
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
@@ -177,7 +167,7 @@ Private Sub UserForm_Initialize()
       End If
       indexCnt = indexCnt + 1
     Next
-    .CommentFont.ListIndex = ListIndex
+    .CommentFontSize.ListIndex = ListIndex
 
     'コメント プレビュー
     imageName = thisAppName & "CommentImg" & ".jpg"
@@ -245,11 +235,7 @@ Private Sub UserForm_Initialize()
         End If
       Next
     End With
-    
-    
-    
-    
-    
+    .MultiPage1.Value = 0
   End With
   
   InitializeFlg = False
@@ -338,6 +324,8 @@ Function doHighLightPreview()
   If BKh_rbPressed = False Then
     BKh_rbPressed = True
   End If
+'  Range("A1:D4").Clear
+'  Call Library.罫線_実線_格子(Range("A1:C3"))
   
   Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
   
@@ -368,7 +356,7 @@ Function doCommentPreview()
 '  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
   
   BK_sheetHighLight.Activate
-  BK_sheetHighLight.Range("N5").Activate
+  BK_sheetHighLight.Range("N7").Activate
   
   CommentBgColor = Me.CommentColor.BackColor
   CommentFontColor = Me.CommentFontColor.BackColor
@@ -379,7 +367,7 @@ Function doCommentPreview()
   
   imageName = thisAppName & "CommentImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N4:S8"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N6:R9"), imageName)
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"

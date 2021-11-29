@@ -715,8 +715,6 @@ Function Ctl_Function(control As IRibbonControl)
   Call Library.showDebugForm("control.ID", control.ID, "debug")
   
   Select Case control.ID
-    Case "Option"
-      Ctl_Option.showOption
       
     Case "Favorite_detail"
       Call Ctl_Favorite.detail
@@ -725,10 +723,21 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Sheet.R1C1•\‹L
     
     'Option--------------------------------------
+    Case "Option"
+      Ctl_Option.showOption
+    
+    Case "OptionHighLight"
+      Ctl_Option.HighLight
+    
+    Case "OptionComment"
+      Ctl_Option.Comment
+    
     Case "Version"
       Call Ctl_Option.showVersion
+    
     Case "Help"
       Call Ctl_Option.showHelp
+    
     Case "OptionSheetImport"
       Call Ctl_RbnMaint.OptionSheetImport
     Case "OptionSheetExport"
