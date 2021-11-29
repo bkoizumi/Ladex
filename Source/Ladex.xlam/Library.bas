@@ -1284,14 +1284,13 @@ End Function
 '**************************************************************************************************
 Function getLength(targetVal As String, Optional charType As String = "半角")
   Dim inputLen As Long
-  Const funcName As String = "Library.chkMaxlength"
+  Const funcName As String = "Library.getLength"
   
-  Call Library.showDebugForm(funcName, , "start")
-  Call Library.showDebugForm("targetVal", targetVal, "debug")
-  Call Library.showDebugForm("charType ", charType, "debug")
-  
-  Call Library.showDebugForm("文字数   [Len]", Len(targetVal), "debug")
-  Call Library.showDebugForm("バイト数[LenB]", LenB(StrConv(targetVal, vbFromUnicode)), "debug")
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.showDebugForm("targetVal", targetVal, "debug")
+'  Call Library.showDebugForm("charType ", charType, "debug")
+'  Call Library.showDebugForm("文字数   [Len]", Len(targetVal), "debug")
+'  Call Library.showDebugForm("バイト数[LenB]", LenB(StrConv(targetVal, vbFromUnicode)), "debug")
   
   Select Case charType
     Case "半角", "全角"
@@ -1300,7 +1299,7 @@ Function getLength(targetVal As String, Optional charType As String = "半角")
       inputLen = Len(targetVal)
   End Select
   
-  Call Library.showDebugForm("inputLen", inputLen, "debug")
+'  Call Library.showDebugForm("inputLen", inputLen, "debug")
   getLength = inputLen
   
   Exit Function
@@ -2379,13 +2378,15 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   Call Library.showDebugForm("  " & funcName, , "function")
   '----------------------------------------------
   
+  Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
+  Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
+  Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
+  Call Library.showDebugForm("setVal        ", CStr(setVal), "debug")
+  
   If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
-    Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
-    Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
-    Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
-    Call Library.showDebugForm("setVal        ", CStr(setVal), "debug")
-    
     Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
+  Else
+    Call Library.showDebugForm("setRegistry ", "同一のため未実行", "debug")
   End If
   
   Exit Function

@@ -5,8 +5,78 @@ Option Explicit
 'ワークシート用変数------------------------------
 'グローバル変数----------------------------------
 
+
+'**************************************************************************************************
+' * 初期設定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function InitializeBook()
+  Dim RegistryKey As String, RegistrySubKey As String, val As String
+  Dim line As Long, endLine As Long
+  Dim regName As String
+  Const funcName As String = "Main.InitializeBook"
+
+  '処理開始--------------------------------------
+  runFlg = True
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    On Error GoTo catchError
+    Call Library.startScript
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  BK_ThisBook.Activate
+  endLine = BK_sheetSetting.Cells(Rows.count, 7).End(xlUp).Row
+  
+  For line = 3 To endLine
+    RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
+    RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
+    val = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
+    
+    If RegistryKey <> "" Then
+     Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
+    End If
+  Next
+  
+  '独自関数設定----------------------------------
+  Call Ctl_Hollyday.InitializeHollyday
+  Call Ctl_UsrFunction.InitializeUsrFunction
+  
+  'ショートカットキー設定------------------------
+  Call Main.setShortcutKey
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm("  ", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'**************************************************************************************************
+' * ショートカットキーの設定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '==================================================================================================
-'ショートカットキーの設定
 Function setShortcutKey()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim keyVal As Variant

@@ -212,6 +212,7 @@ End Function
 Function ‰p”š‘S”¼Šp•ÏŠ·()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
+  Dim slctCellsCnt As Long
   Const funcName As String = "Ctl_Cells.‰p”š‘S”¼Šp•ÏŠ·"
 
   'ˆ—ŠJn--------------------------------------
@@ -225,12 +226,18 @@ Function ‰p”š‘S”¼Šp•ÏŠ·()
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  slctCellsCnt = 0
   
   For Each slctCells In Selection
-    slctCells.Value = Library.convHan2Zen(slctCells.Value)
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.count, "‰p”š‘S”¼Šp•ÏŠ·")
+    If slctCells.Value <> "" Then
+      slctCells.Value = Library.convHan2Zen(slctCells.Value)
+    End If
+    slctCellsCnt = slctCellsCnt + 1
     DoEvents
   Next
 
+  Call Ctl_ProgressBar.showEnd
   'ˆ—I—¹--------------------------------------
   If runFlg = False Then
     Call Library.endScript

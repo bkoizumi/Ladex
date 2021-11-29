@@ -39,6 +39,8 @@ Function onLoad(ribbon As IRibbonUI)
   'BK_ribbonUI.ActivateTab ("Ladex")
   BK_ribbonUI.Invalidate
   
+  Call Main.InitializeBook
+  
   Exit Function
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
 catchError:

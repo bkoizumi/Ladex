@@ -23,11 +23,14 @@ Public BK_sheetFunction     As Worksheet
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
 Public Const thisAppVersion As String = "V1.0.0"
+Public Const RelaxTools     As String = "Relaxtools.xlam"
+
 Public funcName             As String
 Public resetVal             As String
 Public runFlg               As Boolean
+Public PrgP_Cnt             As Long
+Public PrgP_Max             As Long
 
-Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 
 'レジストリ登録用キー----------------------------
@@ -78,9 +81,6 @@ Function unsetting(Optional Flg As Boolean = True)
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Const funcName As String = "init.unsetting"
 
-  If Not (BK_setVal Is Nothing) Then
-    Call Library.showDebugForm("" & funcName, , "function")
-  End If
   Set BK_ThisBook = Nothing
   
   'ワークシート名の設定
@@ -119,19 +119,14 @@ Function setting(Optional reCheckFlg As Boolean)
   Const funcName As String = "init.setting"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
-  If Not (BK_setVal Is Nothing) Then
-    Call Library.showDebugForm("  " & funcName, , "function")
-    Call Library.showDebugForm("reCheckFlg", reCheckFlg, "debug")
-    Call Library.showDebugForm("runFlg", runFlg, "debug")
-  End If
-  '----------------------------------------------
+  'On Error GoTo catchError
 '  ThisWorkbook.Save
 '  If Workbooks.count = 0 Then
 '    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
 '    Call Library.endScript
 '    End
 '  End If
+  '----------------------------------------------
 
   If LadexDir = "" Or BK_setVal Is Nothing Or reCheckFlg = True Then
     Call init.unsetting(False)
@@ -170,17 +165,17 @@ Function setting(Optional reCheckFlg As Boolean)
     
   Dim wsh As Object
   Set wsh = CreateObject("WScript.Shell")
-
   LadexDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex"
   logFile = LadexDir & "\log\ExcelMacro.log"
+  Set wsh = Nothing
   
   Exit Function
   
 'エラー発生時------------------------------------
 catchError:
-  
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  " & Err.Description
 End Function
-
 
 '**************************************************************************************************
 ' * 名前定義
@@ -190,8 +185,9 @@ End Function
 Function 名前定義()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim Name As Object
+  Const funcName As String = "init.名前定義"
   
-'  On Error GoTo catchError
+  On Error GoTo catchError
 
   '名前の定義を削除
   For Each Name In Names
@@ -218,7 +214,7 @@ Function 名前定義()
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-    Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  " & Err.Description
 End Function
 

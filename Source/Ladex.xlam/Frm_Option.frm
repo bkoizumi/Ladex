@@ -652,6 +652,9 @@ Private Sub funcList_Click()
   Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
   
   If funcList.SelectedItem.SubItems(1) <> "" Then
+    onCtrl.Value = False
+    onAlt.Value = False
+    onShift.Value = False
     For Each keyVal In Split(funcList.SelectedItem.SubItems(1), "+")
       If keyVal = "Ctrl" Then
         onCtrl.Value = True

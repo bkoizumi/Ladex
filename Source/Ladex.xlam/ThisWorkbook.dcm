@@ -13,6 +13,7 @@ Private ctlEvent As New clsEvent
 '==================================================================================================
 Private Sub Workbook_Open()
 
+  ThisWorkbook.Activate
   Set ctlEvent = New clsEvent
   Set ctlEvent.ExcelApplication = Application
   ctlEvent.InitializeBookSheets
@@ -20,47 +21,5 @@ Private Sub Workbook_Open()
   'イベント発生再開
 '  clsEvent.StopEvent = False
 
-  Call InitializeBook
-  Call Ctl_UsrFunction.InitializeUsrFunction
-  
-  'ショートカットキーの設定----------------------
-  runFlg = True
-  Call init.setting
-  Call Library.startScript
-  Call Main.setShortcutKey
-  Call Library.endScript
+  'Call Main.InitializeBook
 End Sub
-
-
-
-'**************************************************************************************************
-' * 初期設定
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function InitializeBook()
-  Dim RegistryKey As String, RegistrySubKey As String, val As String
-  Dim line As Long, endLine As Long
-  Dim regName As String
-
-  Call init.setting(True)
-  
-  BK_ThisBook.Activate
-  endLine = BK_sheetSetting.Cells(Rows.count, 7).End(xlUp).Row
-  
-  If Library.getRegistry("Main", "debugMode") <> "" Then
-    Exit Function
-  End If
-  
-  For line = 3 To endLine
-    RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
-    RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
-    val = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
-    
-    If RegistryKey <> "" Then
-     Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
-    End If
-  Next
-  
-  Call Ctl_Hollyday.InitializeHollyday
-End Function
