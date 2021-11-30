@@ -2399,7 +2399,6 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional t
 
   On Error GoTo catchError
   Call Library.showDebugForm("  " & funcName, , "function")
-<<<<<<< HEAD
   
   If RegistryKey <> "" Then
     regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
@@ -2420,21 +2419,6 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional t
     Case Else
   End Select
 
-=======
-  If RegistryKey <> "" Then
-    regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
-  End If
-  Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
-  Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
-  Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
-  Call Library.showDebugForm("regVal        ", CStr(regVal), "debug")
-  
-  If regVal = "" Then
-    getRegistry = 0
-  Else
-    getRegistry = regVal
-  End If
->>>>>>> 9524d9ed695fb4b56514b62e6436c7b14e00ccad
   Exit Function
 
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
