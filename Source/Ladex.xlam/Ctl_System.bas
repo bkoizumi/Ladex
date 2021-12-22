@@ -39,7 +39,7 @@ Function getScroll()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -77,7 +77,7 @@ Function setScroll()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -97,7 +97,7 @@ On Error GoTo catchError
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  'Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
 
 
@@ -126,7 +126,7 @@ Function resetScroll()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -146,5 +146,5 @@ On Error GoTo catchError
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  'Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function

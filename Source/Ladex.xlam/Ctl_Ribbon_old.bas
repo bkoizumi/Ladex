@@ -1,7 +1,7 @@
 Attribute VB_Name = "Ctl_Ribbon_old"
 Option Explicit
 
-Private ctlEvent As New clsEvent
+Private Ctl_Event As New Ctl_Event
 
 #If VBA7 And Win64 Then
   Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
@@ -26,9 +26,7 @@ Function onLoad(ribbon As IRibbonUI)
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
-  
-  
-  
+
   Set BK_ribbonUI = ribbon
   
   BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg")
@@ -96,7 +94,7 @@ End Function
 'シート一覧メニュー
 Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim sheetName As Worksheet
+  Dim SheetName As Worksheet
   Dim MenuSepa, sheetNameID
   
   On Error GoTo catchError
@@ -149,26 +147,26 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   
   
-  For Each sheetName In ActiveWorkbook.Sheets
+  For Each SheetName In ActiveWorkbook.Sheets
     Set Button = DOMDoc.createElement("button")
     With Button
-      sheetNameID = sheetName.Name
-      .SetAttribute "id", "sheetID_" & sheetName.Index
-      .SetAttribute "label", sheetName.Name
+      sheetNameID = SheetName.Name
+      .SetAttribute "id", "sheetID_" & SheetName.Index
+      .SetAttribute "label", SheetName.Name
     
-      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+      If ActiveWorkbook.ActiveSheet.Name = SheetName.Name Then
         .SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
         
-      ElseIf Sheets(sheetName.Name).Visible = True Then
+      ElseIf Sheets(SheetName.Name).Visible = True Then
        '.SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
       
-      ElseIf Sheets(sheetName.Name).Visible = 0 Then
+      ElseIf Sheets(SheetName.Name).Visible = 0 Then
         .SetAttribute "supertip", "非表示シート"
         .SetAttribute "imageMso", "SheetProtect"
       
-      ElseIf Sheets(sheetName.Name).Visible = 2 Then
+      ElseIf Sheets(SheetName.Name).Visible = 2 Then
         .SetAttribute "supertip", "マクロによる非表示シート"
         .SetAttribute "imageMso", "ReviewProtectWorkbook"
       
@@ -213,7 +211,7 @@ End Function
 'RelaxTools
 Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim sheetName As Worksheet
+  Dim SheetName As Worksheet
   Dim MenuSepa
   
   
@@ -373,7 +371,7 @@ End Function
 Function selectActiveSheet(control As IRibbonControl)
   Dim sheetNameID As Integer
   Dim sheetCount As Integer
-  Dim sheetName As Worksheet
+  Dim SheetName As Worksheet
   
   Call Library.startScript
   sheetNameID = Replace(control.ID, "sheetID_", "")
@@ -390,8 +388,8 @@ Function selectActiveSheet(control As IRibbonControl)
   End If
   
   sheetCount = 1
-  For Each sheetName In ActiveWorkbook.Sheets
-    If Sheets(sheetName.Name).Visible = True And sheetName.Name = Sheets(sheetNameID).Name Then
+  For Each SheetName In ActiveWorkbook.Sheets
+    If Sheets(SheetName.Name).Visible = True And SheetName.Name = Sheets(sheetNameID).Name Then
       Exit For
     Else
       sheetCount = sheetCount + 1
@@ -865,9 +863,9 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Library.endScript
-  Set ctlEvent = New clsEvent
-  Set ctlEvent.ExcelApplication = Application
-  ctlEvent.InitializeBookSheets
+  Set Ctl_Event = New Ctl_Event
+  Set Ctl_Event.ExcelApplication = Application
+  Ctl_Event.InitializeBookSheets
   
   Call init.setting
   
@@ -913,9 +911,9 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function Zoom(control As IRibbonControl, pressed As Boolean)
   Call Library.endScript
-  Set ctlEvent = New clsEvent
-  Set ctlEvent.ExcelApplication = Application
-  ctlEvent.InitializeBookSheets
+  Set Ctl_Event = New Ctl_Event
+  Set Ctl_Event.ExcelApplication = Application
+  Ctl_Event.InitializeBookSheets
   
   BKz_rbPressed = pressed
   
@@ -960,9 +958,9 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Call Library.endScript
-  Set ctlEvent = New clsEvent
-  Set ctlEvent.ExcelApplication = Application
-  ctlEvent.InitializeBookSheets
+  Set Ctl_Event = New Ctl_Event
+  Set Ctl_Event.ExcelApplication = Application
+  Ctl_Event.InitializeBookSheets
   
   BKcf_rbPressed = pressed
   

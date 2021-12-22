@@ -33,30 +33,52 @@ dim i
 addInName = "Ladex"
 addInFileName = "Ladex.xlam"
 
+Old_addInName = "Liadex"
+Old_addInFileName = "Liadex.xlam"
+
 Set objWshShell = CreateObject("WScript.Shell")
 Set objFileSys = CreateObject("Scripting.FileSystemObject")
 
-'インストール------------------
-With CreateObject("Excel.Application")
 
-  'インストール先パスの作成
-  strPath = .UserLibraryPath
-  installPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & addInFileName
+'Excel インスタンス化
+Set objExcel = CreateObject("Excel.Application")
+objExcel.Workbooks.Add
+'アドイン登録解除
+For i = 1 To objExcel.Addins.Count
+  Set objAddin = objExcel.Addins.item(i)
+  If objAddin.Name = Old_addInFileName or objAddin.Name = addInFileName Then
+    objAddin.Installed = False
+    WScript.echo(objAddin.Name)
+  End If
+Next
+objExcel.Quit
 
-  'アドイン登録
-  .Workbooks.Add
-  Set objAddin = .AddIns.Add(installPath, True)
-  objAddin.Installed = True
 
-  'Excel 終了
-  .Quit
+UnIstallPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & Old_addInFileName
+If objFileSys.FileExists(UnIstallPath) = True Then
+  'ファイル削除
+  objFileSys.DeleteFile UnIstallPath , True
+  IF Err.Number = 0 THEN
+  ELSE
+    WScript.echo(Err.Number)
+    WScript.Quit
+  End IF
+End If
 
-End With
+UnIstallPath = objWshShell.SpecialFolders("Appdata") & "\Microsoft\Addins\" & addInFileName
+If objFileSys.FileExists(UnIstallPath) = True Then
+  'ファイル削除
+  objFileSys.DeleteFile UnIstallPath , True
+  IF Err.Number = 0 THEN
+  ELSE
+    WScript.echo(Err.Number)
+    WScript.Quit
+  End IF
+End If
 
 
 
 WScript.echo(Err.Number)
-
 
 Set objFileSys = Nothing
 Set objWshShell = Nothing

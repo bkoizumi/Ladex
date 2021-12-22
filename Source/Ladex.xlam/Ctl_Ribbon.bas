@@ -1,7 +1,7 @@
 Attribute VB_Name = "Ctl_Ribbon"
 Option Explicit
 
-Private ctlEvent As New clsEvent
+Private Ctl_Event As New Ctl_Event
 
 #If VBA7 And Win64 Then
   Private Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As LongPtr)
@@ -21,20 +21,21 @@ Function onLoad(ribbon As IRibbonUI)
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "function")
+  Call Library.showDebugForm("" & funcName, , "start")
   '----------------------------------------------
   
   Set BK_ribbonUI = ribbon
   
-  BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg")
-  BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg")
-  BKT_rbPressed = Library.getRegistry("Main", "CustomRibbon")
+  BKh_rbPressed = Library.getRegistry("Main", "HighLightFlg", "Boolean")
+  BKz_rbPressed = Library.getRegistry("Main", "ZoomFlg", "Boolean")
+  BKT_rbPressed = Library.getRegistry("Main", "CustomRibbon", "Boolean")
   
   Call Library.showDebugForm("BKh_rbPressed", CStr(BKh_rbPressed), "debug")
   Call Library.showDebugForm("BKz_rbPressed", CStr(BKz_rbPressed), "debug")
   Call Library.showDebugForm("BKT_rbPressed", CStr(BKT_rbPressed), "debug")
   
   Call Library.setRegistry("Main", "BK_ribbonUI", CStr(ObjPtr(BK_ribbonUI)))
+  Call Main.InitializeBook
   
   'BK_ribbonUI.ActivateTab ("Ladex")
   BK_ribbonUI.Invalidate
@@ -128,9 +129,9 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   
-  Set ctlEvent = New clsEvent
-  Set ctlEvent.ExcelApplication = Application
-  ctlEvent.InitializeBookSheets
+  Set Ctl_Event = New Ctl_Event
+  Set Ctl_Event.ExcelApplication = Application
+  Ctl_Event.InitializeBookSheets
   
   BKh_rbPressed = pressed
   Call Library.setRegistry("Main", "HighLightFlg", pressed)
@@ -164,9 +165,9 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   '----------------------------------------------
   Call Library.setRegistry("Main", "ZoomFlg", pressed)
   
-  Set ctlEvent = New clsEvent
-  Set ctlEvent.ExcelApplication = Application
-  ctlEvent.InitializeBookSheets
+  Set Ctl_Event = New Ctl_Event
+  Set Ctl_Event.ExcelApplication = Application
+  Ctl_Event.InitializeBookSheets
   
   BKz_rbPressed = pressed
   If pressed = False Then
@@ -198,9 +199,9 @@ Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
-  Set ctlEvent = New clsEvent
-  Set ctlEvent.ExcelApplication = Application
-  ctlEvent.InitializeBookSheets
+  Set Ctl_Event = New Ctl_Event
+  Set Ctl_Event.ExcelApplication = Application
+  Ctl_Event.InitializeBookSheets
   BKcf_rbPressed = pressed
   
   Call Ctl_Formula.数式確認
@@ -220,17 +221,23 @@ End Function
 
 '==================================================================================================
 'お気に入りファイルを開く
-Function OpenFavoriteList(control As IRibbonControl)
+Function FavoriteFileOpen(control As IRibbonControl)
   Dim fileNamePath As String
   Dim line As Long
+  Dim objFso As New FileSystemObject
+  Const funcName As String = "Ctl_Ribbon.FavoriteFileOpen"
   
-  line = Replace(control.ID, "Favorite_", "")
-  fileNamePath = BK_sheetFavorite.Range("A" & line)
+  fileNamePath = Library.getRegistry("FavoriteList", control.ID)
   
   If Library.chkFileExists(fileNamePath) Then
-    Workbooks.Open fileName:=fileNamePath
+    Select Case objFso.GetExtensionName(fileNamePath)
+      Case "xls", "xlsx", "xlsm"
+        Workbooks.Open fileName:=fileNamePath
+      Case Else
+        CreateObject("Shell.Application").ShellExecute fileNamePath
+      End Select
   Else
-    MsgBox "ファイルが存在しません" & vbNewLine & fileNamePath, vbExclamation
+    Call Library.showNotice(404, fileNamePath, True)
   End If
 End Function
 
@@ -266,7 +273,7 @@ End Function
 'シート一覧メニュー
 Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim sheetName As Worksheet
+  Dim SheetName As Worksheet
   Dim MenuSepa, sheetNameID
   
 '  On Error GoTo catchError
@@ -291,6 +298,27 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
+  
+  Set MenuSepa = DOMDoc.createElement("menuSeparator")
+    With MenuSepa
+      .SetAttribute "id", "シート管理"
+      .SetAttribute "title", "シート管理"
+    End With
+    Menu.AppendChild MenuSepa
+    Set MenuSepa = Nothing
+
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "シート管理表示"
+      .SetAttribute "label", "シート管理"
+      .SetAttribute "supertip", "シート管理"
+      
+      .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+      .SetAttribute "onAction", "Ladex.xlam!Menu.ladex_シート管理_フォーム表示"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
   If Library.chkFileExists(Application.UserLibraryPath & RelaxTools) = True Then
     Set MenuSepa = DOMDoc.createElement("menuSeparator")
       With MenuSepa
@@ -307,7 +335,7 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
         .SetAttribute "supertip", "RelaxToolsのシート管理を起動"
         
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
+        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxTools01"
       End With
       Menu.AppendChild Button
       Set Button = Nothing
@@ -323,26 +351,26 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   
   
-  For Each sheetName In ActiveWorkbook.Sheets
+  For Each SheetName In ActiveWorkbook.Sheets
     Set Button = DOMDoc.createElement("button")
     With Button
-      sheetNameID = sheetName.Name
-      .SetAttribute "id", "sheetID_" & sheetName.Index
-      .SetAttribute "label", sheetName.Name
+      sheetNameID = SheetName.Name
+      .SetAttribute "id", "sheetID_" & SheetName.Index
+      .SetAttribute "label", SheetName.Name
     
-      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
+      If ActiveWorkbook.ActiveSheet.Name = SheetName.Name Then
         .SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
         
-      ElseIf Sheets(sheetName.Name).Visible = True Then
+      ElseIf Sheets(SheetName.Name).Visible = True Then
        '.SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
       
-      ElseIf Sheets(sheetName.Name).Visible = 0 Then
+      ElseIf Sheets(SheetName.Name).Visible = 0 Then
         .SetAttribute "supertip", "非表示シート"
         .SetAttribute "imageMso", "SheetProtect"
       
-      ElseIf Sheets(sheetName.Name).Visible = 2 Then
+      ElseIf Sheets(SheetName.Name).Visible = 2 Then
         .SetAttribute "supertip", "マクロによる非表示シート"
         .SetAttribute "imageMso", "ReviewProtectWorkbook"
       
@@ -375,10 +403,9 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Dim regLists As Variant, i As Long
   Dim line As Long, endLine As Long
   Dim objFso As New FileSystemObject
-  Dim MenuSepa
-  
+  Dim MenuSepa, tmp
   Const funcName As String = "Ctl_Ribbon.FavoriteMenu"
-  
+
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call init.setting
@@ -399,12 +426,9 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
   Menu.SetAttribute "itemSize", "normal"
 
-  Call Ctl_Favorite.getList
-  If Workbooks.count = 0 Then
-    endLine = 100
-  Else
-    endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
-  End If
+'  Call Ctl_Favorite.getList
+'  endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+  tmp = GetAllSettings(thisAppName, "FavoriteList")
   
   Set MenuSepa = DOMDoc.createElement("menuSeparator")
   With MenuSepa
@@ -413,23 +437,46 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   End With
   Menu.AppendChild MenuSepa
   Set MenuSepa = Nothing
-  For line = 2 To endLine
-    If BK_sheetFavorite.Range("A" & line) <> "" Then
+  If Not IsEmpty(tmp) Then
+    For line = 0 To UBound(tmp)
       Set Button = DOMDoc.createElement("button")
       With Button
-        .SetAttribute "id", "Favorite_" & line
-        .SetAttribute "label", objFso.GetFileName(BK_sheetFavorite.Range("A" & line))
-        .SetAttribute "imageMso", "Favorites"
-        .SetAttribute "supertip", BK_sheetFavorite.Range("A" & line)
-        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.OpenFavoriteList"
+        .SetAttribute "id", tmp(line, 0)
+        .SetAttribute "label", objFso.GetFileName(tmp(line, 1))
+        
+        'アイコンの設定
+        Select Case objFso.GetExtensionName(tmp(line, 1))
+          Case "xlsm"
+            .SetAttribute "imageMso", "MicrosoftExcel"
+          Case "pdf"
+            .SetAttribute "imageMso", "FileSaveAsPdf"
+          Case "docs"
+            .SetAttribute "imageMso", "FileSaveAsWordDocx"
+          Case "text"
+            .SetAttribute "imageMso", "FileNewContext"
+          Case "accdb"
+            .SetAttribute "imageMso", "MicrosoftAccess"
+          Case "pptx"
+            .SetAttribute "imageMso", "MicrosoftPowerPoint"
+          Case "csv"
+            .SetAttribute "imageMso", "FileNewContext"
+          
+          Case Else
+            .SetAttribute "imageMso", "MicrosoftExcel"
+            Call Library.showDebugForm("お気に入りアイコン", objFso.GetExtensionName(tmp(line, 1)), "Error")
+        End Select
+        
+        
+        .SetAttribute "supertip", tmp(line, 1)
+        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.FavoriteFileOpen"
       End With
       Menu.AppendChild Button
       Set Button = Nothing
-    End If
-  Next
+    Next
+  End If
   DOMDoc.AppendChild Menu
   returnedVal = DOMDoc.XML
-  'Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+'  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
   
   Set Menu = Nothing
   Set DOMDoc = Nothing
@@ -447,7 +494,7 @@ End Function
 'RelaxTools
 Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim sheetName As Worksheet
+  Dim SheetName As Worksheet
   Dim MenuSepa
 
   Const funcName As String = "Ctl_Ribbon.getRelaxTools"
@@ -506,7 +553,17 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
       .SetAttribute "id", "RelaxTools01"
       .SetAttribute "label", "シート管理"
       .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
-      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.actRelaxSheetManager"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxTools01"
+    End With
+    Menu.AppendChild Button
+    Set Button = Nothing
+    
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "RelaxTools02"
+      .SetAttribute "label", "書式リフレッシュ"
+      '.SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxTools02"
     End With
     Menu.AppendChild Button
     Set Button = Nothing
@@ -609,7 +666,7 @@ End Function
 Function selectActiveSheet(control As IRibbonControl)
   Dim sheetNameID As Integer
   Dim sheetCount As Integer
-  Dim sheetName As Worksheet
+  Dim SheetName As Worksheet
   Const funcName As String = "Ctl_Ribbon.selectActiveSheet"
   
   '処理開始--------------------------------------
@@ -632,8 +689,8 @@ Function selectActiveSheet(control As IRibbonControl)
   End If
   
   sheetCount = 1
-  For Each sheetName In ActiveWorkbook.Sheets
-    If Sheets(sheetName.Name).Visible = True And sheetName.Name = Sheets(sheetNameID).Name Then
+  For Each SheetName In ActiveWorkbook.Sheets
+    If Sheets(SheetName.Name).Visible = True And SheetName.Name = Sheets(sheetNameID).Name Then
       Exit For
     Else
       sheetCount = sheetCount + 1
@@ -688,6 +745,11 @@ Function decode(strVal As String)
   decode = strVal
 End Function
 
+'**************************************************************************************************
+' * リボンメニュー[その他]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function setCenter(control As IRibbonControl)
   Call init.setting
@@ -695,11 +757,81 @@ Function setCenter(control As IRibbonControl)
     Selection.HorizontalAlignment = xlCenterAcrossSelection
   End If
 End Function
+
+'--------------------------------------------------------------------------------------------------
+Function setShrinkToFit(control As IRibbonControl)
+  Call init.setting
+  If TypeName(Selection) = "Range" Then
+    Selection.ShrinkToFit = True
+  End If
+End Function
+
+'--------------------------------------------------------------------------------------------------
+Function unsetShrinkToFit(control As IRibbonControl)
+  Call init.setting
+  If TypeName(Selection) = "Range" Then
+    Selection.ShrinkToFit = False
+  End If
+End Function
+
 '**************************************************************************************************
-' * リボンメニュー
+' * リボンメニュー[RelaxTools]
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+Function RelaxTools_get(control As IRibbonControl)
+  CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
+End Function
+
+
+'==================================================================================================
+Function RelaxTools01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
+End Function
+
+'==================================================================================================
+Function RelaxTools02(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!basSelection.execSelectionToFormula"
+End Function
+
+'==================================================================================================
+'サイズ合わせ
+Function RelaxShapes01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
+End Function
+
+'==================================================================================================
+'上位置合わせ
+Function RelaxShapes02(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
+End Function
+
+'==================================================================================================
+'左位置合わせ
+Function RelaxShapes03(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
+End Function
+
+
+'==================================================================================================
+'逆Ｌ罫線
+Function RelaxApps01(control As IRibbonControl)
+  Call init.setting
+  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
+End Function
+
+'**************************************************************************************************
+' * リボンメニュー[カスタマイズ]
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'--------------------------------------------------------------------------------------------------
 Function Ctl_Function(control As IRibbonControl)
   Const funcName As String = "Ctl_Ribbon.Ctl_Function"
   
@@ -708,25 +840,43 @@ Function Ctl_Function(control As IRibbonControl)
   On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "start")
-  Call Library.startScript
+  
+  If control.ID <> "行例入れ替えて貼付け" Then
+    Call Library.startScript
+  End If
   '----------------------------------------------
   Call Library.showDebugForm("control.ID", control.ID, "debug")
   
   Select Case control.ID
-    Case "Option"
-      Ctl_Option.showOption
-      
     Case "Favorite_detail"
       Call Ctl_Favorite.detail
+    Case "お気に入り追加"
+      Call Ctl_Favorite.add
     
     Case "Notation_R1C1"
       Call Ctl_Sheet.R1C1表記
     
     'Option--------------------------------------
+    Case "Option"
+      Call Ctl_Option.showOption
+      
+    Case "スタイル出力"
+      Call Ctl_Style.Export
+    Case "スタイル取込"
+      Call Ctl_Style.Import
+    
+    Case "OptionHighLight"
+      Ctl_Option.HighLight
+    
+    Case "OptionComment"
+      Ctl_Option.Comment
+    
     Case "Version"
       Call Ctl_Option.showVersion
+    
     Case "Help"
       Call Ctl_Option.showHelp
+    
     Case "OptionSheetImport"
       Call Ctl_RbnMaint.OptionSheetImport
     Case "OptionSheetExport"
@@ -763,6 +913,8 @@ Function Ctl_Function(control As IRibbonControl)
       ActiveWorkbook.Save
     Case "標準画面"
       Call Ctl_Sheet.標準画面
+    Case "シート管理"
+      Call Ctl_Sheet.シート管理_フォーム表示
     
     'ズーム--------------------------------------
     Case "Zoom01"
@@ -798,6 +950,12 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Cells.コメント削除
     Case "コメント整形"
       Call Ctl_format.コメント整形
+    
+    Case "行例入れ替えて貼付け"
+      Call Ctl_Cells.行例を入れ替えて貼付け
+    Case "ゼロ埋め"
+      Call Ctl_Cells.ゼロ埋め
+    
     
     '数式編集------------------------------------
     Case "formula01"
@@ -906,15 +1064,18 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_sampleData.日付_時間(Selection.count)
     Case "日時"
       Call Ctl_sampleData.日時(Selection.count)
+    Case "文字"
+      Call Ctl_sampleData.その他_文字(25)
     
     
     Case Else
       Call Library.showDebugForm("リボンメニューなし", control.ID, "Error")
+      Call Library.showNotice("リボンメニューなし", control.ID, "Error")
   End Select
   
   '処理終了--------------------------------------
   Call Library.endScript
-  Call Library.showDebugForm("  ", , "end")
+  Call Library.showDebugForm("", , "end")
   Call init.unsetting
   '----------------------------------------------
   Exit Function
@@ -924,57 +1085,4 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
-
-'**************************************************************************************************
-' * リボンメニュー[RelaxTools]
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-'==================================================================================================
-Function RelaxTools_get(control As IRibbonControl)
-  CreateObject("WScript.Shell").run ("chrome.exe -url " & "https://software.opensquare.net/relaxtools/")
-End Function
-
-
-'==================================================================================================
-Function actRelaxSheetManager(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSheetManager"
-End Function
-
-'==================================================================================================
-Function RelaxTools01(control As IRibbonControl)
-  Call init.setting
-End Function
-
-'==================================================================================================
-'サイズ合わせ
-Function RelaxShapes01(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeSize"
-End Function
-
-'==================================================================================================
-'上位置合わせ
-Function RelaxShapes02(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeTop"
-End Function
-
-'==================================================================================================
-'左位置合わせ
-Function RelaxShapes03(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!sameShapeLeft"
-End Function
-
-
-'==================================================================================================
-'逆Ｌ罫線
-Function RelaxApps01(control As IRibbonControl)
-  Call init.setting
-  Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!execSelectionFormatCheckList"
-End Function
-
 

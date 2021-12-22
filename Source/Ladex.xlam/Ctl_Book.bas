@@ -9,29 +9,34 @@ Option Explicit
 '==================================================================================================
 Function 名前定義削除()
   Dim wb As Workbook, tmp As String
-  funcName = "Ctl_Book.名前定義削除"
+  Const funcName As String = "Ctl_Book.名前定義削除"
   
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm("" & funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  For Each wb In Workbooks
-    Workbooks(wb.Name).Activate
-    Call Library.delVisibleNames
-  Next wb
+'  For Each wb In Workbooks
+'    Workbooks(wb.Name).Activate
+'    Call Library.delVisibleNames
+'  Next wb
+  
+  Call Library.delVisibleNames
   
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
   End If
   '----------------------------------------------
   
@@ -57,6 +62,7 @@ Function シートリスト取得()
     Call Library.startScript
   Else
     On Error GoTo catchError
+     Call Library.showDebugForm("  " & funcName, , "function")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -75,7 +81,13 @@ Function シートリスト取得()
   End With
 
   '処理終了--------------------------------------
-  Call Library.endScript
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
   '----------------------------------------------
 
   Exit Function

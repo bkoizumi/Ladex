@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
-   ClientHeight    =   6630
+   ClientHeight    =   7410
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   7695
+   ClientWidth     =   7605
    OleObjectBlob   =   "Frm_Option.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -18,11 +18,7 @@ Dim colorValue As Long
 Dim HighLightDspDirection As String
 Dim old_BKh_rbPressed  As Boolean
 Public InitializeFlg   As Boolean
-
-
-
-
-
+Public selectLine   As Long
 
 
 '**************************************************************************************************
@@ -36,19 +32,15 @@ Private Sub UserForm_Initialize()
   Dim line As Long, endLine As Long
   Dim indexCnt As Integer, i As Variant
   Dim previewImgPath As String
-  Dim cBox As CommandBarComboBox
+  Dim ShortcutKeyList() As Variant
   
+  Dim cBox As CommandBarComboBox
   Const funcName As String = "Frm_Option.UserForm_Initialize"
 
   '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
-  End If
+'  On Error GoTo catchError
+  Call init.setting
+  Call Library.showDebugForm("" & funcName, , "function")
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
@@ -57,7 +49,7 @@ Private Sub UserForm_Initialize()
   indexCnt = 0
   old_BKh_rbPressed = BKh_rbPressed
   
-  '表示位置指定
+  '表示位置指定----------------------------------
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
@@ -65,6 +57,7 @@ Private Sub UserForm_Initialize()
   setZoomLevel = Library.getRegistry("Main", "ZoomLevel")
   
   With Frm_Option
+    .Caption = "オプション |  " & thisAppName
     '基本タブ-----------------------------------
     For Each zoomLevelVal In Split("25,50,75,85,100", ",")
       .ZoomLevel.AddItem zoomLevelVal
@@ -86,7 +79,7 @@ Private Sub UserForm_Initialize()
   
     'ハイライトタブ------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
-    If HighLightColor = "0" Then
+    If HighLightColor = "" Then
       .HighLightColor.BackColor = 10222585
     Else
       .HighLightColor.BackColor = HighLightColor
@@ -177,7 +170,7 @@ Private Sub UserForm_Initialize()
       End If
       indexCnt = indexCnt + 1
     Next
-    .CommentFont.ListIndex = ListIndex
+    .CommentFontSize.ListIndex = ListIndex
 
     'コメント プレビュー
     imageName = thisAppName & "CommentImg" & ".jpg"
@@ -221,6 +214,7 @@ Private Sub UserForm_Initialize()
     
     'ショートカットタブ-------------------------
     onAlt.Value = True
+    indexCnt = 1
     With funcList
       .View = lvwReport
       .LabelEdit = lvwManual
@@ -231,25 +225,47 @@ Private Sub UserForm_Initialize()
       .ColumnHeaders.add , "_ID", "#", 30
       .ColumnHeaders.add , "_ShortcutKey", "キー"
       .ColumnHeaders.add , "_Label", "機能名称", 100
-      .ColumnHeaders.add , "_description", "説明", 100
+      .ColumnHeaders.add , "_description", "機能", 400
+      .ColumnHeaders.add , "_KeyID", "KeyID", 0
       
       endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
       For line = 2 To endLine
-        If BK_sheetFunction.Range("C" & line).Value <> "" Then
+        If BK_sheetFunction.Range("D" & line).Value <> "" Then
           With .ListItems.add
-            .Text = BK_sheetFunction.Range("A" & line).Value
+            .Text = indexCnt
             .SubItems(1) = BK_sheetFunction.Range("B" & line).Value
             .SubItems(2) = BK_sheetFunction.Range("C" & line).Value
             .SubItems(3) = BK_sheetFunction.Range("D" & line).Value
+            .SubItems(4) = BK_sheetFunction.Range("F" & line).Value
           End With
+          indexCnt = indexCnt + 1
         End If
       Next
     End With
     
+    'キーリスト
+    endLine = BK_sheetSetting.Cells(Rows.count, 13).End(xlUp).Row
+    
+     ReDim ShortcutKeyList(endLine - 3, 2)
+    For line = 3 To endLine
+      If BK_sheetSetting.Range("N" & line) <> "" Then
+        ShortcutKeyList(line - 3, 0) = BK_sheetSetting.Range("N" & line)
+        ShortcutKeyList(line - 3, 1) = BK_sheetSetting.Range("M" & line)
+        ShortcutKeyList(line - 3, 2) = BK_sheetSetting.Range("O" & line)
+      End If
+    Next
+    With ShortcutKey
+      .ColumnCount = 3
+      .TextColumn = 1
+      .BoundColumn = 1
+      .ColumnWidths = "60;0;0"
+      .list() = ShortcutKeyList()
+    End With
+
     
     
     
-    
+    .MultiPage1.Value = 0
   End With
   
   InitializeFlg = False
@@ -302,8 +318,7 @@ Function doHighLightPreview()
   Dim HighLightColor As String, HighLightDspDirection As String, HighLightDspMethod As String, HighlightTransparentRate   As Long
   
   Call init.setting
-'  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
-  
+
   
   HighLightColor = Me.HighLightColor.BackColor
 
@@ -338,6 +353,8 @@ Function doHighLightPreview()
   If BKh_rbPressed = False Then
     BKh_rbPressed = True
   End If
+'  Range("A1:D4").Clear
+'  Call Library.罫線_実線_格子(Range("A1:C3"))
   
   Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
   
@@ -368,7 +385,7 @@ Function doCommentPreview()
 '  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
   
   BK_sheetHighLight.Activate
-  BK_sheetHighLight.Range("N5").Activate
+  BK_sheetHighLight.Range("N7").Activate
   
   CommentBgColor = Me.CommentColor.BackColor
   CommentFontColor = Me.CommentFontColor.BackColor
@@ -379,7 +396,7 @@ Function doCommentPreview()
   
   imageName = thisAppName & "CommentImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N4:S8"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N6:R9"), imageName)
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
@@ -568,15 +585,21 @@ Private Sub setShortcutKey_Click()
   
   Call init.setting
   
-  Call Library.showDebugForm("funcList.Item", funcList.SelectedItem.Text, "debug")
+  Call Library.showDebugForm("funcList.Item    ", funcList.SelectedItem.Text, "debug")
   Call Library.showDebugForm("funcList.SubItem1", funcList.SelectedItem.SubItems(1), "debug")
   Call Library.showDebugForm("funcList.SubItem2", funcList.SelectedItem.SubItems(2), "debug")
   Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
 
-  Call Library.showDebugForm("onCtrl", onCtrl.Value, "debug")
-  Call Library.showDebugForm("onAlt", onAlt.Value, "debug")
+  Call Library.showDebugForm("onCtrl ", onCtrl.Value, "debug")
+  Call Library.showDebugForm("onAlt  ", onAlt.Value, "debug")
   Call Library.showDebugForm("onShift", onShift.Value, "debug")
-  Call Library.showDebugForm("ShortcutKey", ShortcutKey.Value, "debug")
+  Call Library.showDebugForm("ShortcutKey", ShortcutKey.list(ShortcutKey.ListIndex, 0), "debug")
+  Call Library.showDebugForm("ShortcutKey", ShortcutKey.list(ShortcutKey.ListIndex, 1), "debug")
+  Call Library.showDebugForm("ShortcutKey", ShortcutKey.list(ShortcutKey.ListIndex, 2), "debug")
+
+  selectLine = funcList.SelectedItem.Text
+
+  BK_sheetFunction.Range("E" & selectLine + 1, "F" & selectLine + 1) = ""
 
   keyVal = ""
   If onCtrl.Value = True Then
@@ -602,12 +625,18 @@ Private Sub setShortcutKey_Click()
   If keyVal = "" Then
     keyVal = "Alt"
   End If
-  keyVal = keyVal & "+" & ShortcutKey.Value
+'  keyVal = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 1)
   
   Call Library.showDebugForm("keyVal", keyVal, "debug")
-  BK_sheetFunction.Range("B" & CInt(funcList.SelectedItem.Text) + 1) = keyVal
+  If WorksheetFunction.CountIf(BK_sheetFunction.Range("B2:B1000"), keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)) > 1 Then
+    megLabel.Caption = "同じ設定がすでにあります"
+  Else
+    BK_sheetFunction.Range("B" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)
+    BK_sheetFunction.Range("E" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 2)
+    BK_sheetFunction.Range("F" & selectLine + 1) = ShortcutKey.list(ShortcutKey.ListIndex, 1)
   
-  Call reLoadFuncList
+    Call reLoadFuncList
+  End If
 End Sub
 
 '==================================================================================================
@@ -625,7 +654,8 @@ Function reLoadFuncList()
     .ColumnHeaders.add , "_ID", "#", 30
     .ColumnHeaders.add , "_ShortcutKey", "キー"
     .ColumnHeaders.add , "_Label", "機能名称", 100
-    .ColumnHeaders.add , "_description", "説明", 100
+    .ColumnHeaders.add , "_description", "機能", 400
+    .ColumnHeaders.add , "_KeyID", "KeyID", 0
     
     endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
     For line = 2 To endLine
@@ -635,9 +665,14 @@ Function reLoadFuncList()
           .SubItems(1) = BK_sheetFunction.Range("B" & line).Value
           .SubItems(2) = BK_sheetFunction.Range("C" & line).Value
           .SubItems(3) = BK_sheetFunction.Range("D" & line).Value
+          .SubItems(4) = BK_sheetFunction.Range("F" & line).Value
         End With
       End If
     Next
+    .ListItems(selectLine).EnsureVisible
+    .ListItems(selectLine).Selected = True
+    .SetFocus
+
   End With
     
 End Function
@@ -646,12 +681,16 @@ End Function
 Private Sub funcList_Click()
   Dim keyVal As Variant
   
-  Call Library.showDebugForm("funcList.Item", funcList.SelectedItem.Text, "debug")
+  Call Library.showDebugForm("funcList.Item    ", funcList.SelectedItem.Text, "debug")
   Call Library.showDebugForm("funcList.SubItem1", funcList.SelectedItem.SubItems(1), "debug")
   Call Library.showDebugForm("funcList.SubItem2", funcList.SelectedItem.SubItems(2), "debug")
   Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
+  Call Library.showDebugForm("funcList.SubItem4", funcList.SelectedItem.SubItems(4), "debug")
   
   If funcList.SelectedItem.SubItems(1) <> "" Then
+    onCtrl.Value = False
+    onAlt.Value = False
+    onShift.Value = False
     For Each keyVal In Split(funcList.SelectedItem.SubItems(1), "+")
       If keyVal = "Ctrl" Then
         onCtrl.Value = True
@@ -676,7 +715,7 @@ Private Sub Del_ShortcutKey_Click()
   
   Call init.setting
   BK_sheetFunction.Range("B" & CInt(funcList.SelectedItem.Text) + 1) = ""
-  
+  megLabel.Caption = ""
   Call reLoadFuncList
 End Sub
 
@@ -707,13 +746,13 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "bgColor", Me.BgColor.Value)
   Call Library.setRegistry("Main", "LineColor", Me.LineColor.BackColor)
   
-  
+  'ハイライト設定--------------------------------
   Call Library.setRegistry("Main", "HighLightColor", Me.HighLightColor.BackColor)
   
-  '透明度----------------------------------------------------------------------------------------
+  '透明度
   Call Library.setRegistry("Main", "HighlightTransparentRate", HighlightTransparentRate.Value)
 
-  '表示方向--------------------------------------------------------------------------------------
+  '表示方向
   If HighlightDspDirection_X.Value = True Then
     HighLightDspDirection = "X"
     
@@ -725,7 +764,7 @@ Private Sub run_Click()
   End If
   Call Library.setRegistry("Main", "HighLightDspDirection", HighLightDspDirection)
   
-  '表示方法--------------------------------------------------------------------------------------
+  '表示方法
   If HighlightDspMethod_0.Value = True Then
     HighLightDspMethod = "0"
   
@@ -738,7 +777,7 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "HighLightDspMethod", HighLightDspMethod)
   BKh_rbPressed = old_BKh_rbPressed
 
-  'コメント----------------------------------------------------------------------------------------
+  'コメント設定----------------------------------
   Call Library.setRegistry("Main", "CommentBgColor", Me.CommentColor.BackColor)
   Call Library.setRegistry("Main", "CommentFont", Me.CommentFont.Value)
   

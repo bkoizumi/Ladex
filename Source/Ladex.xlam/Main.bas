@@ -5,8 +5,69 @@ Option Explicit
 'ワークシート用変数------------------------------
 'グローバル変数----------------------------------
 
+
+'**************************************************************************************************
+' * 初期設定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function InitializeBook()
+  Dim RegistryKey As String, RegistrySubKey As String, val As String
+  Dim line As Long, endLine As Long
+  Dim regName As String
+  Const funcName As String = "Main.InitializeBook"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  runFlg = True
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  BK_ThisBook.Activate
+  endLine = BK_sheetSetting.Cells(Rows.count, 7).End(xlUp).Row
+
+  If Library.getRegistry("Main", "debugMode", "String") = "" Then
+    For line = 3 To endLine
+      RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
+      RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
+      val = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
+
+      If RegistryKey <> "" Then
+       Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
+      End If
+    Next
+  End If
+  
+  '独自関数設定----------------------------------
+  Call Ctl_Hollyday.InitializeHollyday
+  Call Ctl_UsrFunction.InitializeUsrFunction
+  
+  'ショートカットキー設定------------------------
+  Call Main.setShortcutKey
+
+
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Call Library.showDebugForm("", , "end1")
+  'Call init.unsetting
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'**************************************************************************************************
+' * ショートカットキーの設定
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '==================================================================================================
-'ショートカットキーの設定
 Function setShortcutKey()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim keyVal As Variant
@@ -14,35 +75,35 @@ Function setShortcutKey()
   Const funcName As String = "Main.setShortcutKey"
   
   '処理開始--------------------------------------
-  'runFlg = True
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
   For line = 2 To endLine
-    If BK_sheetFunction.Range("B" & line) <> "" Then
+    If BK_sheetFunction.Range("E" & line) <> "" Then
       ShortcutKey = ""
-      For Each keyVal In Split(BK_sheetFunction.Range("B" & line), "+")
+      For Each keyVal In Split(BK_sheetFunction.Range("E" & line), "+")
         If keyVal = "Ctrl" Then
           ShortcutKey = "^"
         ElseIf keyVal = "Alt" Then
           ShortcutKey = ShortcutKey & "%"
         ElseIf keyVal = "Shift" Then
-          ShortcutKey = ShortcutKey & "^"
+          ShortcutKey = ShortcutKey & "+"
         Else
           ShortcutKey = ShortcutKey & keyVal
         End If
       Next
-      ShortcutFunc = "Menu.ladex_" & BK_sheetFunction.Range("D" & line)
+      ShortcutFunc = "Menu.ladex_" & BK_sheetFunction.Range("C" & line)
       Call Library.showDebugForm("ShortcutKey", ShortcutKey, "debug")
-      Call Library.showDebugForm("Function", ShortcutFunc, "debug")
+      Call Library.showDebugForm("Function   ", ShortcutFunc, "debug")
       
       Call Application.OnKey(ShortcutKey, ShortcutFunc)
     End If
@@ -51,22 +112,20 @@ Function setShortcutKey()
   'Call Application.OnKey("{F1}", "Ctl_Option.showVersion")
   Call Application.OnKey("{F1}", "")
 
+
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end1")
   End If
   '----------------------------------------------
 
   Exit Function
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
-  Call Library.showNotice(400, "xxxx.xxxxxxxxxx[" & Err.Number & "]" & Err.Description, True)
-  Call Library.showDebugForm("[" & Err.Number & "]" & Err.Description, , "Error")
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_smplData 
    Caption         =   "sampleData"
-   ClientHeight    =   8340
+   ClientHeight    =   6015
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9525
+   ClientWidth     =   9525.001
    OleObjectBlob   =   "Frm_smplData.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -31,7 +31,8 @@ Private Sub UserForm_Initialize()
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
-  
+  Caption = "データ生成 |  " & thisAppName
+
   With Frm_smplData
     For Each cmdVal In BK_sheetSetting.Range(BK_setVal("Cells_sampleData") & "3:" & BK_setVal("Cells_sampleData") & "22")
       ListBox1.AddItem indexCnt & "." & cmdVal
@@ -99,6 +100,17 @@ Private Sub run_Click()
       
         BK_setVal.add "minVal", Me.minVal4.Text
         BK_setVal.add "maxVal", Me.maxVal4.Text
+        
+      Case "【その他】文字"
+        BK_setVal.add "maxCount", Me.maxCount5.Text
+      
+        BK_setVal.add "strType01", Me.strType01.Value
+        BK_setVal.add "strType02", Me.strType02.Value
+        BK_setVal.add "strType03", Me.strType03.Value
+        BK_setVal.add "strType04", Me.strType04.Value
+        BK_setVal.add "strType05", Me.strType05.Value
+        BK_setVal.add "strType06", Me.strType06.Value
+        BK_setVal.add "strType07", Me.strType07.Value
         
       Case "パターン選択"
         BK_setVal.add "maxCount", Me.maxCount0.Text

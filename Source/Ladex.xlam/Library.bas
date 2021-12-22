@@ -55,14 +55,14 @@ Dim SelectionSheet As String
 ' PCAOffice“™‚Ìî•ñæ“¾—p˜A‘z”z—ñ
 Public MachineInfo As Object
 
-' Selenium—pİ’è
+'ƒ‰ƒ“ƒ_ƒ€ŠÖ”—p
 Public Const HalfWidthDigit = "1234567890"
 Public Const HalfWidthCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 Public Const SymbolCharacters = "!""#$%&'()=~|@[`{;:]+*},./\<>?_-^\"
 
-'Public Const JapaneseCharacters = "‚ ‚¢‚¤‚¦‚¨‚©‚«‚­‚¯‚±‚³‚µ‚·‚¹‚»‚½‚¿‚Â‚Ä‚Æ‚È‚É‚Ê‚Ë‚Ì‚Í‚Ğ‚Ó‚Ö‚Ù‚Ü‚İ‚Ş‚ß‚à‚â‚ä‚æ‚ç‚è‚é‚ê‚ë‚í‚ğ‚ñ‚ª‚¬‚®‚°‚²‚´‚¶‚¸‚º‚¼‚¾‚À‚Ã‚Å‚Ç‚Î‚Ñ‚Ô‚×‚Ú‚Ï‚Ò‚Õ‚Ø‚Û"
-'Public Const JapaneseCharactersCommonUse = "‰JŠw‹ó‹àÂ—Ñ‰æŠâ‹‘o’m’·’¼“X“Œ•à–…–¾–å–éˆÏˆç‰jŠİ‹ê‹ïKng–ÀÒÌæóŠ’’è”g”Â•\••¨•ú–¡–½–û˜a‰p‰Ê‰èŠ¯‹G‹ƒ‹¦ŒaŒÅüQ¡ü¼‘²’ê“I“T“Å”O•{–@–q—áˆÕ‰‰¿‰Í‹Œ”ŒøÈ}Éq³µ«§”Å”ì”ñ•‰ˆ‰„Šg‹ŸŒÄá@‚’S’ˆ’‰“Í“û”q•À•ó–‡ˆË‰ŸŠï‹F‹’‹µ‹üŒ¨hÀª©‘ñ’ï““Ë”t”‘””—”Ş•|•ø–b–Î‰Š‰¢‰£"
-'Public Const MachineDependentCharacters = "‡@‡A‡B‡C‡D‡E‡F‡G‡H‡I‡J‡K‡L‡M‡N‡O‡P‡Q‡R‡S‡T‡U‡V‡W‡X‡Y‡Z‡[‡\‡]‡_ú\ú]ú^ú_ú`úaúbúcúdúeúfúgúhúiújúkúlúmúnúoúpúqúrúsútúuúvúwúxúyúzú{"
+Public Const JapaneseCharacters = "‚ ‚¢‚¤‚¦‚¨‚©‚«‚­‚¯‚±‚³‚µ‚·‚¹‚»‚½‚¿‚Â‚Ä‚Æ‚È‚É‚Ê‚Ë‚Ì‚Í‚Ğ‚Ó‚Ö‚Ù‚Ü‚İ‚Ş‚ß‚à‚â‚ä‚æ‚ç‚è‚é‚ê‚ë‚í‚ğ‚ñ‚ª‚¬‚®‚°‚²‚´‚¶‚¸‚º‚¼‚¾‚À‚Ã‚Å‚Ç‚Î‚Ñ‚Ô‚×‚Ú‚Ï‚Ò‚Õ‚Ø‚Û"
+Public Const JapaneseCharactersCommonUse = "‰JŠw‹ó‹àÂ—Ñ‰æŠâ‹‘o’m’·’¼“X“Œ•à–…–¾–å–éˆÏˆç‰jŠİ‹ê‹ïKng–ÀÒÌæóŠ’’è”g”Â•\••¨•ú–¡–½–û˜a‰p‰Ê‰èŠ¯‹G‹ƒ‹¦ŒaŒÅüQ¡ü¼‘²’ê“I“T“Å”O•{–@–q—áˆÕ‰‰¿‰Í‹Œ”ŒøÈ}Éq³µ«§”Å”ì”ñ•‰ˆ‰„Šg‹ŸŒÄá@‚’S’ˆ’‰“Í“û”q•À•ó–‡ˆË‰ŸŠï‹F‹’‹µ‹üŒ¨hÀª©‘ñ’ï““Ë”t”‘””—”Ş•|•ø–b–Î‰Š‰¢‰£"
+Public Const MachineDependentCharacters = "‡@‡A‡B‡C‡D‡E‡F‡G‡H‡I‡J‡K‡L‡M‡N‡O‡P‡Q‡R‡S‡T‡U‡V‡W‡X‡Y‡Z‡[‡\‡]‡_ú\ú]ú^ú_ú`úaúbúcúdúeúfúgúhúiújúkúlúmúnúoúpúqúrúsútúuúvúwúxúyúzú{"
 
 Public ThisBook As Workbook
 
@@ -77,7 +77,7 @@ Function errorHandle()
   
   Call Library.endScript
   Call Ctl_ProgressBar.showEnd
-  Call Library.showDebugForm("  ", , "end")
+  Call Library.showDebugForm("", , "end1")
 '  Stop
 End Function
 
@@ -90,7 +90,7 @@ Function startScript()
   Const funcName As String = "Library.startScript"
 
   On Error Resume Next
-  Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm(funcName, , "function1")
 
   'ƒAƒNƒeƒBƒuƒZƒ‹‚Ìæ“¾
   If TypeName(Selection) = "Range" Then
@@ -129,7 +129,7 @@ Function endScript(Optional reCalflg As Boolean = False, Optional Flg As Boolean
   Const funcName As String = "Library.endScript"
 
   On Error Resume Next
-  Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm(funcName, , "function1")
 
   '‹­§“I‚ÉÄŒvZ‚³‚¹‚é
   If reCalflg = True Then
@@ -169,13 +169,13 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function chkSheetExists(sheetName) As Boolean
+Function chkSheetExists(SheetName) As Boolean
   Dim tempSheet As Object
   Dim Result As Boolean
 
   Result = False
   For Each tempSheet In Sheets
-    If LCase(sheetName) = LCase(tempSheet.Name) Then
+    If LCase(SheetName) = LCase(tempSheet.Name) Then
       Result = True
       Exit For
     End If
@@ -226,10 +226,10 @@ End Function
 '**************************************************************************************************
 Function chkExcludeSheet(chkSheetName As String) As Boolean
  Dim Result As Boolean
- Dim sheetName As Variant
+ Dim SheetName As Variant
 
-  For Each sheetName In Range("ExcludeSheet")
-    If sheetName = chkSheetName Then
+  For Each SheetName In Range("ExcludeSheet")
+    If SheetName = chkSheetName Then
       Result = True
       Exit For
     Else
@@ -288,7 +288,7 @@ Function chkHeader(baseNameArray As Variant, chkNameArray As Variant)
   Const funcName As String = "Library.chkHeader"
 
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   errMeg = ""
   If UBound(baseNameArray) <> UBound(chkNameArray) Then
     errMeg = "ŒÂ”‚ªˆÙ‚È‚è‚Ü‚·B"
@@ -333,7 +333,7 @@ Function chkIsDate(chkVal As Date, startDay As Date, endDay As Date)
 End Function
 
 '==================================================================================================
-Function chkIsOpen(targetBookName) As Boolean
+Function chkIsOpen(targetBookName As String) As Boolean
   Dim openWorkbook As Workbook
   Dim chkFlg As Boolean
   Const funcName As String = "Library.chkIsOpen"
@@ -345,9 +345,11 @@ Function chkIsOpen(targetBookName) As Boolean
       Exit For
     End If
   Next
-  Call Library.showDebugForm("  " & funcName, , "start")
-  Call Library.showDebugForm("targetBookName", chkFlg, "info")
-
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("targetBookName", targetBookName, "debug")
+  Call Library.showDebugForm("isOpen", chkFlg, "debug")
+  Call Library.showDebugForm(funcName, , "end1")
+  
   chkIsOpen = chkFlg
 End Function
 
@@ -509,7 +511,7 @@ Function chkTypeName(targetVal As Variant, permitType As String, Optional regPat
   Set regexp = Nothing
 
 Lbl_endSelect:
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("targetval ", targetVal, "info")
   Call Library.showDebugForm("regPattern", regPattern, "info")
   Call Library.showDebugForm("resultFlg ", resultFlg, "info")
@@ -551,15 +553,20 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function convFixedLength(targetVal As String, lengs As Long, addString As String) As String
+Function convFixedLength(targetVal As String, lengs As Long, addString As String, Optional addType As Boolean = True) As String
   Dim strFirst As String
   Dim strExceptFirst As String
 
   Do While LenB(StrConv(targetVal, vbFromUnicode)) <= lengs
-    targetVal = targetVal & addString
+    If addType = True Then
+      targetVal = targetVal & addString
+    Else
+      targetVal = addString & targetVal
+    End If
   Loop
   convFixedLength = targetVal
 End Function
+
 
 '**************************************************************************************************
 ' * ƒLƒƒƒƒ‹ƒP[ƒX‚ğƒXƒl[ƒNƒP[ƒX‚É•ÏŠ·
@@ -636,6 +643,7 @@ Function convHan2Zen(Text As String) As String
   Next i
   convHan2Zen = ansData
 End Function
+
 
 '**************************************************************************************************
 ' * ƒpƒCƒv‚ğƒJƒ“ƒ}‚É•ÏŠ·
@@ -827,7 +835,7 @@ End Function
 Function delSheetData(Optional targetSheet As Worksheet, Optional line As Long)
   Const funcName As String = "Library.delSheetData"
 
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   If targetSheet Is Nothing Then
     Set targetSheet = ActiveSheet
@@ -847,7 +855,7 @@ Function delSheetData(Optional targetSheet As Worksheet, Optional line As Long)
   End If
   DoEvents
 
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+'  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 '**************************************************************************************************
@@ -945,7 +953,7 @@ Function execCopy(srcPath As String, dstPath As String)
   Const funcName As String = "Library.execCopy"
 
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
   Call showDebugForm("  ƒRƒs[Œ³F" & srcPath)
@@ -976,7 +984,7 @@ Function execMove(srcPath As String, dstPath As String)
   Const funcName As String = "Library.execMove"
 
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
   Call showDebugForm("  ˆÚ“®Œ³F" & srcPath)
@@ -1004,7 +1012,7 @@ Function execDeldir(srcPath As String)
   Const funcName As String = "Library.execDeldir"
 
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
   Call showDebugForm("  íœ‘ÎÛF" & srcPath)
@@ -1032,14 +1040,14 @@ Function execDel(srcPath As String)
   Const funcName As String = "Library.execDel"
 
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  Call showDebugForm("  íœ‘ÎÛF" & srcPath)
+  Call showDebugForm("íœ‘ÎÛ", srcPath, "debug")
 
   If srcPath Like "*[*]*" Then
   ElseIf chkFileExists(srcPath) = False Then
-    Call showinfo(404, "íœ‘ÎÛ", True)
+    Call showNotice(404, "íœ‘ÎÛ", True)
   End If
 
   FSO.DeleteFile srcPath
@@ -1062,7 +1070,7 @@ Function execRename(srcPath As String, oldFileName As String, fileName As String
 
   errFlg = False
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   Call showDebugForm("•ÏXŒ³", srcPath)
   Call showDebugForm("‹Œ–¼Ì", oldFileName)
   Call showDebugForm("V–¼Ì", fileName)
@@ -1122,7 +1130,7 @@ Private Function chkParentDir(TargetFolder)
   Const funcName As String = "Library.chkParentDir"
 
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
   ParentFolder = FSO.GetParentFolderName(TargetFolder)
@@ -1284,14 +1292,13 @@ End Function
 '**************************************************************************************************
 Function getLength(targetVal As String, Optional charType As String = "”¼Šp")
   Dim inputLen As Long
-  Const funcName As String = "Library.chkMaxlength"
+  Const funcName As String = "Library.getLength"
   
-  Call Library.showDebugForm(funcName, , "start")
-  Call Library.showDebugForm("targetVal", targetVal, "debug")
-  Call Library.showDebugForm("charType ", charType, "debug")
-  
-  Call Library.showDebugForm("•¶š”   [Len]", Len(targetVal), "debug")
-  Call Library.showDebugForm("ƒoƒCƒg”[LenB]", LenB(StrConv(targetVal, vbFromUnicode)), "debug")
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.showDebugForm("targetVal", targetVal, "debug")
+'  Call Library.showDebugForm("charType ", charType, "debug")
+'  Call Library.showDebugForm("•¶š”   [Len]", Len(targetVal), "debug")
+'  Call Library.showDebugForm("ƒoƒCƒg”[LenB]", LenB(StrConv(targetVal, vbFromUnicode)), "debug")
   
   Select Case charType
     Case "”¼Šp", "‘SŠp"
@@ -1300,7 +1307,7 @@ Function getLength(targetVal As String, Optional charType As String = "”¼Šp")
       inputLen = Len(targetVal)
   End Select
   
-  Call Library.showDebugForm("inputLen", inputLen, "debug")
+'  Call Library.showDebugForm("inputLen", inputLen, "debug")
   getLength = inputLen
   
   Exit Function
@@ -1793,7 +1800,7 @@ End Function
 '**************************************************************************************************
 Function getSheetList(columnName As String)
   Dim i As Long
-  Dim sheetName As Object
+  Dim SheetName As Object
   Const funcName As String = "Library.getSheetList"
 
   i = 3
@@ -1801,7 +1808,7 @@ Function getSheetList(columnName As String)
     columnName = "E"
   End If
 
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   'Œ»İ’è’l‚ÌƒNƒŠƒA
   Worksheets("İ’è").Range(columnName & "3:" & columnName & "100").Select
@@ -1821,10 +1828,10 @@ Function getSheetList(columnName As String)
     .PatternTintAndShade = 0
   End With
 
-  For Each sheetName In ActiveWorkbook.Sheets
+  For Each SheetName In ActiveWorkbook.Sheets
     'ƒV[ƒg–¼‚Ìİ’è
     Worksheets("İ’è").Range(columnName & i).Select
-    Worksheets("İ’è").Range(columnName & i) = sheetName.Name
+    Worksheets("İ’è").Range(columnName & i) = SheetName.Name
 
     ' ƒZƒ‹‚Ì”wŒiF‰ğœ
     With Worksheets("İ’è").Range(columnName & i).Interior
@@ -1833,10 +1840,10 @@ Function getSheetList(columnName As String)
     End With
 
     ' ƒV[ƒgF‚Æ“¯‚¶F‚ğƒZƒ‹‚Éİ’è
-    If Worksheets(sheetName.Name).Tab.Color Then
+    If Worksheets(SheetName.Name).Tab.Color Then
       With Worksheets("İ’è").Range(columnName & i).Interior
         .Pattern = xlPatternNone
-        .Color = Worksheets(sheetName.Name).Tab.Color
+        .Color = Worksheets(SheetName.Name).Tab.Color
       End With
     End If
 
@@ -1918,11 +1925,11 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
       LogLevel = 1
 
     Case "warning"
-      meg1 = "  [warn] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [warn]  " & Replace(meg1, vbNewLine, " ")
       LogLevel = 2
 
     Case "info"
-      meg1 = "  [info] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [info]  " & Replace(meg1, vbNewLine, " ")
       LogLevel = 4
 
     Case "debug"
@@ -1930,24 +1937,36 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
       LogLevel = 5
 
     Case "start"
-      meg1 = Library.convFixedLength(meg1, 60, "-")
+      meg1 = Library.convFixedLength(meg1, 60, "=")
       LogLevel = 0
     Case "end"
-      meg1 = Library.convFixedLength(meg1, 60, "-")
+      meg1 = Library.convFixedLength("", 60, "=")
       LogLevel = 0
-
+      
     Case "function"
+      meg1 = meg1
       LogLevel = 0
+    
+    Case "start1"
+      meg1 = Library.convFixedLength("  " & meg1, 60, "-")
+      LogLevel = 0
+    Case "end1"
+      meg1 = Library.convFixedLength("  ", 60, "-")
+      LogLevel = 0
+    Case "function1"
+      meg1 = "  " & meg1
+      LogLevel = 0
+      
     Case Else
       meg1 = "  [] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 6
   End Select
 
   If IsMissing(meg2) = False Then
-    meg1 = meg1 & "F" & Application.WorksheetFunction.Trim(Replace(CStr(meg2), vbNewLine, " "))
+    meg1 = meg1 & " : " & Application.WorksheetFunction.Trim(CStr(meg2))
   End If
 
-  If CInt(LogLevel) <= CInt(Split(BK_setVal("LogLevel"), ".")(0)) Then
+  If CInt(LogLevel) <= CInt(LogLevel) Then
     Call outputLog(runTime, meg1)
     Debug.Print runTime & "  " & meg1
   Else
@@ -1962,8 +1981,7 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
 
 'ƒGƒ‰[”­¶------------------------------------
 catchError:
-  Debug.Print runTime & "  [ERROR] " & Err.Description
-  Debug.Print runTime & "  " & meg1
+  Debug.Print runTime & "  [ERROR] " & Err.Description; "  " & meg1
   Exit Function
 End Function
 
@@ -2049,11 +2067,14 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function makeRandomString(ByVal setString As String, ByVal setStringCnt As Integer) As String
+Function makeRandomString(ByVal setStringCnt As Integer, Optional setString As String) As String
   Dim i, n
   Dim str1 As String
 
- For i = 1 To setStringCnt
+  If setString = "" Then
+    setString = HalfWidthDigit & HalfWidthCharacters
+  End If
+  For i = 1 To setStringCnt
     '—”ƒWƒFƒlƒŒ[ƒ^‚ğ‰Šú‰»
     Randomize
     n = Int((Len(setString) - 1 + 1) * Rnd + 1)
@@ -2376,18 +2397,18 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   
   'ˆ—ŠJn--------------------------------------
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
-    Call Library.showDebugForm("thisAppName   ", thisAppName, "debug")
-    Call Library.showDebugForm("RegistrySubKey", RegistrySubKey, "debug")
-    Call Library.showDebugForm("RegistryKey   ", RegistryKey, "debug")
-    Call Library.showDebugForm("setVal        ", CStr(setVal), "debug")
-    
-    Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
-  End If
+  Call Library.showDebugForm("Key", thisAppName & "|" & RegistrySubKey & "|" & RegistryKey & "|" & CStr(setVal), "debug")
   
+'  If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
+    Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
+'  Else
+'    Call Library.showDebugForm("setRegistry   ", "“¯ˆê‚Ì‚½‚ß–¢Às", "debug")
+'  End If
+  
+  Call Library.showDebugForm(funcName, , "end1")
   Exit Function
 'ƒGƒ‰[”­¶------------------------------------
 catchError:
@@ -2395,20 +2416,37 @@ catchError:
   Call Library.errorHandle
 End Function
 '==================================================================================================
-Function getRegistry(RegistrySubKey As String, RegistryKey As String)
+Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional typeVal As String = "String")
   Dim regVal As String
   Const funcName As String = "Library.getRegistry"
 
   On Error GoTo catchError
-  'Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm(funcName, , "start1")
+  
   If RegistryKey <> "" Then
     regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
   End If
-  If regVal = "" Then
-    getRegistry = 0
-  Else
-    getRegistry = regVal
-  End If
+  
+  Call Library.showDebugForm("MainKey", thisAppName, "debug")
+  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
+  Call Library.showDebugForm("Key    ", RegistryKey, "debug")
+  Call Library.showDebugForm("Val    ", regVal, "debug")
+  Call Library.showDebugForm("type   ", typeVal, "debug")
+  
+  Select Case typeVal
+    Case "Boolean", "Long"
+      If regVal = "" Then
+        getRegistry = 0
+      Else
+        getRegistry = regVal
+      End If
+      
+    Case "String"
+      getRegistry = regVal
+    Case Else
+  End Select
+  
+  Call Library.showDebugForm(funcName, , "end1")
   Exit Function
 
 'ƒGƒ‰[”­¶------------------------------------
@@ -2422,7 +2460,7 @@ Function delRegistry(RegistrySubKey As String, Optional RegistryKey As String)
 
   Const funcName As String = "Library.delRegistry"
   On Error GoTo catchError
-  'Call Library.showDebugForm("  " & funcName, , "function")
+  'Call Library.showDebugForm(funcName, , "function1")
 
   If RegistryKey = "" Then
     Call DeleteSetting(thisAppName, RegistrySubKey)
@@ -2444,7 +2482,7 @@ End Function
 Function setProtectSheet(Optional thisAppPasswd As String)
   Const funcName As String = "Library.setProtectSheet"
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   ActiveSheet.Protect passWord:=thisAppPasswd, DrawingObjects:=True, Contents:=True, Scenarios:=True
   ActiveSheet.EnableSelection = xlUnlockedCells
@@ -2459,7 +2497,7 @@ End Function
 Function unsetProtectSheet(Optional thisAppPasswd As String)
   Const funcName As String = "Library.unsetProtectSheet"
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
   ActiveSheet.Unprotect passWord:=thisAppPasswd
   Exit Function
@@ -2531,7 +2569,7 @@ Function replaceFromFile(fileName As String, TargetText As String, Optional NewT
 
   Const funcName As String = "Library.replaceFromFile"
   On Error GoTo catchError
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
 
  'ƒIƒuƒWƒFƒNƒgì¬
  Set FSO = CreateObject("Scripting.FileSystemObject")
@@ -2585,7 +2623,7 @@ Function setComment(Optional BgColorVal = 14811135, Optional FontVal = "MS UI Go
         'ƒTƒCƒYİ’è
         .TextFrame.AutoSize = True
         .TextFrame.Characters.Font.Size = FontSizeVal
-        '.TextFrame.Characters.Font.Color = FontColorVal
+        .TextFrame.Characters.Font.Color = FontColorVal
 
         'Œ`ó‚ğŠpŠÛlŠpŒ`‚É•ÏX
         .AutoShapeType = msoShapeRectangle
@@ -3632,6 +3670,8 @@ Function getColumnWidth()
 
   For Each slctCells In Selection
     slctCells = slctCells.ColumnWidth
+    slctCells.HorizontalAlignment = xlCenter
+    slctCells.VerticalAlignment = xlCenter
   Next
 End Function
 
@@ -3644,7 +3684,7 @@ Function setColumnWidth()
   'ˆ—ŠJn--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("  " & funcName, , "function")
+  Call Library.showDebugForm(funcName, , "function1")
   '----------------------------------------------
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
@@ -3676,7 +3716,7 @@ Function getURLStatusCode(ByVal strURL As String) As Integer
   If strURL = "" Then
     Exit Function
   End If
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   Set Http = CreateObject("MSXML2.ServerXMLHTTP.6.0")
 
   With Http
@@ -3718,30 +3758,30 @@ End Function
 '==================================================================================================
 Function sheetProtect(Optional mode As String = "")
   Dim cellAddres As String
-  Dim sheetName As Variant
+  Dim SheetName As Variant
   Const funcName As String = "Library.sheetProtect"
 
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("mode", mode, "debug")
   Call init.setting
 
   If mode = "all" Then
-    For Each sheetName In Sheets
-      ThisWorkbook.Worksheets(sheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
-      ThisWorkbook.Worksheets(sheetName.Name).EnableSelection = xlUnlockedCells
+    For Each SheetName In Sheets
+      ThisWorkbook.Worksheets(SheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
+      ThisWorkbook.Worksheets(SheetName.Name).EnableSelection = xlUnlockedCells
 
-      Call Library.showDebugForm("sheetName", sheetName.Name, "info")
+      Call Library.showDebugForm("sheetName", SheetName.Name, "info")
       DoEvents
     Next
 
   ElseIf mode = "ExcelHelp" Then
-    For Each sheetName In Sheets
-      If sheetName.Name Like "s*t" Then
+    For Each SheetName In Sheets
+      If SheetName.Name Like "s*t" Then
       Else
-        ThisWorkbook.Worksheets(sheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
-        ThisWorkbook.Worksheets(sheetName.Name).EnableSelection = xlUnlockedCells
+        ThisWorkbook.Worksheets(SheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
+        ThisWorkbook.Worksheets(SheetName.Name).EnableSelection = xlUnlockedCells
 
-        Call Library.showDebugForm("sheetName", sheetName.Name, "info")
+        Call Library.showDebugForm("sheetName", SheetName.Name, "info")
       End If
       DoEvents
     Next
@@ -3756,21 +3796,21 @@ End Function
 
 '==================================================================================================
 Function sheetUnprotect(Optional allSheetflg As Boolean = False)
-  Dim sheetName As Variant
+  Dim SheetName As Variant
   Const funcName As String = "Library.sheetUnprotect"
 
   'ˆ—ŠJn--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
 
   Call Library.showDebugForm("allSheetflg", allSheetflg, "debug")
   If allSheetflg = True Then
-    For Each sheetName In Sheets
-      If sheetName.Name Like "s*t" Then
+    For Each SheetName In Sheets
+      If SheetName.Name Like "s*t" Then
       Else
-        ThisWorkbook.Worksheets(sheetName.Name).Unprotect passWord:=thisAppPasswd
+        ThisWorkbook.Worksheets(SheetName.Name).Unprotect passWord:=thisAppPasswd
       End If
       DoEvents
     Next
@@ -3779,7 +3819,7 @@ Function sheetUnprotect(Optional allSheetflg As Boolean = False)
   End If
 
   'ˆ—I—¹--------------------------------------
-  Call Library.showDebugForm("  ", , "end")
+  Call Library.showDebugForm("", , "end1")
   Exit Function
 
 'ƒGƒ‰[”­¶------------------------------------
@@ -3797,25 +3837,25 @@ End Function
 '==================================================================================================
 Function sheetNoDisplay(Optional mode As String = "")
   Dim cellAddres As String
-  Dim sheetName As Variant
+  Dim SheetName As Variant
   Const funcName As String = "Library.sheetProtect"
 
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("mode", mode, "debug")
   Call init.setting
 
   If mode = "all" Then
-    For Each sheetName In Sheets
-      ThisWorkbook.Worksheets(sheetName.Name).Visible = xlSheetVeryHidden
-      Call Library.showDebugForm("sheetName", sheetName.Name, "info")
+    For Each SheetName In Sheets
+      ThisWorkbook.Worksheets(SheetName.Name).Visible = xlSheetVeryHidden
+      Call Library.showDebugForm("sheetName", SheetName.Name, "info")
       DoEvents
     Next
 
   ElseIf mode = "ehelp" Then
-    For Each sheetName In Sheets
-      If sheetName.Name Like "s*t" Then
-        ThisWorkbook.Worksheets(sheetName.Name).Visible = xlSheetVeryHidden
-        Call Library.showDebugForm("sheetName", sheetName.Name, "info")
+    For Each SheetName In Sheets
+      If SheetName.Name Like "s*t" Then
+        ThisWorkbook.Worksheets(SheetName.Name).Visible = xlSheetVeryHidden
+        Call Library.showDebugForm("sheetName", SheetName.Name, "info")
       End If
       DoEvents
     Next
@@ -3830,25 +3870,25 @@ End Function
 '==================================================================================================
 Function sheetDisplay(Optional mode As String = "")
   Dim cellAddres As String
-  Dim sheetName As Variant
+  Dim SheetName As Variant
   Const funcName As String = "Library.sheetProtect"
 
-  Call Library.showDebugForm("  " & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("mode", mode, "info")
   Call init.setting
 
   If mode = "all" Then
-    For Each sheetName In Sheets
-      ThisWorkbook.Worksheets(sheetName.Name).Visible = True
-      Call Library.showDebugForm("sheetName", sheetName.Name, "info")
+    For Each SheetName In Sheets
+      ThisWorkbook.Worksheets(SheetName.Name).Visible = True
+      Call Library.showDebugForm("sheetName", SheetName.Name, "info")
       DoEvents
     Next
 
   ElseIf mode = "ehelp" Then
-    For Each sheetName In Sheets
-      If sheetName.Name Like "s*t" Then
-        ThisWorkbook.Worksheets(sheetName.Name).Visible = True
-        Call Library.showDebugForm("sheetName", sheetName.Name, "info")
+    For Each SheetName In Sheets
+      If SheetName.Name Like "s*t" Then
+        ThisWorkbook.Worksheets(SheetName.Name).Visible = True
+        Call Library.showDebugForm("sheetName", SheetName.Name, "info")
       End If
       DoEvents
     Next
@@ -3892,5 +3932,7 @@ Function RedimPreserve2D(ByVal orgArray, ByVal lengthTo)
   ReDim Preserve transedArray(1 To UBound(transedArray, 1), 1 To lengthTo)
   RedimPreserve2D = WorksheetFunction.Transpose(transedArray)
 End Function
+
+
 
 

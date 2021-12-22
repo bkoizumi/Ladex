@@ -9,7 +9,7 @@ Option Explicit
 '==================================================================================================
 Function シート追加()
   Call init.setting
-  ThisWorkbook.Worksheets.add.Name = "Function"
+  ThisWorkbook.Worksheets.add.Name = "SheetList"
   ThisWorkbook.Save
 End Function
 
@@ -66,18 +66,25 @@ Function OptionSheetImport()
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsm")
 
-  targetBook.Sheets("設定").Columns("A:AA").Copy ThisWorkbook.Worksheets("設定").Range("A1")
-'  targetBook.Sheets("Ribbon").Columns("A:G").Copy ThisWorkbook.Worksheets("Ribbon").Range("A1")
-  targetBook.Sheets("Notice").Columns("A:B").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
-  targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
-  targetBook.Sheets("testData").Columns("A:P").Copy ThisWorkbook.Worksheets("testData").Range("A1")
-  targetBook.Sheets("Favorite").Columns("A:A").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
-  targetBook.Sheets("Function").Columns("A:E").Copy ThisWorkbook.Worksheets("Function").Range("A1")
+  targetBook.Sheets("設定").Columns("A:Z").Copy ThisWorkbook.Worksheets("設定").Range("A1")
+  targetBook.Sheets("Notice").Columns("A:Z").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
+  targetBook.Sheets("Style").Columns("A:Z").Copy ThisWorkbook.Worksheets("Style").Range("A1")
+  targetBook.Sheets("testData").Columns("A:Z").Copy ThisWorkbook.Worksheets("testData").Range("A1")
+  targetBook.Sheets("Favorite").Columns("A:Z").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
+  targetBook.Sheets("Function").Columns("A:Z").Copy ThisWorkbook.Worksheets("Function").Range("A1")
   
   
   Application.DisplayAlerts = False
   
-  'ヘルプシート編集--------------------------------------------------------------------------------
+  'ハイライト、コメントプレビュー用--------------
+  ThisWorkbook.Sheets("HighLight").delete
+  ThisWorkbook.Worksheets.add.Name = "HighLight"
+  ThisWorkbook.Sheets("HighLight").Cells.ColumnWidth = 3.86
+  ThisWorkbook.Sheets("HighLight").Cells.RowHeight = 15
+  targetBook.Sheets("HighLight").Columns("A:Z").Copy ThisWorkbook.Worksheets("HighLight").Range("A1")
+  
+  
+  'ヘルプシート編集------------------------------
   'ThisWorkbook.Sheets("Help").delete
   'ThisWorkbook.Worksheets.add.Name = "Help"
   ThisWorkbook.Sheets("Help").Cells.ColumnWidth = 3
@@ -97,17 +104,16 @@ Function OptionSheetImport()
 '    End If
 '  Next
   
-  'スタンプシート編集------------------------------------------------------------------------------
+  'スタンプシート編集----------------------------
   ThisWorkbook.Sheets("Stamp").delete
   ThisWorkbook.Worksheets.add.Name = "Stamp"
   targetBook.Sheets("Stamp").Columns("A:AP").Copy ThisWorkbook.Worksheets("Stamp").Range("A1")
-  Application.DisplayAlerts = True
-  
-  ThisWorkbook.Save
-  
+    
   'Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("C39"))
   
-
+  Application.DisplayAlerts = True
+  ThisWorkbook.Save
+  Set targetBook = Nothing
 End Function
 
 
@@ -117,16 +123,19 @@ Function OptionSheetExport()
   Call init.setting
   Set targetBook = Workbooks("メンテナンス用.xlsm")
   
-'  ThisWorkbook.Sheets("設定").Columns("A:AA").Copy targetBook.Worksheets("設定").Range("A1")
-'  ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
-'  ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
-'  ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
-'  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
-  ThisWorkbook.Worksheets("Function").Columns("A:C").Copy targetBook.Sheets("Function").Range("A1")
+  ThisWorkbook.Sheets("設定").Columns("A:AA").Copy targetBook.Worksheets("設定").Range("A1")
+  ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
+  ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
+  ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
+  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  ThisWorkbook.Worksheets("Function").Columns("A:Z").Copy targetBook.Sheets("Function").Range("A1")
+  ThisWorkbook.Worksheets("SheetList").Columns("A:Z").Copy targetBook.Sheets("SheetList").Range("A1")
   
 '  Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
   
-
+  targetBook.Save
+  ThisWorkbook.Save
+  Set targetBook = Nothing
 End Function
 
 

@@ -73,7 +73,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   'èàóùèIóπ--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------

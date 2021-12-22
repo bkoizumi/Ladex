@@ -10,16 +10,23 @@ Option Explicit
 Function setVal(pType As String, pText As String)
   Dim line As Long, endLine As Long
   Dim chkFlg As Boolean
+  Const funcName As String = "Ctl_SaveVal.setVal"
   
   '処理開始--------------------------------------
-'  On Error GoTo catchError
-  funcName = "Ctl_SaveVal.setVal"
-
-  Call init.setting
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
   chkFlg = False
   BK_ThisBook.Activate
-'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("設定")
-  '----------------------------------------------
+  
   endLine = Cells(Rows.count, 4).End(xlUp).Row
   For line = 3 To BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
     If BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) = pType Then
@@ -36,10 +43,16 @@ Function setVal(pType As String, pText As String)
     BK_sheetSetting.Range(BK_setVal("Cells_pText") & line) = pText
   End If
   
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
 End Function
 
 
@@ -47,13 +60,19 @@ End Function
 Function getVal(pType As String) As String
   Dim resetObjVal          As Object
   Dim line As Long, endLine As Long
+  Const funcName As String = "Ctl_SaveVal.getVal"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
-  funcName = "Ctl_SaveVal.setVal"
-
-  Call init.setting
-'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("設定")
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Set resetObjVal = Nothing
@@ -72,40 +91,52 @@ Function getVal(pType As String) As String
   End If
   Set resetObjVal = Nothing
   
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Set resetObjVal = Nothing
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
 End Function
 
 '==================================================================================================
 Function delVal(pType As String)
   Dim line As Long, endLine As Long
+  Const funcName As String = "Ctl_SaveVal.delVal"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
-  funcName = "Ctl_SaveVal.setVal"
-  
-  Call Library.startScript
-  Call init.setting
-'  Set BK_sheetSetting = ActiveWorkbook.Worksheets("設定")
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-  
   
   For line = 3 To BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
     If BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) Like "*" & pType Then
       BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) = ""
       BK_sheetSetting.Range(BK_setVal("Cells_pText") & line) = ""
-
     End If
   Next
  
-  
-  Call Library.endScript
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
 End Function
 

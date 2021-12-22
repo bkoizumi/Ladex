@@ -9,14 +9,23 @@ Option Explicit
 '**************************************************************************************************
 '==================================================================================================
 Function 数式確認()
-
   Dim confirmFormulaName As String
   Dim count As Long
   Dim formulaVals As Variant
   Dim objShp, aryRange
+  Const funcName As String = "Ctl_Formula.数式確認"
   
-'  On Error GoTo catchError
-  Call Library.startScript
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
   '既存のファイル削除
   For Each objShp In ActiveSheet.Shapes
@@ -29,33 +38,50 @@ Function 数式確認()
     Call Library.endScript
     Exit Function
   End If
-  
-  Call init.setting
-  aryRange = getFormulaRange(ActiveCell)
+  aryRange = Ctl_Formula.getFormulaRange(ActiveCell)
   
   count = 1
   For Each formulaVals In aryRange
     confirmFormulaName = "confirmFormulaName_" & count
-  
-    Call 範囲選択(formulaVals, confirmFormulaName)
+    Call Ctl_Formula.範囲選択(formulaVals, confirmFormulaName)
     count = count + 1
   Next
-  
   ActiveCell.Select
-
-
-  Call Library.endScript
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+  
+'エラー発生時------------------------------------
 catchError:
-  Call Library.endScript
-  'Call Library.showNotice(400, "", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
 '==================================================================================================
 Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
-
+  Const funcName As String = "Ctl_Formula.範囲選択"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  
   If formulaVals.Worksheet.Name <> ActiveSheet.Name Then
     Exit Function
   End If
@@ -80,24 +106,47 @@ Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
     .MarginTop = 0
     .MarginBottom = 0
     .TextRange.Font.Fill.ForeColor.RGB = RGB(255, 0, 0)
-  
   End With
   
   Selection.ShapeRange.line.Visible = msoTrue
   Selection.ShapeRange.line.ForeColor.RGB = RGB(255, 0, 0)
   Selection.ShapeRange.line.Weight = 2
   
-  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
-
-
 '==================================================================================================
-Sub GetCurPosition()
-
-  Dim p        As POINTAPI 'API用変数
+Function GetCurPosition()
+  Dim p As POINTAPI 'API用変数
   Dim Rng  As Range
   Dim objShp
+  Const funcName As String = "Ctl_Formula.GetCurPosition"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
   For Each objShp In ActiveSheet.Shapes
     If objShp.Name Like "confirmFormulaName_*" Then
@@ -105,99 +154,132 @@ Sub GetCurPosition()
     End If
   Next
   Call Library.waitTime(50)
-  Call Library.startScript
   
   'カーソル位置取得
   GetCursorPos p
   If TypeName(ActiveWindow.RangeFromPoint(p.X, p.Y)) = "Range" Then
     ActiveWindow.RangeFromPoint(p.X, p.Y).Select
   End If
-  Call Library.endScript
   Call Ctl_Formula.数式確認
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
 
-
-End Sub
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
 '==================================================================================================
 Function getFormulaRange(ByVal argRange As Range) As Range()
-    Dim sFormula As String
-    Dim aryRange() As Range
-    Dim tRange As Range
-    Dim ix As Long
-    Dim i As Long
-    Dim flgS As Boolean 'シングルクオートが奇数の時True
-    Dim flgD As Boolean 'ダブルクオートが奇数の時True
-    Dim sSplit() As String
-    Dim sTemp As String
+  Dim sFormula As String, sSplit() As String, sTemp As String
+  Dim aryRange() As Range, tRange As Range
+  Dim ix As Long, i As Long
+  Dim flgS As Boolean, flgD As Boolean
+  Const funcName As String = "Ctl_Formula.getFormulaRange"
   
-    '=以降の計算式
-    sFormula = Mid(argRange.FormulaLocal, 2)
-    '計算式の中の改行や余分な空白を除去
-    sFormula = Replace(sFormula, vbCrLf, "")
-    sFormula = Replace(sFormula, vbLf, "")
-    sFormula = Trim(sFormula)
-  
-    flgS = False
-    flgD = False
-    For i = 1 To Len(sFormula)
-        'シングル・ダブルのTrue,Falseを反転
-        Select Case Mid(sFormula, i, 1)
-            Case "'"
-                flgS = Not flgS
-            Case """"
-                'シングルの中ならシート名
-                If Not flgS Then
-                    flgD = Not flgD
-                End If
-        End Select
-        Select Case Mid(sFormula, i, 1)
-            '各種演算子の判定
-            Case "+", "-", "*", "/", "^", ">", "<", "=", "(", ")", "&", ",", " "
-                Select Case True
-                    Case flgS
-                        'シングルの中ならシート名
-                        sTemp = sTemp & Mid(sFormula, i, 1)
-                    Case flgD
-                        'ダブルの中なら無視
-                    Case Else
-                        '各種演算子をvbLfに置換
-                        sTemp = sTemp & vbLf
-                End Select
-            Case Else
-                'ダブルの中なら無視、ただしシングルの中はシート名
-                If Not flgD Or flgS Then
-                    sTemp = sTemp & Mid(sFormula, i, 1)
-                End If
-        End Select
-    Next
-  
-    On Error Resume Next
-    'vbLfで区切って配列化
-    sSplit = Split(sTemp, vbLf)
-    ix = 0
-    For i = 0 To UBound(sSplit)
-        If sSplit(i) <> "" Then
-            Err.Clear
-            'Application.Evaluateメソッドを使ってRangeに変換
-            If InStr(sSplit(i), "!") > 0 Then
-                Set tRange = Evaluate(Trim(sSplit(i)))
-            Else
-                'シート名を含まない場合は、元セルのシート名を付加
-                Set tRange = Evaluate("'" & argRange.Parent.Name & "'!" & Trim(sSplit(i)))
-            End If
-            'Rangeオブジェクト化が成功すれば配列へ入れる
-            If Err.Number = 0 Then
-                ReDim Preserve aryRange(ix)
-                Set aryRange(ix) = tRange
-                ix = ix + 1
-            End If
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  '=以降の計算式
+  sFormula = Mid(argRange.FormulaLocal, 2)
+  '計算式の中の改行や余分な空白を除去
+  sFormula = Replace(sFormula, vbCrLf, "")
+  sFormula = Replace(sFormula, vbLf, "")
+  sFormula = Trim(sFormula)
+
+  flgS = False
+  flgD = False
+  For i = 1 To Len(sFormula)
+    'シングル・ダブルのTrue,Falseを反転
+    Select Case Mid(sFormula, i, 1)
+      Case "'"
+        flgS = Not flgS
+      Case """"
+        'シングルの中ならシート名
+        If Not flgS Then
+          flgD = Not flgD
         End If
-    Next
-    On Error GoTo 0
-    getFormulaRange = aryRange
+    End Select
+    Select Case Mid(sFormula, i, 1)
+      '各種演算子の判定
+      Case "+", "-", "*", "/", "^", ">", "<", "=", "(", ")", "&", ",", " "
+        Select Case True
+          Case flgS
+            'シングルの中ならシート名
+            sTemp = sTemp & Mid(sFormula, i, 1)
+          Case flgD
+            'ダブルの中なら無視
+          Case Else
+            '各種演算子をvbLfに置換
+            sTemp = sTemp & vbLf
+        End Select
+      Case Else
+        'ダブルの中なら無視、ただしシングルの中はシート名
+        If Not flgD Or flgS Then
+          sTemp = sTemp & Mid(sFormula, i, 1)
+        End If
+    End Select
+  Next
+
+  On Error Resume Next
+  'vbLfで区切って配列化
+  sSplit = Split(sTemp, vbLf)
+  ix = 0
+  For i = 0 To UBound(sSplit)
+    If sSplit(i) <> "" Then
+      Err.Clear
+      'Application.Evaluateメソッドを使ってRangeに変換
+      If InStr(sSplit(i), "!") > 0 Then
+        Set tRange = Evaluate(Trim(sSplit(i)))
+      Else
+        'シート名を含まない場合は、元セルのシート名を付加
+        Set tRange = Evaluate("'" & argRange.Parent.Name & "'!" & Trim(sSplit(i)))
+      End If
+      'Rangeオブジェクト化が成功すれば配列へ入れる
+      If Err.Number = 0 Then
+        ReDim Preserve aryRange(ix)
+        Set aryRange(ix) = tRange
+        ix = ix + 1
+      End If
+    End If
+  Next
+  On Error GoTo 0
+  getFormulaRange = aryRange
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
-
-
 
 '**************************************************************************************************
 ' * 数式編集
@@ -210,9 +292,15 @@ Function formula01()
   Const funcName As String = "Ctl_Formula.formula01"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
-  Call init.setting
-  Call Library.showDebugForm("" & funcName, , "function")
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
   If ActiveCell.HasFormula = False Then
@@ -229,10 +317,20 @@ Function formula01()
   
   ActiveCell.Formula = "=" & formulaVal
   
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
   Exit Function
+
 'エラー発生時------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 
@@ -240,30 +338,72 @@ End Function
 '==================================================================================================
 Function formula02()
   Dim formulaVal As String
+  Const funcName As String = "Ctl_Formula.formula02"
   
-  'On Error GoTo catchError
-
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
 
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
 '==================================================================================================
 Function formula03()
   Dim formulaVal As String
+  Const funcName As String = "Ctl_Formula.formula03"
   
-  'On Error GoTo catchError
-
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("  " & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
   
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+
+'エラー発生時------------------------------------
 catchError:
-
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
-
 
 
 

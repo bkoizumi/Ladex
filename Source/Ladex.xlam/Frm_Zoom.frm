@@ -20,6 +20,8 @@ Private Sub UserForm_Initialize()
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
+  
+  Caption = "ズーム |  " & thisAppName
 End Sub
 
 '==================================================================================================
@@ -36,5 +38,5 @@ End Sub
 '==================================================================================================
 Private Sub TextBox_Change()
   Call init.setting
-  Label2.Caption = "入力文字数：" & Library.getLength(TextBox.Value)
+  Label2.Caption = "入力文字数：" & Library.getLength(TextBox.Value, "文字数")
 End Sub

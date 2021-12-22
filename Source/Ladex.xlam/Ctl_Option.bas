@@ -86,7 +86,7 @@ Function showHelp()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -135,7 +135,7 @@ Function initialization()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -178,7 +178,7 @@ Function showOption()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -219,7 +219,7 @@ Function HighLight()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -260,7 +260,7 @@ Function Comment()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("  ", , "end")
+    Call Library.showDebugForm("", , "end")
     Call init.unsetting
   End If
   '----------------------------------------------

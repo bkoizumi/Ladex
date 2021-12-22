@@ -24,6 +24,8 @@ Private Sub UserForm_Initialize()
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
 
+    Caption = "ƒo[ƒWƒ‡ƒ“î•ñ |  " & thisAppName
+
 End Sub
 
 

@@ -12,71 +12,70 @@ Dim setStyleBook     As Workbook
 '==================================================================================================
 Function Export()
   Dim filePath As String, fileName As String
-  Dim FSO As Object
-     
+  Const funcName As String = "Ctl_Style.Export"
      
   '処理開始--------------------------------------
-  'On Error GoTo catchError
-  funcName = "Ctl_Style.Export"
-
-  Call Library.startScript
-  Call init.setting
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-
   BK_sheetStyle.Copy
   
   Set setStyleBook = ActiveWorkbook
-  Set FSO = CreateObject("Scripting.FileSystemObject")
-  
-  With setStyleBook
-    With FSO
-      fileName = thisAppName & "_" & .GetBaseName(.GetTempName) & ".xlsx"
-      filePath = .GetSpecialFolder(2) & "\" & fileName
-    End With
-    .SaveAs filePath
-  End With
-  Set FSO = Nothing
+  setStyleBook.SaveAs LadexDir & "\" & "スタイル情報.xlsx"
   
   Call Ctl_SaveVal.setVal("ExportStyleFilePaht", filePath)
   Call Ctl_SaveVal.setVal("ExportStyleFileName", fileName)
 
 
   '処理終了--------------------------------------
-  Call Library.endScript
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end1")
+    Call init.unsetting
+  End If
   '----------------------------------------------
 
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
 
 
 '==================================================================================================
 Function Import()
-  Dim FSO As Object
   Dim styleBookPath As String
   Dim filePath As String, fileName As String
+  Const funcName As String = "Ctl_Style.Import"
   
-  
-  Set FSO = CreateObject("Scripting.FileSystemObject")
-     
-     
   '処理開始--------------------------------------
-  'On Error GoTo catchError
-  funcName = "Ctl_Style.Import"
-
-  Call Library.startScript
-  Call init.setting
-  
-  '----------------------------------------------
-  If setStyleBook Is Nothing Then
-    Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
   End If
+  Call Ctl_ProgressBar.showStart
+  PrgP_Max = 4
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
   
-  Call Library.startScript
-  setStyleBook.Save
-  
+  If Library.chkIsOpen("スタイル情報.xlsx") Then
+    Set setStyleBook = Workbooks("スタイル情報.xlsx")
+    setStyleBook.Save
+  Else
+    Set setStyleBook = Workbooks.Open(LadexDir & "\" & "スタイル情報.xlsx")
+    Call Library.startScript
+  End If
   setStyleBook.Sheets("Style").Columns("A:J").Copy BK_ThisBook.Worksheets("Style").Range("A1")
   
   Call Ctl_SaveVal.delVal("ExportStyleFilePaht")
@@ -85,23 +84,29 @@ Function Import()
   styleBookPath = setStyleBook.Path & "\" & setStyleBook.Name
   Application.DisplayAlerts = False
   setStyleBook.Close
-  Call Library.execDel(styleBookPath)
+'  Call Library.execDel(styleBookPath)
   
   Set setStyleBook = Nothing
   If MsgBox("スタイルを適応しますか？", vbYesNo + vbExclamation) = vbYes Then
-    Call Ctl_Style.スタイル削除
     Call Ctl_Style.スタイル設定
   End If
   
   
   '処理終了--------------------------------------
-  Call Library.endScript
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
   '----------------------------------------------
 
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
 
 
@@ -115,12 +120,21 @@ Function スタイル削除()
   Dim count As Long, endCount As Long
   Dim line As Long, endLine As Long
   Dim tempSheet As Object
+  Const funcName As String = "Ctl_Style.スタイル削除"
   
-  On Error Resume Next
-  
-  
-  Call Library.startScript
-  Call init.setting
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
   
   'ブックの保護確認
   If ActiveWorkbook.ProtectWindows = True Then
@@ -135,31 +149,43 @@ Function スタイル削除()
     End If
   Next
   
-  
   count = 1
-  Call Ctl_ProgressBar.showStart
   endCount = ActiveWorkbook.Styles.count
   
   For Each s In ActiveWorkbook.Styles
     Call Ctl_ProgressBar.showCount("定義済スタイル削除", count, endCount, s.Name)
     Select Case s.Name
       Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
-        Call Library.showDebugForm("定義済スタイル    ：" & s.Name)
+        Call Library.showDebugForm("定義済スタイル", s.Name, "debug")
       
       'Ladexの初期設定
-      Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準"
-        Call Library.showDebugForm("Ladexスタイル    ：" & s.Name)
+      Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準", "H_目次1", "H_目次2", "H_目次3", "《》"
+        Call Library.showDebugForm("Ladexスタイル ", s.Name, "debug")
       
       Case Else
-        Call Library.showDebugForm("定義済スタイル削除：" & s.Name)
+        Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
         s.delete
     End Select
     count = count + 1
   Next
   
-  Call Ctl_ProgressBar.showEnd
-  Call Library.endScript
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
 
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
@@ -174,26 +200,44 @@ Function スタイル設定()
   Dim line As Long, endLine As Long
   Dim tempSheet As Object
   
-  On Error Resume Next
+'  On Error Resume Next
+  Const funcName As String = "Ctl_Style.スタイル設定"
   
   
-  Call Library.startScript
-  Call init.setting
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
   
   Call Ctl_Style.スタイル削除
-  Call Ctl_ProgressBar.showStart
-
   
-  'スタイル初期化----------------------------------------------------------------------------------
+  'スタイル初期化--------------------------------
   endLine = BK_sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
   For line = 2 To endLine
     If BK_sheetStyle.Range("A" & line) <> "無効" Then
-      Call Ctl_ProgressBar.showCount("スタイル初期化", line, endLine, BK_sheetStyle.Range("B" & line))
-      Call Library.showDebugForm("スタイル初期化：" & BK_sheetStyle.Range("B" & line))
+      Call Ctl_ProgressBar.showCount("スタイル設定", line, endLine, BK_sheetStyle.Range("B" & line))
 
-      If BK_sheetStyle.Range("B" & line) <> "Normal" Then
+      Select Case BK_sheetStyle.Range("B" & line)
+        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
+          Call Library.showDebugForm("定義済スタイル", BK_sheetStyle.Range("B" & line), "debug")
+          
+      'Ladexの初期設定
+      Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準", "H_目次1", "H_目次2", "H_目次3", "《》"
+        Call Library.showDebugForm("Ladexスタイル ", BK_sheetStyle.Range("B" & line), "debug")
+      
+      Case Else
+        Call Library.showDebugForm("スタイル名", BK_sheetStyle.Range("B" & line), "debug")
         ActiveWorkbook.Styles.add Name:=BK_sheetStyle.Range("B" & line).Value
-      End If
+      End Select
 
       With ActiveWorkbook.Styles(BK_sheetStyle.Range("B" & line).Value)
 
@@ -265,15 +309,26 @@ Function スタイル設定()
         If BK_sheetStyle.Range("H" & line) = "TRUE" Then
           .Interior.Color = BK_sheetStyle.Range("J" & line).Interior.Color
         End If
-
-
       End With
     End If
   Next
   
-  Call Ctl_ProgressBar.showEnd
-  Call Library.endScript
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+      Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
 
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
@@ -314,12 +369,12 @@ Function スタイル初期化()
   
   '処理終了--------------------------------------
   Application.GoTo Reference:=Range("A1"), Scroll:=True
-  Call Library.showDebugForm(funcName & "終了==========================================")
+  Call Library.showDebugForm("", , "end")
   Call Library.endScript
   '----------------------------------------------
 
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, funcName & vbNewLine & Err.Number & "：" & Err.Description, True)
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function

@@ -28,20 +28,19 @@ Private Const WS_THICKFRAME = &H40000
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function FormResize()
-    Dim hwnd                    As Long         '// ウインドウハンドル
-    Dim style                   As Long         '// ウインドウスタイル
- 
-    '// ウインドウハンドル取得
-    hwnd = GetActiveWindow()
-    
-    '// ウインドウのスタイルを取得
-    style = GetWindowLong(hwnd, GWL_STYLE)
-    
-    '// ウインドウのスタイルにウインドウサイズ可変＋最小ボタン＋最大ボタンを追加
-    style = style Or WS_THICKFRAME Or WS_MAXIMIZEBOX
- 
-    '// ウインドウのスタイルを再設定
-    Call SetWindowLong(hwnd, GWL_STYLE, style)
+  Dim hwnd  As Long, style As Long
+  
+  'ウインドウハンドル取得
+  hwnd = GetActiveWindow()
+  
+  'ウインドウのスタイルを取得
+  style = GetWindowLong(hwnd, GWL_STYLE)
+  
+  'ウインドウのスタイルにウインドウサイズ可変＋最小ボタン＋最大ボタンを追加
+  style = style Or WS_THICKFRAME Or WS_MAXIMIZEBOX
+  
+  'ウインドウのスタイルを再設定
+  Call SetWindowLong(hwnd, GWL_STYLE, style)
 End Function
 
 
@@ -51,7 +50,20 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function InitializeUsrFunction()
-
+  Const funcName As String = "Ctl_UsrFunction.InitializeUsrFunction"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
   Application.MacroOptions _
     Macro:="chkWorkDay", _
     Description:="第N営業日かチェックし、True/Falseを返す", _
@@ -68,7 +80,9 @@ Function InitializeUsrFunction()
     Macro:="chkWeekNum", _
     Description:="第N週X曜日の日付かチェックし、True/Falseを返す", _
     Category:=thisAppName, _
-    ArgumentDescriptions:=Array("チェックする日付を指定", "第N週を数値で指定", "X曜日を数値で指定")
+    ArgumentDescriptions:=Array("チェックする日付を指定", "第N週を数値で指定", "曜日を数値で指定" & vbNewLine & _
+                                "1：月　2：火　3：水" & vbNewLine & _
+                                "4：木　5：金　6：土　7：日")
 
   Application.MacroOptions _
     Macro:="Textjoin", _
@@ -76,13 +90,25 @@ Function InitializeUsrFunction()
     Category:=thisAppName, _
     ArgumentDescriptions:=Array("区切り文字", "空欄時処理[True：処理する/False：処理しない]", "文字列1,文字列2, ...")
 
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
 
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
-
-
 '==================================================================================================
-Function Textjoin(Delim, Ignore As Boolean, ParamArray par())
+Function Textjoin(Delim As String, ParamArray par())
 Attribute Textjoin.VB_Description = "文字列連結"
 Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim i As Integer
@@ -94,22 +120,19 @@ Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n19"
   For i = LBound(par) To UBound(par)
     If TypeName(par(i)) = "Range" Then
       For Each tR In par(i)
-        If tR.Value <> "" Or Ignore = False Then
+        If tR.Value <> "" Then
           Textjoin = Textjoin & Delim & tR.Value2
         End If
       Next
     Else
-      If (par(i) <> "" And par(i) <> "<>") Or Ignore = False Then
+      If (par(i) <> "" And par(i) <> "<>") Then
         Textjoin = Textjoin & Delim & par(i)
       End If
     End If
   Next
 
   Textjoin = Mid(Textjoin, Len(Delim) + 1)
-
 End Function
-
-
 
 
 '==================================================================================================

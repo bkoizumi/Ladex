@@ -28,7 +28,7 @@ Private Sub UserForm_Initialize()
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
-  
+  Caption = "‚¨‹C‚É“ü‚è |  " & thisAppName
   
   Set myMenu = Application.CommandBars.add(Position:=msoBarPopup, Temporary:=True)
   

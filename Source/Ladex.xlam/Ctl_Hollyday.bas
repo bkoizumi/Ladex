@@ -12,17 +12,26 @@ Function InitializeHollyday()
   Dim NowYear As Integer, today As Date
   Dim HollydayName As String
   Dim count As Long
+  Const funcName As String = "Ctl_Hollyday.InitializeHollyday"
   
-  Call init.setting
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
   
   NowYear = Format(Date, "yyyy")
   startDay = Format(NowYear & "/4/1", "yyyy/mm/dd")
   endDay = Format(NowYear + 2 & "/3/31", "yyyy/mm/dd")
   
   If Library.chkArrayEmpty(arryHollyday) = False Then
-    Exit Function
-  Else
-    Range("J3:K" & Rows.count).ClearContents
+    GoTo Lbl_exitFunction
   End If
   
   count = 0
@@ -32,8 +41,24 @@ Function InitializeHollyday()
       arryHollyday(count) = today
     End If
   Next
-End Function
 
+Lbl_exitFunction:
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
 
 '==================================================================================================

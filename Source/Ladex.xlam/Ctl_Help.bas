@@ -3,11 +3,9 @@ Option Explicit
 
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
-
   Dim actrow As Integer
   On Error GoTo catchError
   
-
   ' 選択セルが変更されたとき
   If ActiveCell.Column = 1 And ActiveCell.Value <> "" Then
     ' A列で値が"タイトル"で選択範囲が3の場合そのセルを左上に持ってくる
@@ -33,7 +31,6 @@ End Sub
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Sub 目次生成()
-
   Dim line As Long, endLine As Long, mline As Long
   Dim columnName1 As String, columnName2 As String
   
@@ -109,7 +106,4 @@ catchError:
     Call Library.endScript
 
 End Sub
-
-
-
 

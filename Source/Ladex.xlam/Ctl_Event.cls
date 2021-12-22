@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "clsEvent"
+Attribute VB_Name = "Ctl_Event"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -25,6 +25,7 @@ Private pCntBS As Integer
 
 'イベント停止（一時的に停止させる）
 Private pStopEvent As Boolean
+
 
 '==================================================================================================
 ' 公開プロパティ
@@ -161,33 +162,64 @@ End Sub
 '==================================================================================================
 'ブックが開かれたときに発生
 Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
-    If Me.StopEvent Then Exit Sub
-    If Not CheckBook(wb) Then Exit Sub
+  Const funcName As String = "Ctl_Event.xlApp_WorkbookOpen"
+  
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckBook(wb) Then Exit Sub
 
-    'メッセージボックスでイベント補足を確認
-'    MsgBox "WorkbookOpen : " & wb.FullName
+'  runFlg = True
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.startScript
+'  Call Main.setShortcutKey
+'  Call Library.endScript
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 
 '==================================================================================================
 'ブックが閉じられる直前に発生
 Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
-    If Me.StopEvent Then Exit Sub
-    If Not CheckBook(wb) Then Exit Sub
+  Const funcName As String = "Ctl_Event.xlApp_WorkbookBeforeClose"
+  
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckBook(wb) Then Exit Sub
 
-    'メッセージボックスでイベント補足を確認
-'    MsgBox "WorkbookBeforeClose : " & wb.FullName
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.showDebugForm(funcName, , "end")
+  
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
-
 
 '==================================================================================================
 '新しいブックが作成されたときに発生
 Private Sub xlApp_NewWorkbook(ByVal wb As Workbook)
-    If Me.StopEvent Then Exit Sub
-    If Not CheckBook(wb) Then Exit Sub
+  Const funcName As String = "Ctl_Event.xlApp_NewWorkbook"
+  
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckBook(wb) Then Exit Sub
 
-    'メッセージボックスでイベント補足を確認
-'    MsgBox "NewWorkbook : " & wb.Name
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.showDebugForm(funcName, , "end")
+  
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 '==================================================================================================
@@ -198,67 +230,99 @@ End Sub
 '==================================================================================================
 'シートがアクティブになったときに発生
 Private Sub xlApp_SheetActivate(ByVal sh As Object)
+  Const funcName As String = "Ctl_Event.xlApp_SheetActivate"
+  
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(sh) Then Exit Sub
 
-    'メッセージボックスでイベント補足を確認
-'    MsgBox "SheetActivate : [" & Sh.Parent.Name & "]" & Sh.Name
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.showDebugForm(funcName, , "end")
+  
   Exit Sub
-'エラー発生時--------------------------------------------------------------------------------------
+  
+'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(400, "", True)
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
-
 
 '==================================================================================================
 'ワークシートのセルが変更されたときに発生
 Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
-    If Me.StopEvent Then Exit Sub
-    If Not CheckSheet(sh) Then Exit Sub
+  Const funcName As String = "Ctl_Event.xlApp_SheetChange"
+    
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckSheet(sh) Then Exit Sub
 
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.showDebugForm(funcName, , "end")
 
-
-    'メッセージボックスでイベント補足を確認
-'    MsgBox "SheetChange : " & Target.Address(external:=True)
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
-
 
 '==================================================================================================
 Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range)
+  Const funcName As String = "Ctl_Event.xlApp_SheetSelectionChange"
+  
+  On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(sh) Then Exit Sub
   
-  'ハイライト機能----------------------------------------------------------------------------------
-  If Library.getRegistry("Main", "HighLightFlg") = True Then
+  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+  
+  'ハイライト機能--------------------------------
+  If BKh_rbPressed = True Then
     runFlg = True
     Call Ctl_HighLight.showStart(Target)
   End If
   
-  '数式確認機能------------------------------------------------------------------------------------
+  '数式確認機能----------------------------------
   If BKcf_rbPressed = True Then
     runFlg = True
     Call Ctl_Formula.数式確認
   End If
+  
+'  Call Library.showDebugForm(funcName, , "end")
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 
 '==================================================================================================
 'セルがダブルクリックされたときに発生
 Private Sub xlApp_SheetBeforeDoubleClick(ByVal sh As Object, ByVal Target As Range, Cancel As Boolean)
+  Const funcName As String = "Ctl_Event.xlApp_SheetBeforeDoubleClick"
+
+  On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(sh) Then Exit Sub
 
-  'ズーム機能--------------------------------------------------------------------------------------
-  If Library.getRegistry("Main", "ZoomFlg") = True Then
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start")
+  
+  'ズーム機能------------------------------------
+  If BKz_rbPressed = True Then
     Cancel = True
     runFlg = True
     Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
   End If
-
-
-
-
+  Call Library.showDebugForm(funcName, , "end")
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 '==================================================================================================

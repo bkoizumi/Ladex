@@ -80,3 +80,10 @@ Function Zoom01()
   
 End Function
 
+'==================================================================================================
+'初期ズーム値に変更
+Function defaultZoom()
+  Call init.setting
+  ActiveWindow.Zoom = Library.getRegistry("Main", "ZoomLevel")
+End Function
+
