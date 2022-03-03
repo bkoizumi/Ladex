@@ -170,6 +170,7 @@ Function showOption()
     .Show
   End With
 
+  Call init.setting(True)
   Call Main.setShortcutKey
 
 

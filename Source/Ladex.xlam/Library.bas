@@ -90,8 +90,10 @@ Function startScript()
   Const funcName As String = "Library.startScript"
 
   On Error Resume Next
-  Call Library.showDebugForm(funcName, , "function1")
-
+  If logFile <> "" Then
+    Call Library.showDebugForm(funcName, , "function1")
+  End If
+  
   'アクティブセルの取得
   If TypeName(Selection) = "Range" Then
     SelectionCell = Selection.Address
@@ -125,11 +127,13 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function endScript(Optional reCalflg As Boolean = False, Optional Flg As Boolean = False)
+Function endScript(Optional reCalflg As Boolean = False, Optional flg As Boolean = False)
   Const funcName As String = "Library.endScript"
 
   On Error Resume Next
-  Call Library.showDebugForm(funcName, , "function1")
+  If logFile <> "" Then
+    Call Library.showDebugForm(funcName, , "function1")
+  End If
 
   '強制的に再計算させる
   If reCalflg = True Then
@@ -137,7 +141,7 @@ Function endScript(Optional reCalflg As Boolean = False, Optional Flg As Boolean
   End If
 
  'アクティブセルの選択
-  If SelectionCell <> "" And Flg = True Then
+  If SelectionCell <> "" And flg = True Then
     ActiveWorkbook.Worksheets(SelectionSheet).Select
     ActiveWorkbook.Range(SelectionCell).Select
   End If
@@ -1153,10 +1157,10 @@ End Function
 '**************************************************************************************************
 Function execCompress(srcPath As String, zipFilePath As String) As Boolean
   'Dim sh  As New IWshRuntimeLibrary.WshShell
-  Dim sh
+  Dim Sh
   Dim ex  As WshExec
   Dim cmd As String
-  Set sh = CreateObject("WScript.Shell")
+  Set Sh = CreateObject("WScript.Shell")
   Call showDebugForm("対象ディレクトリ：" & srcPath)
   Call showDebugForm("zipファイル     ：" & zipFilePath)
 
@@ -1170,7 +1174,7 @@ Function execCompress(srcPath As String, zipFilePath As String) As Boolean
 
   cmd = "Compress-Archive -Path " & srcPath & " -DestinationPath " & zipFilePath & " -Force"
   Call showDebugForm("cmd：" & cmd)
-  Set ex = sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
+  Set ex = Sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
 
   If ex.Status = WshFailed Then
     execCompress = False
@@ -1187,11 +1191,11 @@ End Function
 '==================================================================================================
 Function execUncompress(zipFilePath As String, dstPath As String) As Boolean
   'Dim sh As New IWshRuntimeLibrary.WshShell
-  Dim sh
+  Dim Sh
   Dim ex As WshExec
   Dim cmd As String
 
-  Set sh = CreateObject("WScript.Shell")
+  Set Sh = CreateObject("WScript.Shell")
   Call showDebugForm("zipファイル     ", zipFilePath)
   Call showDebugForm("対象ディレクトリ", dstPath)
 
@@ -1208,7 +1212,7 @@ Function execUncompress(zipFilePath As String, dstPath As String) As Boolean
 
   cmd = "Expand-Archive -Path " & zipFilePath & " -DestinationPath " & dstPath & " -Force"
   Call showDebugForm("cmd：" & cmd)
-  Set ex = sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
+  Set ex = Sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
 
   If ex.Status = WshFailed Then
     execUncompress = False
@@ -1937,10 +1941,10 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
       LogLevel = 5
 
     Case "start"
-      meg1 = Library.convFixedLength(meg1, 60, "=")
+      meg1 = Library.convFixedLength(meg1, 62, "=")
       LogLevel = 0
     Case "end"
-      meg1 = Library.convFixedLength("", 60, "=")
+      meg1 = Library.convFixedLength("", 62, "=")
       LogLevel = 0
       
     Case "function"
@@ -1966,10 +1970,10 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
     meg1 = meg1 & " : " & Application.WorksheetFunction.Trim(CStr(meg2))
   End If
 
-  If CInt(LogLevel) <= CInt(LogLevel) Then
+  If CInt(LogLevel) <= CInt(Split(BK_setVal("LogLevel"), ".")(0)) Then
     Call outputLog(runTime, meg1)
-    Debug.Print runTime & "  " & meg1
-  Else
+  End If
+  If BK_setVal("debugMode") = "develop" Then
     Debug.Print runTime & "  " & meg1
   End If
   DoEvents
@@ -2530,11 +2534,11 @@ End Function
 Function setValandRange(keyName As String, val As String)
   Const funcName As String = "Library.setValandRange"
 
-  Range(keyName) = val
-  If setVal Is Nothing Then
+'  Range(keyName) = val
+  If BK_setVal Is Nothing Then
     Call init.setting
   Else
-    setVal(keyName) = val
+    BK_setVal(keyName) = val
   End If
   Call Library.showDebugForm(funcName, keyName & "/" & val, "info")
 End Function
@@ -3934,5 +3938,302 @@ Function RedimPreserve2D(ByVal orgArray, ByVal lengthTo)
 End Function
 
 
+
+'==================================================================================================
+'コントロールパネルのホイール量取得
+Function getScrollRow()
+  Dim scrollVal As Long
+  Const GetWheelScrollLines = 104
+  Const funcName As String = "Library.getScrollRow"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+
+  SystemParametersInfo GetWheelScrollLines, 0, scrollVal, 0
+  Call Library.setValandRange("scrollRowCnt", CStr(scrollVal))
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end1")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+'コントロールパネルのホイール量設定
+Function setScroll(setScrollRow As Long)
+  Const SENDCHANGE = 3
+  Const SetWheelScrollLines = 105
+  Const funcName As String = "Library.setScroll"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.showDebugForm("setScrollRow", setScrollRow, "debug")
+  '----------------------------------------------
+
+  SystemParametersInfo SetWheelScrollLines, setScrollRow, 0, SENDCHANGE
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end1")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'**************************************************************************************************
+' * iniファイル読み込み
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function getConfigIni(filePath As String)
+  Dim buf As String
+  Dim SectionVal As String, keyName As String, keyVal As String
+  Dim keys As Variant
+
+  Const funcName As String = "Library.getConfig"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+
+  Set setIni = Nothing
+  Set setIni = CreateObject("Scripting.Dictionary")
+
+
+  With CreateObject("ADODB.Stream")
+    .Charset = "UTF-8"
+    .Open
+    .LoadFromFile filePath
+    Do Until .EOS
+      buf = .ReadText(-2)
+
+      If Len(buf) = 0 Then
+      ElseIf Left(buf, 1) = ";" Then
+      ElseIf Left(buf, 1) = "[" Then
+        SectionVal = Mid(buf, 2, Len(buf) - 2)
+      ElseIf InStr(1, buf, "=") > 0 Then
+        keys = Split(buf, "=")
+        keyName = keys(0)
+        keyVal = keys(1)
+
+        Call Library.showDebugForm(SectionVal & "_" & keyName, keyVal, "debug")
+        setIni.add SectionVal & "_" & keyName, keyVal
+      End If
+    Loop
+    .Close
+  End With
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function setConfigIni(sectionName As String, keyName As String, filePath As String, setVal As String)
+  Const funcName As String = "Library.setLineHeight"
+
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+
+'  Call WritePrivateProfileString(sectionName, keyName, setVal, filePath)
+
+
+
+  '処理終了--------------------------------------
+  Call Library.showDebugForm(funcName, , "end1")
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function getLineHeight(targetRang As Range, maxLen As Long, defaultRowHeight As Long)
+  Dim LFCount As Long, LenCount As Long
+'  Dim setHeight As Long
+  Const funcName As String = "Library.getLineHeight"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+
+  LFCount = UBound(Split(targetRang.Value, vbNewLine))
+  LenCount = Library.getLength(targetRang.Value)
+
+  If LFCount > 0 Then
+    LFCount = LFCount + 1
+  Else
+    If LenCount > maxLen Then
+      LFCount = Int(LenCount / maxLen) + 1
+    Else
+      LFCount = 1
+    End If
+  End If
+  Call Library.showDebugForm("LFCount", LFCount, "debug")
+  Call Library.showDebugForm("LenCount", LenCount, "debug")
+
+  getLineHeight = LFCount
+
+'  setHeight = defaultRowHeight * LFCount
+'
+'  Call Library.showDebugForm("LFCount", LFCount, "debug")
+'  Call Library.showDebugForm("LenCount", LenCount, "debug")
+'  Call Library.showDebugForm("setHeight", setHeight, "debug")
+'
+'  If ActiveSheet.Rows(targetRang.Row & ":" & targetRang.Row).RowHeight < setHeight Then
+'    ActiveSheet.Rows(targetRang.Row & ":" & targetRang.Row).RowHeight = setHeight
+'  End If
+
+  '処理終了--------------------------------------
+  Call Library.showDebugForm(funcName, , "end1")
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function getLineWidth()
+  Dim colLine As Long, endColLine As Long
+  Dim colName As String
+  Dim slctCells As Range
+  Const funcName As String = "Library.getLineWidth"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "function1")
+  '----------------------------------------------
+
+  Cells.EntireColumn.AutoFit
+
+  For colLine = 1 To Columns.count
+    If Cells(1, colLine).ColumnWidth > 30 Then
+      colName = Library.getColumnName(colLine)
+      Columns(colName & ":" & colName).ColumnWidth = 30
+    End If
+  Next
+
+  '処理終了--------------------------------------
+
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+
+
+
+
+'==================================================================================================
+' * 文字列の左側から指定文字数抽出
+Function getLeftString(targetStr, strCnt As Long) As String
+  Dim targetLen As Long
+  Dim getStr As String
+
+  targetLen = Len(targetStr)
+
+  '文字列ではない場合
+  If VarType(targetStr) <> vbString Then
+    getStr = targetStr
+
+  ElseIf targetLen < strCnt Then
+    getStr = targetStr
+  Else
+    'getStr = Right(targetStr, targetLen - strCnt)
+    getStr = Left(targetStr, strCnt)
+  End If
+
+  getLeftString = getStr
+
+End Function
+
+'==================================================================================================
+' * 文字列の右側から指定文字数抽出
+Function getRightString(targetStr, strCnt As Long) As String
+  Dim targetLen As Long
+  Dim getStr As String
+
+  targetLen = Len(targetStr)
+
+  If VarType(targetStr) <> vbString Then
+    getStr = targetStr
+
+  ElseIf targetLen < strCnt Then
+    getStr = targetStr
+  Else
+    getStr = Right(targetStr, strCnt)
+  End If
+
+  getRightString = getStr
+End Function
 
 

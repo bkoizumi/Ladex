@@ -178,7 +178,7 @@ Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 
@@ -199,7 +199,7 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 '==================================================================================================
@@ -219,7 +219,7 @@ Private Sub xlApp_NewWorkbook(ByVal wb As Workbook)
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 '==================================================================================================
@@ -229,12 +229,12 @@ End Sub
 
 '==================================================================================================
 'シートがアクティブになったときに発生
-Private Sub xlApp_SheetActivate(ByVal sh As Object)
+Private Sub xlApp_SheetActivate(ByVal Sh As Object)
   Const funcName As String = "Ctl_Event.xlApp_SheetActivate"
   
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(sh) Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
 
 '  Call init.setting
 '  Call Library.showDebugForm(funcName, , "start")
@@ -244,17 +244,17 @@ Private Sub xlApp_SheetActivate(ByVal sh As Object)
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 '==================================================================================================
 'ワークシートのセルが変更されたときに発生
-Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
+Private Sub xlApp_SheetChange(ByVal Sh As Object, ByVal Target As Range)
   Const funcName As String = "Ctl_Event.xlApp_SheetChange"
     
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(sh) Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
 
 '  Call init.setting
 '  Call Library.showDebugForm(funcName, , "start")
@@ -264,16 +264,17 @@ Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 '==================================================================================================
-Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range)
+'ワークシートの選択セルが変更されたときに発生
+Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
   Const funcName As String = "Ctl_Event.xlApp_SheetSelectionChange"
   
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(sh) Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
   
   Call init.setting
 '  Call Library.showDebugForm(funcName, , "start")
@@ -295,35 +296,64 @@ Private Sub xlApp_SheetSelectionChange(ByVal sh As Object, ByVal Target As Range
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
 
 '==================================================================================================
 'セルがダブルクリックされたときに発生
-Private Sub xlApp_SheetBeforeDoubleClick(ByVal sh As Object, ByVal Target As Range, Cancel As Boolean)
+Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
   Const funcName As String = "Ctl_Event.xlApp_SheetBeforeDoubleClick"
 
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(sh) Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
 
   Call init.setting
-  Call Library.showDebugForm(funcName, , "start")
   
   'ズーム機能------------------------------------
   If BKz_rbPressed = True Then
+    Call Library.showDebugForm(funcName, , "start")
+    
     Cancel = True
     runFlg = True
     Call Ctl_Zoom.ZoomIn(CStr(Target.Address(False, False)))
+    
+    Call Library.showDebugForm(funcName, , "end")
   End If
-  Call Library.showDebugForm(funcName, , "end")
+  
   Exit Sub
   
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
+
+'==================================================================================================
+'右クリックされたとき
+Private Sub xlApp_SheetBeforeRightClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
+  Const funcName As String = "Ctl_Event.xlApp_SheetBeforeRightClick"
+
+'  On Error GoTo catchError
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckSheet(Sh) Then Exit Sub
+'
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start")
+'
+'  '右クリックメニュー----------------------------
+'  If Library.getRegistry("Main", "CustomRibbon", "Boolean") = True Then
+'    Call Main.右クリックメニュー(Target, Cancel)
+'  End If
+'
+'  Call Library.showDebugForm(funcName, , "end")
+'  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+End Sub
+
 
 '==================================================================================================
 ' 非公開メソッド

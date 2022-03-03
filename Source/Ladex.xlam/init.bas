@@ -23,7 +23,7 @@ Public BK_sheetSheetList    As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "V1.0.0"
+Public Const thisAppVersion As String = "1.2.1.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 Public funcName             As String
@@ -31,6 +31,7 @@ Public resetVal             As String
 Public runFlg               As Boolean
 Public PrgP_Cnt             As Long
 Public PrgP_Max             As Long
+'Public LogLevel             As Long
 
 
 
@@ -80,7 +81,7 @@ Public defaultZoomInVal     As String
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function unsetting(Optional Flg As Boolean = True)
+Function unsetting(Optional flg As Boolean = True)
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Const funcName As String = "init.unsetting"
 
@@ -101,7 +102,7 @@ Function unsetting(Optional Flg As Boolean = True)
   logFile = ""
   LadexDir = ""
   
-  If Flg = True Then
+  If flg = True Then
     runFlg = False
   End If
   
@@ -172,11 +173,15 @@ Function setting(Optional reCheckFlg As Boolean)
     End If
   Next
     
+  'ログ出力設定----------------------------------
   Dim wsh As Object
   Set wsh = CreateObject("WScript.Shell")
   LadexDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex"
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
+  
+  
+'  LogLevel = Split(BK_setVal("LogLevel"), ".")(0)
   
   Exit Function
   

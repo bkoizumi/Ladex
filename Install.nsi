@@ -1,24 +1,26 @@
 ﻿; インストーラーの識別子
 !define PRODUCT_NAME "Ladex"
 ; インストーラーのバージョン。
-!define PRODUCT_VERSION "1.0.0.0"
+!define PRODUCT_VERSION "1.2.1.0"
 
 ; 多言語で使用する場合はここをUnicodeにすることを推奨
 Unicode true
 
 ; インストーラーのアイコン
-!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
+!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\win-install.ico"
 
 ; アンインストーラーのアイコン
-!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\win-uninstall.ico"
 
 ; インストーラの見た目
-!define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_RIGHT
-!define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-r.bmp"
-!define MUI_HEADERIMAGE_UNBITMAP "${NSISDIR}\Contrib\Graphics\Header\orange-uninstall-r.bmp"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange-uninstall.bmp"
+; !define MUI_HEADERIMAGE
+; !define MUI_HEADERIMAGE_RIGHT
+; !define MUI_HEADERIMAGE_BITMAP          "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
+; !define MUI_HEADERIMAGE_UNBITMAP        "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
+
+; !define MUI_WELCOMEFINISHPAGE_BITMAP    "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
+; !define MUI_UNWELCOMEFINISHPAGE_BITMAP  "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
+
 
 ; 使用する外部ライブラリ
 !include Sections.nsh
@@ -31,9 +33,9 @@ Unicode true
 SetCompressor /solid lzma
 
 ; インストーラー名
-Name "Addin For Excel Library [Ladex]"
+Name "Ladex [Addin For Excel Library]"
 ; 出力されるファイル名
-OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}.exe"
+OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}-setup.exe"
 
 ; インストール/アンインストール時の進捗画面
 ShowInstDetails   show
@@ -54,7 +56,7 @@ VIAddVersionKey FileVersion     "${PRODUCT_VERSION}"
  InstallDir "$appData\Bkoizumi\Ladex"
 
 ;実行権限 [user/admin]
-RequestExecutionLevel admin
+RequestExecutionLevel user
 
 ;インストール画面構成
 ; !define MUI_LICENSEPAGE_RADIOBUTTONS      ; 「ライセンスに同意する」をラジオボタンにする
@@ -75,21 +77,20 @@ UninstPage instfiles
 
 ; インストール処理---------------------------------------------------------------------------------------
 Section "Ladex" sec_Main
-  SetOutPath "$appData\\Microsoft\AddIns"
+  SetOutPath "$appData\Microsoft\AddIns"
   File    "Ladex.xlam"
 
   SetOutPath $INSTDIR
   ; ディレクトリ/ファイルをコピー
   File    "ExcelOpen_ViewProtected.vbs"
   File    "README.pdf"
-  File    "スタイル情報.xlsx"
   ; File    "メンテナンス用.xlsm"
   CreateDirectory $INSTDIR\Images
   CreateDirectory $INSTDIR\log
-  ; CreateDirectory $INSTDIR\RibbonImg
+  CreateDirectory $INSTDIR\RibbonImg
   ; CreateDirectory $INSTDIR\RibbonSrc
-  File /r   "setupLadex\RibbonImg"
   File /r   "setupLadex\RibbonSrc"
+  File      "setupLadex\スタイル情報.xlsx"
 
 
   ; レジストリキーの設定
@@ -103,10 +104,11 @@ Section "Ladex" sec_Main
 
   ;スタートメニューの作成
   SetShellVarContext current
-  CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"  "$INSTDIR\スタイル情報.xlsx"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"    "$INSTDIR\README.pdf"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"    "$INSTDIR\Uninstall.exe"
+  CreateDirectory "$SMPROGRAMS\Bkoizumi"
+  CreateDirectory "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}"
+  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\スタイル情報.lnk"   "$INSTDIR\スタイル情報.xlsx"
+  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\README.lnk"         "$INSTDIR\README.pdf"
+  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"
 SectionEnd
 
 Section  "読み取り専用で開く" addReadOnly
@@ -120,7 +122,7 @@ Section  "読み取り専用で開く" addReadOnly
   DetailPrint `Return Code = $0`
 
   SetShellVarContext current
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"   "$INSTDIR\ExcelOpen_ReadOnly.vbs"
+  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\読み取り専用で開く.lnk"   "$INSTDIR\ExcelOpen_ReadOnly.vbs"
 
 SectionEnd
 
@@ -131,10 +133,12 @@ Section "Uninstall"
 
   ;スタートメニューから削除
   SetShellVarContext current
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\アンインストール.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"
-  RMDir /r  "$SMPROGRAMS\${PRODUCT_NAME}"
+  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\Uninstall.lnk"
+  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\読み取り専用で開く.lnk"
+  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\スタイル情報.xlsx"
+  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\README.lnk"
+  RMDir /r  "$SMPROGRAMSBkoizumi\${PRODUCT_NAME}"
+  RMDir /r  "$SMPROGRAMSBkoizumi"
 
   ; ディレクトリ削除
   RMDir /r "$INSTDIR"

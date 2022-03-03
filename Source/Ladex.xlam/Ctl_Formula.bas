@@ -18,12 +18,12 @@ Function 数式確認()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
-    Call Library.startScript
+    Call Library.showDebugForm(funcName, , "start")
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
+  Call Library.startScript
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
@@ -49,8 +49,8 @@ Function 数式確認()
   ActiveCell.Select
   
   '処理終了--------------------------------------
+  Call Library.endScript
   If runFlg = False Then
-    Call Library.endScript
     Call Library.showDebugForm("", , "end")
     Call init.unsetting
   Else
@@ -73,11 +73,11 @@ Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -139,11 +139,11 @@ Function GetCurPosition()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -190,11 +190,11 @@ Function getFormulaRange(ByVal argRange As Range) As Range()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -294,11 +294,11 @@ Function formula01()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -343,11 +343,11 @@ Function formula02()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -378,11 +378,11 @@ Function formula03()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------

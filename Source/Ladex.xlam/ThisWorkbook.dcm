@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Private ctlEvent As New Ctl_Event
+Private Ctl_Event As New Ctl_Event
 
 
 '==================================================================================================
@@ -22,4 +22,8 @@ Private Sub Workbook_Open()
 '  clsEvent.StopEvent = False
   
 '  Call Main.InitializeBook
+End Sub
+
+Private Sub Workbook_SheetBeforeRightClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
+
 End Sub

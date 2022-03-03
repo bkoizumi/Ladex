@@ -122,12 +122,21 @@ Sub ladex_コメント削除()
   Call Ctl_Cells.コメント削除
 End Sub
 
+Sub ladex_行挿入()
+  Call Ctl_Cells.行挿入
+End Sub
+
+Sub ladex_列挿入()
+  Call Ctl_Cells.列挿入
+End Sub
+
+
 Sub ladex_コメント整形()
   Call Ctl_format.コメント整形
 End Sub
 
 Sub ladex_行例を入れ替えて貼付け()
-  Call Ctl_format.行例を入れ替えて貼付け
+  Call Ctl_Cells.行例を入れ替えて貼付け
 End Sub
 
 Sub ladex_数式エラー防止()

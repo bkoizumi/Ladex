@@ -12,11 +12,11 @@ Function コメント整形()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -54,11 +54,11 @@ Function 移動やサイズ変更をする()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -106,11 +106,11 @@ Function 移動する()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -157,11 +157,11 @@ Function 移動やサイズ変更をしない()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -209,11 +209,11 @@ Function 余白ゼロ()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------

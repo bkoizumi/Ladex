@@ -34,7 +34,7 @@ Private Sub UserForm_Initialize()
   Caption = "ƒf[ƒ^¶¬ |  " & thisAppName
 
   With Frm_smplData
-    For Each cmdVal In BK_sheetSetting.Range(BK_setVal("Cells_sampleData") & "3:" & BK_setVal("Cells_sampleData") & "22")
+    For Each cmdVal In BK_sheetSetting.Range(BK_setVal("Cells_sampleData") & "3:" & BK_setVal("Cells_sampleData") & BK_sheetSetting.Cells(Rows.count, 11).End(xlUp).Row)
       ListBox1.AddItem indexCnt & "." & cmdVal
       indexCnt = indexCnt + 1
     Next
@@ -48,14 +48,21 @@ End Sub
 '**************************************************************************************************
 '==================================================================================================
 Private Sub add_Click()
-  ListBox2.AddItem Me.ListBox1.Value
-  ListBox1.RemoveItem Me.ListBox1.ListIndex
+  ListBox2.AddItem ListBox1.Value
+  
+  If ListBox1.Value Like "*‹ó”’*" Then
+  Else
+    ListBox1.RemoveItem ListBox1.ListIndex
+  End If
   
 End Sub
 
 '==================================================================================================
 Private Sub del_Click()
-  ListBox1.AddItem Me.ListBox2.Value, Split(Me.ListBox2.Value, ".")(0)
+  If ListBox2.Value Like "*‹ó”’*" Then
+  Else
+    ListBox1.AddItem ListBox2.Value, Split(ListBox2.Value, ".")(0)
+  End If
   ListBox2.RemoveItem Me.ListBox2.ListIndex
   
 End Sub
@@ -85,12 +92,16 @@ Private Sub run_Click()
       Case "y”’lzŒ…”ŒÅ’è"
         BK_setVal.add "digits", Me.digits1.Text
         BK_setVal.add "maxCount", Me.maxCount1.Text
+        BK_setVal.add "addFirst", Me.addFirst.Text
+        BK_setVal.add "addEnd", Me.addEnd.Text
         
       Case "y”’lz”ÍˆÍw’è"
         BK_setVal.add "maxCount", Me.maxCount2.Text
         
         BK_setVal.add "minVal", Me.minVal2.Text
         BK_setVal.add "maxVal", Me.maxVal2.Text
+        BK_setVal.add "addFirst", Me.addFirst.Text
+        BK_setVal.add "addEnd", Me.addEnd.Text
       
       Case "y–¼‘Oz©", "y–¼‘Oz–¼", "y–¼‘Ozƒtƒ‹ƒl[ƒ€"
         BK_setVal.add "maxCount", Me.maxCount3.Text
@@ -119,7 +130,7 @@ Private Sub run_Click()
         Set sampleDataList = CreateObject("Scripting.Dictionary")
         With .Controls("ListBox2")
           For i = 0 To .ListCount - 1
-            sampleDataList.add "list_" & i, .list(i)
+            sampleDataList.add Split(.list(i), ".")(1), Split(.list(i), ".")(1)
           Next
         End With
   

@@ -18,10 +18,6 @@ Option Explicit
 Public InitializeFlg   As Boolean
 Public selectLine   As Long
 
-
-
-
-
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -34,6 +30,7 @@ Private Sub UserForm_Initialize()
   '処理開始--------------------------------------
 '  On Error GoTo catchError
   Call init.setting
+  Call Library.startScript
   Call Library.showDebugForm("" & funcName, , "function")
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -95,6 +92,8 @@ Private Sub UserForm_Initialize()
   End With
   
   InitializeFlg = False
+  Call Library.endScript
+  
   Exit Sub
 
 'エラー発生時------------------------------------
@@ -132,15 +131,21 @@ End Sub
 
 '==================================================================================================
 Private Sub SheetList_DblClick()
+  Dim SheetName As String, sheetDspFLg As String
+  
   Call Library.startScript
   selectLine = SheetList.SelectedItem.Text
   
-  If BK_sheetSheetList.Range("E" & selectLine) = "○" And BK_sheetSheetList.Range("F" & selectLine).Value <> "" Then
-    ActiveWorkbook.Worksheets(BK_sheetSheetList.Range("F" & selectLine).Value).Select
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  sheetDspFLg = SheetList.SelectedItem.SubItems(1)
+  
+  If sheetDspFLg = "○" Then
+    ActiveWorkbook.Worksheets(SheetName).Select
   Else
-    targetBook.Sheets(BK_sheetSheetList.Range("F" & selectLine).Value).Visible = True
-    ActiveWorkbook.Worksheets(BK_sheetSheetList.Range("F" & selectLine).Value).Select
+    targetBook.Sheets(SheetName).Visible = True
+    ActiveWorkbook.Worksheets(SheetName).Select
   End If
+  
   Unload Me
   Call Library.endScript
 End Sub
@@ -228,20 +233,22 @@ End Sub
 '==================================================================================================
 'シートの選択
 Private Sub active_Click()
+  Dim SheetName As String, sheetDspFLg As String
+  
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  sheetDspFLg = SheetList.SelectedItem.SubItems(1)
   selectLine = SheetList.SelectedItem.Text
   
-  If BK_sheetSheetList.Range("E" & selectLine) = "○" Then
-    ActiveWorkbook.Worksheets(BK_sheetSheetList.Range("F" & selectLine).Value).Select
+  SheetName = BK_sheetSheetList.Range("F" & selectLine).Value
+  If ActiveWorkbook.Worksheets(SheetName).Visible = True Then
+    ActiveWorkbook.Worksheets(SheetName).Select
   Else
-    targetBook.Sheets(BK_sheetSheetList.Range("F" & selectLine).Value).Visible = True
-    ActiveWorkbook.Worksheets(BK_sheetSheetList.Range("F" & selectLine).Value).Select
+    ActiveWorkbook.Worksheets(SheetName).Visible = True
+    ActiveWorkbook.Worksheets(SheetName).Select
   End If
-  Unload Me
   
+  'Unload Me
 End Sub
-
-
-
 
 '==================================================================================================
 'キャンセル処理
@@ -269,7 +276,7 @@ Private Sub Submit_Click()
         
       Else
         'シートの順番変更
-        targetBook.Sheets(BK_sheetSheetList.Range("A" & line)).Move Before:=Sheets(BK_sheetSheetList.Range("D" & line))
+        targetBook.Sheets(BK_sheetSheetList.Range("A" & line)).Move before:=Sheets(BK_sheetSheetList.Range("D" & line))
       End If
     ElseIf BK_sheetSheetList.Range("B" & line) <> BK_sheetSheetList.Range("E" & line) Then
       'シートの表示/非表示切り替え
@@ -301,7 +308,7 @@ Private Sub Submit_Click()
   
   
   Call Library.endScript
-  Unload Me
+'  Unload Me
 End Sub
 
 

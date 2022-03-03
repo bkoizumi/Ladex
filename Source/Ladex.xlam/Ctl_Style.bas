@@ -153,7 +153,7 @@ Function スタイル削除()
   endCount = ActiveWorkbook.Styles.count
   
   For Each s In ActiveWorkbook.Styles
-    Call Ctl_ProgressBar.showCount("定義済スタイル削除", count, endCount, s.Name)
+    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
     Select Case s.Name
       Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
         Call Library.showDebugForm("定義済スタイル", s.Name, "debug")
@@ -224,7 +224,7 @@ Function スタイル設定()
   endLine = BK_sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
   For line = 2 To endLine
     If BK_sheetStyle.Range("A" & line) <> "無効" Then
-      Call Ctl_ProgressBar.showCount("スタイル設定", line, endLine, BK_sheetStyle.Range("B" & line))
+      Call Ctl_ProgressBar.showCount("スタイル設定", 1, 2, line, endLine, BK_sheetStyle.Range("B" & line))
 
       Select Case BK_sheetStyle.Range("B" & line)
         Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"

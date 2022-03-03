@@ -44,7 +44,7 @@ Function add(Optional filePath As String)
   Dim line As Long, endLine As Long
   
   Call init.setting
-  
+  Call Ctl_Favorite.getList
   line = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row + 1
   
   If filePath = "" Then

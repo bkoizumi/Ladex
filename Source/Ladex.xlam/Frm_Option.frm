@@ -21,6 +21,10 @@ Public InitializeFlg   As Boolean
 Public selectLine   As Long
 
 
+Private Sub MultiPage1_Change()
+
+End Sub
+
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -51,8 +55,8 @@ Private Sub UserForm_Initialize()
   
   '表示位置指定----------------------------------
   StartUpPosition = 0
-  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
-  Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Height) / 2)
+  Left = ActiveWindow.Left + ((ActiveWindow.Width - Width) / 2)
     
   setZoomLevel = Library.getRegistry("Main", "ZoomLevel")
   
@@ -76,6 +80,21 @@ Private Sub UserForm_Initialize()
       .LineColor.BackColor = LineColor
     End If
     .LineColor.Caption = ""
+  
+    'デバッグ関連
+    .LogLevel.AddItem "1.Error"
+    .LogLevel.AddItem "2.warning"
+    .LogLevel.AddItem "3.notice"
+    .LogLevel.AddItem "4.info"
+    .LogLevel.AddItem "5.debug"
+    .LogLevel.Text = BK_setVal("LogLevel")
+    
+    .debugMode.AddItem "all"
+    .debugMode.AddItem "File"
+    .debugMode.AddItem "Speak"
+    .debugMode.AddItem "none"
+    .debugMode.AddItem "develop"
+    .debugMode.Text = BK_setVal("debugMode")
   
     'ハイライトタブ------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
@@ -417,8 +436,8 @@ Function doStampPreview()
   BK_sheetHighLight.Activate
   BK_sheetHighLight.Range("F10").Activate
   
-  StampVal = Me.StampVal.Value
-  StampFont = Me.StampFont.Value
+  StampVal = StampVal.Value
+  StampFont = StampFont.Value
   
   Call Ctl_Stamp.押印_確認印(StampVal, StampFont, thisAppName & "StampImg")
   
@@ -496,7 +515,7 @@ Private Sub HighlightTransparentRate_Change()
   If InitializeFlg = False Then
     Call doHighLightPreview
     
-    Me.HighlightTransparentRate_text.Caption = Me.HighlightTransparentRate.Value
+    HighlightTransparentRate_text.Caption = HighlightTransparentRate.Value
   End If
 
 End Sub
@@ -505,8 +524,8 @@ End Sub
 '==================================================================================================
 Private Sub HighLightColor_Click()
   
-  colorValue = Library.getColor(Me.HighLightColor.BackColor)
-  Me.HighLightColor.BackColor = colorValue
+  colorValue = Library.getColor(HighLightColor.BackColor)
+  HighLightColor.BackColor = colorValue
   
   If InitializeFlg = False Then
     Call doHighLightPreview
@@ -516,9 +535,9 @@ End Sub
 
 '==================================================================================================
 Private Sub LineColor_Click()
-  colorValue = Library.getColor(Me.LineColor.BackColor)
-  Me.LineColor.BackColor = colorValue
-  Me.LineColor.Caption = ""
+  colorValue = Library.getColor(LineColor.BackColor)
+  LineColor.BackColor = colorValue
+  LineColor.Caption = ""
   
   If InitializeFlg = False Then
     Call doHighLightPreview
@@ -528,9 +547,9 @@ End Sub
 
 '==================================================================================================
 Private Sub CommentColor_Click()
-  colorValue = Library.getColor(Me.CommentColor.BackColor)
-  Me.CommentColor.BackColor = colorValue
-  Me.CommentColor.Caption = ""
+  colorValue = Library.getColor(CommentColor.BackColor)
+  CommentColor.BackColor = colorValue
+  CommentColor.Caption = ""
   
   If InitializeFlg = False Then
     Call doCommentPreview
@@ -539,19 +558,19 @@ End Sub
 
 '==================================================================================================
 Private Sub CommentFontColor_Click()
-  colorValue = Library.getColor(Me.CommentFontColor.BackColor)
-  Me.CommentFontColor.BackColor = colorValue
-  Me.CommentFontColor.Caption = ""
+  colorValue = Library.getColor(CommentFontColor.BackColor)
+  CommentFontColor.BackColor = colorValue
+  CommentFontColor.Caption = ""
   
   If InitializeFlg = False Then
     Call doCommentPreview
   End If
-  Me.CommentFontColor.Caption = ""
+  CommentFontColor.Caption = ""
 End Sub
 
 '==================================================================================================
 Private Sub CommentFont_Change()
-  Me.CommentFontColor.Caption = ""
+  CommentFontColor.Caption = ""
   If InitializeFlg = False Then
     Call doCommentPreview
   End If
@@ -559,7 +578,7 @@ End Sub
 
 '==================================================================================================
 Private Sub CommentFontSize_Change()
-  Me.CommentFontColor.Caption = ""
+  CommentFontColor.Caption = ""
   If InitializeFlg = False Then
     Call doCommentPreview
   End If
@@ -714,7 +733,11 @@ End Sub
 Private Sub Del_ShortcutKey_Click()
   
   Call init.setting
-  BK_sheetFunction.Range("B" & CInt(funcList.SelectedItem.Text) + 1) = ""
+  selectLine = funcList.SelectedItem.Text
+  
+  BK_sheetFunction.Range("B" & selectLine + 1) = ""
+  BK_sheetFunction.Range("E" & selectLine + 1) = ""
+  BK_sheetFunction.Range("F" & selectLine + 1) = ""
   megLabel.Caption = ""
   Call reLoadFuncList
 End Sub
@@ -727,8 +750,8 @@ End Sub
 '==================================================================================================
 'キャンセル処理
 Private Sub Cancel_Click()
-'  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
-'  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+'  Call Library.setRegistry("UserForm", "OptionTop", Top)
+'  Call Library.setRegistry("UserForm", "OptionLeft", Left)
   
   Unload Me
 End Sub
@@ -738,16 +761,23 @@ End Sub
 Private Sub run_Click()
   Dim execDay As Date
   
-'  Call Library.setRegistry("UserForm", "OptionTop", Me.Top)
-'  Call Library.setRegistry("UserForm", "OptionLeft", Me.Left)
+'  Call Library.setRegistry("UserForm", "OptionTop", Top)
+'  Call Library.setRegistry("UserForm", "OptionLeft", Left)
   
-  Call Library.setRegistry("Main", "ZoomLevel", Me.ZoomLevel.Text)
-  Call Library.setRegistry("Main", "GridLine", Me.GridLine.Value)
-  Call Library.setRegistry("Main", "bgColor", Me.BgColor.Value)
-  Call Library.setRegistry("Main", "LineColor", Me.LineColor.BackColor)
+  Call Library.setRegistry("Main", "ZoomLevel", ZoomLevel.Text)
+  Call Library.setRegistry("Main", "GridLine", GridLine.Value)
+  Call Library.setRegistry("Main", "bgColor", BgColor.Value)
+  Call Library.setRegistry("Main", "LineColor", LineColor.BackColor)
+  Call Library.setRegistry("Main", "debugMode", debugMode.Value)
+  Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
+  
+  BK_setVal("debugMode") = debugMode.Value
+  BK_sheetSetting.Range("B3") = debugMode.Value
+  BK_setVal("LogLevel") = LogLevel.Value
+  BK_sheetSetting.Range("B4") = LogLevel.Value
   
   'ハイライト設定--------------------------------
-  Call Library.setRegistry("Main", "HighLightColor", Me.HighLightColor.BackColor)
+  Call Library.setRegistry("Main", "HighLightColor", HighLightColor.BackColor)
   
   '透明度
   Call Library.setRegistry("Main", "HighlightTransparentRate", HighlightTransparentRate.Value)
@@ -778,14 +808,14 @@ Private Sub run_Click()
   BKh_rbPressed = old_BKh_rbPressed
 
   'コメント設定----------------------------------
-  Call Library.setRegistry("Main", "CommentBgColor", Me.CommentColor.BackColor)
-  Call Library.setRegistry("Main", "CommentFont", Me.CommentFont.Value)
+  Call Library.setRegistry("Main", "CommentBgColor", CommentColor.BackColor)
+  Call Library.setRegistry("Main", "CommentFont", CommentFont.Value)
   
-  Call Library.setRegistry("Main", "CommentFontColor", Me.CommentFontColor.BackColor)
-  Call Library.setRegistry("Main", "CommentFontSize", Me.CommentFontSize.Value)
+  Call Library.setRegistry("Main", "CommentFontColor", CommentFontColor.BackColor)
+  Call Library.setRegistry("Main", "CommentFontSize", CommentFontSize.Value)
 
-  Call Library.setRegistry("Main", "StampVal", Me.StampVal.Value)
-  Call Library.setRegistry("Main", "StampFont", Me.StampFont.Value)
+  Call Library.setRegistry("Main", "StampVal", StampVal.Value)
+  Call Library.setRegistry("Main", "StampFont", StampFont.Value)
   
   'スタイルシートをスタイル2シートへコピー
 '  endLine = sheetStyle2.Cells(Rows.count, 2).End(xlUp).Row

@@ -1,5 +1,4 @@
 Attribute VB_Name = "Ctl_ProgressBar"
-Option Explicit
 
 '**************************************************************************************************
 ' * プログレスバー表示制御
@@ -16,13 +15,18 @@ Public PrgP_Meg As String
 Public PrgC_Meg As String
 Public PrgMeg   As String
 
-
 '==================================================================================================
 Public Function showStart()
   
+'  If PBarFlg = False Then
+'    Exit Function
+'  End If
+  
   With Frm_Progress
+    .StartUpPosition = 0
+    .Caption = thisAppName
     
-    '親進捗バー----------------------------------
+    '親進捗バー------------------------------------------------------------------------------------
     'プログレスバーの枠の部分
     With .PrgP_Area
       .BorderStyle = fmBorderStyleSingle
@@ -59,7 +63,7 @@ Public Function showStart()
       .Font.Bold = False
     End With
     
-    '子進捗バー----------------------------------
+    '子進捗バー------------------------------------------------------------------------------------
     'プログレスバーの枠の部分
     With .PrgC_Area
       .BorderStyle = fmBorderStyleSingle
@@ -112,28 +116,28 @@ Public Function showStart()
   End With
 
   Frm_Progress.Show vbModeless
+
 End Function
 
 
-'==================================================================================================
 'プログレスバー表示更新
+'==================================================================================================
 Public Function showCount( _
                             Prg_Title As String _
+                          , PrgP_Cnt As Long, PrgP_Max As Long _
                           , PrgC_Cnt As Long, PrgC_Max As Long _
                           , PrgMeg As String _
-                          , Optional Flg As Boolean = False _
                         )
 
-  Call showBar(Prg_Title, 2, 2, PrgC_Cnt, PrgC_Max, PrgMeg)
-                
+  Call showBar(Prg_Title, PrgP_Cnt, PrgP_Max, PrgC_Cnt, PrgC_Max, PrgMeg)
+  PrgP_Cnt = PrgP_Cnt + 1
 End Function
-
 '==================================================================================================
 Public Function showBar( _
-                            Prg_Title As String _
+                            ByVal Prg_Title As String _
                           , ByVal L_PrgP_Cnt As Long, PrgP_Max As Long _
                           , ByVal L_PrgC_Cnt As Long, PrgC_Max As Long _
-                          , PrgMeg As String _
+                          , ByVal PrgMeg As String _
                         )
                         
                         
@@ -141,10 +145,19 @@ Public Function showBar( _
   Dim myMsg2 As String
   Dim PrgP_Prg As Long, PrgC_Prg As Long
   
-  L_PrgP_Cnt = L_PrgP_Cnt - 1
-  L_PrgC_Cnt = L_PrgC_Cnt
+'  L_PrgP_Cnt = L_PrgP_Cnt - 1
+'  L_PrgC_Cnt = L_PrgC_Cnt - 1
   
-  If L_PrgP_Cnt <= 0 And L_PrgC_Cnt > 0 Then
+  If L_PrgP_Cnt = 0 Then
+    PrgP_Prg = 0
+    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    
+  ElseIf L_PrgC_Cnt = 0 Then
+    PrgC_Prg = 0
+    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+  
+  
+  ElseIf L_PrgP_Cnt <= 0 And L_PrgC_Cnt > 0 Then
     PrgP_Prg = 0
     PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
     
@@ -160,18 +173,15 @@ Public Function showBar( _
     PrgC_Prg = Int((L_PrgC_Cnt) / PrgC_Max * 100)
     PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
   
-  ElseIf L_PrgP_Cnt = 0 Then
-    PrgP_Prg = 0
-    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
-    
-  ElseIf L_PrgC_Cnt = 0 Then
-    PrgC_Prg = 0
-    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+  End If
   
+  'メッセージの長さ調整
+  If Library.getLength(PrgMeg) >= 60 Then
+    PrgMeg = Library.getLeftString(PrgMeg, 10) & "..." & Library.getRightString(PrgMeg, 35)
   End If
   
   With Frm_Progress
-    .Caption = Prg_Title
+    .Caption = "[" & thisAppName & "] " & Prg_Title
     .PrgP_Bar.Width = Int(PrgP_Barsize * PrgP_Prg / 100)
     .PrgP_Progress.Caption = PrgP_Meg
     
@@ -185,11 +195,25 @@ Public Function showBar( _
     End If
   End With
   DoEvents
+
 End Function
 
-'==================================================================================================
-'プログレスバー表示終了
+
+'**************************************************************************************************
+' * プログレスバー表示終了
+' *
+'**************************************************************************************************
 Public Function showEnd()
+  
+  'ダイアログを閉じる
   Unload Frm_Progress
+  
 End Function
+
+
+
+
+
+
+
 

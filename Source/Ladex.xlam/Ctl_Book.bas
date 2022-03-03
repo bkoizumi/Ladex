@@ -14,11 +14,11 @@ Function 名前定義削除()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -62,7 +62,7 @@ Function シートリスト取得()
     Call Library.startScript
   Else
     On Error GoTo catchError
-     Call Library.showDebugForm("  " & funcName, , "function")
+     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------

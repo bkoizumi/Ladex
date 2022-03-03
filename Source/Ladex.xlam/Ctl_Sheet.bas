@@ -44,24 +44,27 @@ Function セル幅調整()
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-  
-  Cells.EntireColumn.AutoFit
-  
   If Selection.count > 1 Then
+    Columns(Library.getColumnName(Selection(1).Column) & ":" & Library.getColumnName(Selection(Selection.count).Column)).EntireColumn.AutoFit
+    
     For Each slctCells In Selection
       colName = Library.getColumnName(slctCells.Column)
-      If IsNumeric(slctCells.Value) And CInt(slctCells.Value) > 1 Then
-        Columns(colName & ":" & colName).ColumnWidth = slctCells.Value
+      If Columns(colName & ":" & colName).ColumnWidth > 30 Then
+        Columns(colName & ":" & colName).ColumnWidth = 30
       End If
     Next
 
   Else
+    Cells.EntireColumn.AutoFit
     For colLine = 1 To Columns.count
-      If IsNumeric(Cells(1, colLine)) And CInt(Cells(1, colLine)) > 1 Then
-        colName = Library.getColumnName(colLine)
-        Columns(colName & ":" & colName).ColumnWidth = Cells(1, colLine).Value
+      colName = Library.getColumnName(colLine)
+      If IsNumeric(Cells(1, colLine)) Then
+        If CInt(Cells(1, colLine)) > 1 Then
+          Columns(colName & ":" & colName).ColumnWidth = Cells(1, colLine).Value
+        End If
+      End If
       
-      ElseIf Cells(1, colLine).ColumnWidth > 30 Then
+      If Cells(1, colLine).ColumnWidth > 30 Then
         colName = Library.getColumnName(colLine)
         Columns(colName & ":" & colName).ColumnWidth = 30
       End If
@@ -186,7 +189,7 @@ Function すべて表示()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError

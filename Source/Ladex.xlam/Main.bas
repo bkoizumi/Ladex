@@ -130,13 +130,6 @@ catchError:
   Call Library.errorHandle
 End Function
 
-
-
-
-
-
-
-
 '==================================================================================================
 Function xxxxxxxxxx()
 End Function
@@ -157,9 +150,7 @@ Function 画像設定()
       CurShape.Placement = xlMove
     Next
   End With
-  
 End Function
-
 
 
 '**************************************************************************************************
@@ -244,7 +235,48 @@ Function 設定_取込()
   Call Library.endScript
 End Function
 
+'==================================================================================================
+Function 右クリックメニュー(Target As Range, Cancel As Boolean)
+  Dim menu01 As CommandBarControl
+  
+  Call init.setting
+  
+  '標準状態にリセット
+  Application.CommandBars("Cell").Reset
+  For Each menu01 In Application.CommandBars("Cell").Controls
+    'Call Library.showDebugForm("右クリック", menu01.Caption, "debug")
+    
+    If menu01.Caption Like "*[複合表として 追加操作]*" Then
+      menu01.Visible = False
+    End If
+  Next
 
+  
+  With Application.CommandBars("Cell").Controls.add(before:=1, Type:=msoControlPopup, Temporary:=True)
+    .Caption = thisAppName
+    If Not (Target.count = Rows.count Or Target.count = Columns.count) Then
+      With .Controls.add(Temporary:=True)
+        .Caption = "行列を入れ替えて貼付け"
+        .OnAction = "menu.ladex_行例を入れ替えて貼付け"
+      End With
+    End If
+    With .Controls.add(Temporary:=True)
+      .BeginGroup = True
+      .Caption = "行の挿入"
+      .OnAction = "menu.ladex_行挿入"
+    End With
+    With .Controls.add(Temporary:=True)
+      .Caption = "列の挿入"
+      .OnAction = "menu.ladex_列挿入"
+    End With
+  End With
+  
+
+
+  Application.CommandBars("Cell").ShowPopup
+  Application.CommandBars("Cell").Reset
+  Cancel = True
+End Function
 
 
 

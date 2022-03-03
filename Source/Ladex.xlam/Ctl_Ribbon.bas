@@ -21,7 +21,7 @@ Function onLoad(ribbon As IRibbonUI)
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start")
   '----------------------------------------------
   
   Set BK_ribbonUI = ribbon
@@ -839,7 +839,7 @@ Function Ctl_Function(control As IRibbonControl)
   runFlg = True
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "start")
+  Call Library.showDebugForm(funcName, , "start")
   
   If control.ID <> "行例入れ替えて貼付け" Then
     Call Library.startScript
@@ -942,6 +942,15 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Cells.連番追加
     Case "全半角変換"
       Call Ctl_Cells.英数字全半角変換
+      
+    Case "半全角変換"
+      Call Ctl_Cells.英数字全半角変換
+      
+      
+    Case "delLinefeed"
+      Call Ctl_Cells.改行削除
+      
+      
     Case "取り消し線"
       Call Ctl_Cells.取り消し線設定
     Case "コメント挿入"
@@ -1066,6 +1075,8 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_sampleData.日時(Selection.count)
     Case "文字"
       Call Ctl_sampleData.その他_文字(25)
+    Case "パターン選択"
+      Call Ctl_sampleData.パターン選択(Selection.count)
     
     
     Case Else

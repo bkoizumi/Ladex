@@ -18,7 +18,7 @@ Function Trim01()
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -58,7 +58,7 @@ Function 全空白削除()
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -108,11 +108,11 @@ Function 中黒点付与()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -148,11 +148,11 @@ Function 連番設定()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -199,11 +199,11 @@ Function 連番追加()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -248,6 +248,7 @@ Function 英数字全半角変換()
     Call Library.showDebugForm("" & funcName, , "function")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
   '----------------------------------------------
   slctCellsCnt = 0
   
@@ -260,8 +261,8 @@ Function 英数字全半角変換()
     DoEvents
   Next
 
-  Call Ctl_ProgressBar.showEnd
   '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
     Call Library.showDebugForm("", , "end")
@@ -287,11 +288,11 @@ Function 取り消し線設定()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -375,7 +376,7 @@ Function コメント削除()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
     Else
     On Error GoTo catchError
@@ -419,10 +420,10 @@ Function 行例を入れ替えて貼付け()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
 '  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -447,6 +448,7 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
 '==================================================================================================
 Function ゼロ埋め()
   Dim slctCells As Range
@@ -455,10 +457,10 @@ Function ゼロ埋め()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "start")
+    Call Library.showDebugForm(funcName, , "start")
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -485,4 +487,168 @@ catchError:
   Call Library.errorHandle
 End Function
 
+'==================================================================================================
+Function 指定フォントに設定()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.指定フォントに設定"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  
+  On Error Resume Next
+  Selection.SpecialCells(xlCellTypeBlanks).Value = 0
+  On Error GoTo catchError
+
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 改行削除()
+  Dim slctCells As Range
+  Dim resVal As String
+  Const funcName As String = "Ctl_Cells.Trim01"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  For Each slctCells In Selection
+    resVal = slctCells.Text
+    
+    If resVal <> "" Then
+      resVal = Replace(resVal, vbCrLf, "")
+      resVal = Replace(resVal, vbCr, "")
+      resVal = Replace(resVal, vbLf, "")
+      slctCells.Value = resVal
+      DoEvents
+    End If
+  Next
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function 行挿入()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.行挿入"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  'Set slctCells = Selection
+  
+  Selection.Insert Shift:=xlDown, CopyOrigin:=xlFormatFromRightOrBelow
+  Application.CutCopyMode = False
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 列挿入()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.列挿入"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  'Set slctCells = Selection
+  
+  Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromRightOrBelow
+  Application.CutCopyMode = False
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
