@@ -23,7 +23,7 @@ Public BK_sheetSheetList    As Worksheet
 
 'ƒOƒ[ƒoƒ‹•Ï”----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "1.2.1.0"
+Public Const thisAppVersion As String = "1.2.2.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 Public funcName             As String

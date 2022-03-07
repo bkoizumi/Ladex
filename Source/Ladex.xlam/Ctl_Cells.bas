@@ -652,3 +652,43 @@ catchError:
   Call Library.errorHandle
 End Function
 
+'==================================================================================================
+Function 定数削除()
+  Dim slctCells As Range
+  Dim resVal As String
+  Const funcName As String = "Ctl_Cells.定数削除"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  On Error Resume Next
+  If Selection.count = 1 Then
+    Call Library.showNotice(600)
+  ElseIf Selection.count > 1 Then
+    Selection.SpecialCells(xlCellTypeConstants, 23).ClearContents
+  End If
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

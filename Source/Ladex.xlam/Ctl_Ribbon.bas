@@ -945,10 +945,11 @@ Function Ctl_Function(control As IRibbonControl)
       
     Case "”¼‘SŠp•ÏŠ·"
       Call Ctl_Cells.‰p”š‘S”¼Šp•ÏŠ·
-      
-      
+    
     Case "delLinefeed"
       Call Ctl_Cells.‰üsíœ
+    Case "’è”íœ"
+      Call Ctl_Cells.’è”íœ
       
       
     Case "æ‚èÁ‚µü"

@@ -63,7 +63,7 @@ RequestExecutionLevel user
 ; !define MUI_FINISHPAGE_NOAUTOCLOSE        ; インストール完了後自動的に完了画面に遷移しないようにする
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "E:\networkDrive\Git\Ladex\LICENSE"
+!insertmacro MUI_PAGE_LICENSE "LICENSE"
 ; !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_INSTFILES
@@ -87,10 +87,10 @@ Section "Ladex" sec_Main
   ; File    "メンテナンス用.xlsm"
   CreateDirectory $INSTDIR\Images
   CreateDirectory $INSTDIR\log
-  CreateDirectory $INSTDIR\RibbonImg
-  ; CreateDirectory $INSTDIR\RibbonSrc
-  File /r   "setupLadex\RibbonSrc"
-  File      "setupLadex\スタイル情報.xlsx"
+  File /r "Ladex\RibbonImg"
+  File /r "Ladex\RibbonSrc"
+  File /r "Ladex\RibbonSrc"
+  File    "Ladex\スタイル情報.xlsx"
 
 
   ; レジストリキーの設定
