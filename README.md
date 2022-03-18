@@ -19,7 +19,7 @@ Addin For Excel Library　の造語でLadex[ラデックス]と読みます
 
 ## 機能
 
-### 専用のリボンメニューから処理  
+### 専用のリボンメニューから処理
 <img src="Docs/リボンメニュー_カスタム機能.png" width="50%">
 
 |#|メニュー名|機能|
@@ -69,7 +69,7 @@ Addin For Excel Library　の造語でLadex[ラデックス]と読みます
   | chkWeekNum | 第N週X曜日の日付かチェックし、True/Falseを返す|
   | getWorkDay | 第N営業日をシリアル値で返す|
   | Textjoin | 文字列連結|
-  
+
   ※ 現時点では当年、翌年のみ対応
 
 ## よく使う標準機能のメニューをまとめたもの
@@ -79,34 +79,34 @@ Addin For Excel Library　の造語でLadex[ラデックス]と読みます
 
 ## 使用制限
 
-* ハイライト  
- 行方向の最大値：11270行  
+* ハイライト
+ 行方向の最大値：11270行
  列方向の最大値：EDK列
 
-* ズーム  
+* ズーム
  文字色が設定されている場合、クリアされる
 
-* 数式確認  
+* 数式確認
  異なるシートにあるセルは対象外
 
 
 ## インストール／バージョンアップ方法
 1. Excelを全て閉じる
-2. install.vbs を実行する。
-3. Excelを起動し「Ladex」タブが表示されることを確認する  
+2. Ladex-XXXX-setup.exe を実行する。
+3. Excelを起動し「Ladex」タブが表示されることを確認する
 　表示されていない場合は、「表示」タブでLadexにチェックを入れる
 
 
 ## 参考サイト
-[RelaxTools Addin](https://software.opensquare.net/relaxtools/)  
-[Excelでお仕事!](http://www.ne.jp/asahi/excel/inoue/)  
-[moug モーグ](https://www.moug.net/)  
-[Office TANAKA](http://officetanaka.net/)  
-[エクセルの神髄](https://excel-ubara.com/)  
+[RelaxTools Addin](https://software.opensquare.net/relaxtools/)
+[Excelでお仕事!](http://www.ne.jp/asahi/excel/inoue/)
+[moug モーグ](https://www.moug.net/)
+[Office TANAKA](http://officetanaka.net/)
+[エクセルの神髄](https://excel-ubara.com/)
 
 ## サポート
-当ソフトはフリーソフトウェアです。   
-個人・法人に限らず利用者は自由に使用および配布することができますが、著作権は作者にあります。   
+当ソフトはフリーソフトウェアです。
+個人・法人に限らず利用者は自由に使用および配布することができますが、著作権は作者にあります。
 当ソフトを使用した事によるいかなる損害も作者は一切の責任を負いません。
 
 ソースを利用する場合にはMITライセンスです。
