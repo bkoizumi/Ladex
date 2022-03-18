@@ -20,10 +20,11 @@ Public BK_sheetHighLight    As Worksheet
 Public BK_sheetHelp         As Worksheet
 Public BK_sheetFunction     As Worksheet
 Public BK_sheetSheetList    As Worksheet
+Public LdSh_inputData       As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "1.2.2.0"
+Public Const thisAppVersion As String = "1.3.0.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 Public funcName             As String
@@ -155,8 +156,8 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_sheetHighLight = BK_ThisBook.Worksheets("HighLight")
   Set BK_sheetHelp = BK_ThisBook.Worksheets("Help")
   Set BK_sheetFunction = BK_ThisBook.Worksheets("Function")
-  Set BK_sheetSheetList = BK_ThisBook.Worksheets("SheetList")
   
+  Set LdSh_inputData = BK_ThisBook.Worksheets("inputData")
  
   '設定値読み込み--------------------------------
   Set BK_setVal = Nothing
@@ -180,6 +181,9 @@ Function setting(Optional reCheckFlg As Boolean)
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
   
+  If Application.UserName = "小泉 文平" Then
+    BK_setVal("debugMode") = "develop"
+  End If
   
 '  LogLevel = Split(BK_setVal("LogLevel"), ".")(0)
   

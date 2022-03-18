@@ -9,7 +9,7 @@ Option Explicit
 '==================================================================================================
 Function ÉVÅ[Égí«â¡()
   Call init.setting
-  ThisWorkbook.Worksheets.add.Name = "SheetList"
+  ThisWorkbook.Worksheets.add.Name = "inputData"
   ThisWorkbook.Save
 End Function
 

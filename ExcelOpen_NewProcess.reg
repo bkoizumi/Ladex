@@ -1,0 +1,29 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Excel.CSV\shell]
+@="Other"
+[HKEY_CLASSES_ROOT\Excel.CSV\shell\Other]
+@="別プロセスで開く"
+[HKEY_CLASSES_ROOT\Excel.CSV\shell\Other\command]
+@="\"C:\\Program Files (x86)\\Microsoft Office\\Office16\\EXCEL.EXE\" \"%1\" /x"
+
+[HKEY_CLASSES_ROOT\Excel.Sheet.12\shell]
+@="Other"
+[HKEY_CLASSES_ROOT\Excel.Sheet.12\shell\Other]
+@="別プロセスで開く"
+[HKEY_CLASSES_ROOT\Excel.Sheet.12\shell\Other\command]
+@="\"C:\\Program Files (x86)\\Microsoft Office\\Office16\\EXCEL.EXE\" \"%1\" /x"
+
+[HKEY_CLASSES_ROOT\Excel.SheetMacroEnabled.12\shell]
+@="Other"
+[HKEY_CLASSES_ROOT\Excel.SheetMacroEnabled.12\shell\Other]
+@="別プロセスで開く"
+[HKEY_CLASSES_ROOT\Excel.SheetMacroEnabled.12\shell\Other\command]
+@="\"C:\\Program Files (x86)\\Microsoft Office\\Office16\\EXCEL.EXE\" \"%1\" /x"
+
+[HKEY_CLASSES_ROOT\Excel.Sheet.8\shell]
+@="Other"
+[HKEY_CLASSES_ROOT\Excel.Sheet.8\shell\Other]
+@="別プロセスで開く"
+[HKEY_CLASSES_ROOT\Excel.Sheet.8\shell\Other\command]
+@="\"C:\\Program Files (x86)\\Microsoft Office\\Office16\\EXCEL.EXE\" \"%1\" /x"

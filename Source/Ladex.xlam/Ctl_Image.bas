@@ -11,6 +11,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   Dim slctArea
   Dim targetImg As Chart
   Dim saveDir As String
+  Dim DisplayGridlineFlg As Boolean
   Const funcName As String = "Ctl_Image.saveSelectArea2Image"
 
   'èàóùäJén--------------------------------------
@@ -23,6 +24,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
     Call Library.showDebugForm("" & funcName, , "function")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  DisplayGridlineFlg = False
   '----------------------------------------------
 
   If IsMissing(defSlctArea) Then
@@ -38,9 +40,14 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   If Library.chkDirExists(saveDir) = "" Then
     Call Library.execMkdir(saveDir)
   End If
-  
   Select Case TypeName(slctArea)
     Case "Range"
+  
+      'ògê¸ê›íËêÿÇËë÷Ç¶--------------------------
+      If ActiveWindow.DisplayGridlines = True Then
+        ActiveWindow.DisplayGridlines = False
+        DisplayGridlineFlg = True
+      End If
       slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
     
     Case "ChartArea", "Picture", "GroupObject", "TextBox", "Rectangle"
@@ -66,6 +73,12 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   Set targetImg = Nothing
   Set slctArea = Nothing
 
+  'ògê¸ê›íË
+  If DisplayGridlineFlg = True Then
+    ActiveWindow.DisplayGridlines = True
+  End If
+  
+  
   If IsMissing(defSlctArea) Then
     Call Shell("Explorer.exe /select, " & saveDir & imageName, vbNormalFocus)
   End If

@@ -1,25 +1,33 @@
-﻿; インストーラーの識別子
+﻿ManifestDPIAware true
+!define MUI_HEADERIMAGE_BITMAP_STRETCH AspectFitHeight
+!define MUI_WELCOMEFINISHPAGE_BITMAP_STRETCH AspectFitHeight
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP_STRETCH AspectFitHeight
+
+
+
+
+; インストーラーの識別子
 !define PRODUCT_NAME "Ladex"
 ; インストーラーのバージョン。
-!define PRODUCT_VERSION "1.2.2.0"
+!define PRODUCT_VERSION "1.3.0.0"
 
 ; 多言語で使用する場合はここをUnicodeにすることを推奨
 Unicode true
 
 ; インストーラーのアイコン
-!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\win-install.ico"
+!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
 
 ; アンインストーラーのアイコン
-!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\win-uninstall.ico"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
 ; インストーラの見た目
-; !define MUI_HEADERIMAGE
-; !define MUI_HEADERIMAGE_RIGHT
-; !define MUI_HEADERIMAGE_BITMAP          "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
-; !define MUI_HEADERIMAGE_UNBITMAP        "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_RIGHT
+!define MUI_HEADERIMAGE_BITMAP          "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
+!define MUI_HEADERIMAGE_UNBITMAP        "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
 
-; !define MUI_WELCOMEFINISHPAGE_BITMAP    "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
-; !define MUI_UNWELCOMEFINISHPAGE_BITMAP  "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP    "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP  "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
 
 
 ; 使用する外部ライブラリ
@@ -84,11 +92,10 @@ Section "Ladex" sec_Main
   ; ディレクトリ/ファイルをコピー
   File    "ExcelOpen_ViewProtected.vbs"
   File    "README.pdf"
-  ; File    "メンテナンス用.xlsm"
+  File    "メンテナンス用.xlsm"
   CreateDirectory $INSTDIR\Images
   CreateDirectory $INSTDIR\log
   File /r "Ladex\RibbonImg"
-  File /r "Ladex\RibbonSrc"
   File /r "Ladex\RibbonSrc"
   File    "Ladex\スタイル情報.xlsx"
 
@@ -104,11 +111,14 @@ Section "Ladex" sec_Main
 
   ;スタートメニューの作成
   SetShellVarContext current
-  CreateDirectory "$SMPROGRAMS\Bkoizumi"
-  CreateDirectory "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}"
-  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\スタイル情報.lnk"   "$INSTDIR\スタイル情報.xlsx"
-  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\README.lnk"         "$INSTDIR\README.pdf"
-  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"
+  CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\メンテナンス用.lnk" "$INSTDIR\メンテナンス用.xlsx"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"   "$INSTDIR\スタイル情報.xlsx"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"       "$INSTDIR\README.pdf"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"
+
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Excelを新プロセスで開く.lnk"      "$INSTDIR\ExcelOpen_NewProcess.reg"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Excelを標準にもどす.lnk"      "$INSTDIR\ExcelOpen_setDefault.reg"
 SectionEnd
 
 Section  "読み取り専用で開く" addReadOnly
@@ -122,7 +132,7 @@ Section  "読み取り専用で開く" addReadOnly
   DetailPrint `Return Code = $0`
 
   SetShellVarContext current
-  CreateShortCut  "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\読み取り専用で開く.lnk"   "$INSTDIR\ExcelOpen_ReadOnly.vbs"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"   "$INSTDIR\ExcelOpen_ReadOnly.vbs"
 
 SectionEnd
 
@@ -133,12 +143,15 @@ Section "Uninstall"
 
   ;スタートメニューから削除
   SetShellVarContext current
-  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\Uninstall.lnk"
-  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\読み取り専用で開く.lnk"
-  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\スタイル情報.xlsx"
-  Delete "$SMPROGRAMS\Bkoizumi\${PRODUCT_NAME}\README.lnk"
-  RMDir /r  "$SMPROGRAMSBkoizumi\${PRODUCT_NAME}"
-  RMDir /r  "$SMPROGRAMSBkoizumi"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\メンテナンス用.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\Excelを新プロセスで開く.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\Excelを標準にもどす.lnk"
+
+  RMDir  "$SMPROGRAMS\${PRODUCT_NAME}"
 
   ; ディレクトリ削除
   RMDir /r "$INSTDIR"

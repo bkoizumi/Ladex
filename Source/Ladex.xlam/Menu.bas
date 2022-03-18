@@ -74,16 +74,16 @@ End Sub
 
 
 Sub ladex_セル調整_幅()
-  Call Ctl_Sheet.セル幅調整
+  Call Ctl_Cells.セル幅調整
 End Sub
 
 Sub ladex_セル調整_高さ()
-  Call Ctl_Sheet.セル高さ調整
+  Call Ctl_Cells.セル高さ調整
 End Sub
 
 Sub ladex_セル調整_両方()
-  Call Ctl_Sheet.セル幅調整
-  Call Ctl_Sheet.セル高さ調整
+  Call Ctl_Cells.セル幅調整
+  Call Ctl_Cells.セル高さ調整
 End Sub
 
 Sub ladex_セル幅取得()
@@ -179,11 +179,11 @@ Sub ladex_罫線_表_実線()
   Call Library.罫線_実線_格子
 End Sub
 
-Sub ladex_罫線_表_破線B()
+Sub ladex_罫線_表_破線A()
   Call Library.罫線_表
 End Sub
 
-Sub ladex_罫線_表_破線C()
+Sub ladex_罫線_表_破線B()
   Call Library.罫線_破線_格子
   Call Library.罫線_実線_水平
   Call Library.罫線_実線_囲み

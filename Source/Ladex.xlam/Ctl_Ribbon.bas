@@ -922,12 +922,12 @@ Function Ctl_Function(control As IRibbonControl)
     
     'セル調整------------------------------------
     Case "セル調整_幅"
-      Call Ctl_Sheet.セル幅調整
+      Call Ctl_Cells.セル幅調整
     Case "セル調整_高さ"
-      Call Ctl_Sheet.セル高さ調整
+      Call Ctl_Cells.セル高さ調整
     Case "セル調整_両方"
-      Call Ctl_Sheet.セル幅調整
-      Call Ctl_Sheet.セル高さ調整
+      Call Ctl_Cells.セル幅調整
+      Call Ctl_Cells.セル高さ調整
     Case "セル幅取得"
       Call Library.getColumnWidth
     
@@ -1059,25 +1059,25 @@ Function Ctl_Function(control As IRibbonControl)
     Case "連番生成"
       Call Ctl_Cells.連番追加
     Case "桁数固定数値"
-      Call Ctl_sampleData.数値_桁数固定(Selection.count)
+      Call Ctl_sampleData.数値_桁数固定(Selection.Rows.count)
     Case "範囲指定数値"
       Call Ctl_sampleData.数値_範囲
     Case "姓"
-      Call Ctl_sampleData.名前_姓(Selection.count)
+      Call Ctl_sampleData.名前_姓(Selection.Rows.count)
     Case "名"
-      Call Ctl_sampleData.名前_名(Selection.count)
+      Call Ctl_sampleData.名前_名(Selection.Rows.count)
     Case "氏名"
-      Call Ctl_sampleData.名前_フルネーム(Selection.count)
+      Call Ctl_sampleData.名前_フルネーム(Selection.Rows.count)
     Case "日付"
-      Call Ctl_sampleData.日付_日(Selection.count)
+      Call Ctl_sampleData.日付_日(Selection.Rows.count)
     Case "時間"
-      Call Ctl_sampleData.日付_時間(Selection.count)
+      Call Ctl_sampleData.日付_時間(Selection.Rows.count)
     Case "日時"
-      Call Ctl_sampleData.日時(Selection.count)
+      Call Ctl_sampleData.日時(Selection.Rows.count)
     Case "文字"
       Call Ctl_sampleData.その他_文字(25)
     Case "パターン選択"
-      Call Ctl_sampleData.パターン選択(Selection.count)
+      Call Ctl_sampleData.パターン選択(Selection.Rows.count)
     
     
     Case Else

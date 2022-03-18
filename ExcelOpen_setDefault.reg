@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\Excel.CSV\shell]
+@="Open"
+[HKEY_CLASSES_ROOT\Excel.Sheet.12\shell]
+@="Open"
+[HKEY_CLASSES_ROOT\Excel.SheetMacroEnabled.12\shell]
+@="Open"
+[HKEY_CLASSES_ROOT\Excel.Sheet.8\shell]
+@="Open"

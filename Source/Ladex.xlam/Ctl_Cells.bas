@@ -159,7 +159,7 @@ Function 連番設定()
   
   line = 1
   For Each slctCells In Selection
-    'slctCells.NumberFormatLocal = "@"
+    slctCells.NumberFormatLocal = "###"
     slctCells.Value = line
     line = line + 1
     DoEvents
@@ -209,6 +209,7 @@ Function 連番追加()
   '----------------------------------------------
   line = 1
   For Each slctCells In Selection
+    slctCells.NumberFormatLocal = "@"
     slctCells.Value = line & "．" & Reg.Replace(slctCells.Value, "")
     line = line + 1
     DoEvents
@@ -691,4 +692,117 @@ Function 定数削除()
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
+End Function
+
+'**************************************************************************************************
+' * セル幅・高さ調整
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function セル幅調整()
+  Dim colLine As Long, endColLine As Long
+  Dim colName As String
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.セル幅調整"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  If Selection.count > 1 Then
+    Columns(Library.getColumnName(Selection(1).Column) & ":" & Library.getColumnName(Selection(Selection.count).Column)).EntireColumn.AutoFit
+    
+    For Each slctCells In Selection
+      colName = Library.getColumnName(slctCells.Column)
+      If IsNumeric(slctCells.Value) Then
+        If CInt(slctCells.Value) > 1 Then
+          Columns(colName & ":" & colName).ColumnWidth = slctCells.Value
+        End If
+      End If
+      
+      If Columns(colName & ":" & colName).ColumnWidth > 60 Then
+        Columns(colName & ":" & colName).ColumnWidth = 60
+      End If
+    Next
+
+  Else
+    Cells.EntireColumn.AutoFit
+    For colLine = 1 To Columns.count
+      colName = Library.getColumnName(colLine)
+      If IsNumeric(Cells(1, colLine)) Then
+        If CInt(Cells(1, colLine)) > 1 Then
+          Columns(colName & ":" & colName).ColumnWidth = Cells(1, colLine).Value
+        End If
+      End If
+      
+      If Cells(1, colLine).ColumnWidth > 60 Then
+        colName = Library.getColumnName(colLine)
+        Columns(colName & ":" & colName).ColumnWidth = 60
+      End If
+    Next
+  End If
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript(True)
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function セル高さ調整()
+  Const funcName As String = "Ctl_Cells.セル高さ調整"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  Cells.EntireRow.AutoFit
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript(True)
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
