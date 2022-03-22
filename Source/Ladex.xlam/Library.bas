@@ -2004,9 +2004,9 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   runTime = Format(Now(), "yyyy-mm-dd hh:nn:ss")
 
   errLevel = "warning"
-  endLine = BK_sheetNotice.Cells(Rows.count, 1).End(xlUp).Row
-  message = Application.WorksheetFunction.VLookup(Code, BK_sheetNotice.Range("A2:C" & endLine), 3, False)
-  megTitle = Application.WorksheetFunction.VLookup(Code, BK_sheetNotice.Range("A2:C" & endLine), 2, False)
+  endLine = LadexSh_Notice.Cells(Rows.count, 1).End(xlUp).Row
+  message = Application.WorksheetFunction.VLookup(Code, LadexSh_Notice.Range("A2:C" & endLine), 3, False)
+  megTitle = Application.WorksheetFunction.VLookup(Code, LadexSh_Notice.Range("A2:C" & endLine), 2, False)
   If megTitle = "" Then megTitle = thisAppName
 
   message = Replace(message, "%%", process)

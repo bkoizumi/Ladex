@@ -123,7 +123,7 @@ Private Sub Lst_Favorite_Click()
   Call init.setting
   
   line = Lst_Favorite.ListIndex + 2
-  filePath = BK_sheetFavorite.Range("A" & line)
+  filePath = LadexSh_Favorite.Range("A" & line)
   
   If Library.chkFileExists(filePath) Then
     Set FSO = CreateObject("Scripting.FileSystemObject")

@@ -25,7 +25,7 @@ Function Export()
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-  BK_sheetStyle.Copy
+  LadexSh_Style.Copy
   
   Set setStyleBook = ActiveWorkbook
   setStyleBook.SaveAs LadexDir & "\" & "スタイル情報.xlsx"
@@ -221,93 +221,93 @@ Function スタイル設定()
   Call Ctl_Style.スタイル削除
   
   'スタイル初期化--------------------------------
-  endLine = BK_sheetStyle.Cells(Rows.count, 2).End(xlUp).Row
+  endLine = LadexSh_Style.Cells(Rows.count, 2).End(xlUp).Row
   For line = 2 To endLine
-    If BK_sheetStyle.Range("A" & line) <> "無効" Then
-      Call Ctl_ProgressBar.showCount("スタイル設定", 1, 2, line, endLine, BK_sheetStyle.Range("B" & line))
+    If LadexSh_Style.Range("A" & line) <> "無効" Then
+      Call Ctl_ProgressBar.showCount("スタイル設定", 1, 2, line, endLine, LadexSh_Style.Range("B" & line))
 
-      Select Case BK_sheetStyle.Range("B" & line)
+      Select Case LadexSh_Style.Range("B" & line)
         Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
-          Call Library.showDebugForm("定義済スタイル", BK_sheetStyle.Range("B" & line), "debug")
+          Call Library.showDebugForm("定義済スタイル", LadexSh_Style.Range("B" & line), "debug")
           
       'Ladexの初期設定
       Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準", "H_目次1", "H_目次2", "H_目次3", "《》"
-        Call Library.showDebugForm("Ladexスタイル ", BK_sheetStyle.Range("B" & line), "debug")
+        Call Library.showDebugForm("Ladexスタイル ", LadexSh_Style.Range("B" & line), "debug")
       
       Case Else
-        Call Library.showDebugForm("スタイル名", BK_sheetStyle.Range("B" & line), "debug")
-        ActiveWorkbook.Styles.add Name:=BK_sheetStyle.Range("B" & line).Value
+        Call Library.showDebugForm("スタイル名", LadexSh_Style.Range("B" & line), "debug")
+        ActiveWorkbook.Styles.add Name:=LadexSh_Style.Range("B" & line).Value
       End Select
 
-      With ActiveWorkbook.Styles(BK_sheetStyle.Range("B" & line).Value)
+      With ActiveWorkbook.Styles(LadexSh_Style.Range("B" & line).Value)
 
-        If BK_sheetStyle.Range("C" & line) <> "" Then
-          .NumberFormatLocal = BK_sheetStyle.Range("C" & line)
+        If LadexSh_Style.Range("C" & line) <> "" Then
+          .NumberFormatLocal = LadexSh_Style.Range("C" & line)
         End If
 
-        .IncludeNumber = BK_sheetStyle.Range("D" & line)
-        .IncludeFont = BK_sheetStyle.Range("E" & line)
-        .IncludeAlignment = BK_sheetStyle.Range("F" & line)
-        .IncludeBorder = BK_sheetStyle.Range("G" & line)
-        .IncludePatterns = BK_sheetStyle.Range("H" & line)
-        .IncludeProtection = BK_sheetStyle.Range("I" & line)
+        .IncludeNumber = LadexSh_Style.Range("D" & line)
+        .IncludeFont = LadexSh_Style.Range("E" & line)
+        .IncludeAlignment = LadexSh_Style.Range("F" & line)
+        .IncludeBorder = LadexSh_Style.Range("G" & line)
+        .IncludePatterns = LadexSh_Style.Range("H" & line)
+        .IncludeProtection = LadexSh_Style.Range("I" & line)
 
-        If BK_sheetStyle.Range("E" & line) = "TRUE" Then
-          .Font.Name = BK_sheetStyle.Range("J" & line).Font.Name
-          .Font.Size = BK_sheetStyle.Range("J" & line).Font.Size
-          .Font.Color = BK_sheetStyle.Range("J" & line).Font.Color
-          .Font.Bold = BK_sheetStyle.Range("J" & line).Font.Bold
+        If LadexSh_Style.Range("E" & line) = "TRUE" Then
+          .Font.Name = LadexSh_Style.Range("J" & line).Font.Name
+          .Font.Size = LadexSh_Style.Range("J" & line).Font.Size
+          .Font.Color = LadexSh_Style.Range("J" & line).Font.Color
+          .Font.Bold = LadexSh_Style.Range("J" & line).Font.Bold
         End If
 
         '配置
-        If BK_sheetStyle.Range("F" & line) = "TRUE" Then
-          .HorizontalAlignment = BK_sheetStyle.Range("J" & line).HorizontalAlignment
-          .VerticalAlignment = BK_sheetStyle.Range("J" & line).VerticalAlignment
+        If LadexSh_Style.Range("F" & line) = "TRUE" Then
+          .HorizontalAlignment = LadexSh_Style.Range("J" & line).HorizontalAlignment
+          .VerticalAlignment = LadexSh_Style.Range("J" & line).VerticalAlignment
         End If
 
         '罫線
-        If BK_sheetStyle.Range("G" & line) = "TRUE" Then
-          If BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).LineStyle <> xlNone Then
-            .Borders(xlDiagonalDown).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).LineStyle
-            .Borders(xlDiagonalDown).Weight = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).Weight
-            .Borders(xlDiagonalDown).Color = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalDown).Color
+        If LadexSh_Style.Range("G" & line) = "TRUE" Then
+          If LadexSh_Style.Range("J" & line).Borders(xlDiagonalDown).LineStyle <> xlNone Then
+            .Borders(xlDiagonalDown).LineStyle = LadexSh_Style.Range("J" & line).Borders(xlDiagonalDown).LineStyle
+            .Borders(xlDiagonalDown).Weight = LadexSh_Style.Range("J" & line).Borders(xlDiagonalDown).Weight
+            .Borders(xlDiagonalDown).Color = LadexSh_Style.Range("J" & line).Borders(xlDiagonalDown).Color
           End If
 
-          If BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).LineStyle <> xlNone Then
-            .Borders(xlDiagonalUp).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).LineStyle
-            .Borders(xlDiagonalUp).Weight = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).Weight
-            .Borders(xlDiagonalUp).Color = BK_sheetStyle.Range("J" & line).Borders(xlDiagonalUp).Color
+          If LadexSh_Style.Range("J" & line).Borders(xlDiagonalUp).LineStyle <> xlNone Then
+            .Borders(xlDiagonalUp).LineStyle = LadexSh_Style.Range("J" & line).Borders(xlDiagonalUp).LineStyle
+            .Borders(xlDiagonalUp).Weight = LadexSh_Style.Range("J" & line).Borders(xlDiagonalUp).Weight
+            .Borders(xlDiagonalUp).Color = LadexSh_Style.Range("J" & line).Borders(xlDiagonalUp).Color
           End If
 
-          If BK_sheetStyle.Range("J" & line).Borders(xlLeft).LineStyle <> xlNone Then
-            .Borders(xlLeft).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlLeft).LineStyle
-            .Borders(xlLeft).Weight = BK_sheetStyle.Range("J" & line).Borders(xlLeft).Weight
-            .Borders(xlLeft).Color = BK_sheetStyle.Range("J" & line).Borders(xlLeft).Color
+          If LadexSh_Style.Range("J" & line).Borders(xlLeft).LineStyle <> xlNone Then
+            .Borders(xlLeft).LineStyle = LadexSh_Style.Range("J" & line).Borders(xlLeft).LineStyle
+            .Borders(xlLeft).Weight = LadexSh_Style.Range("J" & line).Borders(xlLeft).Weight
+            .Borders(xlLeft).Color = LadexSh_Style.Range("J" & line).Borders(xlLeft).Color
           End If
 
-          If BK_sheetStyle.Range("J" & line).Borders(xlRight).LineStyle <> xlNone Then
-            .Borders(xlRight).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlRight).LineStyle
-            .Borders(xlRight).Weight = BK_sheetStyle.Range("J" & line).Borders(xlRight).Weight
-            .Borders(xlRight).Color = BK_sheetStyle.Range("J" & line).Borders(xlRight).Color
+          If LadexSh_Style.Range("J" & line).Borders(xlRight).LineStyle <> xlNone Then
+            .Borders(xlRight).LineStyle = LadexSh_Style.Range("J" & line).Borders(xlRight).LineStyle
+            .Borders(xlRight).Weight = LadexSh_Style.Range("J" & line).Borders(xlRight).Weight
+            .Borders(xlRight).Color = LadexSh_Style.Range("J" & line).Borders(xlRight).Color
           End If
 
-          If BK_sheetStyle.Range("J" & line).Borders(xlTop).LineStyle <> xlNone Then
-            .Borders(xlTop).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlTop).LineStyle
-            .Borders(xlTop).Weight = BK_sheetStyle.Range("J" & line).Borders(xlTop).Weight
-            .Borders(xlTop).Color = BK_sheetStyle.Range("J" & line).Borders(xlTop).Color
+          If LadexSh_Style.Range("J" & line).Borders(xlTop).LineStyle <> xlNone Then
+            .Borders(xlTop).LineStyle = LadexSh_Style.Range("J" & line).Borders(xlTop).LineStyle
+            .Borders(xlTop).Weight = LadexSh_Style.Range("J" & line).Borders(xlTop).Weight
+            .Borders(xlTop).Color = LadexSh_Style.Range("J" & line).Borders(xlTop).Color
           End If
 
-          If BK_sheetStyle.Range("J" & line).Borders(xlBottom).LineStyle <> xlNone Then
-            .Borders(xlBottom).LineStyle = BK_sheetStyle.Range("J" & line).Borders(xlBottom).LineStyle
-            .Borders(xlBottom).Weight = BK_sheetStyle.Range("J" & line).Borders(xlBottom).Weight
-            .Borders(xlBottom).Color = BK_sheetStyle.Range("J" & line).Borders(xlBottom).Color
+          If LadexSh_Style.Range("J" & line).Borders(xlBottom).LineStyle <> xlNone Then
+            .Borders(xlBottom).LineStyle = LadexSh_Style.Range("J" & line).Borders(xlBottom).LineStyle
+            .Borders(xlBottom).Weight = LadexSh_Style.Range("J" & line).Borders(xlBottom).Weight
+            .Borders(xlBottom).Color = LadexSh_Style.Range("J" & line).Borders(xlBottom).Color
           End If
         End If
 
 
         '背景色
-        If BK_sheetStyle.Range("H" & line) = "TRUE" Then
-          .Interior.Color = BK_sheetStyle.Range("J" & line).Interior.Color
+        If LadexSh_Style.Range("H" & line) = "TRUE" Then
+          .Interior.Color = LadexSh_Style.Range("J" & line).Interior.Color
         End If
       End With
     End If

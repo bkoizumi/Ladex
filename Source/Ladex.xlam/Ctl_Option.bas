@@ -45,7 +45,7 @@ Function showHelp()
   '----------------------------------------------
   
   BK_ThisBook.Activate
-  BK_sheetHelp.Activate
+  LadexSh_Help.Activate
   Sheets("Help").Copy
   ActiveWindow.DisplayGridlines = False
   Set targetBook = ActiveWorkbook
@@ -118,13 +118,13 @@ Function initialization()
   '----------------------------------------------
   
   BK_ThisBook.Activate
-  endLine = BK_sheetSetting.Cells(Rows.count, Library.getColumnNo(BK_setVal("Cells_RegistryKey"))).End(xlUp).Row
+  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(BK_setVal("Cells_RegistryKey"))).End(xlUp).Row
   
   Call Library.delRegistry("Main")
   For line = 3 To endLine
-    RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
-    RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
-    RegistryVal = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
+    RegistryKey = LadexSh_Config.Range(BK_setVal("Cells_RegistryKey") & line)
+    RegistrySubKey = LadexSh_Config.Range(BK_setVal("Cells_RegistrySubKey") & line)
+    RegistryVal = LadexSh_Config.Range(BK_setVal("Cells_RegistryValue") & line)
     
     If RegistryKey <> "" Then
      Call Library.setRegistry(RegistryKey, RegistrySubKey, RegistryVal)

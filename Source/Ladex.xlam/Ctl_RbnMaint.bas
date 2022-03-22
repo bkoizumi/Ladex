@@ -35,22 +35,22 @@ Function その他()
 '  Cells.Select
 '  Selection.ColumnWidth = 5
   
-'  BK_sheetHighLight.Range("N5").Select
-'  BK_sheetHighLight.Range("N5").ClearComments
-'  BK_sheetHighLight.Range("N5").AddComment
-'  BK_sheetHighLight.Range("N5").Comment.Visible = False
-'  BK_sheetHighLight.Range("N5").Comment.Text Text:="Sampleコメント" & Chr(10) & "Sampleコメント" & Chr(10) & "Sampleコメント "
+'  LadexSh_HighLight.Range("N5").Select
+'  LadexSh_HighLight.Range("N5").ClearComments
+'  LadexSh_HighLight.Range("N5").AddComment
+'  LadexSh_HighLight.Range("N5").Comment.Visible = False
+'  LadexSh_HighLight.Range("N5").Comment.Text Text:="Sampleコメント" & Chr(10) & "Sampleコメント" & Chr(10) & "Sampleコメント "
 '
-'  BK_sheetHighLight.Range("N5").Comment.Visible = True
+'  LadexSh_HighLight.Range("N5").Comment.Visible = True
   
   
-  BK_sheetHelp.Cells.ColumnWidth = 3
-  BK_sheetHelp.Cells.RowHeight = 15
+  LadexSh_Help.Cells.ColumnWidth = 3
+  LadexSh_Help.Cells.RowHeight = 15
   
-  endLine = BK_sheetHelp.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_Help.Cells(Rows.count, 1).End(xlUp).Row
   For line = 1 To endLine
-    If BK_sheetHelp.Range("A" & line) <> "" Then
-      BK_sheetHelp.Cells.RowHeight = 20
+    If LadexSh_Help.Range("A" & line) <> "" Then
+      LadexSh_Help.Cells.RowHeight = 20
     End If
   Next
   

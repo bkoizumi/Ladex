@@ -135,67 +135,67 @@ Function パターン選択(Optional maxCount As Long)
   End If
   maxCount = BK_setVal("maxCount")
 
-  Call Library.delSheetData(LdSh_inputData)
-  LdSh_inputData.Cells.NumberFormatLocal = "@"
+  Call Library.delSheetData(LadexSh_InputData)
+  LadexSh_InputData.Cells.NumberFormatLocal = "@"
   
   line = 1
   
   For count = 0 To (maxCount - 1)
-    getLine = Library.makeRandomNo(2, BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row)
+    getLine = Library.makeRandomNo(2, LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row)
     getLine2 = Library.makeRandomNo(2, 5)
     
     '氏名(姓)
-    LdSh_inputData.Range("A" & line + count) = BK_sheetTestData.Range("A" & getLine)
-    LdSh_inputData.Range("D" & line + count) = BK_sheetTestData.Range("B" & getLine)
+    LadexSh_InputData.Range("A" & line + count) = LadexSh_TestData.Range("A" & getLine)
+    LadexSh_InputData.Range("D" & line + count) = LadexSh_TestData.Range("B" & getLine)
     
     '氏名(名)
-    getLine = Library.makeRandomNo(2, BK_sheetTestData.Cells(Rows.count, 4).End(xlUp).Row)
-    LdSh_inputData.Range("B" & line + count) = BK_sheetTestData.Range("D" & getLine)
-    LdSh_inputData.Range("E" & line + count) = BK_sheetTestData.Range("E" & getLine)
+    getLine = Library.makeRandomNo(2, LadexSh_TestData.Cells(Rows.count, 4).End(xlUp).Row)
+    LadexSh_InputData.Range("B" & line + count) = LadexSh_TestData.Range("D" & getLine)
+    LadexSh_InputData.Range("E" & line + count) = LadexSh_TestData.Range("E" & getLine)
     
-    LdSh_inputData.Range("C" & line + count) = LdSh_inputData.Range("A" & line + count) & "　" & LdSh_inputData.Range("B" & line + count)
-    LdSh_inputData.Range("F" & line + count) = LdSh_inputData.Range("D" & line + count) & "　" & LdSh_inputData.Range("E" & line + count)
+    LadexSh_InputData.Range("C" & line + count) = LadexSh_InputData.Range("A" & line + count) & "　" & LadexSh_InputData.Range("B" & line + count)
+    LadexSh_InputData.Range("F" & line + count) = LadexSh_InputData.Range("D" & line + count) & "　" & LadexSh_InputData.Range("E" & line + count)
     
     '性別
-    LdSh_inputData.Range("G" & line + count) = BK_sheetTestData.Range("F" & getLine2)
+    LadexSh_InputData.Range("G" & line + count) = LadexSh_TestData.Range("F" & getLine2)
     
 
     '血液型
-    LdSh_inputData.Range("H" & line + count) = BK_sheetTestData.Range("H" & getLine2)
+    LadexSh_InputData.Range("H" & line + count) = LadexSh_TestData.Range("H" & getLine2)
     
     '生年月日
-    LdSh_inputData.Range("I" & line + count) = Format(Int((Date - #1/1/1950# + 1) * Rnd + #1/1/1950#), "yyyy/mm/dd")
+    LadexSh_InputData.Range("I" & line + count) = Format(Int((Date - #1/1/1950# + 1) * Rnd + #1/1/1950#), "yyyy/mm/dd")
     
     '年齢
-    LdSh_inputData.Range("J" & line + count) = Application.Evaluate("DATEDIF(""" & LdSh_inputData.Range("I" & line + count) & """, TODAY(), ""Y"")")
+    LadexSh_InputData.Range("J" & line + count) = Application.Evaluate("DATEDIF(""" & LadexSh_InputData.Range("I" & line + count) & """, TODAY(), ""Y"")")
     
     '電話番号
-    LdSh_inputData.Range("K" & line + count) = BK_sheetTestData.Range("Z" & getLine) & "-" & BK_sheetTestData.Range("AA" & getLine) & "-1234"
+    LadexSh_InputData.Range("K" & line + count) = LadexSh_TestData.Range("Z" & getLine) & "-" & LadexSh_TestData.Range("AA" & getLine) & "-1234"
     
     'メールアドレス
-    getLine = Library.makeRandomNo(2, BK_sheetTestData.Cells(Rows.count, 10).End(xlUp).Row)
-    LdSh_inputData.Range("L" & line + count) = "Sample" & BK_sheetTestData.Range("J" & getLine)
+    getLine = Library.makeRandomNo(2, LadexSh_TestData.Cells(Rows.count, 10).End(xlUp).Row)
+    LadexSh_InputData.Range("L" & line + count) = "Sample" & LadexSh_TestData.Range("J" & getLine)
     
     '都道府県
-    getLine = Library.makeRandomNo(2, BK_sheetTestData.Cells(Rows.count, 15).End(xlUp).Row)
-    LdSh_inputData.Range("M" & line + count) = BK_sheetTestData.Range("O" & getLine)
-    LdSh_inputData.Range("N" & line + count) = BK_sheetTestData.Range("P" & getLine)
-    LdSh_inputData.Range("O" & line + count) = BK_sheetTestData.Range("Q" & getLine)
-    LdSh_inputData.Range("P" & line + count) = BK_sheetTestData.Range("R" & getLine)
-    LdSh_inputData.Range("Q" & line + count) = BK_sheetTestData.Range("S" & getLine)
+    getLine = Library.makeRandomNo(2, LadexSh_TestData.Cells(Rows.count, 15).End(xlUp).Row)
+    LadexSh_InputData.Range("M" & line + count) = LadexSh_TestData.Range("O" & getLine)
+    LadexSh_InputData.Range("N" & line + count) = LadexSh_TestData.Range("P" & getLine)
+    LadexSh_InputData.Range("O" & line + count) = LadexSh_TestData.Range("Q" & getLine)
+    LadexSh_InputData.Range("P" & line + count) = LadexSh_TestData.Range("R" & getLine)
+    LadexSh_InputData.Range("Q" & line + count) = LadexSh_TestData.Range("S" & getLine)
    
-    If InStr(BK_sheetTestData.Range("U" & getLine2), "番") > 0 Then
-      LdSh_inputData.Range("R" & line + count) = LdSh_inputData.Range("R" & line + count) & BK_sheetTestData.Range("T" & getLine) & StrConv(Replace(BK_sheetTestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbWide)
+    If InStr(LadexSh_TestData.Range("U" & getLine2), "番") > 0 Then
+      LadexSh_InputData.Range("R" & line + count) = LadexSh_InputData.Range("R" & line + count) & LadexSh_TestData.Range("T" & getLine) & StrConv(Replace(LadexSh_TestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbWide)
     Else
-      LdSh_inputData.Range("R" & line + count) = LdSh_inputData.Range("R" & line + count) & StrConv(Replace(BK_sheetTestData.Range("T" & getLine), "丁目", "-"), vbNarrow)
-      LdSh_inputData.Range("R" & line + count) = LdSh_inputData.Range("R" & line + count) & StrConv(Replace(BK_sheetTestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbNarrow)
+      LadexSh_InputData.Range("R" & line + count) = LadexSh_InputData.Range("R" & line + count) & StrConv(Replace(LadexSh_TestData.Range("T" & getLine), "丁目", "-"), vbNarrow)
+      LadexSh_InputData.Range("R" & line + count) = LadexSh_InputData.Range("R" & line + count) & StrConv(Replace(LadexSh_TestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbNarrow)
     End If
     
-    LdSh_inputData.Range("S" & line + count) = BK_sheetTestData.Range("V" & getLine)
-    LdSh_inputData.Range("T" & line + count) = BK_sheetTestData.Range("W" & getLine)
-    LdSh_inputData.Range("U" & line + count) = BK_sheetTestData.Range("X" & getLine)
+    LadexSh_InputData.Range("S" & line + count) = LadexSh_TestData.Range("V" & getLine)
+    LadexSh_InputData.Range("T" & line + count) = LadexSh_TestData.Range("W" & getLine)
+    LadexSh_InputData.Range("U" & line + count) = LadexSh_TestData.Range("X" & getLine)
     
-    strAddress = LdSh_inputData.Range("R" & line + count)
+    strAddress = LadexSh_InputData.Range("R" & line + count)
     strAddress = StrConv(Replace(strAddress, "丁目", "-"), vbNarrow)
     strAddress = StrConv(Replace(strAddress, "丁", "-"), vbNarrow)
     strAddress = StrConv(Replace(strAddress, "番地", ""), vbNarrow)
@@ -203,7 +203,7 @@ Function パターン選択(Optional maxCount As Long)
     strAddress = StrConv(Replace(strAddress, "号", ""), vbNarrow)
     
     
-    LdSh_inputData.Range("V" & line + count) = strAddress
+    LadexSh_InputData.Range("V" & line + count) = strAddress
     Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
   Next
   
@@ -214,51 +214,51 @@ Function パターン選択(Optional maxCount As Long)
     Call Library.showDebugForm("varDic", varDic, "debug")
     Select Case varDic
       Case "氏名(姓)"
-        LdSh_inputData.Range("A1:A" & maxCount).Copy Selection
+        LadexSh_InputData.Range("A1:A" & maxCount).Copy Selection
       Case "氏名(名)"
-        LdSh_inputData.Range("B1:B" & maxCount).Copy Selection
+        LadexSh_InputData.Range("B1:B" & maxCount).Copy Selection
 
       Case "氏名(フルネーム)"
-        LdSh_inputData.Range("C1:C" & maxCount).Copy Selection
+        LadexSh_InputData.Range("C1:C" & maxCount).Copy Selection
 
       Case "[カナ]氏名(姓)"
-        LdSh_inputData.Range("D1:D" & maxCount).Copy Selection
+        LadexSh_InputData.Range("D1:D" & maxCount).Copy Selection
       Case "[カナ]氏名(名)"
-        LdSh_inputData.Range("E1:E" & maxCount).Copy Selection
+        LadexSh_InputData.Range("E1:E" & maxCount).Copy Selection
       Case "[カナ]氏名(フルネーム)"
-        LdSh_inputData.Range("F1:F" & maxCount).Copy Selection
+        LadexSh_InputData.Range("F1:F" & maxCount).Copy Selection
       Case "性別"
-        LdSh_inputData.Range("G1:G" & maxCount).Copy Selection
+        LadexSh_InputData.Range("G1:G" & maxCount).Copy Selection
       Case "血液型"
-        LdSh_inputData.Range("H1:H" & maxCount).Copy Selection
+        LadexSh_InputData.Range("H1:H" & maxCount).Copy Selection
       Case "生年月日"
-        LdSh_inputData.Range("I1:I" & maxCount).Copy Selection
+        LadexSh_InputData.Range("I1:I" & maxCount).Copy Selection
       Case "年齢"
-        LdSh_inputData.Range("J1:J" & maxCount).Copy Selection
+        LadexSh_InputData.Range("J1:J" & maxCount).Copy Selection
       Case "電話番号"
-        LdSh_inputData.Range("K1:K" & maxCount).Copy Selection
+        LadexSh_InputData.Range("K1:K" & maxCount).Copy Selection
       Case "メールアドレス"
-        LdSh_inputData.Range("L1:L" & maxCount).Copy Selection
+        LadexSh_InputData.Range("L1:L" & maxCount).Copy Selection
       Case "都道府県コード"
-        LdSh_inputData.Range("M1:M" & maxCount).Copy Selection
+        LadexSh_InputData.Range("M1:M" & maxCount).Copy Selection
       Case "郵便番号"
-        LdSh_inputData.Range("N1:N" & maxCount).Copy Selection
+        LadexSh_InputData.Range("N1:N" & maxCount).Copy Selection
       Case "都道府県"
-        LdSh_inputData.Range("O1:O" & maxCount).Copy Selection
+        LadexSh_InputData.Range("O1:O" & maxCount).Copy Selection
       Case "市区郡町村"
-        LdSh_inputData.Range("P1:P" & maxCount).Copy Selection
+        LadexSh_InputData.Range("P1:P" & maxCount).Copy Selection
       Case "町域"
-        LdSh_inputData.Range("Q1:Q" & maxCount).Copy Selection
+        LadexSh_InputData.Range("Q1:Q" & maxCount).Copy Selection
       Case "丁目・字名・番地"
-        LdSh_inputData.Range("R1:R" & maxCount).Copy Selection
+        LadexSh_InputData.Range("R1:R" & maxCount).Copy Selection
       Case "[カナ]都道府県"
-        LdSh_inputData.Range("S1:S" & maxCount).Copy Selection
+        LadexSh_InputData.Range("S1:S" & maxCount).Copy Selection
       Case "[カナ]市区郡町村"
-        LdSh_inputData.Range("T1:T" & maxCount).Copy Selection
+        LadexSh_InputData.Range("T1:T" & maxCount).Copy Selection
       Case "[カナ]町域"
-        LdSh_inputData.Range("U1:U" & maxCount).Copy Selection
+        LadexSh_InputData.Range("U1:U" & maxCount).Copy Selection
       Case "[カナ]丁目・字名・番地"
-        LdSh_inputData.Range("V1:V" & maxCount).Copy Selection
+        LadexSh_InputData.Range("V1:V" & maxCount).Copy Selection
       
       Case Else
     End Select
@@ -266,7 +266,7 @@ Function パターン選択(Optional maxCount As Long)
     DoEvents
   Next
   actRange.Select
-  Call Library.delSheetData(LdSh_inputData)
+  Call Library.delSheetData(LadexSh_InputData)
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
@@ -405,7 +405,7 @@ Function 名前_姓(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
-  endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】姓")
@@ -415,7 +415,7 @@ Function 名前_姓(Optional maxCount As Long)
   
   For count = 0 To (maxCount - 1)
     getLine = Library.makeRandomNo(2, endLine)
-    Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("A" & getLine)
+    Cells(line + count, ActiveCell.Column) = LadexSh_TestData.Range("A" & getLine)
     
     Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
   Next
@@ -457,7 +457,7 @@ Function 名前_名(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
-  endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】名")
@@ -467,7 +467,7 @@ Function 名前_名(Optional maxCount As Long)
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
     getLine = Library.makeRandomNo(2, endLine)
-    Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("D" & getLine)
+    Cells(line + count, ActiveCell.Column) = LadexSh_TestData.Range("D" & getLine)
     
     Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
   Next
@@ -509,7 +509,7 @@ Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean 
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
-  endLine = BK_sheetTestData.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】フルネーム")
@@ -519,10 +519,10 @@ Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean 
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
     getLine = Library.makeRandomNo(2, endLine)
-    Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("A" & getLine) & "　" & BK_sheetTestData.Range("D" & getLine)
+    Cells(line + count, ActiveCell.Column) = LadexSh_TestData.Range("A" & getLine) & "　" & LadexSh_TestData.Range("D" & getLine)
     
     If kanaFlg = True Then
-      Cells(line + count, ActiveCell.Column + 1) = BK_sheetTestData.Range("B" & getLine) & "　" & BK_sheetTestData.Range("E" & getLine)
+      Cells(line + count, ActiveCell.Column + 1) = LadexSh_TestData.Range("B" & getLine) & "　" & LadexSh_TestData.Range("E" & getLine)
     End If
   
     Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
@@ -803,7 +803,7 @@ Function メールアドレス(Optional maxCount As Long)
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  endLine = BK_sheetTestData.Cells(Rows.count, 10).End(xlUp).Row
+  endLine = LadexSh_TestData.Cells(Rows.count, 10).End(xlUp).Row
   If IsMissing(maxCount) Then
     maxCount = BK_setVal("maxCount")
   End If
@@ -818,7 +818,7 @@ Function メールアドレス(Optional maxCount As Long)
     makeStr = makeStr & HalfWidthDigit
     makeStr = Library.makeRandomString(10, makeStr)
     
-    Cells(line + count, ActiveCell.Column) = "Sample." & makeStr & BK_sheetTestData.Range("J" & getLine)
+    Cells(line + count, ActiveCell.Column) = "Sample." & makeStr & LadexSh_TestData.Range("J" & getLine)
   
     Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
   Next
@@ -864,27 +864,27 @@ Function 住所(maxCount As Long, ParamArray addressFlgs())
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  endLine = BK_sheetTestData.Cells(Rows.count, 16).End(xlUp).Row
+  endLine = LadexSh_TestData.Cells(Rows.count, 16).End(xlUp).Row
   
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
     getLine = Library.makeRandomNo(2, endLine)
     getLine2 = Library.makeRandomNo(2, 5)
     
-    If InStr(BK_sheetTestData.Range("U" & getLine2), "番") > 0 Then
-      strAddress = BK_sheetTestData.Range("P" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("Q" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("R" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("S" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("T" & getLine) & vbTab
-      strAddress = strAddress & StrConv(Replace(BK_sheetTestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbWide)
+    If InStr(LadexSh_TestData.Range("U" & getLine2), "番") > 0 Then
+      strAddress = LadexSh_TestData.Range("P" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("Q" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("R" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("S" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("T" & getLine) & vbTab
+      strAddress = strAddress & StrConv(Replace(LadexSh_TestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbWide)
     Else
-      strAddress = BK_sheetTestData.Range("P" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("Q" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("R" & getLine) & vbTab
-      strAddress = strAddress & BK_sheetTestData.Range("S" & getLine) & vbTab
-      strAddress = strAddress & StrConv(Replace(BK_sheetTestData.Range("T" & getLine), "丁目", "-"), vbUpperCase)
-      strAddress = strAddress & StrConv(Replace(BK_sheetTestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbNarrow)
+      strAddress = LadexSh_TestData.Range("P" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("Q" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("R" & getLine) & vbTab
+      strAddress = strAddress & LadexSh_TestData.Range("S" & getLine) & vbTab
+      strAddress = strAddress & StrConv(Replace(LadexSh_TestData.Range("T" & getLine), "丁目", "-"), vbUpperCase)
+      strAddress = strAddress & StrConv(Replace(LadexSh_TestData.Range("U" & getLine2), "%", Library.makeRandomNo(1, 5)), vbNarrow)
     End If
     
     Cells(line + count, ActiveCell.Column).NumberFormatLocal = "@"
@@ -931,11 +931,11 @@ Function 電話番号(Optional maxCount As Long)
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  endLine = BK_sheetTestData.Cells(Rows.count, 15).End(xlUp).Row
+  endLine = LadexSh_TestData.Cells(Rows.count, 15).End(xlUp).Row
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
     getLine = Library.makeRandomNo(2, endLine)
-    Cells(line + count, ActiveCell.Column) = BK_sheetTestData.Range("Y" & getLine) & "-" & BK_sheetTestData.Range("Z" & getLine) & "-1234"
+    Cells(line + count, ActiveCell.Column) = LadexSh_TestData.Range("Y" & getLine) & "-" & LadexSh_TestData.Range("Z" & getLine) & "-1234"
   
     Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
   Next

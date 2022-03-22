@@ -34,7 +34,7 @@ Private Sub UserForm_Initialize()
   Call Library.showDebugForm("" & funcName, , "function")
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
-  Call Library.delSheetData(BK_sheetSheetList)
+  Call Library.delSheetData(LadexSh_SheetList)
   
   '表示位置指定----------------------------------
   StartUpPosition = 0
@@ -70,13 +70,13 @@ Private Sub UserForm_Initialize()
           selectLine = line
         End If
         
-        BK_sheetSheetList.Range("A" & line) = SheetList.ListItems.Item(line).Text
-        BK_sheetSheetList.Range("B" & line) = SheetList.ListItems.Item(line).SubItems(1)
-        BK_sheetSheetList.Range("C" & line) = SheetList.ListItems.Item(line).SubItems(2)
+        LadexSh_SheetList.Range("A" & line) = SheetList.ListItems.Item(line).Text
+        LadexSh_SheetList.Range("B" & line) = SheetList.ListItems.Item(line).SubItems(1)
+        LadexSh_SheetList.Range("C" & line) = SheetList.ListItems.Item(line).SubItems(2)
         
-        BK_sheetSheetList.Range("D" & line) = SheetList.ListItems.Item(line).Text
-        BK_sheetSheetList.Range("E" & line) = SheetList.ListItems.Item(line).SubItems(1)
-        BK_sheetSheetList.Range("F" & line) = SheetList.ListItems.Item(line).SubItems(2)
+        LadexSh_SheetList.Range("D" & line) = SheetList.ListItems.Item(line).Text
+        LadexSh_SheetList.Range("E" & line) = SheetList.ListItems.Item(line).SubItems(1)
+        LadexSh_SheetList.Range("F" & line) = SheetList.ListItems.Item(line).SubItems(2)
       Next
       
       '最終行に空白追加
@@ -155,8 +155,8 @@ End Sub
 Private Sub up_Click()
   selectLine = SheetList.SelectedItem.Text
   
-  BK_sheetSheetList.Range("D" & selectLine) = BK_sheetSheetList.Range("D" & selectLine) - 1
-  BK_sheetSheetList.Range("D" & selectLine - 1) = BK_sheetSheetList.Range("D" & selectLine - 1) + 1
+  LadexSh_SheetList.Range("D" & selectLine) = LadexSh_SheetList.Range("D" & selectLine) - 1
+  LadexSh_SheetList.Range("D" & selectLine - 1) = LadexSh_SheetList.Range("D" & selectLine - 1) + 1
   
   selectLine = selectLine - 1
   Call reLoadList
@@ -167,8 +167,8 @@ End Sub
 Private Sub down_Click()
   selectLine = SheetList.SelectedItem.Text
   
-  BK_sheetSheetList.Range("D" & selectLine) = BK_sheetSheetList.Range("D" & selectLine) + 1
-  BK_sheetSheetList.Range("D" & selectLine + 1) = BK_sheetSheetList.Range("D" & selectLine + 1) - 1
+  LadexSh_SheetList.Range("D" & selectLine) = LadexSh_SheetList.Range("D" & selectLine) + 1
+  LadexSh_SheetList.Range("D" & selectLine + 1) = LadexSh_SheetList.Range("D" & selectLine + 1) - 1
   
   selectLine = selectLine + 1
   Call reLoadList
@@ -179,7 +179,7 @@ End Sub
 Private Sub edit_Click()
   selectLine = SheetList.SelectedItem.Text
   
-  BK_sheetSheetList.Range("F" & selectLine) = SheetName.Value
+  LadexSh_SheetList.Range("F" & selectLine) = SheetName.Value
   
   Call reLoadList
 End Sub
@@ -189,11 +189,11 @@ End Sub
 Private Sub add_Click()
   Dim endLine As Long
   
-  endLine = BK_sheetSheetList.Cells(Rows.count, 4).End(xlUp).Row + 1
+  endLine = LadexSh_SheetList.Cells(Rows.count, 4).End(xlUp).Row + 1
   
-  BK_sheetSheetList.Range("D" & endLine) = endLine
-  BK_sheetSheetList.Range("E" & endLine) = "○"
-  BK_sheetSheetList.Range("F" & endLine) = SheetName.Value
+  LadexSh_SheetList.Range("D" & endLine) = endLine
+  LadexSh_SheetList.Range("E" & endLine) = "○"
+  LadexSh_SheetList.Range("F" & endLine) = SheetName.Value
   
   selectLine = endLine
   Call reLoadList
@@ -204,14 +204,14 @@ End Sub
 Private Sub del_Click()
   selectLine = SheetList.SelectedItem.Text
   
-  If BK_sheetSheetList.Range("E" & selectLine) = "削除" Then
-    If BK_sheetSheetList.Range("E" & selectLine) <> "" Then
-      BK_sheetSheetList.Range("E" & selectLine) = BK_sheetSheetList.Range("B" & selectLine)
+  If LadexSh_SheetList.Range("E" & selectLine) = "削除" Then
+    If LadexSh_SheetList.Range("E" & selectLine) <> "" Then
+      LadexSh_SheetList.Range("E" & selectLine) = LadexSh_SheetList.Range("B" & selectLine)
     Else
-      BK_sheetSheetList.Range("E" & selectLine) = "○"
+      LadexSh_SheetList.Range("E" & selectLine) = "○"
     End If
   Else
-    BK_sheetSheetList.Range("E" & selectLine) = "削除"
+    LadexSh_SheetList.Range("E" & selectLine) = "削除"
   End If
   Call reLoadList
 End Sub
@@ -222,10 +222,10 @@ End Sub
 Private Sub display_Click()
   selectLine = SheetList.SelectedItem.Text
   
-  If BK_sheetSheetList.Range("E" & selectLine) = "○" Then
-    BK_sheetSheetList.Range("E" & selectLine) = "X"
+  If LadexSh_SheetList.Range("E" & selectLine) = "○" Then
+    LadexSh_SheetList.Range("E" & selectLine) = "X"
   Else
-    BK_sheetSheetList.Range("E" & selectLine) = "○"
+    LadexSh_SheetList.Range("E" & selectLine) = "○"
   End If
   Call reLoadList
 End Sub
@@ -239,7 +239,7 @@ Private Sub active_Click()
   sheetDspFLg = SheetList.SelectedItem.SubItems(1)
   selectLine = SheetList.SelectedItem.Text
   
-  SheetName = BK_sheetSheetList.Range("F" & selectLine).Value
+  SheetName = LadexSh_SheetList.Range("F" & selectLine).Value
   If ActiveWorkbook.Worksheets(SheetName).Visible = True Then
     ActiveWorkbook.Worksheets(SheetName).Select
   Else
@@ -263,47 +263,47 @@ Private Sub Submit_Click()
   Dim selectLine As Long
   Const funcName As String = "Frm_Sheet.UserForm_Initialize"
 
-  endLine = BK_sheetSheetList.Cells(Rows.count, 4).End(xlUp).Row
+  endLine = LadexSh_SheetList.Cells(Rows.count, 4).End(xlUp).Row
   Call Library.startScript
   
   For line = 1 To endLine
-    If BK_sheetSheetList.Range("A" & line) <> BK_sheetSheetList.Range("D" & line) Then
-      If BK_sheetSheetList.Range("A" & line) = "" And BK_sheetSheetList.Range("E" & line) <> "削除" Then
+    If LadexSh_SheetList.Range("A" & line) <> LadexSh_SheetList.Range("D" & line) Then
+      If LadexSh_SheetList.Range("A" & line) = "" And LadexSh_SheetList.Range("E" & line) <> "削除" Then
         '新規シート追加
         targetBook.Sheets.add After:=ActiveSheet
-        targetBook.ActiveSheet.Name = BK_sheetSheetList.Range("F" & line).Value
-        targetBook.ActiveSheet.Move After:=Sheets(BK_sheetSheetList.Range("D" & line - 1))
+        targetBook.ActiveSheet.Name = LadexSh_SheetList.Range("F" & line).Value
+        targetBook.ActiveSheet.Move After:=Sheets(LadexSh_SheetList.Range("D" & line - 1))
         
       Else
         'シートの順番変更
-        targetBook.Sheets(BK_sheetSheetList.Range("A" & line)).Move before:=Sheets(BK_sheetSheetList.Range("D" & line))
+        targetBook.Sheets(LadexSh_SheetList.Range("A" & line)).Move before:=Sheets(LadexSh_SheetList.Range("D" & line))
       End If
-    ElseIf BK_sheetSheetList.Range("B" & line) <> BK_sheetSheetList.Range("E" & line) Then
+    ElseIf LadexSh_SheetList.Range("B" & line) <> LadexSh_SheetList.Range("E" & line) Then
       'シートの表示/非表示切り替え
-      If BK_sheetSheetList.Range("E" & line) = "○" Then
-        targetBook.Sheets(BK_sheetSheetList.Range("F" & line).Value).Visible = True
+      If LadexSh_SheetList.Range("E" & line) = "○" Then
+        targetBook.Sheets(LadexSh_SheetList.Range("F" & line).Value).Visible = True
       
-      ElseIf BK_sheetSheetList.Range("E" & line) = "削除" Then
-        targetBook.Worksheets(BK_sheetSheetList.Range("F" & line).Value).Select
+      ElseIf LadexSh_SheetList.Range("E" & line) = "削除" Then
+        targetBook.Worksheets(LadexSh_SheetList.Range("F" & line).Value).Select
         ActiveWindow.SelectedSheets.delete
       Else
-        targetBook.Sheets(BK_sheetSheetList.Range("F" & line).Value).Visible = False
+        targetBook.Sheets(LadexSh_SheetList.Range("F" & line).Value).Visible = False
       End If
       
-    ElseIf BK_sheetSheetList.Range("C" & line) <> BK_sheetSheetList.Range("F" & line) Then
+    ElseIf LadexSh_SheetList.Range("C" & line) <> LadexSh_SheetList.Range("F" & line) Then
       'シート名の変更
-      targetBook.Sheets(BK_sheetSheetList.Range("C" & line).Value).Name = BK_sheetSheetList.Range("F" & line).Value
+      targetBook.Sheets(LadexSh_SheetList.Range("C" & line).Value).Name = LadexSh_SheetList.Range("F" & line).Value
     End If
       
   Next
   
-  Call Library.delSheetData(BK_sheetSheetList)
+  Call Library.delSheetData(LadexSh_SheetList)
   Set targetBook = Nothing
   
   selectLine = SheetList.SelectedItem.Text
   
-  If BK_sheetSheetList.Range("E" & selectLine) = "○" And BK_sheetSheetList.Range("F" & selectLine).Value <> "" Then
-    ActiveWorkbook.Worksheets(BK_sheetSheetList.Range("F" & selectLine).Value).Select
+  If LadexSh_SheetList.Range("E" & selectLine) = "○" And LadexSh_SheetList.Range("F" & selectLine).Value <> "" Then
+    ActiveWorkbook.Worksheets(LadexSh_SheetList.Range("F" & selectLine).Value).Select
   End If
   
   
@@ -317,11 +317,11 @@ Function reLoadList()
   Dim line As Long, endLine As Long
   Const funcName As String = "Frm_Sheet.UserForm_Initialize"
 
-  endLine = BK_sheetSheetList.Cells(Rows.count, 4).End(xlUp).Row
+  endLine = LadexSh_SheetList.Cells(Rows.count, 4).End(xlUp).Row
 
-  BK_sheetSheetList.Sort.SortFields.Clear
-  BK_sheetSheetList.Sort.SortFields.add Key:=Range("D1:D" & endLine), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
-  With BK_sheetSheetList.Sort
+  LadexSh_SheetList.Sort.SortFields.Clear
+  LadexSh_SheetList.Sort.SortFields.add Key:=Range("D1:D" & endLine), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+  With LadexSh_SheetList.Sort
     .SetRange Range("A1:F" & endLine)
     .Header = xlGuess
     .MatchCase = False
@@ -346,9 +346,9 @@ Function reLoadList()
     
     For line = 1 To endLine
       With .ListItems.add
-        .Text = BK_sheetSheetList.Range("D" & line).Value
-        .SubItems(1) = BK_sheetSheetList.Range("E" & line).Value
-        .SubItems(2) = BK_sheetSheetList.Range("F" & line).Value
+        .Text = LadexSh_SheetList.Range("D" & line).Value
+        .SubItems(1) = LadexSh_SheetList.Range("E" & line).Value
+        .SubItems(2) = LadexSh_SheetList.Range("F" & line).Value
       End With
     Next
     '最終行に空白追加

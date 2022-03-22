@@ -28,10 +28,10 @@ Function setVal(pType As String, pText As String)
   BK_ThisBook.Activate
   
   endLine = Cells(Rows.count, 4).End(xlUp).Row
-  For line = 3 To BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
-    If BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) = pType Then
-      BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) = pType
-      BK_sheetSetting.Range(BK_setVal("Cells_pText") & line) = pText
+  For line = 3 To LadexSh_Config.Cells(Rows.count, 4).End(xlUp).Row
+    If LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = pType Then
+      LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = pType
+      LadexSh_Config.Range(BK_setVal("Cells_pText") & line) = pText
       
       chkFlg = True
       Exit For
@@ -39,8 +39,8 @@ Function setVal(pType As String, pText As String)
   Next
    
   If chkFlg = False Then
-    BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) = pType
-    BK_sheetSetting.Range(BK_setVal("Cells_pText") & line) = pText
+    LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = pType
+    LadexSh_Config.Range(BK_setVal("Cells_pText") & line) = pText
   End If
   
   'èàóùèIóπ--------------------------------------
@@ -78,9 +78,9 @@ Function getVal(pType As String) As String
   Set resetObjVal = Nothing
   Set resetObjVal = CreateObject("Scripting.Dictionary")
   
-  For line = 3 To BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
-    If BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) <> "" Then
-      resetObjVal.add BK_sheetSetting.Range(BK_setVal("Cells_pType") & line).Text, BK_sheetSetting.Range(BK_setVal("Cells_pText") & line).Text
+  For line = 3 To LadexSh_Config.Cells(Rows.count, 4).End(xlUp).Row
+    If LadexSh_Config.Range(BK_setVal("Cells_pType") & line) <> "" Then
+      resetObjVal.add LadexSh_Config.Range(BK_setVal("Cells_pType") & line).Text, LadexSh_Config.Range(BK_setVal("Cells_pText") & line).Text
     End If
   Next
   
@@ -121,10 +121,10 @@ Function delVal(pType As String)
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
-  For line = 3 To BK_sheetSetting.Cells(Rows.count, 4).End(xlUp).Row
-    If BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) Like "*" & pType Then
-      BK_sheetSetting.Range(BK_setVal("Cells_pType") & line) = ""
-      BK_sheetSetting.Range(BK_setVal("Cells_pText") & line) = ""
+  For line = 3 To LadexSh_Config.Cells(Rows.count, 4).End(xlUp).Row
+    If LadexSh_Config.Range(BK_setVal("Cells_pType") & line) Like "*" & pType Then
+      LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = ""
+      LadexSh_Config.Range(BK_setVal("Cells_pText") & line) = ""
     End If
   Next
  

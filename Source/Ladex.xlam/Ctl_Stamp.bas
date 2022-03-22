@@ -17,7 +17,7 @@ Function 押印_済印()
   Set ActvSheet = ActiveSheet
   Set ActvCell = ActiveCell
   
-  BK_sheetStamp.Activate
+  LadexSh_Stamp.Activate
 '  sheetsetting.Shapes.Range(Array("TB_日付")).Select
 '  'Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Date, "yyyy/mm/dd")
 '  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Now(), "mm/dd hh:nn")
@@ -28,7 +28,7 @@ Function 押印_済印()
 '  sheetsetting.Shapes.Range(Array("TB_済")).Select
 '  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = checkFlg
   
-  BK_sheetStamp.Shapes.Range(Array("済印")).Select
+  LadexSh_Stamp.Shapes.Range(Array("済印")).Select
   Selection.Copy
   
   'Call Library.waitTime(1000)
@@ -84,18 +84,18 @@ Function 押印_確認印(Optional nameVal As String, Optional FontName As String, Op
 
   
   
-  BK_sheetStamp.Activate
+  LadexSh_Stamp.Activate
 '  sheetsetting.Shapes.Range(Array("TB_日付")).Select
 '  'Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Date, "yyyy/mm/dd")
 '  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Now(), "mm/dd hh:nn")
 '
-  BK_sheetStamp.Shapes.Range(Array("TB_名前2")).Select
+  LadexSh_Stamp.Shapes.Range(Array("TB_名前2")).Select
   If nameVal = "" Then
     nameVal = Library.getRegistry("Main", "StampVal")
   End If
   Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = nameVal
   
-  BK_sheetStamp.Shapes.Range(Array("認印")).Select
+  LadexSh_Stamp.Shapes.Range(Array("認印")).Select
   Selection.Copy
   
   ActvSheet.Activate

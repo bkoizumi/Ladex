@@ -9,18 +9,18 @@ Public targetBook           As Workbook
 'ワークシート用変数------------------------------
 Public targetSheet          As Worksheet
 
-Public BK_sheetSetting      As Worksheet
-Public BK_sheetNotice       As Worksheet
-Public BK_sheetStyle        As Worksheet
-Public BK_sheetTestData     As Worksheet
-Public BK_sheetRibbon       As Worksheet
-Public BK_sheetFavorite     As Worksheet
-Public BK_sheetStamp        As Worksheet
-Public BK_sheetHighLight    As Worksheet
-Public BK_sheetHelp         As Worksheet
-Public BK_sheetFunction     As Worksheet
-Public BK_sheetSheetList    As Worksheet
-Public LdSh_inputData       As Worksheet
+'Public LadexSh_Config      As Worksheet
+'Public LadexSh_Notice       As Worksheet
+'Public LadexSh_Style        As Worksheet
+'Public LadexSh_TestData     As Worksheet
+'Public LadexSh_Ribbon       As Worksheet
+'Public LadexSh_Favorite     As Worksheet
+'Public LadexSh_Stamp        As Worksheet
+'Public LadexSh_HighLight    As Worksheet
+'Public LadexSh_Help         As Worksheet
+'Public LadexSh_Function     As Worksheet
+'Public LadexSh_SheetList    As Worksheet
+'Public LadexSh_InputData    As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
@@ -89,12 +89,12 @@ Function unsetting(Optional flg As Boolean = True)
   Set BK_ThisBook = Nothing
   
   'ワークシート名の設定
-  Set BK_sheetSetting = Nothing
-  Set BK_sheetNotice = Nothing
-  Set BK_sheetStyle = Nothing
-  Set BK_sheetTestData = Nothing
-  Set BK_sheetRibbon = Nothing
-  Set BK_sheetFavorite = Nothing
+'  Set LadexSh_Config = Nothing
+'  Set LadexSh_Notice = Nothing
+'  Set LadexSh_Style = Nothing
+'  Set LadexSh_TestData = Nothing
+'  Set LadexSh_Ribbon = Nothing
+'  Set LadexSh_Favorite = Nothing
 
   '設定値読み込み
   Set BK_setVal = Nothing
@@ -146,31 +146,31 @@ Function setting(Optional reCheckFlg As Boolean)
   Set BK_ThisBook = ThisWorkbook
   
   'ワークシート名の設定
-  Set BK_sheetSetting = BK_ThisBook.Worksheets("設定")
-  Set BK_sheetNotice = BK_ThisBook.Worksheets("Notice")
-  Set BK_sheetStyle = BK_ThisBook.Worksheets("Style")
-  Set BK_sheetTestData = BK_ThisBook.Worksheets("testData")
-'  Set BK_sheetRibbon = BK_ThisBook.Worksheets("Ribbon")
-  Set BK_sheetFavorite = BK_ThisBook.Worksheets("Favorite")
-  Set BK_sheetStamp = BK_ThisBook.Worksheets("Stamp")
-  Set BK_sheetHighLight = BK_ThisBook.Worksheets("HighLight")
-  Set BK_sheetHelp = BK_ThisBook.Worksheets("Help")
-  Set BK_sheetFunction = BK_ThisBook.Worksheets("Function")
-  
-  Set LdSh_inputData = BK_ThisBook.Worksheets("inputData")
+'  Set LadexSh_Config = BK_ThisBook.Worksheets("設定")
+'  Set LadexSh_Notice = BK_ThisBook.Worksheets("Notice")
+'  Set LadexSh_Style = BK_ThisBook.Worksheets("Style")
+'  Set LadexSh_TestData = BK_ThisBook.Worksheets("testData")
+'  Set LadexSh_Ribbon = BK_ThisBook.Worksheets("Ribbon")
+'  Set LadexSh_Favorite = BK_ThisBook.Worksheets("Favorite")
+'  Set LadexSh_Stamp = BK_ThisBook.Worksheets("Stamp")
+'  Set LadexSh_HighLight = BK_ThisBook.Worksheets("HighLight")
+'  Set LadexSh_Help = BK_ThisBook.Worksheets("Help")
+'  Set LadexSh_Function = BK_ThisBook.Worksheets("Function")
+'  Set LadexSh_InputData = BK_ThisBook.Worksheets("inputData")
+ 
  
   '設定値読み込み--------------------------------
   Set BK_setVal = Nothing
   Set BK_setVal = CreateObject("Scripting.Dictionary")
   
-  endLine = BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 0 Then
     endLine = 11
   End If
   
   For line = 3 To endLine
-    If BK_sheetSetting.Range("A" & line) <> "" Then
-      BK_setVal.add BK_sheetSetting.Range("A" & line).Text, BK_sheetSetting.Range("B" & line).Text
+    If LadexSh_Config.Range("A" & line) <> "" Then
+      BK_setVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
     End If
   Next
     
@@ -219,14 +219,14 @@ Function 名前定義()
   Next
   
   'VBA用の設定
-  For line = 3 To BK_sheetSetting.Cells(Rows.count, 1).End(xlUp).Row
-    If BK_sheetSetting.Range("A" & line) <> "" Then
-      BK_sheetSetting.Range("B" & line).Name = BK_sheetSetting.Range("A" & line)
+  For line = 3 To LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
+    If LadexSh_Config.Range("A" & line) <> "" Then
+      LadexSh_Config.Range("B" & line).Name = LadexSh_Config.Range("A" & line)
     End If
   Next
   
   'Book用の設定
-  BK_sheetSetting.Range("D3:D" & BK_sheetSetting.Cells(Rows.count, 6).End(xlUp).Row).Name = BK_sheetSetting.Range("D2")
+  LadexSh_Config.Range("D3:D" & LadexSh_Config.Cells(Rows.count, 6).End(xlUp).Row).Name = LadexSh_Config.Range("D2")
   
 
   Exit Function

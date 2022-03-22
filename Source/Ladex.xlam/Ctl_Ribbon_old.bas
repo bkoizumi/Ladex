@@ -499,7 +499,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   If Workbooks.count = 0 Then
     endLine = 100
   Else
-    endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+    endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
   End If
   
   Set MenuSepa = DOMDoc.createElement("menuSeparator")
@@ -512,13 +512,13 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
     
     
   For line = 2 To endLine
-    If BK_sheetFavorite.Range("A" & line) <> "" Then
+    If LadexSh_Favorite.Range("A" & line) <> "" Then
       Set Button = DOMDoc.createElement("button")
       With Button
         .SetAttribute "id", "Favorite_" & line
-        .SetAttribute "label", objFso.GetFileName(BK_sheetFavorite.Range("A" & line))
+        .SetAttribute "label", objFso.GetFileName(LadexSh_Favorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
-        .SetAttribute "supertip", BK_sheetFavorite.Range("A" & line)
+        .SetAttribute "supertip", LadexSh_Favorite.Range("A" & line)
         .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.OpenFavoriteList"
       End With
       Menu.AppendChild Button
@@ -548,7 +548,7 @@ Function OpenFavoriteList(control As IRibbonControl)
   Dim line As Long
   
   line = Replace(control.ID, "Favorite_", "")
-  fileNamePath = BK_sheetFavorite.Range("A" & line)
+  fileNamePath = LadexSh_Favorite.Range("A" & line)
   
   If Library.chkFileExists(fileNamePath) Then
     Workbooks.Open fileName:=fileNamePath

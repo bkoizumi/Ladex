@@ -34,7 +34,7 @@ Private Sub UserForm_Initialize()
   Caption = "ÉfÅ[É^ê∂ê¨ |  " & thisAppName
 
   With Frm_smplData
-    For Each cmdVal In BK_sheetSetting.Range(BK_setVal("Cells_sampleData") & "3:" & BK_setVal("Cells_sampleData") & BK_sheetSetting.Cells(Rows.count, 11).End(xlUp).Row)
+    For Each cmdVal In LadexSh_Config.Range(BK_setVal("Cells_sampleData") & "3:" & BK_setVal("Cells_sampleData") & LadexSh_Config.Cells(Rows.count, 11).End(xlUp).Row)
       ListBox1.AddItem indexCnt & "." & cmdVal
       indexCnt = indexCnt + 1
     Next

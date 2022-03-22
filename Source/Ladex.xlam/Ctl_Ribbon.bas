@@ -427,7 +427,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Menu.SetAttribute "itemSize", "normal"
 
 '  Call Ctl_Favorite.getList
-'  endLine = BK_sheetFavorite.Cells(Rows.count, 1).End(xlUp).Row
+'  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
   tmp = GetAllSettings(thisAppName, "FavoriteList")
   
   Set MenuSepa = DOMDoc.createElement("menuSeparator")

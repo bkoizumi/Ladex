@@ -27,13 +27,13 @@ Function InitializeBook()
   '----------------------------------------------
   
   BK_ThisBook.Activate
-  endLine = BK_sheetSetting.Cells(Rows.count, 7).End(xlUp).Row
+  endLine = LadexSh_Config.Cells(Rows.count, 7).End(xlUp).Row
 
   If Library.getRegistry("Main", "debugMode", "String") = "" Then
     For line = 3 To endLine
-      RegistryKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistryKey") & line)
-      RegistrySubKey = BK_sheetSetting.Range(BK_setVal("Cells_RegistrySubKey") & line)
-      val = BK_sheetSetting.Range(BK_setVal("Cells_RegistryValue") & line)
+      RegistryKey = LadexSh_Config.Range(BK_setVal("Cells_RegistryKey") & line)
+      RegistrySubKey = LadexSh_Config.Range(BK_setVal("Cells_RegistrySubKey") & line)
+      val = LadexSh_Config.Range(BK_setVal("Cells_RegistryValue") & line)
 
       If RegistryKey <> "" Then
        Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
@@ -86,11 +86,11 @@ Function setShortcutKey()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
-  endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
   For line = 2 To endLine
-    If BK_sheetFunction.Range("E" & line) <> "" Then
+    If LadexSh_Function.Range("E" & line) <> "" Then
       ShortcutKey = ""
-      For Each keyVal In Split(BK_sheetFunction.Range("E" & line), "+")
+      For Each keyVal In Split(LadexSh_Function.Range("E" & line), "+")
         If keyVal = "Ctrl" Then
           ShortcutKey = "^"
         ElseIf keyVal = "Alt" Then
@@ -101,7 +101,7 @@ Function setShortcutKey()
           ShortcutKey = ShortcutKey & keyVal
         End If
       Next
-      ShortcutFunc = "Menu.ladex_" & BK_sheetFunction.Range("C" & line)
+      ShortcutFunc = "Menu.ladex_" & LadexSh_Function.Range("C" & line)
       Call Library.showDebugForm("ShortcutKey", ShortcutKey, "debug")
       Call Library.showDebugForm("Function   ", ShortcutFunc, "debug")
       
@@ -206,7 +206,7 @@ Function ê›íË_íäèo()
   
   TempName = FSO.GetSpecialFolder(2) & "\BK_Style.xlsx"
   
-  BK_sheetStyle.Copy
+  LadexSh_Style.Copy
   ActiveWorkbook.SaveAs fileName:=TempName, FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
   
   Call Library.endScript

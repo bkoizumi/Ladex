@@ -247,15 +247,15 @@ Private Sub UserForm_Initialize()
       .ColumnHeaders.add , "_description", "機能", 400
       .ColumnHeaders.add , "_KeyID", "KeyID", 0
       
-      endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
+      endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
       For line = 2 To endLine
-        If BK_sheetFunction.Range("D" & line).Value <> "" Then
+        If LadexSh_Function.Range("D" & line).Value <> "" Then
           With .ListItems.add
             .Text = indexCnt
-            .SubItems(1) = BK_sheetFunction.Range("B" & line).Value
-            .SubItems(2) = BK_sheetFunction.Range("C" & line).Value
-            .SubItems(3) = BK_sheetFunction.Range("D" & line).Value
-            .SubItems(4) = BK_sheetFunction.Range("F" & line).Value
+            .SubItems(1) = LadexSh_Function.Range("B" & line).Value
+            .SubItems(2) = LadexSh_Function.Range("C" & line).Value
+            .SubItems(3) = LadexSh_Function.Range("D" & line).Value
+            .SubItems(4) = LadexSh_Function.Range("F" & line).Value
           End With
           indexCnt = indexCnt + 1
         End If
@@ -263,14 +263,14 @@ Private Sub UserForm_Initialize()
     End With
     
     'キーリスト
-    endLine = BK_sheetSetting.Cells(Rows.count, 13).End(xlUp).Row
+    endLine = LadexSh_Config.Cells(Rows.count, 13).End(xlUp).Row
     
      ReDim ShortcutKeyList(endLine - 3, 2)
     For line = 3 To endLine
-      If BK_sheetSetting.Range("N" & line) <> "" Then
-        ShortcutKeyList(line - 3, 0) = BK_sheetSetting.Range("N" & line)
-        ShortcutKeyList(line - 3, 1) = BK_sheetSetting.Range("M" & line)
-        ShortcutKeyList(line - 3, 2) = BK_sheetSetting.Range("O" & line)
+      If LadexSh_Config.Range("N" & line) <> "" Then
+        ShortcutKeyList(line - 3, 0) = LadexSh_Config.Range("N" & line)
+        ShortcutKeyList(line - 3, 1) = LadexSh_Config.Range("M" & line)
+        ShortcutKeyList(line - 3, 2) = LadexSh_Config.Range("O" & line)
       End If
     Next
     With ShortcutKey
@@ -367,7 +367,7 @@ Function doHighLightPreview()
   End If
 
 
-  BK_sheetHighLight.Activate
+  LadexSh_HighLight.Activate
   
   If BKh_rbPressed = False Then
     BKh_rbPressed = True
@@ -379,7 +379,7 @@ Function doHighLightPreview()
   
   imageName = thisAppName & "HighLightImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("A1:C3"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HighLight.Range("A1:C3"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
@@ -401,10 +401,10 @@ Function doCommentPreview()
   Dim CommentBgColor, CommentFontColor, CommentFont, CommentFontSize
 
   Call init.setting
-'  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
+'  Set LadexSh_HighLight = ActiveWorkbook.Worksheets("HighLight")
   
-  BK_sheetHighLight.Activate
-  BK_sheetHighLight.Range("N7").Activate
+  LadexSh_HighLight.Activate
+  LadexSh_HighLight.Range("N7").Activate
   
   CommentBgColor = Me.CommentColor.BackColor
   CommentFontColor = Me.CommentFontColor.BackColor
@@ -415,7 +415,7 @@ Function doCommentPreview()
   
   imageName = thisAppName & "CommentImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("N6:R9"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HighLight.Range("N6:R9"), imageName)
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
@@ -431,10 +431,10 @@ Function doStampPreview()
   Dim StampVal As String, StampFont As String
   
   Call init.setting(True)
-  Set BK_sheetHighLight = ActiveWorkbook.Worksheets("HighLight")
+  Set LadexSh_HighLight = ActiveWorkbook.Worksheets("HighLight")
   
-  BK_sheetHighLight.Activate
-  BK_sheetHighLight.Range("F10").Activate
+  LadexSh_HighLight.Activate
+  LadexSh_HighLight.Range("F10").Activate
   
   StampVal = StampVal.Value
   StampFont = StampFont.Value
@@ -443,7 +443,7 @@ Function doStampPreview()
   
   imageName = thisAppName & "StampImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(BK_sheetHighLight.Range("E10:H12"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HighLight.Range("E10:H12"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
@@ -452,7 +452,7 @@ Function doStampPreview()
   End If
   StampImg.Picture = LoadPicture(previewImgPath)
   
-  BK_sheetHighLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
+  LadexSh_HighLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
 End Function
 
 
@@ -618,7 +618,7 @@ Private Sub setShortcutKey_Click()
 
   selectLine = funcList.SelectedItem.Text
 
-  BK_sheetFunction.Range("E" & selectLine + 1, "F" & selectLine + 1) = ""
+  LadexSh_Function.Range("E" & selectLine + 1, "F" & selectLine + 1) = ""
 
   keyVal = ""
   If onCtrl.Value = True Then
@@ -647,12 +647,12 @@ Private Sub setShortcutKey_Click()
 '  keyVal = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 1)
   
   Call Library.showDebugForm("keyVal", keyVal, "debug")
-  If WorksheetFunction.CountIf(BK_sheetFunction.Range("B2:B1000"), keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)) > 1 Then
+  If WorksheetFunction.CountIf(LadexSh_Function.Range("B2:B1000"), keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)) > 1 Then
     megLabel.Caption = "同じ設定がすでにあります"
   Else
-    BK_sheetFunction.Range("B" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)
-    BK_sheetFunction.Range("E" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 2)
-    BK_sheetFunction.Range("F" & selectLine + 1) = ShortcutKey.list(ShortcutKey.ListIndex, 1)
+    LadexSh_Function.Range("B" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)
+    LadexSh_Function.Range("E" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 2)
+    LadexSh_Function.Range("F" & selectLine + 1) = ShortcutKey.list(ShortcutKey.ListIndex, 1)
   
     Call reLoadFuncList
   End If
@@ -676,15 +676,15 @@ Function reLoadFuncList()
     .ColumnHeaders.add , "_description", "機能", 400
     .ColumnHeaders.add , "_KeyID", "KeyID", 0
     
-    endLine = BK_sheetFunction.Cells(Rows.count, 1).End(xlUp).Row
+    endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
     For line = 2 To endLine
-      If BK_sheetFunction.Range("C" & line).Value <> "" Then
+      If LadexSh_Function.Range("C" & line).Value <> "" Then
         With .ListItems.add
-          .Text = BK_sheetFunction.Range("A" & line).Value
-          .SubItems(1) = BK_sheetFunction.Range("B" & line).Value
-          .SubItems(2) = BK_sheetFunction.Range("C" & line).Value
-          .SubItems(3) = BK_sheetFunction.Range("D" & line).Value
-          .SubItems(4) = BK_sheetFunction.Range("F" & line).Value
+          .Text = LadexSh_Function.Range("A" & line).Value
+          .SubItems(1) = LadexSh_Function.Range("B" & line).Value
+          .SubItems(2) = LadexSh_Function.Range("C" & line).Value
+          .SubItems(3) = LadexSh_Function.Range("D" & line).Value
+          .SubItems(4) = LadexSh_Function.Range("F" & line).Value
         End With
       End If
     Next
@@ -735,9 +735,9 @@ Private Sub Del_ShortcutKey_Click()
   Call init.setting
   selectLine = funcList.SelectedItem.Text
   
-  BK_sheetFunction.Range("B" & selectLine + 1) = ""
-  BK_sheetFunction.Range("E" & selectLine + 1) = ""
-  BK_sheetFunction.Range("F" & selectLine + 1) = ""
+  LadexSh_Function.Range("B" & selectLine + 1) = ""
+  LadexSh_Function.Range("E" & selectLine + 1) = ""
+  LadexSh_Function.Range("F" & selectLine + 1) = ""
   megLabel.Caption = ""
   Call reLoadFuncList
 End Sub
@@ -772,9 +772,9 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
   
   BK_setVal("debugMode") = debugMode.Value
-  BK_sheetSetting.Range("B3") = debugMode.Value
+  LadexSh_Config.Range("B3") = debugMode.Value
   BK_setVal("LogLevel") = LogLevel.Value
-  BK_sheetSetting.Range("B4") = LogLevel.Value
+  LadexSh_Config.Range("B4") = LogLevel.Value
   
   'ハイライト設定--------------------------------
   Call Library.setRegistry("Main", "HighLightColor", HighLightColor.BackColor)
