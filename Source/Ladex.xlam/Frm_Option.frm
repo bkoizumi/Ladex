@@ -365,8 +365,7 @@ Function doHighLightPreview()
   ElseIf Me.HighlightDspMethod_2.Value = True Then
     HighLightDspMethod = "2"
   End If
-
-
+  
   LadexSh_HighLight.Activate
   
   If BKh_rbPressed = False Then

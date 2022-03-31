@@ -1000,8 +1000,8 @@ End Function
 
 
 '--------------------------------------------------------------------------------------------------
-Function formula01(control As IRibbonControl)
-  Call Ctl_Formula.formula01
+Function ÉGÉâÅ[ñhé~(control As IRibbonControl)
+  Call Ctl_Formula.ÉGÉâÅ[ñhé~
 End Function
 
 '--------------------------------------------------------------------------------------------------

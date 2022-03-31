@@ -83,6 +83,11 @@ End Function
 '初期ズーム値に変更
 Function defaultZoom()
   Call init.setting
+  Call Library.startScript
+  
+  ActiveWindow.View = xlNormalView
   ActiveWindow.Zoom = Library.getRegistry("Main", "ZoomLevel")
+  
+  Call Library.endScript
 End Function
 

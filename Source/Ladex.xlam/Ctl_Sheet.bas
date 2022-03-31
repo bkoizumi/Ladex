@@ -214,9 +214,19 @@ Function シート管理_フォーム表示()
   Dim addSheetName As String
   Const funcName As String = "Ctl_Sheet.シート管理_フォーム表示"
   
-  Set targetBook = ActiveWorkbook
+  '処理開始--------------------------------------
+  Application.Cursor = xlWait
+  On Error GoTo catchError
+  Call init.setting
+  Call Library.startScript
+  Call Library.showDebugForm(funcName, , "function")
+  '----------------------------------------------
+  
   Frm_Sheet.Show vbModeless
   
+  '処理終了--------------------------------------
+  Call Library.endScript
+  '----------------------------------------------
   
   Exit Function
 

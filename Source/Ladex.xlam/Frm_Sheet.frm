@@ -29,10 +29,9 @@ Private Sub UserForm_Initialize()
 
   '処理開始--------------------------------------
 '  On Error GoTo catchError
-  Call init.setting
-  Call Library.startScript
-  Call Library.showDebugForm("" & funcName, , "function")
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+'  Call init.setting
+'  Call Library.startScript
+  Call Library.showDebugForm(funcName, , "function")
   '----------------------------------------------
   Call Library.delSheetData(LadexSh_SheetList)
   
@@ -41,7 +40,6 @@ Private Sub UserForm_Initialize()
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
     
-  Application.Cursor = xlDefault
   InitializeFlg = True
   
   With Frm_Sheet
@@ -54,29 +52,29 @@ Private Sub UserForm_Initialize()
       .FullRowSelect = True
       .Gridlines = True
       .ColumnHeaders.add , "_ID", "#", 30
-      .ColumnHeaders.add , "_Display", "表示", 30
+      .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
       .ColumnHeaders.add , "_SheetName", "シート名", 140
       
       For line = 1 To ActiveWorkbook.Worksheets.count
         With .ListItems.add
           .Text = line
+          LadexSh_SheetList.Range("A" & line) = line
+          LadexSh_SheetList.Range("D" & line) = line
+          
           If ActiveWorkbook.Worksheets(line).Visible = True Then
             .SubItems(1) = "○"
+            LadexSh_SheetList.Range("B" & line) = "○"
+            LadexSh_SheetList.Range("E" & line) = "○"
           End If
           .SubItems(2) = ActiveWorkbook.Worksheets(line).Name
+          LadexSh_SheetList.Range("C" & line) = ActiveWorkbook.Worksheets(line).Name
+          LadexSh_SheetList.Range("F" & line) = ActiveWorkbook.Worksheets(line).Name
         End With
         
         If ActiveWorkbook.Worksheets(line).Name = ActiveSheet.Name Then
           selectLine = line
         End If
-        
-        LadexSh_SheetList.Range("A" & line) = SheetList.ListItems.Item(line).Text
-        LadexSh_SheetList.Range("B" & line) = SheetList.ListItems.Item(line).SubItems(1)
-        LadexSh_SheetList.Range("C" & line) = SheetList.ListItems.Item(line).SubItems(2)
-        
-        LadexSh_SheetList.Range("D" & line) = SheetList.ListItems.Item(line).Text
-        LadexSh_SheetList.Range("E" & line) = SheetList.ListItems.Item(line).SubItems(1)
-        LadexSh_SheetList.Range("F" & line) = SheetList.ListItems.Item(line).SubItems(2)
+        DoEvents
       Next
       
       '最終行に空白追加
@@ -92,7 +90,6 @@ Private Sub UserForm_Initialize()
   End With
   
   InitializeFlg = False
-  Call Library.endScript
   
   Exit Sub
 
@@ -341,7 +338,7 @@ Function reLoadList()
     .FullRowSelect = True
     .Gridlines = True
       .ColumnHeaders.add , "_ID", "#", 30
-      .ColumnHeaders.add , "_Display", "表示", 30
+      .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
       .ColumnHeaders.add , "_SheetName", "シート名", 140
     
     For line = 1 To endLine

@@ -9,7 +9,7 @@
 ; インストーラーの識別子
 !define PRODUCT_NAME "Ladex"
 ; インストーラーのバージョン。
-!define PRODUCT_VERSION "1.3.0.0"
+!define PRODUCT_VERSION "1.3.1.0"
 
 ; 多言語で使用する場合はここをUnicodeにすることを推奨
 Unicode true

@@ -158,10 +158,6 @@ Function スタイル削除()
       Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
         Call Library.showDebugForm("定義済スタイル", s.Name, "debug")
       
-      'Ladexの初期設定
-      Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準", "H_目次1", "H_目次2", "H_目次3", "《》"
-        Call Library.showDebugForm("Ladexスタイル ", s.Name, "debug")
-      
       Case Else
         Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
         s.delete
@@ -200,25 +196,37 @@ Function スタイル設定()
   Dim line As Long, endLine As Long
   Dim tempSheet As Object
   
-'  On Error Resume Next
   Const funcName As String = "Ctl_Style.スタイル設定"
-  
   
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
     PrgP_Max = 4
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
   '----------------------------------------------
   
   Call Ctl_Style.スタイル削除
+  
+  If setStyleBook Is Nothing Then
+    If Library.chkIsOpen("スタイル情報.xlsx") Then
+      Set setStyleBook = Workbooks("スタイル情報.xlsx")
+      setStyleBook.Save
+    Else
+      Set setStyleBook = Workbooks.Open(LadexDir & "\" & "スタイル情報.xlsx")
+      Call Library.startScript
+    End If
+    setStyleBook.Sheets("Style").Columns("A:J").Copy BK_ThisBook.Worksheets("Style").Range("A1")
+    setStyleBook.Close
+  End If
+  
+  
   
   'スタイル初期化--------------------------------
   endLine = LadexSh_Style.Cells(Rows.count, 2).End(xlUp).Row
@@ -233,7 +241,7 @@ Function スタイル設定()
       'Ladexの初期設定
       Case "桁区切り", "パーセント", "通貨", "通貨[千単位]", "数値", "数値[千単位]", "00.0", "日付 [yyyy/mm/dd]", "日付 [yyyy/m]", "日時", "不要", "Error", "要確認", "H_標準", "H_目次1", "H_目次2", "H_目次3", "《》"
         Call Library.showDebugForm("Ladexスタイル ", LadexSh_Style.Range("B" & line), "debug")
-      
+        ActiveWorkbook.Styles.add Name:=LadexSh_Style.Range("B" & line).Value
       Case Else
         Call Library.showDebugForm("スタイル名", LadexSh_Style.Range("B" & line), "debug")
         ActiveWorkbook.Styles.add Name:=LadexSh_Style.Range("B" & line).Value
@@ -314,9 +322,9 @@ Function スタイル設定()
   Next
   
   '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  Call Library.endScript
   If runFlg = False Then
-    Call Ctl_ProgressBar.showEnd
-    Call Library.endScript
     Call Library.showDebugForm("", , "end")
     Call init.unsetting
   Else

@@ -287,9 +287,10 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function formula01()
+Function エラー防止()
+  Dim slctCells As Range
   Dim formulaVal As String
-  Const funcName As String = "Ctl_Formula.formula01"
+  Const funcName As String = "Ctl_Formula.エラー防止"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -303,19 +304,20 @@ Function formula01()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  If ActiveCell.HasFormula = False Then
-    Exit Function
-  End If
+  For Each slctCells In Selection
+    If slctCells.HasFormula = True Then
+      formulaVal = slctCells.Formula
+      formulaVal = Replace(formulaVal, "=", "")
+      formulaVal = Replace(formulaVal, vbCrLf, "")
+      formulaVal = Replace(formulaVal, vbLf, "")
+      formulaVal = Trim(formulaVal)
+      
+      formulaVal = "IFERROR(" & formulaVal & ","""")"
+      
+      slctCells.Formula = "=" & formulaVal
+    End If
+  Next
   
-  formulaVal = ActiveCell.Formula
-  formulaVal = Replace(formulaVal, "=", "")
-  formulaVal = Replace(formulaVal, vbCrLf, "")
-  formulaVal = Replace(formulaVal, vbLf, "")
-  formulaVal = Trim(formulaVal)
-  
-  formulaVal = "IFERROR(" & formulaVal & ","""")"
-  
-  ActiveCell.Formula = "=" & formulaVal
   
   '処理終了--------------------------------------
   If runFlg = False Then
@@ -336,9 +338,10 @@ End Function
 
 
 '==================================================================================================
-Function formula02()
+Function ゼロ非表示()
+  Dim slctCells As Range
   Dim formulaVal As String
-  Const funcName As String = "Ctl_Formula.formula02"
+  Const funcName As String = "Ctl_Formula.ゼロ非表示"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -351,6 +354,21 @@ Function formula02()
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
+  
+  
+  For Each slctCells In Selection
+    If slctCells.HasFormula = True Then
+      formulaVal = slctCells.Formula
+      formulaVal = Replace(formulaVal, "=", "")
+      formulaVal = Replace(formulaVal, vbCrLf, "")
+      formulaVal = Replace(formulaVal, vbLf, "")
+      formulaVal = Trim(formulaVal)
+      
+      formulaVal = "IF(" & formulaVal & "=0,""""," & formulaVal & ")"
+      
+      slctCells.Formula = "=" & formulaVal
+    End If
+  Next
   
   '処理終了--------------------------------------
   If runFlg = False Then
@@ -368,45 +386,3 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
-
-'==================================================================================================
-Function formula03()
-  Dim formulaVal As String
-  Const funcName As String = "Ctl_Formula.formula03"
-  
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
-  '----------------------------------------------
-  
-  
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm("", , "end")
-    Call init.unsetting
-  Else
-    Call Library.showDebugForm("", , "end")
-  End If
-  '----------------------------------------------
-  Exit Function
-
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
-
-
-
-
-
-

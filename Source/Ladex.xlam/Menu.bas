@@ -140,7 +140,7 @@ Sub ladex_行例を入れ替えて貼付け()
 End Sub
 
 Sub ladex_数式エラー防止()
-  Call Ctl_Formula.formula01
+  Call Ctl_Formula.エラー防止
 End Sub
 
 Sub ladex_整形_1()

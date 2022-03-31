@@ -968,8 +968,8 @@ Function Ctl_Function(control As IRibbonControl)
     
     
     '数式編集------------------------------------
-    Case "formula01"
-      Call Ctl_Formula.formula01
+    Case "エラー防止"
+      Call Ctl_Formula.エラー防止
     
     '整形------------------------------------
     Case "整形_1"

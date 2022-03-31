@@ -31,7 +31,7 @@ End Function
 
 '==================================================================================================
 Function showHelp()
-  Const funcName As String = "Library.showHelp"
+  Const funcName As String = "Ctl_Option.showHelp"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -104,7 +104,7 @@ Function initialization()
   Dim line As Long, endLine As Long
   Dim regName As String
 
-  Const funcName As String = "Library.initialization"
+  Const funcName As String = "Ctl_Option.initialization"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -151,7 +151,7 @@ End Function
 '==================================================================================================
 Function showOption()
   Dim line As Long, endLine As Long
-  Const funcName As String = "Library.showOption"
+  Const funcName As String = "Ctl_Option.showOption"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -195,7 +195,7 @@ End Function
 
 '==================================================================================================
 Function HighLight()
-  Const funcName As String = "Library.HighLight"
+  Const funcName As String = "Ctl_Option.HighLight"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -236,7 +236,7 @@ End Function
 
 '==================================================================================================
 Function Comment()
-  Const funcName As String = "Library.Comment"
+  Const funcName As String = "Ctl_Option.Comment"
 
   '処理開始--------------------------------------
   If runFlg = False Then
