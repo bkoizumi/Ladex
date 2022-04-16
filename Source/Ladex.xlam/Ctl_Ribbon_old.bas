@@ -516,7 +516,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
       Set Button = DOMDoc.createElement("button")
       With Button
         .SetAttribute "id", "Favorite_" & line
-        .SetAttribute "label", objFso.GetFileName(LadexSh_Favorite.Range("A" & line))
+        .SetAttribute "label", objFso.getFileName(LadexSh_Favorite.Range("A" & line))
         .SetAttribute "imageMso", "Favorites"
         .SetAttribute "supertip", LadexSh_Favorite.Range("A" & line)
         .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.OpenFavoriteList"

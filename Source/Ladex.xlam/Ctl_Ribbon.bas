@@ -442,7 +442,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
       Set Button = DOMDoc.createElement("button")
       With Button
         .SetAttribute "id", tmp(line, 0)
-        .SetAttribute "label", objFso.GetFileName(tmp(line, 1))
+        .SetAttribute "label", objFso.getFileName(tmp(line, 1))
         
         'アイコンの設定
         Select Case objFso.GetExtensionName(tmp(line, 1))
@@ -916,6 +916,13 @@ Function Ctl_Function(control As IRibbonControl)
     Case "シート管理"
       Call Ctl_Sheet.シート管理_フォーム表示
     
+    'ファイル管理--------------------------------
+    Case "ファイル管理_情報取得"
+      Call Ctl_File.ファイルパス情報
+    Case "ファイル管理_画像貼付け"
+      Call Ctl_File.画像貼付け
+    
+    
     'ズーム--------------------------------------
     Case "Zoom01"
       Call Ctl_Zoom.Zoom01
@@ -970,6 +977,9 @@ Function Ctl_Function(control As IRibbonControl)
     '数式編集------------------------------------
     Case "エラー防止"
       Call Ctl_Formula.エラー防止
+    Case "ゼロ非表示"
+      Call Ctl_Formula.ゼロ非表示
+    
     
     '整形------------------------------------
     Case "整形_1"
@@ -978,8 +988,10 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_format.移動する
     Case "整形_3"
       Call Ctl_format.移動やサイズ変更をしない
-    Case "余白ゼロ"
-      Call Ctl_format.余白ゼロ
+    Case "上下余白ゼロ"
+      Call Ctl_format.上下余白ゼロ
+    Case "左右余白ゼロ"
+      Call Ctl_format.左右余白ゼロ
     
     '画像保存------------------------------------
     Case "saveImage"
@@ -1082,7 +1094,7 @@ Function Ctl_Function(control As IRibbonControl)
     
     Case Else
       Call Library.showDebugForm("リボンメニューなし", control.ID, "Error")
-      Call Library.showNotice("リボンメニューなし", control.ID, "Error")
+      Call Library.showNotice(406, "リボンメニューなし：" & control.ID, True)
   End Select
   
   '処理終了--------------------------------------

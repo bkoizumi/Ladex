@@ -109,8 +109,8 @@ Function setShortcutKey()
     End If
   Next
   
-  'Call Application.OnKey("{F1}", "Ctl_Option.showVersion")
-  Call Application.OnKey("{F1}", "")
+'  Call Application.OnKey("{F1}", "Ctl_Option.showVersion")
+'  Call Application.OnKey("{F1}", "")
 
 
   '処理終了--------------------------------------
@@ -252,7 +252,7 @@ Function 右クリックメニュー(Target As Range, Cancel As Boolean)
   Next
 
   
-  With Application.CommandBars("Cell").Controls.add(before:=1, Type:=msoControlPopup, Temporary:=True)
+  With Application.CommandBars("Cell").Controls.add(Before:=1, Type:=msoControlPopup, Temporary:=True)
     .Caption = thisAppName
     If Not (Target.count = Rows.count Or Target.count = Columns.count) Then
       With .Controls.add(Temporary:=True)

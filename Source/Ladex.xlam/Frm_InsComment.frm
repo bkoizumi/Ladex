@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_InsComment 
    Caption         =   "コメント設定"
-   ClientHeight    =   4830
+   ClientHeight    =   4836
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   7050
@@ -44,8 +44,8 @@ Private Sub UserForm_Initialize()
     .Caption = "コメント挿入 |  " & thisAppName
     
     'コメント 背景色-----------------------------
-    CommentBgColor = Library.getRegistry("Main", "CommentBgColor")
-    .CommentColor.BackColor = CommentBgColor
+    commentBgColor = Library.getRegistry("Main", "CommentBgColor")
+    .CommentColor.BackColor = commentBgColor
     .CommentColor.Caption = ""
     
     'コメント フォント---------------------------

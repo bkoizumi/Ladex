@@ -155,8 +155,8 @@ Sub ladex_整形_3()
   Call Ctl_format.移動やサイズ変更をしない
 End Sub
 
-Sub ladex_余白ゼロ()
-  Call Ctl_format.余白ゼロ
+Sub ladex_上下の余白ゼロ()
+  Call Ctl_format.上下余白ゼロ
 End Sub
 
 Sub ladex_画像保存()

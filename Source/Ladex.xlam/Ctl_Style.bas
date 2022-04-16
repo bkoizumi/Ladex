@@ -81,7 +81,7 @@ Function Import()
   Call Ctl_SaveVal.delVal("ExportStyleFilePaht")
   Call Ctl_SaveVal.delVal("ExportStyleFileName")
   
-  styleBookPath = setStyleBook.Path & "\" & setStyleBook.Name
+  styleBookPath = setStyleBook.path & "\" & setStyleBook.Name
   Application.DisplayAlerts = False
   setStyleBook.Close
 '  Call Library.execDel(styleBookPath)

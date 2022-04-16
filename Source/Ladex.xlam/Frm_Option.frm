@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
-   ClientHeight    =   7410
+   ClientHeight    =   7404
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   7605
@@ -158,8 +158,8 @@ Private Sub UserForm_Initialize()
     
     
     'コメントタブ--------------------------------
-    CommentBgColor = Library.getRegistry("Main", "CommentBgColor")
-    .CommentColor.BackColor = CommentBgColor
+    commentBgColor = Library.getRegistry("Main", "CommentBgColor")
+    .CommentColor.BackColor = commentBgColor
     .CommentColor.Caption = ""
     
     'コメント フォント
@@ -268,9 +268,9 @@ Private Sub UserForm_Initialize()
      ReDim ShortcutKeyList(endLine - 3, 2)
     For line = 3 To endLine
       If LadexSh_Config.Range("N" & line) <> "" Then
-        ShortcutKeyList(line - 3, 0) = LadexSh_Config.Range("N" & line)
-        ShortcutKeyList(line - 3, 1) = LadexSh_Config.Range("M" & line)
-        ShortcutKeyList(line - 3, 2) = LadexSh_Config.Range("O" & line)
+        ShortcutKeyList(line - 3, 0) = CStr(LadexSh_Config.Range("N" & line))
+        ShortcutKeyList(line - 3, 1) = CStr(LadexSh_Config.Range("M" & line))
+        ShortcutKeyList(line - 3, 2) = CStr(LadexSh_Config.Range("O" & line))
       End If
     Next
     With ShortcutKey
@@ -302,6 +302,7 @@ End Sub
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Private Sub IncludeFont01_Click()
+  
   If IncludeFont01.Value = True Then
     ret = セルの書式設定_フォント(1)
     IncludeFont01.Value = ret
@@ -366,7 +367,7 @@ Function doHighLightPreview()
     HighLightDspMethod = "2"
   End If
   
-  LadexSh_HighLight.Activate
+  LadexSh_HiLight.Activate
   
   If BKh_rbPressed = False Then
     BKh_rbPressed = True
@@ -378,7 +379,7 @@ Function doHighLightPreview()
   
   imageName = thisAppName & "HighLightImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HighLight.Range("A1:C3"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("A1:C3"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
@@ -397,24 +398,24 @@ End Function
 '==================================================================================================
 Function doCommentPreview()
   Dim previewImgPath As String
-  Dim CommentBgColor, CommentFontColor, CommentFont, CommentFontSize
+  Dim commentBgColor, CommentFontColor, CommentFont, CommentFontSize
 
   Call init.setting
-'  Set LadexSh_HighLight = ActiveWorkbook.Worksheets("HighLight")
+'  Set LadexSh_HiLight = ActiveWorkbook.Worksheets("HighLight")
   
-  LadexSh_HighLight.Activate
-  LadexSh_HighLight.Range("N7").Activate
+  LadexSh_HiLight.Activate
+  LadexSh_HiLight.Range("N7").Activate
   
-  CommentBgColor = Me.CommentColor.BackColor
+  commentBgColor = Me.CommentColor.BackColor
   CommentFontColor = Me.CommentFontColor.BackColor
   CommentFont = Me.CommentFont.Value
   CommentFontSize = Me.CommentFontSize.Value
   
-  Call Library.setComment(CommentBgColor, CommentFont, CommentFontColor, CommentFontSize)
+  Call Library.setComment(commentBgColor, CommentFont, CommentFontColor, CommentFontSize)
   
   imageName = thisAppName & "CommentImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HighLight.Range("N6:R9"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("N6:R9"), imageName)
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
@@ -430,10 +431,10 @@ Function doStampPreview()
   Dim StampVal As String, StampFont As String
   
   Call init.setting(True)
-  Set LadexSh_HighLight = ActiveWorkbook.Worksheets("HighLight")
+  Set LadexSh_HiLight = ActiveWorkbook.Worksheets("HighLight")
   
-  LadexSh_HighLight.Activate
-  LadexSh_HighLight.Range("F10").Activate
+  LadexSh_HiLight.Activate
+  LadexSh_HiLight.Range("F10").Activate
   
   StampVal = StampVal.Value
   StampFont = StampFont.Value
@@ -442,7 +443,7 @@ Function doStampPreview()
   
   imageName = thisAppName & "StampImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HighLight.Range("E10:H12"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("E10:H12"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
@@ -451,7 +452,7 @@ Function doStampPreview()
   End If
   StampImg.Picture = LoadPicture(previewImgPath)
   
-  LadexSh_HighLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
+  LadexSh_HiLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
 End Function
 
 

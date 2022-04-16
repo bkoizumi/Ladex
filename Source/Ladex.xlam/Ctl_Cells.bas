@@ -325,7 +325,8 @@ End Function
 
 '==================================================================================================
 Function コメント挿入()
-  Dim commentVal As String
+  Dim commentVal As String, commentBgColor As Long, CommentFontColor As Long
+  Dim CommentFont As String, CommentFontSize As String
   Dim slctCells As Range
   Const funcName As String = "Ctl_Cells.コメント挿入"
 
@@ -343,9 +344,21 @@ Function コメント挿入()
     commentVal = ""
     If TypeName(slctCells.Comment) = "Comment" Then
       commentVal = slctCells.Comment.Text
+      commentBgColor = slctCells.Comment.Shape.Fill.ForeColor.RGB
+      CommentFontSize = slctCells.Comment.Shape.TextFrame.Characters.Font.Size
+      CommentFont = slctCells.Comment.Shape.TextFrame.Characters.Font.Name
+      CommentFontColor = slctCells.Comment.Shape.TextFrame.Characters.Font.Color
     End If
     With Frm_InsComment
       .TextBox = commentVal
+      
+      If commentVal <> "" Then
+        .CommentColor.BackColor = commentBgColor
+        .CommentFont = CommentFont
+        .CommentFontColor.BackColor = CommentFontColor
+        .CommentFontSize = CommentFontSize
+      End If
+      
       .Label1.Caption = "選択セル：" & slctCells.Address(RowAbsolute:=False, ColumnAbsolute:=False)
       .Show
     End With

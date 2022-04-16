@@ -9,22 +9,9 @@ Public targetBook           As Workbook
 'ワークシート用変数------------------------------
 Public targetSheet          As Worksheet
 
-'Public LadexSh_Config      As Worksheet
-'Public LadexSh_Notice       As Worksheet
-'Public LadexSh_Style        As Worksheet
-'Public LadexSh_TestData     As Worksheet
-'Public LadexSh_Ribbon       As Worksheet
-'Public LadexSh_Favorite     As Worksheet
-'Public LadexSh_Stamp        As Worksheet
-'Public LadexSh_HighLight    As Worksheet
-'Public LadexSh_Help         As Worksheet
-'Public LadexSh_Function     As Worksheet
-'Public LadexSh_SheetList    As Worksheet
-'Public LadexSh_InputData    As Worksheet
-
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "1.3.1.0"
+Public Const thisAppVersion As String = "1.3.2.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 Public funcName             As String
@@ -44,6 +31,7 @@ Public RegistrySubKey       As String
 '設定値保持--------------------------------------
 Public BK_setVal            As Object
 Public sampleDataList       As Object
+Public FrmVal               As Object
 
 
 'ファイル/ディレクトリ関連-----------------------
@@ -88,17 +76,10 @@ Function unsetting(Optional flg As Boolean = True)
 
   Set BK_ThisBook = Nothing
   
-  'ワークシート名の設定
-'  Set LadexSh_Config = Nothing
-'  Set LadexSh_Notice = Nothing
-'  Set LadexSh_Style = Nothing
-'  Set LadexSh_TestData = Nothing
-'  Set LadexSh_Ribbon = Nothing
-'  Set LadexSh_Favorite = Nothing
-
   '設定値読み込み
   Set BK_setVal = Nothing
   Set BK_ribbonVal = Nothing
+  Set FrmVal = Nothing
   
   logFile = ""
   LadexDir = ""
@@ -145,23 +126,13 @@ Function setting(Optional reCheckFlg As Boolean)
   'ブックの設定
   Set BK_ThisBook = ThisWorkbook
   
-  'ワークシート名の設定
-'  Set LadexSh_Config = BK_ThisBook.Worksheets("設定")
-'  Set LadexSh_Notice = BK_ThisBook.Worksheets("Notice")
-'  Set LadexSh_Style = BK_ThisBook.Worksheets("Style")
-'  Set LadexSh_TestData = BK_ThisBook.Worksheets("testData")
-'  Set LadexSh_Ribbon = BK_ThisBook.Worksheets("Ribbon")
-'  Set LadexSh_Favorite = BK_ThisBook.Worksheets("Favorite")
-'  Set LadexSh_Stamp = BK_ThisBook.Worksheets("Stamp")
-'  Set LadexSh_HighLight = BK_ThisBook.Worksheets("HighLight")
-'  Set LadexSh_Help = BK_ThisBook.Worksheets("Help")
-'  Set LadexSh_Function = BK_ThisBook.Worksheets("Function")
-'  Set LadexSh_InputData = BK_ThisBook.Worksheets("inputData")
- 
- 
   '設定値読み込み--------------------------------
   Set BK_setVal = Nothing
   Set BK_setVal = CreateObject("Scripting.Dictionary")
+  
+  Set FrmVal = Nothing
+  Set FrmVal = CreateObject("Scripting.Dictionary")
+  
   
   endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 0 Then
@@ -180,10 +151,6 @@ Function setting(Optional reCheckFlg As Boolean)
   LadexDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex"
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
-  
-  If Application.UserName = "小泉 文平" Then
-    BK_setVal("debugMode") = "develop"
-  End If
   
 '  LogLevel = Split(BK_setVal("LogLevel"), ".")(0)
   

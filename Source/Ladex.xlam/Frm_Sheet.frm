@@ -33,7 +33,6 @@ Private Sub UserForm_Initialize()
 '  Call Library.startScript
   Call Library.showDebugForm(funcName, , "function")
   '----------------------------------------------
-  Call Library.delSheetData(LadexSh_SheetList)
   
   '表示位置指定----------------------------------
   StartUpPosition = 0
@@ -44,6 +43,7 @@ Private Sub UserForm_Initialize()
   
   With Frm_Sheet
     .Caption = "シート管理 " & thisAppName
+    .inputSheetName.Value = ActiveSheet.Name
     With SheetList
       .View = lvwReport
       .LabelEdit = lvwManual
@@ -58,17 +58,14 @@ Private Sub UserForm_Initialize()
       For line = 1 To ActiveWorkbook.Worksheets.count
         With .ListItems.add
           .Text = line
-          LadexSh_SheetList.Range("A" & line) = line
-          LadexSh_SheetList.Range("D" & line) = line
           
           If ActiveWorkbook.Worksheets(line).Visible = True Then
             .SubItems(1) = "○"
-            LadexSh_SheetList.Range("B" & line) = "○"
-            LadexSh_SheetList.Range("E" & line) = "○"
+          
+          Else
+            .SubItems(1) = "－"
           End If
           .SubItems(2) = ActiveWorkbook.Worksheets(line).Name
-          LadexSh_SheetList.Range("C" & line) = ActiveWorkbook.Worksheets(line).Name
-          LadexSh_SheetList.Range("F" & line) = ActiveWorkbook.Worksheets(line).Name
         End With
         
         If ActiveWorkbook.Worksheets(line).Name = ActiveSheet.Name Then
@@ -77,12 +74,6 @@ Private Sub UserForm_Initialize()
         DoEvents
       Next
       
-      '最終行に空白追加
-        With .ListItems.add
-          .Text = line
-          .SubItems(1) = ""
-          .SubItems(2) = "シート末尾"
-        End With
       .ListItems(selectLine).EnsureVisible
       .ListItems(selectLine).Selected = True
       .SetFocus
@@ -108,22 +99,51 @@ End Sub
 '**************************************************************************************************
 '==================================================================================================
 Private Sub SheetList_Click()
-  selectLine = SheetList.SelectedItem.Text
+  Dim SheetName As String, meg As String
+  Const funcName As String = "Frm_Sheet.edit_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  Frm_Sheet.inputSheetName.Value = SheetName
   
-  If SheetList.SelectedItem.SubItems(2) = "シート末尾" Then
-    SheetName.Value = ""
-    Exit Sub
-  Else
-    SheetName.Value = SheetList.SelectedItem.SubItems(2)
-  End If
+  If ActiveWorkbook.Worksheets(SheetName).Visible = 2 Then
+    meg = "マクロによって非表示となっているシートです" & vbNewLine & "マクロの動作に影響を与える可能性があります。"
+    Frm_Sheet.add.Enabled = False
+    Frm_Sheet.edit.Enabled = False
+    Frm_Sheet.del.Enabled = False
+    
+    Frm_Sheet.up.Enabled = False
+    Frm_Sheet.down.Enabled = False
+    
+  ElseIf ActiveWorkbook.Worksheets(SheetName).Visible = True Then
+    meg = "ダブルクリックで選択(アクティブ化)します"
+    Frm_Sheet.add.Enabled = True
+    Frm_Sheet.edit.Enabled = True
+    Frm_Sheet.del.Enabled = True
   
-  If ActiveWorkbook.Worksheets(selectLine).Visible = 2 Then
-    sheetInfo.Caption = "マクロによって非表示となっているシートです" & vbNewLine & "マクロの動作に影響を与える可能性があります。"
-  ElseIf ActiveWorkbook.Worksheets(selectLine).Visible = True Then
-    sheetInfo.Caption = "ダブルクリックで選択(アクティブ化)します"
+    Frm_Sheet.up.Enabled = True
+    Frm_Sheet.down.Enabled = True
+  
   Else
-    sheetInfo.Caption = ""
+    meg = "非表示となっているシートです" & vbNewLine & "ダブルクリックで表示し、選択(アクティブ化)します"
+    Frm_Sheet.add.Enabled = False
+    Frm_Sheet.edit.Enabled = False
+    Frm_Sheet.del.Enabled = True
+    
+    Frm_Sheet.up.Enabled = False
+    Frm_Sheet.down.Enabled = False
+    
   End If
+
+    sheetInfo.Caption = meg & vbNewLine & ""
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
 
 '==================================================================================================
@@ -139,7 +159,7 @@ Private Sub SheetList_DblClick()
   If sheetDspFLg = "○" Then
     ActiveWorkbook.Worksheets(SheetName).Select
   Else
-    targetBook.Sheets(SheetName).Visible = True
+    ActiveWorkbook.Sheets(SheetName).Visible = True
     ActiveWorkbook.Worksheets(SheetName).Select
   End If
   
@@ -150,81 +170,169 @@ End Sub
 '==================================================================================================
 '上
 Private Sub up_Click()
-  selectLine = SheetList.SelectedItem.Text
+  Dim SheetName As String
+   
+  Const funcName As String = "Frm_Sheet.up_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-  LadexSh_SheetList.Range("D" & selectLine) = LadexSh_SheetList.Range("D" & selectLine) - 1
-  LadexSh_SheetList.Range("D" & selectLine - 1) = LadexSh_SheetList.Range("D" & selectLine - 1) + 1
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  Sheets(SheetName).Move Before:=Sheets(SheetList.SelectedItem.Text - 1)
   
-  selectLine = selectLine - 1
+  
   Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
+
 
 '==================================================================================================
 '下
 Private Sub down_Click()
-  selectLine = SheetList.SelectedItem.Text
+  Dim SheetName As String
+   
+  Const funcName As String = "Frm_Sheet.down_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-  LadexSh_SheetList.Range("D" & selectLine) = LadexSh_SheetList.Range("D" & selectLine) + 1
-  LadexSh_SheetList.Range("D" & selectLine + 1) = LadexSh_SheetList.Range("D" & selectLine + 1) - 1
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  Sheets(SheetName).Move Before:=Sheets(SheetList.SelectedItem.Text + 2)
   
-  selectLine = selectLine + 1
+  
   Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
 
 '==================================================================================================
 'シート名変更
 Private Sub edit_Click()
-  selectLine = SheetList.SelectedItem.Text
+  Dim SheetName As String
+   
+  Const funcName As String = "Frm_Sheet.edit_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-  LadexSh_SheetList.Range("F" & selectLine) = SheetName.Value
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  If Library.chkSheetExists(inputSheetName.Value) = False Then
+    ActiveWorkbook.Sheets(SheetName).Select
+    ActiveWorkbook.Sheets(SheetName).Name = inputSheetName.Value
+  Else
+    sheetInfo.Caption = inputSheetName.Value & "は、すでに存在します"
+  End If
+  
   
   Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
 
 '==================================================================================================
 'シート追加
 Private Sub add_Click()
-  Dim endLine As Long
+  Dim SheetName As String
+   
+  Const funcName As String = "Frm_Sheet.add_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-  endLine = LadexSh_SheetList.Cells(Rows.count, 4).End(xlUp).Row + 1
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  ActiveWorkbook.Sheets(SheetName).Select
   
-  LadexSh_SheetList.Range("D" & endLine) = endLine
-  LadexSh_SheetList.Range("E" & endLine) = "○"
-  LadexSh_SheetList.Range("F" & endLine) = SheetName.Value
+  If Library.chkSheetExists(inputSheetName.Value) = False Then
+    Sheets.add After:=ActiveSheet
+    ActiveSheet.Name = inputSheetName.Value
+  Else
+    sheetInfo.Caption = inputSheetName.Value & "はすでに存在します"
+  End If
   
-  selectLine = endLine
   Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
+
 
 '==================================================================================================
 'シート削除
 Private Sub del_Click()
-  selectLine = SheetList.SelectedItem.Text
+  Dim SheetName As String
+   
+  Const funcName As String = "Frm_Sheet.del_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-  If LadexSh_SheetList.Range("E" & selectLine) = "削除" Then
-    If LadexSh_SheetList.Range("E" & selectLine) <> "" Then
-      LadexSh_SheetList.Range("E" & selectLine) = LadexSh_SheetList.Range("B" & selectLine)
-    Else
-      LadexSh_SheetList.Range("E" & selectLine) = "○"
-    End If
-  Else
-    LadexSh_SheetList.Range("E" & selectLine) = "削除"
-  End If
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  
+'  If MsgBox(SheetName & "を削除します(元にもどせません)", vbYesNo + vbExclamation) = vbYes Then
+    ActiveWorkbook.Sheets(SheetName).delete
+'  End If
+  
   Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
 
 
 '==================================================================================================
 '表示/非表示
 Private Sub display_Click()
-  selectLine = SheetList.SelectedItem.Text
+  Dim SheetName As String
+   
+  Const funcName As String = "Frm_Sheet.display_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-  If LadexSh_SheetList.Range("E" & selectLine) = "○" Then
-    LadexSh_SheetList.Range("E" & selectLine) = "X"
+  SheetName = SheetList.SelectedItem.SubItems(2)
+  If ActiveWorkbook.Sheets(SheetName).Visible = True Then
+    ActiveWorkbook.Sheets(SheetName).Visible = False
   Else
-    LadexSh_SheetList.Range("E" & selectLine) = "○"
+    ActiveWorkbook.Sheets(SheetName).Visible = True
   End If
   Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
 
 '==================================================================================================
@@ -233,18 +341,15 @@ Private Sub active_Click()
   Dim SheetName As String, sheetDspFLg As String
   
   SheetName = SheetList.SelectedItem.SubItems(2)
-  sheetDspFLg = SheetList.SelectedItem.SubItems(1)
-  selectLine = SheetList.SelectedItem.Text
   
-  SheetName = LadexSh_SheetList.Range("F" & selectLine).Value
   If ActiveWorkbook.Worksheets(SheetName).Visible = True Then
     ActiveWorkbook.Worksheets(SheetName).Select
   Else
     ActiveWorkbook.Worksheets(SheetName).Visible = True
     ActiveWorkbook.Worksheets(SheetName).Select
   End If
-  
-  'Unload Me
+  Call reLoadList
+
 End Sub
 
 '==================================================================================================
@@ -254,82 +359,18 @@ Private Sub Cancel_Click()
 End Sub
 
 '==================================================================================================
-' 実行
-Private Sub Submit_Click()
-  Dim line As Long, endLine As Long
-  Dim selectLine As Long
-  Const funcName As String = "Frm_Sheet.UserForm_Initialize"
-
-  endLine = LadexSh_SheetList.Cells(Rows.count, 4).End(xlUp).Row
-  Call Library.startScript
-  
-  For line = 1 To endLine
-    If LadexSh_SheetList.Range("A" & line) <> LadexSh_SheetList.Range("D" & line) Then
-      If LadexSh_SheetList.Range("A" & line) = "" And LadexSh_SheetList.Range("E" & line) <> "削除" Then
-        '新規シート追加
-        targetBook.Sheets.add After:=ActiveSheet
-        targetBook.ActiveSheet.Name = LadexSh_SheetList.Range("F" & line).Value
-        targetBook.ActiveSheet.Move After:=Sheets(LadexSh_SheetList.Range("D" & line - 1))
-        
-      Else
-        'シートの順番変更
-        targetBook.Sheets(LadexSh_SheetList.Range("A" & line)).Move before:=Sheets(LadexSh_SheetList.Range("D" & line))
-      End If
-    ElseIf LadexSh_SheetList.Range("B" & line) <> LadexSh_SheetList.Range("E" & line) Then
-      'シートの表示/非表示切り替え
-      If LadexSh_SheetList.Range("E" & line) = "○" Then
-        targetBook.Sheets(LadexSh_SheetList.Range("F" & line).Value).Visible = True
-      
-      ElseIf LadexSh_SheetList.Range("E" & line) = "削除" Then
-        targetBook.Worksheets(LadexSh_SheetList.Range("F" & line).Value).Select
-        ActiveWindow.SelectedSheets.delete
-      Else
-        targetBook.Sheets(LadexSh_SheetList.Range("F" & line).Value).Visible = False
-      End If
-      
-    ElseIf LadexSh_SheetList.Range("C" & line) <> LadexSh_SheetList.Range("F" & line) Then
-      'シート名の変更
-      targetBook.Sheets(LadexSh_SheetList.Range("C" & line).Value).Name = LadexSh_SheetList.Range("F" & line).Value
-    End If
-      
-  Next
-  
-  Call Library.delSheetData(LadexSh_SheetList)
-  Set targetBook = Nothing
-  
-  selectLine = SheetList.SelectedItem.Text
-  
-  If LadexSh_SheetList.Range("E" & selectLine) = "○" And LadexSh_SheetList.Range("F" & selectLine).Value <> "" Then
-    ActiveWorkbook.Worksheets(LadexSh_SheetList.Range("F" & selectLine).Value).Select
-  End If
-  
-  
-  Call Library.endScript
-'  Unload Me
-End Sub
-
-
-'==================================================================================================
 Function reLoadList()
   Dim line As Long, endLine As Long
-  Const funcName As String = "Frm_Sheet.UserForm_Initialize"
+  Const funcName As String = "Frm_Sheet.reLoadList"
 
-  endLine = LadexSh_SheetList.Cells(Rows.count, 4).End(xlUp).Row
-
-  LadexSh_SheetList.Sort.SortFields.Clear
-  LadexSh_SheetList.Sort.SortFields.add Key:=Range("D1:D" & endLine), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
-  With LadexSh_SheetList.Sort
-    .SetRange Range("A1:F" & endLine)
-    .Header = xlGuess
-    .MatchCase = False
-    .Orientation = xlTopToBottom
-    .SortMethod = xlPinYin
-    .Apply
-  End With
+  '処理開始--------------------------------------
+  'On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   
-    
   SheetList.ListItems.Clear
   SheetList.ColumnHeaders.Clear
+
   With SheetList
     .View = lvwReport
     .LabelEdit = lvwManual
@@ -337,28 +378,32 @@ Function reLoadList()
     .AllowColumnReorder = True
     .FullRowSelect = True
     .Gridlines = True
-      .ColumnHeaders.add , "_ID", "#", 30
-      .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
-      .ColumnHeaders.add , "_SheetName", "シート名", 140
+    .ColumnHeaders.add , "_ID", "#", 30
+    .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
+    .ColumnHeaders.add , "_SheetName", "シート名", 140
     
-    For line = 1 To endLine
-      With .ListItems.add
-        .Text = LadexSh_SheetList.Range("D" & line).Value
-        .SubItems(1) = LadexSh_SheetList.Range("E" & line).Value
-        .SubItems(2) = LadexSh_SheetList.Range("F" & line).Value
-      End With
-    Next
-    '最終行に空白追加
+    For line = 1 To ActiveWorkbook.Worksheets.count
       With .ListItems.add
         .Text = line
-        .SubItems(1) = ""
-        .SubItems(2) = "シート末尾"
+        
+        If ActiveWorkbook.Worksheets(line).Visible = True Then
+          .SubItems(1) = "○"
+        
+        Else
+          .SubItems(1) = "－"
+        End If
+        .SubItems(2) = ActiveWorkbook.Worksheets(line).Name
       End With
+      
+      If ActiveWorkbook.Worksheets(line).Name = ActiveSheet.Name Then
+        selectLine = line
+      End If
+      DoEvents
+    Next
     
     .ListItems(selectLine).EnsureVisible
     .ListItems(selectLine).Selected = True
     .SetFocus
   End With
-  
 End Function
 

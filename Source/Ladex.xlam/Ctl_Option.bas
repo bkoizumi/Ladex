@@ -171,6 +171,8 @@ Function showOption()
   End With
 
   Call init.setting(True)
+  
+  
   Call Main.setShortcutKey
 
 

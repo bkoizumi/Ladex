@@ -541,13 +541,13 @@ Function convscale(ByVal lngVal As Long) As String
   Dim convVal As String
 
   If lngVal >= 1024 ^ 3 Then
-    convVal = Round(lngVal / (1024 ^ 3), 3) & " GB"
+    convVal = Round(lngVal / (1024 ^ 3), 2) & " GB"
   ElseIf lngVal >= 1024 ^ 2 Then
-    convVal = Round(lngVal / (1024 ^ 2), 3) & " MB"
+    convVal = Round(lngVal / (1024 ^ 2), 2) & " MB"
   ElseIf lngVal >= 1024 Then
-    convVal = Round(lngVal / (1024), 3) & " KB"
+    convVal = Round(lngVal / (1024), 2) & " KB"
   Else
-    convVal = lngVal & " Byte"
+    convVal = lngVal & " B"
   End If
   convscale = convVal
 End Function
@@ -1440,7 +1440,7 @@ Function getDirPath(CurrentDirectory As String, Optional title As String)
     If Library.chkDirExists(CurrentDirectory) = True Then
       .InitialFileName = CurrentDirectory & "\"
     Else
-      .InitialFileName = ThisWorkbook.Path
+      .InitialFileName = ThisWorkbook.path
     End If
 
     .AllowMultiSelect = False
@@ -1531,7 +1531,7 @@ Function getFilePath(CurrentDirectory As String, fileName As String, title As St
     If chkDirExists(CurrentDirectory) = True Then
       .InitialFileName = CurrentDirectory & "\" & fileName
     Else
-      .InitialFileName = ActiveWorkbook.Path & "\" & fileName
+      .InitialFileName = ActiveWorkbook.path & "\" & fileName
     End If
 
     '表示形式の設定
@@ -1554,13 +1554,13 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getFilesPath(CurrentDirectory As String, fileName As String, title As String, fileType As String)
+Function getFilesPath(CurrentDirectory As String, title As String, fileType As String)
   Dim filePath() As Variant
   Dim Result As Long, i As Integer
 
   With Application.FileDialog(msoFileDialogFilePicker)
     '複数選択を許可
-    .AllowMultiSelect = MultiSelect
+    .AllowMultiSelect = True
 
     ' ファイルの種類を設定
     .Filters.Clear
@@ -1589,9 +1589,6 @@ Function getFilesPath(CurrentDirectory As String, fileName As String, title As S
       Case "psd"
         .Filters.add "Photoshop Data", "*.psd"
 
-      Case "クリエイティブ"
-        .Filters.add "クリエイティブ", "*.jpg;*.gif;*.png;*.mp4"
-
       Case "mov"
         .Filters.add "動画ファイル", "*.mp4"
 
@@ -1601,7 +1598,7 @@ Function getFilesPath(CurrentDirectory As String, fileName As String, title As S
     '.FilterIndex = FileTypeNo
 
     '表示するフォルダ
-    .InitialFileName = CurrentDirectory & "\" & fileName
+    .InitialFileName = CurrentDirectory & "\"
 
     '表示形式の設定
     .InitialView = msoFileDialogViewWebView
@@ -1627,14 +1624,14 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getFileList(Path As String, fileName As String)
+Function getFileList(path As String, fileName As String)
   Dim f As Object, cnt As Long
   Dim list() As String
 
   cnt = 0
-  Call Library.showDebugForm("Path", Path, "info")
+  Call Library.showDebugForm("Path", path, "info")
   With CreateObject("Scripting.FileSystemObject")
-    For Each f In .GetFolder(Path).Files
+    For Each f In .GetFolder(path).Files
       If f.Name Like fileName Then
         ReDim Preserve list(cnt)
         list(cnt) = f.Name
@@ -1646,19 +1643,19 @@ Function getFileList(Path As String, fileName As String)
 End Function
 
 '==================================================================================================
-Function getFilePath2LikeFileName(Path As String, fileName As String, Optional perfectMatchFlg As Boolean = False)
+Function getFilePath2LikeFileName(path As String, fileName As String, Optional perfectMatchFlg As Boolean = False)
   Dim f As Object
   Dim retVal As String
   Const funcName As String = "Library.getFilePath2likeFileName"
 
-  Call Library.showDebugForm("Path", Path, "info")
+  Call Library.showDebugForm("Path", path, "info")
   With CreateObject("Scripting.FileSystemObject")
-    For Each f In .GetFolder(Path).Files
+    For Each f In .GetFolder(path).Files
       If f.Name Like fileName And perfectMatchFlg = False Then
-        retVal = Path & "\" & f.Name
+        retVal = path & "\" & f.Name
         Exit For
       ElseIf f.Name = fileName And perfectMatchFlg = True Then
-        retVal = Path & "\" & f.Name
+        retVal = path & "\" & f.Name
         Exit For
       End If
     Next f
@@ -1990,6 +1987,35 @@ catchError:
 End Function
 
 '**************************************************************************************************
+' * ステータスバーにメッセージを表示
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function showError(message As String)
+  Dim i As Integer
+  Const funcName As String = "Library.showError"
+
+  On Error GoTo catchError
+
+  For i = 0 To 3
+    Application.StatusBar = message
+    Call Library.waitTime(300)
+    
+    Application.StatusBar = " "
+    Call Library.waitTime(300)
+  Next
+  
+  Application.StatusBar = False
+
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print "  [ERROR] " & Err.Description; "  " & message
+  Exit Function
+End Function
+
+'**************************************************************************************************
 ' * 処理情報通知
 ' *
 ' * Worksheets("info").Visible = True
@@ -2117,7 +2143,7 @@ End Function
 Function outputLog(runTime As String, message As String)
   Dim fileTimestamp As Date
 
-  On Error GoTo catchError
+'  On Error GoTo catchError
   If logFile = "" Then
     Debug.Print "ログファイルが設定されていません"
     End
@@ -2404,21 +2430,22 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  Call Library.showDebugForm("Key", thisAppName & "|" & RegistrySubKey & "|" & RegistryKey & "|" & CStr(setVal), "debug")
+  Call Library.showDebugForm("MainKey", thisAppName, "debug")
+  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
+  Call Library.showDebugForm("Key    ", RegistryKey, "debug")
+  Call Library.showDebugForm("Val    ", CStr(setVal), "debug")
   
-'  If getRegistry(RegistrySubKey, RegistryKey) <> setVal And RegistryKey <> "" Then
-    Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
-'  Else
-'    Call Library.showDebugForm("setRegistry   ", "同一のため未実行", "debug")
-'  End If
+  Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
   
   Call Library.showDebugForm(funcName, , "end1")
   Exit Function
+  
 'エラー発生時------------------------------------
 catchError:
     Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
 '==================================================================================================
 Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional typeVal As String = "String")
   Dim regVal As String

@@ -88,7 +88,7 @@ Function showFrm_sampleData(showType As String)
     If Selection.count > 1 Then
       .maxCount0 = Selection.Rows.count
       .maxCount1 = Selection.Rows.count
-      .maxCount2 = Selection.Rows.count
+      .maxCount2 = Selection.count
       .maxCount3 = Selection.Rows.count
       .maxCount4 = Selection.Rows.count
     End If
@@ -157,9 +157,8 @@ Function パターン選択(Optional maxCount As Long)
     LadexSh_InputData.Range("F" & line + count) = LadexSh_InputData.Range("D" & line + count) & "　" & LadexSh_InputData.Range("E" & line + count)
     
     '性別
-    LadexSh_InputData.Range("G" & line + count) = LadexSh_TestData.Range("F" & getLine2)
+    LadexSh_InputData.Range("G" & line + count) = LadexSh_TestData.Range("F" & getLine)
     
-
     '血液型
     LadexSh_InputData.Range("H" & line + count) = LadexSh_TestData.Range("H" & getLine2)
     
@@ -338,6 +337,7 @@ End Function
 '==================================================================================================
 Function 数値_範囲(Optional maxCount As Long)
   Dim line As Long, endLine As Long
+  Dim slctCells As Range
   Const funcName As String = "Ctl_SampleData.数値_範囲"
   
   '処理開始--------------------------------------
@@ -356,18 +356,27 @@ Function 数値_範囲(Optional maxCount As Long)
   '----------------------------------------------
   
   Call showFrm_sampleData("【数値】範囲指定")
-  line = Selection(1).Row
   
-  If IsMissing(maxCount) Then
-    maxCount = BK_setVal("maxCount")
+  If Selection.count > 1 Then
+    For Each slctCells In Selection
+      slctCells.NumberFormatLocal = "###"
+      slctCells.Value = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
+      DoEvents
+    Next
+  Else
+    line = Selection(1).Row
+  
+    If maxCount = 0 Then
+      maxCount = BK_setVal("maxCount")
+    End If
+  
+    For count = 0 To (maxCount - 1)
+      Cells(line + count, ActiveCell.Column).NumberFormatLocal = "###"
+      Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
+      Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
+    Next
   End If
   
-  For count = 0 To (maxCount - 1)
-    Cells(line + count, ActiveCell.Column).NumberFormatLocal = "###"
-    Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
-    Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
-  Next
-
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then

@@ -99,3 +99,47 @@ catchError:
 End Function
 
 
+'==================================================================================================
+Function 貼付け()
+  Dim line As Long, endLine As Long
+  Dim objFolder As Folder
+  Dim objFile As File
+  Dim dirPath  As String
+  Const funcName As String = "Ctl_Image.画像貼付け"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  PrgP_Max = 2
+  PrgP_Cnt = 1
+  Call Ctl_ProgressBar.showStart
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  
+  ActiveSheet.Pictures.Insert objFile.path
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時====================================
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

@@ -12,12 +12,12 @@ Function 画面サイズ変更(Optional widthVal As Long, Optional heightVal As Long)
   actWinTop = actWin.Top
   actWinLeft = actWin.Left
 
-  Call Library.showDebugForm("actWinTop ：" & actWinTop)
-  Call Library.showDebugForm("actWinLeft：" & actWinLeft)
+  Call Library.showDebugForm("actWinTop ", actWinTop, "debug")
+  Call Library.showDebugForm("actWinLeft", actWinLeft, "debug")
 
   Call Library.getMachineInfo
-  Call Library.showDebugForm("appWidth ：" & MachineInfo("appWidth"))
-  Call Library.showDebugForm("appHeight ：" & MachineInfo("appHeight"))
+  Call Library.showDebugForm("appWidth ", MachineInfo("appWidth"), "debug")
+  Call Library.showDebugForm("appHeight", MachineInfo("appHeight"), "debug")
   
   
   actWin.WindowState = xlNormal
