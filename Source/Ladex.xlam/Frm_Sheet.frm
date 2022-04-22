@@ -99,17 +99,17 @@ End Sub
 '**************************************************************************************************
 '==================================================================================================
 Private Sub SheetList_Click()
-  Dim SheetName As String, meg As String
+  Dim sheetName As String, meg As String
   Const funcName As String = "Frm_Sheet.edit_Click"
 
   '処理開始--------------------------------------
   On Error GoTo catchError
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
-  SheetName = SheetList.SelectedItem.SubItems(2)
-  Frm_Sheet.inputSheetName.Value = SheetName
+  sheetName = SheetList.SelectedItem.SubItems(2)
+  Frm_Sheet.inputSheetName.Value = sheetName
   
-  If ActiveWorkbook.Worksheets(SheetName).Visible = 2 Then
+  If ActiveWorkbook.Worksheets(sheetName).Visible = 2 Then
     meg = "マクロによって非表示となっているシートです" & vbNewLine & "マクロの動作に影響を与える可能性があります。"
     Frm_Sheet.add.Enabled = False
     Frm_Sheet.edit.Enabled = False
@@ -118,17 +118,20 @@ Private Sub SheetList_Click()
     Frm_Sheet.up.Enabled = False
     Frm_Sheet.down.Enabled = False
     
-  ElseIf ActiveWorkbook.Worksheets(SheetName).Visible = True Then
-    meg = "ダブルクリックで選択(アクティブ化)します"
+  ElseIf ActiveWorkbook.Worksheets(sheetName).Visible = True Then
+'    meg = "ダブルクリックで選択(アクティブ化)します"
     Frm_Sheet.add.Enabled = True
     Frm_Sheet.edit.Enabled = True
     Frm_Sheet.del.Enabled = True
   
     Frm_Sheet.up.Enabled = True
     Frm_Sheet.down.Enabled = True
-  
+    ActiveWorkbook.Worksheets(sheetName).Select
+    ActiveWindow.ScrollColumn = 1
+    ActiveWindow.ScrollRow = 1
   Else
-    meg = "非表示となっているシートです" & vbNewLine & "ダブルクリックで表示し、選択(アクティブ化)します"
+    meg = "非表示となっているシートです"
+'    meg = meg & vbNewLine & "ダブルクリックで表示し、選択(アクティブ化)します"
     Frm_Sheet.add.Enabled = False
     Frm_Sheet.edit.Enabled = False
     Frm_Sheet.del.Enabled = True
@@ -148,19 +151,19 @@ End Sub
 
 '==================================================================================================
 Private Sub SheetList_DblClick()
-  Dim SheetName As String, sheetDspFLg As String
+  Dim sheetName As String, sheetDspFLg As String
   
   Call Library.startScript
   selectLine = SheetList.SelectedItem.Text
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
+  sheetName = SheetList.SelectedItem.SubItems(2)
   sheetDspFLg = SheetList.SelectedItem.SubItems(1)
   
   If sheetDspFLg = "○" Then
-    ActiveWorkbook.Worksheets(SheetName).Select
+    ActiveWorkbook.Worksheets(sheetName).Select
   Else
-    ActiveWorkbook.Sheets(SheetName).Visible = True
-    ActiveWorkbook.Worksheets(SheetName).Select
+    ActiveWorkbook.Sheets(sheetName).Visible = True
+    ActiveWorkbook.Worksheets(sheetName).Select
   End If
   
   Unload Me
@@ -170,7 +173,7 @@ End Sub
 '==================================================================================================
 '上
 Private Sub up_Click()
-  Dim SheetName As String
+  Dim sheetName As String
    
   Const funcName As String = "Frm_Sheet.up_Click"
 
@@ -179,8 +182,8 @@ Private Sub up_Click()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
-  Sheets(SheetName).Move Before:=Sheets(SheetList.SelectedItem.Text - 1)
+  sheetName = SheetList.SelectedItem.SubItems(2)
+  Sheets(sheetName).Move Before:=Sheets(SheetList.SelectedItem.Text - 1)
   
   
   Call reLoadList
@@ -196,7 +199,7 @@ End Sub
 '==================================================================================================
 '下
 Private Sub down_Click()
-  Dim SheetName As String
+  Dim sheetName As String
    
   Const funcName As String = "Frm_Sheet.down_Click"
 
@@ -205,8 +208,8 @@ Private Sub down_Click()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
-  Sheets(SheetName).Move Before:=Sheets(SheetList.SelectedItem.Text + 2)
+  sheetName = SheetList.SelectedItem.SubItems(2)
+  Sheets(sheetName).Move Before:=Sheets(SheetList.SelectedItem.Text + 2)
   
   
   Call reLoadList
@@ -221,7 +224,7 @@ End Sub
 '==================================================================================================
 'シート名変更
 Private Sub edit_Click()
-  Dim SheetName As String
+  Dim sheetName As String
    
   Const funcName As String = "Frm_Sheet.edit_Click"
 
@@ -230,10 +233,10 @@ Private Sub edit_Click()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
+  sheetName = SheetList.SelectedItem.SubItems(2)
   If Library.chkSheetExists(inputSheetName.Value) = False Then
-    ActiveWorkbook.Sheets(SheetName).Select
-    ActiveWorkbook.Sheets(SheetName).Name = inputSheetName.Value
+    ActiveWorkbook.Sheets(sheetName).Select
+    ActiveWorkbook.Sheets(sheetName).Name = inputSheetName.Value
   Else
     sheetInfo.Caption = inputSheetName.Value & "は、すでに存在します"
   End If
@@ -251,7 +254,7 @@ End Sub
 '==================================================================================================
 'シート追加
 Private Sub add_Click()
-  Dim SheetName As String
+  Dim sheetName As String
    
   Const funcName As String = "Frm_Sheet.add_Click"
 
@@ -260,8 +263,8 @@ Private Sub add_Click()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
-  ActiveWorkbook.Sheets(SheetName).Select
+  sheetName = SheetList.SelectedItem.SubItems(2)
+  ActiveWorkbook.Sheets(sheetName).Select
   
   If Library.chkSheetExists(inputSheetName.Value) = False Then
     Sheets.add After:=ActiveSheet
@@ -283,7 +286,7 @@ End Sub
 '==================================================================================================
 'シート削除
 Private Sub del_Click()
-  Dim SheetName As String
+  Dim sheetName As String
    
   Const funcName As String = "Frm_Sheet.del_Click"
 
@@ -292,10 +295,10 @@ Private Sub del_Click()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
+  sheetName = SheetList.SelectedItem.SubItems(2)
   
 '  If MsgBox(SheetName & "を削除します(元にもどせません)", vbYesNo + vbExclamation) = vbYes Then
-    ActiveWorkbook.Sheets(SheetName).delete
+    ActiveWorkbook.Sheets(sheetName).delete
 '  End If
   
   Call reLoadList
@@ -311,7 +314,7 @@ End Sub
 '==================================================================================================
 '表示/非表示
 Private Sub display_Click()
-  Dim SheetName As String
+  Dim sheetName As String
    
   Const funcName As String = "Frm_Sheet.display_Click"
 
@@ -320,11 +323,11 @@ Private Sub display_Click()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
-  If ActiveWorkbook.Sheets(SheetName).Visible = True Then
-    ActiveWorkbook.Sheets(SheetName).Visible = False
+  sheetName = SheetList.SelectedItem.SubItems(2)
+  If ActiveWorkbook.Sheets(sheetName).Visible = True Then
+    ActiveWorkbook.Sheets(sheetName).Visible = False
   Else
-    ActiveWorkbook.Sheets(SheetName).Visible = True
+    ActiveWorkbook.Sheets(sheetName).Visible = True
   End If
   Call reLoadList
   
@@ -338,15 +341,15 @@ End Sub
 '==================================================================================================
 'シートの選択
 Private Sub active_Click()
-  Dim SheetName As String, sheetDspFLg As String
+  Dim sheetName As String, sheetDspFLg As String
   
-  SheetName = SheetList.SelectedItem.SubItems(2)
+  sheetName = SheetList.SelectedItem.SubItems(2)
   
-  If ActiveWorkbook.Worksheets(SheetName).Visible = True Then
-    ActiveWorkbook.Worksheets(SheetName).Select
+  If ActiveWorkbook.Worksheets(sheetName).Visible = True Then
+    ActiveWorkbook.Worksheets(sheetName).Select
   Else
-    ActiveWorkbook.Worksheets(SheetName).Visible = True
-    ActiveWorkbook.Worksheets(SheetName).Select
+    ActiveWorkbook.Worksheets(sheetName).Visible = True
+    ActiveWorkbook.Worksheets(sheetName).Select
   End If
   Call reLoadList
 
@@ -368,6 +371,7 @@ Function reLoadList()
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
+  Call Library.startScript
   SheetList.ListItems.Clear
   SheetList.ColumnHeaders.Clear
 
@@ -398,12 +402,16 @@ Function reLoadList()
       If ActiveWorkbook.Worksheets(line).Name = ActiveSheet.Name Then
         selectLine = line
       End If
-      DoEvents
+      'DoEvents
     Next
+    DoEvents
     
     .ListItems(selectLine).EnsureVisible
     .ListItems(selectLine).Selected = True
     .SetFocus
   End With
+
+  Call Library.endScript
+
 End Function
 

@@ -16,8 +16,8 @@ Function 数式確認()
   Const funcName As String = "Ctl_Formula.数式確認"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
   Else
     On Error GoTo catchError
@@ -287,10 +287,10 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function エラー防止()
+Function エラー防止_空白()
   Dim slctCells As Range
   Dim formulaVal As String
-  Const funcName As String = "Ctl_Formula.エラー防止"
+  Const funcName As String = "Ctl_Formula.エラー防止_空白"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -313,6 +313,56 @@ Function エラー防止()
       formulaVal = Trim(formulaVal)
       
       formulaVal = "IFERROR(" & formulaVal & ","""")"
+      
+      slctCells.Formula = "=" & formulaVal
+    End If
+  Next
+  
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function エラー防止_ゼロ()
+  Dim slctCells As Range
+  Dim formulaVal As String
+  Const funcName As String = "Ctl_Formula.エラー防止_ゼロ"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  
+  For Each slctCells In Selection
+    If slctCells.HasFormula = True Then
+      formulaVal = slctCells.Formula
+      formulaVal = Replace(formulaVal, "=", "")
+      formulaVal = Replace(formulaVal, vbCrLf, "")
+      formulaVal = Replace(formulaVal, vbLf, "")
+      formulaVal = Trim(formulaVal)
+      
+      formulaVal = "IFERROR(" & formulaVal & ",0)"
       
       slctCells.Formula = "=" & formulaVal
     End If

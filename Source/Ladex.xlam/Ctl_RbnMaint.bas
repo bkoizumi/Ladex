@@ -45,12 +45,12 @@ Function ÇªÇÃëº()
   
   
   LadexSh_Help.Cells.ColumnWidth = 3
-  LadexSh_Help.Cells.RowHeight = 15
+  LadexSh_Help.Cells.rowHeight = 15
   
   endLine = LadexSh_Help.Cells(Rows.count, 1).End(xlUp).Row
   For line = 1 To endLine
     If LadexSh_Help.Range("A" & line) <> "" Then
-      LadexSh_Help.Cells.RowHeight = 20
+      LadexSh_Help.Cells.rowHeight = 20
     End If
   Next
   
@@ -101,7 +101,7 @@ Function OptionSheetImport()
   Call Ctl_ProgressBar.showBar("ÉÅÉìÉeÉiÉìÉX", 1, 2, 7, 10, "Help")
 
   ThisWorkbook.Sheets("Help").Cells.ColumnWidth = 3
-  ThisWorkbook.Sheets("Help").Cells.RowHeight = 15
+  ThisWorkbook.Sheets("Help").Cells.rowHeight = 15
   
   ThisWorkbook.Worksheets("Help").Cells.delete Shift:=xlUp
   For Each objShp In ThisWorkbook.Worksheets("Help").Shapes

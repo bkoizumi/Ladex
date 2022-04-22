@@ -286,7 +286,7 @@ Sub ladex_連番生成()
 End Sub
 
 Sub ladex_桁数固定数値()
-  Call Ctl_sampleData.数値_桁数固定(Selection.count)
+  Call Ctl_sampleData.数値_桁数固定(Selection.CountLarge)
 End Sub
 
 Sub ladex_範囲指定数値()
@@ -294,27 +294,27 @@ Sub ladex_範囲指定数値()
 End Sub
 
 Sub ladex_データ生成_姓()
-  Call Ctl_sampleData.名前_姓(Selection.count)
+  Call Ctl_sampleData.名前_姓(Selection.CountLarge)
 End Sub
 
 Sub ladex_データ生成_名()
-  Call Ctl_sampleData.名前_名(Selection.count)
+  Call Ctl_sampleData.名前_名(Selection.CountLarge)
 End Sub
 
 Sub ladex_データ生成_氏名()
-  Call Ctl_sampleData.名前_フルネーム(Selection.count)
+  Call Ctl_sampleData.名前_フルネーム(Selection.CountLarge)
 End Sub
 
 Sub ladex_データ生成_日付()
-  Call Ctl_sampleData.日付_日(Selection.count)
+  Call Ctl_sampleData.日付_日(Selection.CountLarge)
 End Sub
 
 Sub ladex_データ生成_時間()
-  Call Ctl_sampleData.日付_時間(Selection.count)
+  Call Ctl_sampleData.日付_時間(Selection.CountLarge)
 End Sub
 
 Sub ladex_データ生成_日時()
-  Call Ctl_sampleData.日時(Selection.count)
+  Call Ctl_sampleData.日時(Selection.CountLarge)
 End Sub
 
 Sub ladex_データ生成_文字()

@@ -71,26 +71,39 @@
         <button id="シート一覧取得"      label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"      description="シート名のコピー用に表示 &#13;" />
       </menu>
 
-      <menu id="シート管理_Menu" label="シート管理"  itemSize="large" image="dspDefaultCellSelect">
-        <menuSeparator id="シート管理_sheet" title="アクティブシートのみを対象とした処理" />
-        <button id="セル選択"       label="セル選択"        image="dspDefaultCellSelect"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="アクティブシートのA1セルを選択 &#13;"      />
-        <button id="セル選択_保存"  label="セル選択＆保存"  image="dspDefaultCellSelect2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="アクティブシートのA1セルを選択後、上書き保存 &#13;"      />
-        <button id="全セル表示"     label="全セル表示"      imageMso="ViewNormalViewExcel"    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="非表示セルの表示 &#13;フィルターの解除 &#13;アウトラインの解除 &#13;" />
+      <menu id="シート管理_Menu" label="シート管理"  itemSize="large" imageMso="HeaderFooterSheetNameInsert">
+        <menuSeparator id="シート管理_sheet" title="シート管理" />
+        <menu id="A1セルへ移動_Menu" label="A1セルへ移動"  itemSize="large" image="dspDefaultCellSelect">
+          <menuSeparator id="A1セルへ移動_sheet" title="アクティブシートのみを対象とした処理" />
+          <button id="セル選択"       label="セル選択"        image="dspDefaultCellSelect"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="アクティブシートのA1セルを選択 &#13;"      />
+          <button id="セル選択_保存"  label="セル選択＆保存"  image="dspDefaultCellSelect2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="アクティブシートのA1セルを選択後、上書き保存 &#13;"      />
+          <button id="全セル表示"     label="全セル表示"      imageMso="ViewNormalViewExcel"    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="非表示セルの表示 &#13;フィルターの解除 &#13;アウトラインの解除 &#13;" />
 
-        <menuSeparator id="シート管理_Book" title="アクティブブックを対象とした処理" />
-        <button id="セルとシート選択"   label="全シート選択"        image="dspDefaultCellSelectAllSheet"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのA1セルを選択&#13;"      />
-        <button id="セルとシート_保存"  label="全シート選択＆保存"  image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのA1セルを選択後、上書き保存 &#13;"      />
-        <button id="標準画面"           label="標準画面"            imageMso="ViewNormalViewExcel"            onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプション設定の基本で設定した内容を反映させます &#13;" />
+          <menuSeparator id="シート管理_Book" title="アクティブブックを対象とした処理" />
+          <button id="セルとシート選択"   label="全シート選択"        image="dspDefaultCellSelectAllSheet"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのA1セルを選択&#13;"      />
+          <button id="セルとシート_保存"  label="全シート選択＆保存"   image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのA1セルを選択後、上書き保存 &#13;"      />
 
-        <menuSeparator id="シート管理_MS" title="シートを制御します" />
-        <button id="シート管理"   label="シート管理"    imageMso="HeaderFooterSheetNameInsert"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="シートを制御します&#13;" />
+        </menu>
+
+        <menu id="その他_Menu" label="その他"  itemSize="large" imageMso="GroupFontStyles">
+          <menuSeparator id="シート管理_MS" title="シート表示のコントロール" />
+          <button id="標準画面"        label="標準画面"         imageMso="BlogHomePage"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプション設定の基本で設定した内容を反映させます &#13;" />
+          <button id="体裁一括変更"     label="体裁一括変更"     imageMso="AddToContentStore"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォント(セル・オートシェイプ内の文字）、行の高さ、&#13; ガイドラインの表示/非表示、表示倍率を一括で変更します&#13;" />
+          <button id="フォント一括変更"  label="フォント一括変更" imageMso="FontsReplaceFonts"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォント(セル・オートシェイプ内の文字）を一括で変更します&#13;" />
+        </menu>
 
       </menu>
 
-      <!-- <dynamicMenu  id="SheetList"      label="シート一覧"  invalidateContentOnDrop="true" imageMso="HeaderFooterSheetNameInsert" size="normal" getContent="Ladex.xlam!Ctl_Ribbon.getSheetsList" /> -->
-      <button id="none"     description="&#13;" />
+      <menu id="ファイル管理_Menu" label="ファイル管理"  itemSize="large" imageMso="CloseWeb">
+        <menuSeparator id="ファイル管理_ファイル" title="ファイル・フォルダ" />
+        <button id="ファイル管理_情報取得"  label="ファイル情報取得"  imageMso="AddTextToTextEffect"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="ファイル情報を取得します &#13;" />
+        <button id="ファイル管理_フォルダ生成"  label="フォルダ生成"  imageMso="AddTextToTextEffect"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォルダ生成します &#13;" />
 
-      <button       id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
+        <menuSeparator id="ファイル管理_画像" title="画像貼付け" />
+        <button id="ファイル管理_画像貼付け"  label="一括画像貼付け"  imageMso="PasteAsPicture"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="複数の画像を一括で画像貼付けます &#13;" />
+      </menu>
+
+      <button id="Notation_R1C1"  label="R1C1表記"    image="dispR1C1"  size="normal"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  screentip="R1C1表記"  supertip="R1C1参照形式に変更" />
 
       <splitButton id="SB_ZoomIn" size="normal">
         <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="Ladex.xlam!Ctl_Ribbon.ZoomInPressed"     screentip="ズーム"   supertip="セルのダブルクリックで、別画面で編集できるように &#13;F2キーにも対応" />
@@ -109,13 +122,25 @@
       </splitButton>
 
       <menu id="Adjust" label="セル調整"  itemSize="large" imageMso="SizeToControlHeightAndWidth" screentip="セル幅・高さの調整" supertip="セル幅・高さの調整">
-        <menuSeparator id="Adjust_SP1" title="サイズ調整" />
-        <button id="セル調整_幅"    label="幅"        imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="60ポイント以上には広げません&#13; 選択範囲が数値であればその値に設定します " />
-        <button id="セル調整_高さ"  label="高さ"      imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さ調整 &#13;" />
-        <button id="セル調整_両方"  label="両方"      imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル幅、高さ両方を調整 &#13;" />
+        <menuSeparator id="Adjust_SP1" title="自動調整" />
+        <menu id="Adjust自動_Menu" label="幅と高さを自動で揃えます"  itemSize="large" imageMso="SizeToControlHeightAndWidth">
+          <menuSeparator id="Adjust_SP2" title="自動サイズ調整" />
+          <button id="セル調整_幅"    label="幅"        imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="60ポイント以上には広げません&#13; 選択範囲が数値であればその値に設定します " />
+          <button id="セル調整_高さ"  label="高さ"      imageMso="SizeToControlHeight"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さ調整 &#13;" />
+          <button id="セル調整_両方"  label="両方"      imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル幅、高さ両方を調整 &#13;" />
+        </menu>
+
+        <menuSeparator id="Adjust_SP3" title="指定値サイズ調整" />
+        <menu id="Adjust指定調整_Menu" label="幅と高さをオプションで設定した値に揃えます"  itemSize="large" imageMso="SizeToControlHeightAndWidth">
+          <menuSeparator id="Adjust指定調整_MS" title="指定値サイズ調整" />
+          <button id="幅設定"      label="幅"   imageMso="ColumnWidth"                  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプションで設定した幅に設定します &#13;" />
+          <button id="高さ設定"    label="高さ"  imageMso="RowHeight"                    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプションで設定した高さに設定します&#13;" />
+          <button id="幅と高さ両方" label="両方"  imageMso="SizeToControlHeightAndWidth"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプションで設定した幅、高さともに設定します&#13;" />
+        </menu>
 
         <menuSeparator id="getAdjust_SP1" title="列幅取得" />
         <button id="セル幅取得"     label="列幅取得"  imageMso="SizeToControlWidth"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="選択範囲のセル幅を取得、設定" />
+
       </menu>
 
       <menu id="セル編集" label="セル編集"  itemSize="large" imageMso="TableInsertDialog" >
@@ -170,7 +195,8 @@
 
       <menu id="formulaMenu" label="数式編集"  itemSize="large" imageMso="Formula" screentip="数式編集" supertip="数式編集">
         <menuSeparator id="数式編集_SP1" title="エラー防止" />
-        <button id="エラー防止" label="エラー防止"    imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加します" />
+        <button id="エラー防止_空白" label="エラー防止_空白"  imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加し、空白に設定します" />
+        <button id="エラー防止_ゼロ" label="エラー防止_ゼロ"    imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="『#VALUE!』『#DIV/0!』『#N/A』のエラーを防ぐため &#13; IFERROR関数を追加し、ゼロに設定します" />
         <button id="ゼロ非表示"   label="０非表示"    imageMso="Formula" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="IF関数を追加し、０なら空白にします" />
       </menu>
 
@@ -181,7 +207,8 @@
         <button id="整形_3" label="移動やサイズ変更をしない"  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をしない &#13;" />
 
         <menuSeparator id="整形_SP3" title="その他" />
-        <button id="余白ゼロ" label="上下の余白をゼロにする"    imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="テキストボックスの上下の余白をゼロにする" />
+        <button id="上下余白ゼロ" label="上下の余白をゼロにする"    imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="テキストボックスの上下の余白をゼロにする" />
+        <button id="左右余白ゼロ" label="左右の余白をゼロにする"    imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="テキストボックスの左右の余白をゼロにする" />
 
         <menuSeparator id="コメント整形_SP1" title="コメント整形 書式設定" />
         <splitButton id="SB_Comment" >
@@ -337,6 +364,7 @@
           <control idMso="FilePrepareMenu"        visible="true" />                              <!--配布準備-->
           <control idMso="ObjectAlignMenu"        visible="true"  label="配置" />
           <control idMso="ObjectRotateGallery"    visible="true"  label="回転" />
+          <control idMso="EditLinks"             visible="true" />
           <control idMso="ClearContents"          visible="true" />                              <!--数式と値のクリア-->
           <control idMso="DataValidation"         visible="true" />                              <!--入力規則-->
           <control idMso="NameManager"            visible="true" />                              <!--名前の管理-->

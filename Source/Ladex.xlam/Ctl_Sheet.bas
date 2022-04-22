@@ -24,7 +24,7 @@ End Function
 '==================================================================================================
 Function A1セル選択()
   Dim objSheet As Object
-  Dim SheetName As String, SetActiveSheet As String
+  Dim sheetName As String, SetActiveSheet As String
   Dim sheetCount As Long, sheetMaxCount As Long
   
   Const funcName As String = "Ctl_Sheet.A1セル選択"
@@ -47,13 +47,13 @@ Function A1セル選択()
   sheetCount = 0
   sheetMaxCount = ActiveWorkbook.Sheets.count
   For Each objSheet In ActiveWorkbook.Sheets
-    SheetName = objSheet.Name
-    If Worksheets(SheetName).Visible = True Then
-      Call Library.showDebugForm("sheetName", SheetName, "debug")
-      Application.GoTo Reference:=Worksheets(SheetName).Range("A1"), Scroll:=True
+    sheetName = objSheet.Name
+    If Worksheets(sheetName).Visible = True Then
+      Call Library.showDebugForm("sheetName", sheetName, "debug")
+      Application.GoTo Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
     End If
     
-    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, sheetCount + 1, sheetMaxCount + 1, SheetName & "A1セル選択")
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, sheetCount + 1, sheetMaxCount + 1, sheetName & "A1セル選択")
     sheetCount = sheetCount + 1
   Next
   
@@ -123,7 +123,7 @@ End Function
 '==================================================================================================
 Function 標準画面()
   Dim objSheet As Object
-  Dim SheetName As String, SetActiveSheet As String
+  Dim sheetName As String, SetActiveSheet As String
   Dim sheetCount As Long, sheetMaxCount As Long
   Dim SelectAddress, setZoomLevel, resetBgColor, setGgridLine
   
@@ -151,24 +151,32 @@ Function 標準画面()
   sheetCount = 0
   sheetMaxCount = ActiveWorkbook.Sheets.count
   For Each objSheet In ActiveWorkbook.Sheets
-    SheetName = objSheet.Name
-    If Worksheets(SheetName).Visible = True Then
-      Worksheets(SheetName).Select
+    sheetName = objSheet.Name
+    If Worksheets(sheetName).Visible = True Then
+      Call Library.showDebugForm("SheetName", sheetName, "debug")
+      
+      Worksheets(sheetName).Select
       
       '標準画面に設定
-      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, SheetName)
+      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, sheetName)
       ActiveWindow.View = xlNormalView
       
       '表示倍率の指定
-      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, SheetName)
+      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, sheetName)
       ActiveWindow.Zoom = setZoomLevel
       
       'ガイドラインの表示/非表示
-      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, SheetName)
-      ActiveWindow.DisplayGridlines = setGgridLine
+      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, sheetName)
+      If setGgridLine = "表示しない" Then
+        ActiveWindow.DisplayGridlines = False
+      ElseIf setGgridLine = "表示する" Then
+        ActiveWindow.DisplayGridlines = True
+      ElseIf setGgridLine = "変更しない" Then
+        'ActiveWindow.DisplayGridlines = setGgridLine
+      End If
   
       '背景白をなしにする
-      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, SheetName)
+      Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, sheetName)
       If resetBgColor = True Then
         With Application.FindFormat.Interior
           .PatternColorIndex = xlAutomatic
@@ -183,14 +191,22 @@ Function 標準画面()
         End With
         Cells.Replace What:="", Replacement:="", LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=True, ReplaceFormat:=True
       End If
-      'Application.Goto Reference:=Range("A1"), Scroll:=True
+      
+      'A1を選択された状態にする
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      
+      'RC表記からAQ表記へ変更
+      If Application.ReferenceStyle = xlR1C1 Then
+        Application.ReferenceStyle = xlA1
+      End If
+      
     End If
-    Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, SheetName)
+    Call Ctl_ProgressBar.showBar("標準画面設定", PrgP_Cnt, PrgP_Max, sheetCount, sheetMaxCount, sheetName)
     sheetCount = sheetCount + 1
   Next
   
   Worksheets(SetActiveSheet).Select
-  Range(SelectAddress).Select
+'  Range(SelectAddress).Select
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
@@ -233,6 +249,240 @@ Function シート管理_フォーム表示()
 'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 幅設定()
+  Dim SelectionCell As String
+
+  
+  Const funcName As String = "Ctl_Sheet.幅設定"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  SelectionCell = Selection.Address
+  Cells.Select
+  Range("A1").Activate
+  Selection.ColumnWidth = Library.getRegistry("Main", "ColumnWidth")
+  
+  Range(SelectionCell).Select
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+
+'==================================================================================================
+Function 高さ設定()
+  Dim SelectionCell As String
+
+  Const funcName As String = "Ctl_Sheet.高さ設定"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  SelectionCell = Selection.Address
+  Cells.Select
+  Range("A1").Activate
+  Selection.rowHeight = Library.getRegistry("Main", "rowHeight")
+  
+  Range(SelectionCell).Select
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 体裁一括変更()
+  Dim setGgridLine As String
+  
+  Const funcName As String = "Ctl_Sheet.体裁一括変更"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  'オートシェイプ内の文字------------------------
+  Dim slctObect As Shape
+  On Error Resume Next
+  For Each slctObect In ActiveSheet.Shapes
+    slctObect.Select
+    slctObect.Placement = xlMove
+    With Selection.ShapeRange.TextFrame2
+      .TextRange.Font.NameComplexScript = BK_setVal("BaseFont")
+      .TextRange.Font.NameFarEast = BK_setVal("BaseFont")
+      .TextRange.Font.Name = BK_setVal("BaseFont")
+      .TextRange.Font.Size = BK_setVal("BaseFontSize")
+      
+      If .TextRange.Text <> "" Then
+        .AutoSize = msoAutoSizeShapeToFitText
+        .WordWrap = msoFalse
+        .AutoSize = msoAutoSizeNone
+        .WordWrap = msoTrue
+      End If
+    End With
+    slctObect.Placement = xlFreeFloating
+  Next
+  On Error GoTo catchError
+  
+  'ガイドラインを非表示--------------------------
+  setGgridLine = BK_setVal("GridLine")
+  If setGgridLine = "表示しない" Then
+    ActiveWindow.DisplayGridlines = False
+  ElseIf setGgridLine = "表示する" Then
+    ActiveWindow.DisplayGridlines = True
+  End If
+      
+  '高さ設定--------------------------------------
+  Cells.Select
+  Range("A1").Activate
+  Selection.rowHeight = BK_setVal("rowHeight")
+  
+  'フォント設定----------------------------------
+  With Selection
+    .Font.Name = BK_setVal("BaseFont")
+    .Font.Size = BK_setVal("BaseFontSize")
+    .VerticalAlignment = xlCenter
+  End With
+  
+  '表示倍率--------------------------------------
+  ActiveWindow.Zoom = BK_setVal("ZoomLevel")
+  
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 指定フォントに設定()
+  Dim SelectionCell As String
+
+  Const funcName As String = "Ctl_Sheet.指定フォントに設定"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  
+  SelectionCell = Selection.Address
+  
+  'オートシェイプ内の文字------------------------
+  Dim slctObect As Shape
+  On Error Resume Next
+  For Each slctObect In ActiveSheet.Shapes
+    slctObect.Select
+    With Selection.ShapeRange.TextFrame2
+      .TextRange.Font.NameComplexScript = BK_setVal("BaseFont")
+      .TextRange.Font.NameFarEast = BK_setVal("BaseFont")
+      .TextRange.Font.Name = BK_setVal("BaseFont")
+      .TextRange.Font.Size = BK_setVal("BaseFontSize")
+      If .TextRange.Text <> "" Then
+        .AutoSize = msoAutoSizeShapeToFitText
+        .AutoSize = msoAutoSizeNone
+      End If
+
+    End With
+  
+  
+  Next
+  On Error GoTo catchError
+  
+  'フォント設定----------------------------------
+  Cells.Select
+  With Selection
+    .Font.Name = BK_setVal("BaseFont")
+    .Font.Size = BK_setVal("BaseFontSize")
+    .VerticalAlignment = xlCenter
+  End With
+
+  Range(SelectionCell).Select
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
   Call Library.errorHandle
 End Function
 

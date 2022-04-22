@@ -26,20 +26,18 @@ Function InitializeBook()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
-  BK_ThisBook.Activate
+  ThisWorkbook.Activate
   endLine = LadexSh_Config.Cells(Rows.count, 7).End(xlUp).Row
 
-  If Library.getRegistry("Main", "debugMode", "String") = "" Then
-    For line = 3 To endLine
-      RegistryKey = LadexSh_Config.Range(BK_setVal("Cells_RegistryKey") & line)
-      RegistrySubKey = LadexSh_Config.Range(BK_setVal("Cells_RegistrySubKey") & line)
-      val = LadexSh_Config.Range(BK_setVal("Cells_RegistryValue") & line)
-
-      If RegistryKey <> "" Then
-       Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
-      End If
-    Next
-  End If
+  For line = 3 To endLine
+    RegistryKey = LadexSh_Config.Range("G" & line)
+    RegistrySubKey = LadexSh_Config.Range("H" & line)
+    val = LadexSh_Config.Range("I" & line)
+    
+    If Library.getRegistry(RegistryKey, RegistrySubKey, "String") = "" Then
+      Call Library.setRegistry(RegistryKey, RegistrySubKey, val)
+    End If
+  Next
   
   'ì∆é©ä÷êîê›íË----------------------------------
   Call Ctl_Hollyday.InitializeHollyday

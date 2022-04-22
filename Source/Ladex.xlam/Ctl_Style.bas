@@ -225,7 +225,7 @@ Function スタイル設定()
     setStyleBook.Sheets("Style").Columns("A:J").Copy BK_ThisBook.Worksheets("Style").Range("A1")
     setStyleBook.Close
   End If
-  
+  Set setStyleBook = Nothing
   
   
   'スタイル初期化--------------------------------

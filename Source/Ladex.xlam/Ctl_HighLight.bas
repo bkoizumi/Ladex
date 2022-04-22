@@ -58,6 +58,7 @@ Function showStart(ByVal Target As Range, _
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
+  Call init.setting
   Call Library.startScript
   If Library.chkShapeName("HighLight_X") = True Then
     ActiveSheet.Shapes("HighLight_X").delete
@@ -243,6 +244,7 @@ End Function
 
 
 
+'==================================================================================================
 Sub Sample()
     Dim rngStart As Range, rngEnd As Range
     Dim BX As Single, BY As Single, ex As Single, EY As Single

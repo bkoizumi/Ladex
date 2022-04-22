@@ -37,15 +37,12 @@ Function ZoomIn(Optional slctCellAddress As String)
     .TextBox.MultiLine = True
     .TextBox.MultiLine = True
     .TextBox.EnterKeyBehavior = True
+    .TextBox.IMEMode = fmIMEModeOn
+
+'    .TextBox.Font.Name = ActiveCell.Font.Name
+'    .TextBox.Font.Name = BK_setVal("BaseFont")
+    .TextBox.Font.Name = "メイリオ"
     
-'    If cellVal = StrConv(cellVal, vbNarrow) Then
-'      '半角の場合
-'      .TextBox.IMEMode = fmIMEModeOff
-'    Else
-'      '全角の場合
-'      .TextBox.IMEMode = fmIMEModeOn
-'    End If
-    .TextBox.Font.Name = ActiveCell.Font.Name
     .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
     .Show vbModeless
   

@@ -154,6 +154,8 @@ Private Sub Class_Terminate()
     Set xlApp = Nothing
 End Sub
 
+
+
 '==================================================================================================
 ' Applicationのブックイベント
 '==================================================================================================
@@ -267,6 +269,45 @@ catchError:
   'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
 End Sub
 
+
+'==================================================================================================
+'ワークシートが変更されたとき
+Private Sub xlApp_SheetDeactivate(ByVal Sh As Object)
+  Const funcName As String = "Ctl_Event.xlApp_SheetDeactivate"
+  
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckSheet(Sh) Then Exit Sub
+  
+  
+  
+  'ハイライト機能--------------------------------
+  If BKh_rbPressed = True Then
+    Call init.setting
+    Call Library.startScript
+    If Library.chkShapeName("HighLight_X", Sh) = True Then
+      Sh.Shapes("HighLight_X").delete
+    End If
+    If Library.chkShapeName("HighLight_Y", Sh) = True Then
+      Sh.Shapes("HighLight_Y").delete
+    End If
+      
+    Call Library.setRegistry("targetInfo", "Book", ActiveWorkbook.Name)
+    Call Library.setRegistry("targetInfo", "Sheet", ActiveSheet.Name)
+    
+    runFlg = True
+    Call Ctl_HighLight.showStart(ActiveCell)
+    Call Library.endScript
+  End If
+  
+  
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+End Sub
+
 '==================================================================================================
 'ワークシートの選択セルが変更されたときに発生
 Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
@@ -276,22 +317,23 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(Sh) Then Exit Sub
   
-  Call init.setting
-'  Call Library.showDebugForm(funcName, , "start")
+  
   
   'ハイライト機能--------------------------------
   If BKh_rbPressed = True Then
-    runFlg = True
-    Call Ctl_HighLight.showStart(Target)
+    If Library.getRegistry("targetInfo", "Book", "String") = ActiveWorkbook.Name Then
+      runFlg = True
+      Call Ctl_HighLight.showStart(Target)
+    End If
   End If
   
   '数式確認機能----------------------------------
   If BKcf_rbPressed = True Then
-    runFlg = True
-    Call Ctl_Formula.数式確認
+    If Library.getRegistry("targetInfo", "Book", "String") = ActiveWorkbook.Name And Library.getRegistry("targetInfo", "Sheet", "String") = ActiveSheet.Name Then
+      runFlg = True
+      Call Ctl_Formula.数式確認
+    End If
   End If
-  
-'  Call Library.showDebugForm(funcName, , "end")
   Exit Sub
   
 'エラー発生時------------------------------------
@@ -309,10 +351,10 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
   If Me.StopEvent Then Exit Sub
   If Not CheckSheet(Sh) Then Exit Sub
 
-  Call init.setting
   
   'ズーム機能------------------------------------
   If BKz_rbPressed = True Then
+    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
     
     Cancel = True

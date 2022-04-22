@@ -11,7 +11,7 @@ Public targetSheet          As Worksheet
 
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "1.3.2.0"
+Public Const thisAppVersion As String = "1.3.4.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 Public funcName             As String
@@ -102,6 +102,8 @@ End Function
 '**************************************************************************************************
 Function setting(Optional reCheckFlg As Boolean)
   Dim line As Long, endLine As Long
+  Dim tmpRegList
+  
   Const funcName As String = "init.setting"
   
   '処理開始--------------------------------------
@@ -144,6 +146,16 @@ Function setting(Optional reCheckFlg As Boolean)
       BK_setVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
     End If
   Next
+    
+  'レジストリ設定項目取得------------------------
+  tmpRegList = GetAllSettings(thisAppName, "Main")
+  For line = 0 To UBound(tmpRegList)
+    BK_setVal.add tmpRegList(line, 0), tmpRegList(line, 1)
+  Next
+    
+    
+    
+    
     
   'ログ出力設定----------------------------------
   Dim wsh As Object

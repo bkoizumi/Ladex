@@ -85,10 +85,10 @@ Function showFrm_sampleData(showType As String)
       
       Case Else
     End Select
-    If Selection.count > 1 Then
+    If Selection.CountLarge > 1 Then
       .maxCount0 = Selection.Rows.count
       .maxCount1 = Selection.Rows.count
-      .maxCount2 = Selection.count
+      .maxCount2 = Selection.CountLarge
       .maxCount3 = Selection.Rows.count
       .maxCount4 = Selection.Rows.count
     End If
@@ -357,7 +357,7 @@ Function ”’l_”ÍˆÍ(Optional maxCount As Long)
   
   Call showFrm_sampleData("y”’lz”ÍˆÍŽw’è")
   
-  If Selection.count > 1 Then
+  If Selection.CountLarge > 1 Then
     For Each slctCells In Selection
       slctCells.NumberFormatLocal = "###"
       slctCells.Value = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))

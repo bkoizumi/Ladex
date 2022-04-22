@@ -233,11 +233,11 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 英数字全半角変換()
+Function 英数字全⇒半角変換()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
   Dim slctCellsCnt As Long
-  Const funcName As String = "Ctl_Cells.英数字全半角変換"
+  Const funcName As String = "Ctl_Cells.英数字全⇒半角変換"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -254,7 +254,55 @@ Function 英数字全半角変換()
   slctCellsCnt = 0
   
   For Each slctCells In Selection
-    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.count, "英数字全半角変換")
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "英数字全⇒半角変換")
+    If slctCells.Value <> "" Then
+      slctCells.Value = Library.convZen2Han(slctCells.Value)
+    End If
+    slctCellsCnt = slctCellsCnt + 1
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function 英数字半⇒全角変換()
+  Dim line As Long, endLine As Long
+  Dim slctCells As Range
+  Dim slctCellsCnt As Long
+  Const funcName As String = "Ctl_Cells.英数字半⇒全角変換"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  slctCellsCnt = 0
+  
+  For Each slctCells In Selection
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "英数字半⇒全角変換")
     If slctCells.Value <> "" Then
       slctCells.Value = Library.convHan2Zen(slctCells.Value)
     End If
@@ -342,6 +390,15 @@ Function コメント挿入()
   '----------------------------------------------
   For Each slctCells In Selection
     commentVal = ""
+    
+    '結合されている場合
+    If slctCells.MergeCells Then
+      If slctCells.MergeArea.Item(1).Address = slctCells.Address Then
+      Else
+        GoTo LBl_nextFor
+      End If
+    End If
+
     If TypeName(slctCells.Comment) = "Comment" Then
       commentVal = slctCells.Comment.Text
       commentBgColor = slctCells.Comment.Shape.Fill.ForeColor.RGB
@@ -358,11 +415,13 @@ Function コメント挿入()
         .CommentFontColor.BackColor = CommentFontColor
         .CommentFontSize = CommentFontSize
       End If
-      
       .Label1.Caption = "選択セル：" & slctCells.Address(RowAbsolute:=False, ColumnAbsolute:=False)
       .Show
     End With
     DoEvents
+    
+
+LBl_nextFor:
   Next
   
   '処理終了--------------------------------------
@@ -479,48 +538,13 @@ Function ゼロ埋め()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  On Error Resume Next
-  Selection.SpecialCells(xlCellTypeBlanks).Value = 0
-  On Error GoTo catchError
-
+  For Each slctCells In Selection
+    If slctCells.Text = "" Then
+      slctCells.Value = 0
+      DoEvents
+    End If
+  Next
   
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm("", , "end")
-    Call init.unsetting
-  Else
-    Call Library.showDebugForm("", , "end1")
-  End If
-  '----------------------------------------------
-  Exit Function
-  
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
-  Call Library.errorHandle
-End Function
-
-'==================================================================================================
-Function 指定フォントに設定()
-  Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.指定フォントに設定"
-  
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
-  '----------------------------------------------
-  
-  On Error Resume Next
-  Selection.SpecialCells(xlCellTypeBlanks).Value = 0
-  On Error GoTo catchError
-
   
   '処理終了--------------------------------------
   If runFlg = False Then
@@ -684,9 +708,9 @@ Function 定数削除()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   On Error Resume Next
-  If Selection.count = 1 Then
+  If Selection.CountLarge = 1 Then
     Call Library.showNotice(600)
-  ElseIf Selection.count > 1 Then
+  ElseIf Selection.CountLarge > 1 Then
     Selection.SpecialCells(xlCellTypeConstants, 23).ClearContents
   End If
   
@@ -732,8 +756,8 @@ Function セル幅調整()
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-  If Selection.count > 1 Then
-    Columns(Library.getColumnName(Selection(1).Column) & ":" & Library.getColumnName(Selection(Selection.count).Column)).EntireColumn.AutoFit
+  If Selection.CountLarge > 1 Then
+    Columns(Library.getColumnName(Selection(1).Column) & ":" & Library.getColumnName(Selection(Selection.CountLarge).Column)).EntireColumn.AutoFit
     
     For Each slctCells In Selection
       colName = Library.getColumnName(slctCells.Column)

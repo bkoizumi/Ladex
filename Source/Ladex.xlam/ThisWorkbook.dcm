@@ -24,6 +24,3 @@ Private Sub Workbook_Open()
 '  Call Main.InitializeBook
 End Sub
 
-Private Sub Workbook_SheetBeforeRightClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
-
-End Sub

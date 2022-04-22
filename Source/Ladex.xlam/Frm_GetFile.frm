@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_GetFile 
    Caption         =   "ファイル管理"
-   ClientHeight    =   4692
+   ClientHeight    =   4690
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8250.001
+   ClientWidth     =   8235.001
    OleObjectBlob   =   "Frm_GetFile.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End

@@ -124,8 +124,8 @@ End Function
 '==================================================================================================
 Public Function showCount( _
                             Prg_Title As String _
-                          , PrgP_Cnt As Long, PrgP_Max As Long _
-                          , PrgC_Cnt As Long, PrgC_Max As Long _
+                          , PrgP_Cnt As Variant, PrgP_Max As Variant _
+                          , PrgC_Cnt As Variant, PrgC_Max As Variant _
                           , PrgMeg As String _
                         )
 
@@ -135,8 +135,8 @@ End Function
 '==================================================================================================
 Public Function showBar( _
                             ByVal Prg_Title As String _
-                          , ByVal L_PrgP_Cnt As Long, PrgP_Max As Long _
-                          , ByVal L_PrgC_Cnt As Long, PrgC_Max As Long _
+                          , ByVal L_PrgP_Cnt As Variant, PrgP_Max As Variant _
+                          , ByVal L_PrgC_Cnt As Variant, PrgC_Max As Variant _
                           , ByVal PrgMeg As String _
                         )
                         

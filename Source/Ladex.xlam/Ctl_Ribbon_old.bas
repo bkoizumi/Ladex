@@ -94,7 +94,7 @@ End Function
 'シート一覧メニュー
 Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   Dim MenuSepa, sheetNameID
   
   On Error GoTo catchError
@@ -147,26 +147,26 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   
   
-  For Each SheetName In ActiveWorkbook.Sheets
+  For Each sheetName In ActiveWorkbook.Sheets
     Set Button = DOMDoc.createElement("button")
     With Button
-      sheetNameID = SheetName.Name
-      .SetAttribute "id", "sheetID_" & SheetName.Index
-      .SetAttribute "label", SheetName.Name
+      sheetNameID = sheetName.Name
+      .SetAttribute "id", "sheetID_" & sheetName.Index
+      .SetAttribute "label", sheetName.Name
     
-      If ActiveWorkbook.ActiveSheet.Name = SheetName.Name Then
+      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
         .SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
         
-      ElseIf Sheets(SheetName.Name).Visible = True Then
+      ElseIf Sheets(sheetName.Name).Visible = True Then
        '.SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
       
-      ElseIf Sheets(SheetName.Name).Visible = 0 Then
+      ElseIf Sheets(sheetName.Name).Visible = 0 Then
         .SetAttribute "supertip", "非表示シート"
         .SetAttribute "imageMso", "SheetProtect"
       
-      ElseIf Sheets(SheetName.Name).Visible = 2 Then
+      ElseIf Sheets(sheetName.Name).Visible = 2 Then
         .SetAttribute "supertip", "マクロによる非表示シート"
         .SetAttribute "imageMso", "ReviewProtectWorkbook"
       
@@ -211,7 +211,7 @@ End Function
 'RelaxTools
 Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   Dim MenuSepa
   
   
@@ -371,7 +371,7 @@ End Function
 Function selectActiveSheet(control As IRibbonControl)
   Dim sheetNameID As Integer
   Dim sheetCount As Integer
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   
   Call Library.startScript
   sheetNameID = Replace(control.ID, "sheetID_", "")
@@ -388,8 +388,8 @@ Function selectActiveSheet(control As IRibbonControl)
   End If
   
   sheetCount = 1
-  For Each SheetName In ActiveWorkbook.Sheets
-    If Sheets(SheetName.Name).Visible = True And SheetName.Name = Sheets(sheetNameID).Name Then
+  For Each sheetName In ActiveWorkbook.Sheets
+    If Sheets(sheetName.Name).Visible = True And sheetName.Name = Sheets(sheetNameID).Name Then
       Exit For
     Else
       sheetCount = sheetCount + 1
@@ -1260,7 +1260,7 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_DigitsInt(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.数値_桁数固定(Selection.count)
+  Call Ctl_sampleData.数値_桁数固定(Selection.CountLarge)
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -1272,37 +1272,37 @@ End Function
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_FamilyName(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.名前_姓(Selection.count)
+  Call Ctl_sampleData.名前_姓(Selection.CountLarge)
 End Function
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Name(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.名前_名(Selection.count)
+  Call Ctl_sampleData.名前_名(Selection.CountLarge)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_FullName(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.名前_フルネーム(Selection.count)
+  Call Ctl_sampleData.名前_フルネーム(Selection.CountLarge)
 End Function
 
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Date(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.日付_日(Selection.count)
+  Call Ctl_sampleData.日付_日(Selection.CountLarge)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Time(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.日付_時間(Selection.count)
+  Call Ctl_sampleData.日付_時間(Selection.CountLarge)
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function makeSampleData_Datetime(control As IRibbonControl)
   Call init.setting
-  Call Ctl_sampleData.日時(Selection.count)
+  Call Ctl_sampleData.日時(Selection.CountLarge)
 End Function
 
 

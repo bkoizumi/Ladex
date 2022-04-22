@@ -173,13 +173,13 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function chkSheetExists(SheetName) As Boolean
+Function chkSheetExists(sheetName) As Boolean
   Dim tempSheet As Object
   Dim Result As Boolean
 
   Result = False
   For Each tempSheet In Sheets
-    If LCase(SheetName) = LCase(tempSheet.Name) Then
+    If LCase(sheetName) = LCase(tempSheet.Name) Then
       Result = True
       Exit For
     End If
@@ -208,12 +208,17 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function chkShapeName(ShapeName As String) As Boolean
+Function chkShapeName(ShapeName As String, Optional targetSheet As Worksheet) As Boolean
   Dim objShp As Shape
   Dim Result As Boolean
 
   Result = False
-  For Each objShp In ActiveSheet.Shapes
+  
+  If targetSheet Is Nothing Then
+    Set targetSheet = ActiveSheet
+  End If
+  
+  For Each objShp In targetSheet.Shapes
     If objShp.Name = ShapeName Then
       Result = True
       Exit For
@@ -230,10 +235,10 @@ End Function
 '**************************************************************************************************
 Function chkExcludeSheet(chkSheetName As String) As Boolean
  Dim Result As Boolean
- Dim SheetName As Variant
+ Dim sheetName As Variant
 
-  For Each SheetName In Range("ExcludeSheet")
-    If SheetName = chkSheetName Then
+  For Each sheetName In Range("ExcludeSheet")
+    If sheetName = chkSheetName Then
       Result = True
       Exit For
     Else
@@ -636,18 +641,41 @@ Function convHan2Zen(Text As String) As String
   Dim rData As Variant, ansData As Variant
   Const funcName As String = "Library.convHan2Zen"
   
-  For i = 1 To Len(Text)
-    DoEvents
-    rData = StrConv(Text, vbWide)
-    If Mid(rData, i, 1) Like "[Ａ-ｚ]" Or Mid(rData, i, 1) Like "[０-９]" Or Mid(rData, i, 1) Like "[－！（）／]" Or Mid(rData, i, 1) Like "ｱ-ﾝ" Then
-      ansData = ansData & StrConv(Mid(rData, i, 1), vbNarrow)
-    Else
-      ansData = ansData & Mid(rData, i, 1)
-    End If
-  Next i
-  convHan2Zen = ansData
+  convHan2Zen = StrConv(Text, vbWide)
 End Function
 
+'**************************************************************************************************
+' * 全角を半角に変換する(英数字、カタカナ)
+' *
+' * @link   http://officetanaka.net/excel/function/tips/tips45.htm
+'**************************************************************************************************
+Function convZen2Han(ByVal Text As String) As String
+  Dim i As Long, buf As String
+  Dim c As Range
+  Dim covText As String
+  Const funcName As String = "Library.convZen2Han"
+  
+  For i = 1 To Len(Text)
+    buf = Mid(Text, i, 1)
+    If buf Like "[Ａ-ｚ０-９]" Or _
+      buf Like "[－＝！．｛｝（）／]" Then
+      covText = covText & StrConv(buf, vbNarrow)
+        
+    ElseIf buf Like "[ｱ-ﾝ]" Then
+      covText = covText & StrConv(buf, vbWide)
+    
+    ElseIf buf = "," Then
+      covText = covText & "，"
+    
+    Else
+      covText = covText & buf
+    End If
+    DoEvents
+  Next i
+  
+  Call Library.showDebugForm(funcName, covText, "debug")
+  convZen2Han = covText
+End Function
 
 '**************************************************************************************************
 ' * パイプをカンマに変換
@@ -1123,7 +1151,7 @@ Function execMkdir(fullPath As String)
     Exit Function
   End If
 
-  Call showDebugForm("execMkdir：" & fullPath)
+  Call showDebugForm("execMkdir", fullPath, "debug")
   Call chkParentDir(fullPath)
 End Function
 
@@ -1135,6 +1163,7 @@ Private Function chkParentDir(TargetFolder)
 
   On Error GoTo catchError
   Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("TargetFolder", TargetFolder, "debug")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
   ParentFolder = FSO.GetParentFolderName(TargetFolder)
@@ -1271,7 +1300,7 @@ Function getMachineInfo() As Object
   End Select
 
   'PCの情報--------------------------------------
-  MachineInfo.add "UserName", WshNetworkObject.UserName
+  MachineInfo.add "UserName", WshNetworkObject.userName
   MachineInfo.add "ComputerName", WshNetworkObject.ComputerName
   MachineInfo.add "UserDomain", WshNetworkObject.UserDomain
 
@@ -1384,9 +1413,9 @@ Function getColor(colorValue As Long)
   Call getRGB(colorValue, Red, Green, Blue)
   Application.Dialogs(xlDialogEditColor).Show 10, Red, Green, Blue
   setColorValue = ActiveWorkbook.Colors(10)
-  If setColorValue = False Then
-    setColorValue = colorValue
-  End If
+'  If setColorValue = False Then
+'    setColorValue = colorValue
+'  End If
   getColor = setColorValue
 End Function
 
@@ -1440,7 +1469,7 @@ Function getDirPath(CurrentDirectory As String, Optional title As String)
     If Library.chkDirExists(CurrentDirectory) = True Then
       .InitialFileName = CurrentDirectory & "\"
     Else
-      .InitialFileName = ThisWorkbook.path
+      .InitialFileName = ActiveWorkbook.path
     End If
 
     .AllowMultiSelect = False
@@ -1801,7 +1830,7 @@ End Function
 '**************************************************************************************************
 Function getSheetList(columnName As String)
   Dim i As Long
-  Dim SheetName As Object
+  Dim sheetName As Object
   Const funcName As String = "Library.getSheetList"
 
   i = 3
@@ -1829,10 +1858,10 @@ Function getSheetList(columnName As String)
     .PatternTintAndShade = 0
   End With
 
-  For Each SheetName In ActiveWorkbook.Sheets
+  For Each sheetName In ActiveWorkbook.Sheets
     'シート名の設定
     Worksheets("設定").Range(columnName & i).Select
-    Worksheets("設定").Range(columnName & i) = SheetName.Name
+    Worksheets("設定").Range(columnName & i) = sheetName.Name
 
     ' セルの背景色解除
     With Worksheets("設定").Range(columnName & i).Interior
@@ -1841,10 +1870,10 @@ Function getSheetList(columnName As String)
     End With
 
     ' シート色と同じ色をセルに設定
-    If Worksheets(SheetName.Name).Tab.Color Then
+    If Worksheets(sheetName.Name).Tab.Color Then
       With Worksheets("設定").Range(columnName & i).Interior
         .Pattern = xlPatternNone
-        .Color = Worksheets(SheetName.Name).Tab.Color
+        .Color = Worksheets(sheetName.Name).Tab.Color
       End With
     End If
 
@@ -2447,7 +2476,7 @@ catchError:
 End Function
 
 '==================================================================================================
-Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional typeVal As String = "String")
+Function getRegistry(RegistryKey As String, RegistrySubKey As String, Optional typeVal As String = "String")
   Dim regVal As String
   Const funcName As String = "Library.getRegistry"
 
@@ -2455,12 +2484,12 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional t
   Call Library.showDebugForm(funcName, , "start1")
   
   If RegistryKey <> "" Then
-    regVal = GetSetting(thisAppName, RegistrySubKey, RegistryKey)
+    regVal = GetSetting(thisAppName, RegistryKey, RegistrySubKey)
   End If
   
   Call Library.showDebugForm("MainKey", thisAppName, "debug")
-  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
   Call Library.showDebugForm("Key    ", RegistryKey, "debug")
+  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
   Call Library.showDebugForm("Val    ", regVal, "debug")
   Call Library.showDebugForm("type   ", typeVal, "debug")
   
@@ -2472,7 +2501,7 @@ Function getRegistry(RegistrySubKey As String, RegistryKey As String, Optional t
         getRegistry = regVal
       End If
       
-    Case "String"
+    Case "String", "string"
       getRegistry = regVal
     Case Else
   End Select
@@ -3789,7 +3818,7 @@ End Function
 '==================================================================================================
 Function sheetProtect(Optional mode As String = "")
   Dim cellAddres As String
-  Dim SheetName As Variant
+  Dim sheetName As Variant
   Const funcName As String = "Library.sheetProtect"
 
   Call Library.showDebugForm(funcName, , "start1")
@@ -3797,22 +3826,22 @@ Function sheetProtect(Optional mode As String = "")
   Call init.setting
 
   If mode = "all" Then
-    For Each SheetName In Sheets
-      ThisWorkbook.Worksheets(SheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
-      ThisWorkbook.Worksheets(SheetName.Name).EnableSelection = xlUnlockedCells
+    For Each sheetName In Sheets
+      ThisWorkbook.Worksheets(sheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
+      ThisWorkbook.Worksheets(sheetName.Name).EnableSelection = xlUnlockedCells
 
-      Call Library.showDebugForm("sheetName", SheetName.Name, "info")
+      Call Library.showDebugForm("sheetName", sheetName.Name, "info")
       DoEvents
     Next
 
   ElseIf mode = "ExcelHelp" Then
-    For Each SheetName In Sheets
-      If SheetName.Name Like "《*》" Then
+    For Each sheetName In Sheets
+      If sheetName.Name Like "《*》" Then
       Else
-        ThisWorkbook.Worksheets(SheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
-        ThisWorkbook.Worksheets(SheetName.Name).EnableSelection = xlUnlockedCells
+        ThisWorkbook.Worksheets(sheetName.Name).Protect DrawingObjects:=True, Contents:=True, Scenarios:=True, UserInterfaceOnly:=True, passWord:=thisAppPasswd
+        ThisWorkbook.Worksheets(sheetName.Name).EnableSelection = xlUnlockedCells
 
-        Call Library.showDebugForm("sheetName", SheetName.Name, "info")
+        Call Library.showDebugForm("sheetName", sheetName.Name, "info")
       End If
       DoEvents
     Next
@@ -3827,7 +3856,7 @@ End Function
 
 '==================================================================================================
 Function sheetUnprotect(Optional allSheetflg As Boolean = False)
-  Dim SheetName As Variant
+  Dim sheetName As Variant
   Const funcName As String = "Library.sheetUnprotect"
 
   '処理開始--------------------------------------
@@ -3838,10 +3867,10 @@ Function sheetUnprotect(Optional allSheetflg As Boolean = False)
 
   Call Library.showDebugForm("allSheetflg", allSheetflg, "debug")
   If allSheetflg = True Then
-    For Each SheetName In Sheets
-      If SheetName.Name Like "《*》" Then
+    For Each sheetName In Sheets
+      If sheetName.Name Like "《*》" Then
       Else
-        ThisWorkbook.Worksheets(SheetName.Name).Unprotect passWord:=thisAppPasswd
+        ThisWorkbook.Worksheets(sheetName.Name).Unprotect passWord:=thisAppPasswd
       End If
       DoEvents
     Next
@@ -3868,7 +3897,7 @@ End Function
 '==================================================================================================
 Function sheetNoDisplay(Optional mode As String = "")
   Dim cellAddres As String
-  Dim SheetName As Variant
+  Dim sheetName As Variant
   Const funcName As String = "Library.sheetProtect"
 
   Call Library.showDebugForm(funcName, , "start1")
@@ -3876,17 +3905,17 @@ Function sheetNoDisplay(Optional mode As String = "")
   Call init.setting
 
   If mode = "all" Then
-    For Each SheetName In Sheets
-      ThisWorkbook.Worksheets(SheetName.Name).Visible = xlSheetVeryHidden
-      Call Library.showDebugForm("sheetName", SheetName.Name, "info")
+    For Each sheetName In Sheets
+      ThisWorkbook.Worksheets(sheetName.Name).Visible = xlSheetVeryHidden
+      Call Library.showDebugForm("sheetName", sheetName.Name, "info")
       DoEvents
     Next
 
   ElseIf mode = "ehelp" Then
-    For Each SheetName In Sheets
-      If SheetName.Name Like "《*》" Then
-        ThisWorkbook.Worksheets(SheetName.Name).Visible = xlSheetVeryHidden
-        Call Library.showDebugForm("sheetName", SheetName.Name, "info")
+    For Each sheetName In Sheets
+      If sheetName.Name Like "《*》" Then
+        ThisWorkbook.Worksheets(sheetName.Name).Visible = xlSheetVeryHidden
+        Call Library.showDebugForm("sheetName", sheetName.Name, "info")
       End If
       DoEvents
     Next
@@ -3901,7 +3930,7 @@ End Function
 '==================================================================================================
 Function sheetDisplay(Optional mode As String = "")
   Dim cellAddres As String
-  Dim SheetName As Variant
+  Dim sheetName As Variant
   Const funcName As String = "Library.sheetProtect"
 
   Call Library.showDebugForm(funcName, , "start1")
@@ -3909,17 +3938,17 @@ Function sheetDisplay(Optional mode As String = "")
   Call init.setting
 
   If mode = "all" Then
-    For Each SheetName In Sheets
-      ThisWorkbook.Worksheets(SheetName.Name).Visible = True
-      Call Library.showDebugForm("sheetName", SheetName.Name, "info")
+    For Each sheetName In Sheets
+      ThisWorkbook.Worksheets(sheetName.Name).Visible = True
+      Call Library.showDebugForm("sheetName", sheetName.Name, "info")
       DoEvents
     Next
 
   ElseIf mode = "ehelp" Then
-    For Each SheetName In Sheets
-      If SheetName.Name Like "《*》" Then
-        ThisWorkbook.Worksheets(SheetName.Name).Visible = True
-        Call Library.showDebugForm("sheetName", SheetName.Name, "info")
+    For Each sheetName In Sheets
+      If sheetName.Name Like "《*》" Then
+        ThisWorkbook.Worksheets(sheetName.Name).Visible = True
+        Call Library.showDebugForm("sheetName", sheetName.Name, "info")
       End If
       DoEvents
     Next

@@ -11,6 +11,7 @@ Function getList()
   Dim tmp, i As Long, buf As String
   
   Call init.setting
+  Call Library.delSheetData(LadexSh_Favorite, 2)
   tmp = GetAllSettings(thisAppName, "FavoriteList")
   
   If Not IsEmpty(tmp) Then
@@ -89,7 +90,12 @@ Function RefreshListBox()
   Dim line As Long, endLine As Long
   Dim FSO As Object
   
+  Const funcName As String = "Ctl_Favorite.RefreshListBox"
+  
   Call init.setting
+  Call Library.showDebugForm(funcName, , "start1")
+  
+  
   Set FSO = CreateObject("Scripting.FileSystemObject")
   
   endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
@@ -102,7 +108,7 @@ Function RefreshListBox()
   Next
   Set FSO = Nothing
   
-  ThisWorkbook.Save
+  'ThisWorkbook.Save
 End Function
 
 
@@ -159,7 +165,7 @@ Function moveDown()
     Exit Function
   End If
   LadexSh_Favorite.Range("A" & line).Cut
-  LadexSh_Favorite.Range("A" & line + 1).Insert Shift:=xlDown
+  LadexSh_Favorite.Range("A" & line + 2).Insert Shift:=xlDown
   
   Call RefreshListBox
 End Function

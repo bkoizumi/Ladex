@@ -9,7 +9,7 @@
 ; インストーラーの識別子
 !define PRODUCT_NAME "Ladex"
 ; インストーラーのバージョン。
-!define PRODUCT_VERSION "1.3.1.0"
+!define PRODUCT_VERSION "1.3.4.0"
 
 ; 多言語で使用する場合はここをUnicodeにすることを推奨
 Unicode true
@@ -112,13 +112,14 @@ Section "Ladex" sec_Main
   ;スタートメニューの作成
   SetShellVarContext current
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\メンテナンス用.lnk" "$INSTDIR\メンテナンス用.xlsx"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"   "$INSTDIR\スタイル情報.xlsx"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"       "$INSTDIR\README.pdf"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"      "$INSTDIR\Uninstall.exe"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\メンテナンス用.lnk"  "$INSTDIR\メンテナンス用.xlsm"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"    "$INSTDIR\スタイル情報.xlsx"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"          "$INSTDIR\README.pdf"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"       "$INSTDIR\Uninstall.exe"
 
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Excelを新プロセスで開く.lnk"      "$INSTDIR\ExcelOpen_NewProcess.reg"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Excelを標準にもどす.lnk"      "$INSTDIR\ExcelOpen_setDefault.reg"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Excelを新プロセスで開く.lnk" "$INSTDIR\ExcelOpen_NewProcess.reg"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Excelを標準にもどす.lnk"     "$INSTDIR\ExcelOpen_setDefault.reg"
+  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"      "$INSTDIR\ExcelOpen_ReadOnly.vbs"
 SectionEnd
 
 Section  "読み取り専用で開く" addReadOnly
@@ -130,10 +131,6 @@ Section  "読み取り専用で開く" addReadOnly
   ## Get & Test Return Code
   Pop $0
   DetailPrint `Return Code = $0`
-
-  SetShellVarContext current
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"   "$INSTDIR\ExcelOpen_ReadOnly.vbs"
-
 SectionEnd
 
 

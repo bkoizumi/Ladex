@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
-   ClientHeight    =   7404
+   ClientHeight    =   7400
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   7605
@@ -37,6 +37,7 @@ Private Sub UserForm_Initialize()
   Dim indexCnt As Integer, i As Variant
   Dim previewImgPath As String
   Dim ShortcutKeyList() As Variant
+  Dim gridLineVal
   
   Dim cBox As CommandBarComboBox
   Const funcName As String = "Frm_Option.UserForm_Initialize"
@@ -62,7 +63,9 @@ Private Sub UserForm_Initialize()
   
   With Frm_Option
     .Caption = "オプション |  " & thisAppName
+    
     '基本タブ-----------------------------------
+    .userName.Value = Application.userName
     For Each zoomLevelVal In Split("25,50,75,85,100", ",")
       .ZoomLevel.AddItem zoomLevelVal
       If zoomLevelVal = setZoomLevel Then
@@ -70,7 +73,25 @@ Private Sub UserForm_Initialize()
       End If
       indexCnt = indexCnt + 1
     Next
-    .GridLine.Value = Library.getRegistry("Main", "gridLine")
+    
+    '枠線の表示----------------------------------
+    .GridLine.AddItem "表示しない"
+    .GridLine.AddItem "表示する"
+    .GridLine.AddItem "変更しない"
+    
+    gridLineVal = Library.getRegistry("Main", "gridLine")
+    If gridLineVal = False Then
+      .GridLine.Text = "表示しない"
+    ElseIf gridLineVal = True Then
+      .GridLine.Text = "表示する"
+    Else
+      .GridLine.Text = gridLineVal
+    End If
+    
+    '行の高さ、列の幅----------------------------
+    .ColumnWidth.Value = Library.getRegistry("Main", "ColumnWidth")
+    .rowHeight.Value = Library.getRegistry("Main", "rowHeight")
+    
     .BgColor.Value = Library.getRegistry("Main", "bgColor")
       
     LineColor = Library.getRegistry("Main", "LineColor")
@@ -81,7 +102,54 @@ Private Sub UserForm_Initialize()
     End If
     .LineColor.Caption = ""
   
-    'デバッグ関連
+    '基本フォント--------------------------------
+    BaseFont = Library.getRegistry("Main", "BaseFont")
+    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
+    indexCnt = 0
+    For i = 1 To cBox.ListCount
+      .BaseFont.AddItem cBox.list(i)
+      If cBox.list(i) = BaseFont Then
+        ListIndex = indexCnt
+      End If
+      indexCnt = indexCnt + 1
+    Next
+    .BaseFont.ListIndex = ListIndex
+
+    '基本フォントサイズ
+    indexCnt = 0
+    BaseFontSize = Library.getRegistry("Main", "BaseFontSize")
+    For Each i In Split("6,7,8,9,10,11,12,14,16,18,20", ",")
+      .BaseFontSize.AddItem i
+      If i = BaseFontSize Then
+        ListIndex = indexCnt
+      End If
+      indexCnt = indexCnt + 1
+    Next
+    .BaseFontSize.ListIndex = ListIndex
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    'デバッグ関連--------------------------------
     .LogLevel.AddItem "1.Error"
     .LogLevel.AddItem "2.warning"
     .LogLevel.AddItem "3.notice"
@@ -693,7 +761,6 @@ Function reLoadFuncList()
     .SetFocus
 
   End With
-    
 End Function
 
 '==================================================================================================
@@ -771,10 +838,21 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "debugMode", debugMode.Value)
   Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
   
+  Call Library.setRegistry("Main", "BaseFont", BaseFont.Value)
+  Call Library.setRegistry("Main", "BaseFontSize", BaseFontSize.Value)
+  Call Library.setRegistry("Main", "rowHeight", rowHeight.Value)
+  Call Library.setRegistry("Main", "ColumnWidth", ColumnWidth.Value)
+  Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
+  Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
+  
+  
+  Call Library.setRegistry("Main", "debugMode", debugMode.Value)
+  Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
+  
   BK_setVal("debugMode") = debugMode.Value
-  LadexSh_Config.Range("B3") = debugMode.Value
   BK_setVal("LogLevel") = LogLevel.Value
-  LadexSh_Config.Range("B4") = LogLevel.Value
+  
+  Application.userName = userName.Value
   
   'ハイライト設定--------------------------------
   Call Library.setRegistry("Main", "HighLightColor", HighLightColor.BackColor)

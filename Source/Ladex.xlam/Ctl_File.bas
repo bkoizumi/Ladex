@@ -33,8 +33,8 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
     If dirPath = "" Then
       Call Library.showNotice(100, , True)
     End If
+      Call Ctl_ProgressBar.showStart
   End If
-  Call Ctl_ProgressBar.showStart
   
   With CreateObject("Scripting.FileSystemObject")
     If FrmVal("getSubDir01") = True Then
@@ -44,6 +44,7 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
         Else
           ActiveCell.Offset(line) = objFolder.Name
         End If
+         Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, 1, 10, "ファイルパス情報：" & objFolder.Name)
         
         colLine = 1
         '作成日
@@ -109,6 +110,8 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
         ActiveCell.Offset(line, colLine) = Library.convscale(.GetFile(objFile).Size)
         ActiveCell.Offset(line, colLine).HorizontalAlignment = xlRight
       End If
+      
+      Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, 1, 10, "ファイルパス情報：" & objFile.Name)
       line = line + 1
     Next
   End With
@@ -210,3 +213,83 @@ catchError:
 End Function
 
 
+'==================================================================================================
+Function フォルダー生成()
+  Dim line As Long, endLine As Long
+  Dim slctCells As Range
+  Dim slctCellsCnt As Long
+  Dim basePath As String, targetDir As String
+  Dim targetFile As File
+  Dim FSO As New FileSystemObject
+  
+  
+  Const funcName As String = "Ctl_File.フォルダー生成"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  slctCellsCnt = 0
+  basePath = ""
+  
+  For Each slctCells In Selection
+    targetDir = slctCells.Value
+    If targetDir <> "" Then
+      Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "フォルダー生成：" & targetDir)
+      
+      If targetDir Like "[A-z]:\*" Then
+        Call Library.showDebugForm("targetDir", "フルパス", "debug")
+        
+      ElseIf targetDir Like "\\*" Then
+        Call Library.showDebugForm("targetDir", "ネットワークドライブ", "debug")
+      
+      Else
+        If basePath = "" Then
+          basePath = Library.getDirPath(ThisWorkbook.path, "親フォルダーの選択")
+        End If
+        
+        If basePath = "" Then
+          Call Library.showNotice(100, , True)
+        End If
+        If targetDir Like "[\,/]*" Then
+          targetDir = basePath & targetDir
+        Else
+          targetDir = basePath & "\" & targetDir
+        End If
+      End If
+      targetDir = Replace(targetDir, "/", "\")
+      
+      Call Library.showDebugForm("targetDir", targetDir, "debug")
+      Call Library.execMkdir(targetDir)
+      
+      slctCellsCnt = slctCellsCnt + 1
+      DoEvents
+      
+    End If
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm("", , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm("", , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時====================================
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

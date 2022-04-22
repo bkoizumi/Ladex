@@ -121,11 +121,15 @@ End Function
 'ハイライト
 '==================================================================================================
 Function HighLight(control As IRibbonControl, pressed As Boolean)
+  Dim targetBook  As Workbook
+  Dim targetSheet As Worksheet
+  
   Const funcName As String = "Ctl_Ribbon.HighLight"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
+'  On Error GoTo catchError
   Call init.setting
+  Call Library.startScript
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   
@@ -134,12 +138,30 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Ctl_Event.InitializeBookSheets
   
   BKh_rbPressed = pressed
-  Call Library.setRegistry("Main", "HighLightFlg", pressed)
   
-  Call Ctl_HighLight.showStart(ActiveCell)
   If pressed = False Then
+    Set targetBook = Workbooks(Library.getRegistry("targetInfo", "Book", "String"))
+    Set targetSheet = targetBook.Worksheets(Library.getRegistry("targetInfo", "Sheet", "String"))
+  
+    If Library.chkShapeName("HighLight_X", targetSheet) = True Then
+      targetSheet.Shapes("HighLight_X").delete
+    End If
+    If Library.chkShapeName("HighLight_Y", targetSheet) = True Then
+      targetSheet.Shapes("HighLight_Y").delete
+    End If
+    
     Call Library.delRegistry("Main", "HighLightFlg")
+    Call Library.delRegistry("targetInfo", "Book")
+    Call Library.delRegistry("targetInfo", "Sheet")
+  
+  Else
+    Call Library.setRegistry("Main", "HighLightFlg", pressed)
+    Call Library.setRegistry("targetInfo", "Book", ActiveWorkbook.Name)
+    Call Library.setRegistry("targetInfo", "Sheet", ActiveSheet.Name)
+    
+    Call Ctl_HighLight.showStart(ActiveCell)
   End If
+  Call Library.endScript
   
   Exit Function
 'エラー発生時------------------------------------
@@ -227,18 +249,25 @@ Function FavoriteFileOpen(control As IRibbonControl)
   Dim objFso As New FileSystemObject
   Const funcName As String = "Ctl_Ribbon.FavoriteFileOpen"
   
+  Call Library.startScript
   fileNamePath = Library.getRegistry("FavoriteList", control.ID)
   
   If Library.chkFileExists(fileNamePath) Then
-    Select Case objFso.GetExtensionName(fileNamePath)
-      Case "xls", "xlsx", "xlsm"
-        Workbooks.Open fileName:=fileNamePath
-      Case Else
-        CreateObject("Shell.Application").ShellExecute fileNamePath
+    If Library.chkBookOpened(fileNamePath) = True Then
+      Call Library.showNotice(415, "", True)
+    Else
+      Select Case objFso.GetExtensionName(fileNamePath)
+        Case "xls", "xlsx", "xlsm"
+          Workbooks.Open fileName:=fileNamePath
+        Case Else
+          CreateObject("Shell.Application").ShellExecute fileNamePath
       End Select
+    End If
   Else
     Call Library.showNotice(404, fileNamePath, True)
   End If
+  
+  Call Library.endScript
 End Function
 
 '**************************************************************************************************
@@ -273,7 +302,7 @@ End Function
 'シート一覧メニュー
 Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   Dim MenuSepa, sheetNameID
   
 '  On Error GoTo catchError
@@ -351,26 +380,26 @@ Function getSheetsList(control As IRibbonControl, ByRef returnedVal)
   
   
   
-  For Each SheetName In ActiveWorkbook.Sheets
+  For Each sheetName In ActiveWorkbook.Sheets
     Set Button = DOMDoc.createElement("button")
     With Button
-      sheetNameID = SheetName.Name
-      .SetAttribute "id", "sheetID_" & SheetName.Index
-      .SetAttribute "label", SheetName.Name
+      sheetNameID = sheetName.Name
+      .SetAttribute "id", "sheetID_" & sheetName.Index
+      .SetAttribute "label", sheetName.Name
     
-      If ActiveWorkbook.ActiveSheet.Name = SheetName.Name Then
+      If ActiveWorkbook.ActiveSheet.Name = sheetName.Name Then
         .SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "ExcelSpreadsheetInsert"
         
-      ElseIf Sheets(SheetName.Name).Visible = True Then
+      ElseIf Sheets(sheetName.Name).Visible = True Then
        '.SetAttribute "supertip", "アクティブシート"
         .SetAttribute "imageMso", "HeaderFooterSheetNameInsert"
       
-      ElseIf Sheets(SheetName.Name).Visible = 0 Then
+      ElseIf Sheets(sheetName.Name).Visible = 0 Then
         .SetAttribute "supertip", "非表示シート"
         .SetAttribute "imageMso", "SheetProtect"
       
-      ElseIf Sheets(SheetName.Name).Visible = 2 Then
+      ElseIf Sheets(sheetName.Name).Visible = 2 Then
         .SetAttribute "supertip", "マクロによる非表示シート"
         .SetAttribute "imageMso", "ReviewProtectWorkbook"
       
@@ -446,8 +475,11 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
         
         'アイコンの設定
         Select Case objFso.GetExtensionName(tmp(line, 1))
-          Case "xlsm"
+          Case "xlsm", "xlsx"
             .SetAttribute "imageMso", "MicrosoftExcel"
+          Case "xls"
+            .SetAttribute "imageMso", "FileSaveAsExcel97_2003"
+          
           Case "pdf"
             .SetAttribute "imageMso", "FileSaveAsPdf"
           Case "docs"
@@ -460,9 +492,11 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
             .SetAttribute "imageMso", "MicrosoftPowerPoint"
           Case "csv"
             .SetAttribute "imageMso", "FileNewContext"
+          Case "html"
+            .SetAttribute "imageMso", "GroupWebPageNavigation"
           
           Case Else
-            .SetAttribute "imageMso", "MicrosoftExcel"
+            .SetAttribute "imageMso", "FileNewContext"
             Call Library.showDebugForm("お気に入りアイコン", objFso.GetExtensionName(tmp(line, 1)), "Error")
         End Select
         
@@ -494,7 +528,7 @@ End Function
 'RelaxTools
 Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   Dim MenuSepa
 
   Const funcName As String = "Ctl_Ribbon.getRelaxTools"
@@ -524,7 +558,7 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
     Set MenuSepa = DOMDoc.createElement("menuSeparator")
     With MenuSepa
       .SetAttribute "id", "M_RelaxToolsGet"
-      .SetAttribute "title", "RelaxToolを入手"
+      .SetAttribute "title", "RelaxToolの更新"
     End With
     Menu.AppendChild MenuSepa
     Set MenuSepa = Nothing
@@ -532,7 +566,7 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
     Set Button = DOMDoc.createElement("button")
     With Button
       .SetAttribute "id", "RelaxTools_get"
-      .SetAttribute "label", "RelaxToolを入手"
+      .SetAttribute "label", "RelaxToolの更新"
       .SetAttribute "image", "RelaxToolsLogo"
       .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.RelaxTools_get"
     End With
@@ -567,7 +601,7 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
     End With
     Menu.AppendChild Button
     Set Button = Nothing
-    
+
     'RelaxShapes---------------------------------
     Set MenuSepa = DOMDoc.createElement("menuSeparator")
     With MenuSepa
@@ -666,7 +700,7 @@ End Function
 Function selectActiveSheet(control As IRibbonControl)
   Dim sheetNameID As Integer
   Dim sheetCount As Integer
-  Dim SheetName As Worksheet
+  Dim sheetName As Worksheet
   Const funcName As String = "Ctl_Ribbon.selectActiveSheet"
   
   '処理開始--------------------------------------
@@ -689,8 +723,8 @@ Function selectActiveSheet(control As IRibbonControl)
   End If
   
   sheetCount = 1
-  For Each SheetName In ActiveWorkbook.Sheets
-    If Sheets(SheetName.Name).Visible = True And SheetName.Name = Sheets(sheetNameID).Name Then
+  For Each sheetName In ActiveWorkbook.Sheets
+    If Sheets(sheetName.Name).Visible = True And sheetName.Name = Sheets(sheetNameID).Name Then
       Exit For
     Else
       sheetCount = sheetCount + 1
@@ -796,6 +830,7 @@ Function RelaxTools02(control As IRibbonControl)
   Call init.setting
   Application.run "'" & Application.UserLibraryPath & RelaxTools & "'!basSelection.execSelectionToFormula"
 End Function
+
 
 '==================================================================================================
 'サイズ合わせ
@@ -915,6 +950,20 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Sheet.標準画面
     Case "シート管理"
       Call Ctl_Sheet.シート管理_フォーム表示
+    Case "幅設定"
+      Call Ctl_Sheet.幅設定
+    Case "高さ設定"
+      Call Ctl_Sheet.高さ設定
+    Case "幅と高さ両方"
+      Call Ctl_Sheet.幅設定
+      Call Ctl_Sheet.高さ設定
+    Case "体裁一括変更"
+      Call Ctl_Sheet.体裁一括変更
+    Case "フォント一括変更"
+      Call Ctl_Sheet.指定フォントに設定
+    
+    
+    
     
     'ファイル管理--------------------------------
     Case "ファイル管理_情報取得"
@@ -948,10 +997,10 @@ Function Ctl_Function(control As IRibbonControl)
     Case "連番追加"
       Call Ctl_Cells.連番追加
     Case "全半角変換"
-      Call Ctl_Cells.英数字全半角変換
+      Call Ctl_Cells.英数字全⇒半角変換
       
     Case "半全角変換"
-      Call Ctl_Cells.英数字全半角変換
+      Call Ctl_Cells.英数字半⇒全角変換
     
     Case "delLinefeed"
       Call Ctl_Cells.改行削除
@@ -975,8 +1024,11 @@ Function Ctl_Function(control As IRibbonControl)
     
     
     '数式編集------------------------------------
-    Case "エラー防止"
-      Call Ctl_Formula.エラー防止
+    Case "エラー防止_空白"
+      Call Ctl_Formula.エラー防止_空白
+    Case "エラー防止_ゼロ"
+      Call Ctl_Formula.エラー防止_ゼロ
+      
     Case "ゼロ非表示"
       Call Ctl_Formula.ゼロ非表示
     
