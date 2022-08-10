@@ -29,6 +29,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
 
   If IsMissing(defSlctArea) Then
     imageName = thisAppName & "ExportImg_" & Format(Now(), "yyyymmdd_hhnnss") & ".png"
+    imageName = "Img_" & Format(Now(), "yyyymmdd_hhnnss") & ".png"
     saveDir = LadexDir & "\Images\"
     Set slctArea = Selection
   Else
@@ -51,7 +52,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
       slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
     
     Case "ChartArea", "Picture", "GroupObject", "TextBox", "Rectangle"
-      slctArea.Copy
+      slctArea.copy
     
     Case Else
       Call Library.showNotice(5, TypeName(slctArea))
@@ -86,7 +87,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   'èàóùèIóπ--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -130,10 +131,10 @@ Function ì\ïtÇØ()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function

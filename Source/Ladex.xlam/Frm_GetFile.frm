@@ -43,8 +43,9 @@ Private Sub UserForm_Initialize()
     
   InitializeFlg = True
 
-'  With Frm_GetFile
-'  End With
+  With Frm_GetFile
+    .Caption = "[" & thisAppName & "] お気に入り"
+  End With
   InitializeFlg = False
   
   Exit Sub
@@ -67,19 +68,9 @@ End Sub
 Private Sub DirPath01_Click()
   Dim targetDir As String
   
-  targetDir = Library.getDirPath(targetDir01.Value)
+  targetDir = Library.getDirPath(targetDir01.Value, , "getFileDirPath")
   If targetDir <> "" Then
     targetDir01.Value = targetDir
-  End If
-End Sub
-'==================================================================================================
-'参照ボタン[画像貼付け]
-Private Sub DirPath02_Click()
-  Dim targetDir As String
-  
-  targetDir = Library.getDirPath(targetDir02.Value)
-  If targetDir <> "" Then
-    targetDir02.Value = targetDir
   End If
 End Sub
 

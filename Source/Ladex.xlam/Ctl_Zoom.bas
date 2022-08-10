@@ -69,10 +69,10 @@ Function Zoom01()
   Dim topPosition As Long, leftPosition As Long
   
   Application.DisplayFullScreen = True
-  With Frm_DispFullScreenForm
-    .StartUpPosition = 3
-    .Show vbModeless
-  End With
+'  With Frm_DispFullScreenForm
+'    .StartUpPosition = 3
+'    .Show vbModeless
+'  End With
   
 End Function
 

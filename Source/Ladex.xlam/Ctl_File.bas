@@ -31,7 +31,7 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
     dirPath = FrmVal("targetDir01")
     
     If dirPath = "" Then
-      Call Library.showNotice(100, , True)
+      Call Library.errorHandle
     End If
       Call Ctl_ProgressBar.showStart
   End If
@@ -121,10 +121,10 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -161,7 +161,7 @@ Function 画像貼付け()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
 
-  For Each imgFile In Library.getFilesPath(ThisWorkbook.path, "画像", "img")
+  For Each imgFile In Library.getFilesPath(ActiveWorkbook.path, "画像", "img", "pasteImgPath")
     If imgFile <> "" Then
       chfkFlg = True
       Call Library.showDebugForm("imgFile", imgFile, "debug")
@@ -183,25 +183,32 @@ Function 画像貼付け()
       fileShape.ScaleWidth 1, msoTrue
       fileShape.ScaleHeight 1, msoTrue
       
+      '枠線設定
+      With fileShape.line
+        .Visible = msoTrue
+        .ForeColor.RGB = RGB(127, 127, 127)
+        .Transparency = 0
+      End With
+      
       Set fileShape = Nothing
     End If
   Next
   
   'オブジェクト選択モードにする
-  If chfkFlg = True Then
-    With Application.CommandBars.FindControl(ID:=182)
-      If .State = msoButtonUp Then .Execute
-    End With
-  End If
+'  If chfkFlg = True Then
+'    With Application.CommandBars.FindControl(ID:=182)
+'      If .State = msoButtonUp Then .Execute
+'    End With
+'  End If
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -214,7 +221,7 @@ End Function
 
 
 '==================================================================================================
-Function フォルダー生成()
+Function フォルダ生成()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
   Dim slctCellsCnt As Long
@@ -223,7 +230,7 @@ Function フォルダー生成()
   Dim FSO As New FileSystemObject
   
   
-  Const funcName As String = "Ctl_File.フォルダー生成"
+  Const funcName As String = "Ctl_File.フォルダ生成"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -243,7 +250,7 @@ Function フォルダー生成()
   For Each slctCells In Selection
     targetDir = slctCells.Value
     If targetDir <> "" Then
-      Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "フォルダー生成：" & targetDir)
+      Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "フォルダ生成：" & targetDir)
       
       If targetDir Like "[A-z]:\*" Then
         Call Library.showDebugForm("targetDir", "フルパス", "debug")
@@ -280,10 +287,10 @@ Function フォルダー生成()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function

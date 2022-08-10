@@ -50,7 +50,7 @@ Function A1セル選択()
     sheetName = objSheet.Name
     If Worksheets(sheetName).Visible = True Then
       Call Library.showDebugForm("sheetName", sheetName, "debug")
-      Application.GoTo Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
+      Application.Goto Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
     End If
     
     Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, sheetCount + 1, sheetMaxCount + 1, sheetName & "A1セル選択")
@@ -63,7 +63,7 @@ Function A1セル選択()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -107,10 +107,10 @@ Function すべて表示()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 
@@ -193,7 +193,7 @@ Function 標準画面()
       End If
       
       'A1を選択された状態にする
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Application.Goto Reference:=Range("A1"), Scroll:=True
       
       'RC表記からAQ表記へ変更
       If Application.ReferenceStyle = xlR1C1 Then
@@ -211,7 +211,7 @@ Function 標準画面()
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Application.Goto Reference:=Range("A1"), Scroll:=True
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
@@ -282,7 +282,7 @@ Function 幅設定()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -324,7 +324,7 @@ Function 高さ設定()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -401,12 +401,12 @@ Function 体裁一括変更()
   '表示倍率--------------------------------------
   ActiveWindow.Zoom = BK_setVal("ZoomLevel")
   
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
 
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -472,10 +472,10 @@ Function 指定フォントに設定()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
   Exit Function
@@ -483,6 +483,130 @@ Function 指定フォントに設定()
 'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 連続シート追加()
+  Dim sheetName As Variant
+  
+  Const funcName As String = "Ctl_Sheet.連続シート追加"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  
+  Set FrmVal = Nothing
+  Set FrmVal = CreateObject("Scripting.Dictionary")
+  With Frm_Info
+    .Caption = "連続シート生成"
+    .TextBox.Value = ""
+    .copySheet.Visible = True
+    .Label1.Visible = True
+    .Label2.Visible = True
+    .Show
+  End With
+  
+  Call Library.showDebugForm("copySheet", FrmVal("copySheet"), "debug")
+  For Each sheetName In Split(FrmVal("SheetList"), vbNewLine)
+    Call Library.showDebugForm("sheetName", sheetName, "debug")
+    
+    If Library.chkSheetExists(CStr(sheetName)) = False And sheetName <> "" And FrmVal("copySheet") <> "≪新規シート≫" Then
+      Worksheets(FrmVal("copySheet")).copy After:=Worksheets(Worksheets.count)
+      ActiveSheet.Name = CStr(sheetName)
+    
+    ElseIf Library.chkSheetExists(CStr(sheetName)) = False And sheetName <> "" And FrmVal("copySheet") = "≪新規シート≫" Then
+      Worksheets.add(After:=Worksheets(Worksheets.count)).Name = CStr(sheetName)
+    End If
+    
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+  Next
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+
+'==================================================================================================
+Function 画面枠固定()
+  Dim objSheet As Object
+  Dim sheetName As String, SetActiveSheet As String
+  Dim sheetCount As Long, sheetMaxCount As Long
+  Dim slctCell As String
+  Const funcName As String = "Ctl_Sheet.画面枠固定"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  
+  SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
+  slctCell = ActiveCell.Address(False, False)
+  
+  sheetCount = 0
+  sheetMaxCount = ActiveWorkbook.Sheets.count
+  For Each objSheet In ActiveWorkbook.Sheets
+    sheetName = objSheet.Name
+    If Worksheets(sheetName).Visible = True And Not (sheetName Like "《*》") Then
+      Call Library.showDebugForm("sheetName", sheetName, "debug")
+      
+      ActiveWindow.FreezePanes = False
+      Range(slctCell).Select
+      ActiveWindow.FreezePanes = True
+      
+      Application.Goto Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
+    End If
+    
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, sheetCount + 1, sheetMaxCount + 1, sheetName & "A1セル選択")
+    sheetCount = sheetCount + 1
+  Next
+  
+  Worksheets(SetActiveSheet).Select
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
 

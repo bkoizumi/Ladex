@@ -7,11 +7,11 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function 表示位置(t, l)
+Function 表示位置(T, L)
   Dim topPosition As Long, leftPosition As Long
   
-  topPosition = CLng(t)
-  leftPosition = CLng(l)
+  topPosition = CLng(T)
+  leftPosition = CLng(L)
   
   Call Library.getMachineInfo
   
@@ -27,19 +27,19 @@ Function 表示位置(t, l)
 
   
   If topPosition > MachineInfo("appHeight") Then
-    t = CInt(MachineInfo("appHeight") / 4)
+    T = CInt(MachineInfo("appHeight") / 4)
   ElseIf topPosition = 0 Then
-    t = CInt(MachineInfo("appHeight") / 4)
+    T = CInt(MachineInfo("appHeight") / 4)
   Else
-    t = topPosition
+    T = topPosition
   End If
   
   If leftPosition > MachineInfo("appWidth") Then
-    l = CInt(MachineInfo("appWidth") / 4)
+    L = CInt(MachineInfo("appWidth") / 4)
   ElseIf leftPosition = 0 Then
-    l = CInt(MachineInfo("appWidth") / 4)
+    L = CInt(MachineInfo("appWidth") / 4)
   Else
-    l = leftPosition
+    L = leftPosition
   End If
   
 '  Call Library.showDebugForm("t               ：" & t)

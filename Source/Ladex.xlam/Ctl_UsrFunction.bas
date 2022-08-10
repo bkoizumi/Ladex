@@ -93,10 +93,10 @@ Function InitializeUsrFunction()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 
@@ -110,7 +110,7 @@ End Function
 '==================================================================================================
 Function Textjoin(Delim As String, ParamArray par())
 Attribute Textjoin.VB_Description = "文字列連結"
-Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n20"
+Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim i As Integer
   Dim tR As Range
 
@@ -138,7 +138,7 @@ End Function
 '==================================================================================================
 Function chkWorkDay(ByVal checkDate As Date, ByVal bsnDay As Long) As Boolean
 Attribute chkWorkDay.VB_Description = "第N営業日かチェックし、True/Falseを返す"
-Attribute chkWorkDay.VB_ProcData.VB_Invoke_Func = " \n20"
+Attribute chkWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim getDay As Date, firstDay As Date
   
   
@@ -161,7 +161,7 @@ End Function
 '==================================================================================================
 Function chkWeekNum(ByVal checkDate As Date, ByVal checkWeekday As Long, ByVal weekNum As Long) As Boolean
 Attribute chkWeekNum.VB_Description = "第N週X曜日の日付かチェックし、True/Falseを返す"
-Attribute chkWeekNum.VB_ProcData.VB_Invoke_Func = " \n20"
+Attribute chkWeekNum.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim getDay As Date, firstDay As Long, diff As Long
   
 '  Application.Volatile
@@ -181,7 +181,7 @@ End Function
 '==================================================================================================
 Function getWorkDay(ByVal cYear As Long, ByVal cMonth As Long, ByVal bsnDay As Long) As Date
 Attribute getWorkDay.VB_Description = "第N営業日をシリアル値で返す"
-Attribute getWorkDay.VB_ProcData.VB_Invoke_Func = " \n20"
+Attribute getWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
   Dim getDay As Date, firstDay As Date
   
 '  Application.Volatile

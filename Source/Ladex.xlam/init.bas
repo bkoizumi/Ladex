@@ -9,9 +9,12 @@ Public targetBook           As Workbook
 'ワークシート用変数------------------------------
 Public targetSheet          As Worksheet
 
+Public targetRange          As Range
+
+
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "1.3.4.0"
+Public Const thisAppVersion As String = "1.4.4.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 
 Public funcName             As String
@@ -20,6 +23,9 @@ Public runFlg               As Boolean
 Public PrgP_Cnt             As Long
 Public PrgP_Max             As Long
 'Public LogLevel             As Long
+Public arrFavCategory()
+Public useStyle()
+Public arrCells()
 
 
 
@@ -65,6 +71,7 @@ Public defaultZoomInVal     As String
 
 
 
+
 '**************************************************************************************************
 ' * 設定解除
 ' *
@@ -80,6 +87,13 @@ Function unsetting(Optional flg As Boolean = True)
   Set BK_setVal = Nothing
   Set BK_ribbonVal = Nothing
   Set FrmVal = Nothing
+  
+  Set targetSheet = Nothing
+  Set targetRange = Nothing
+  
+  Erase arrFavCategory
+  Erase useStyle
+  Erase arrCells
   
   logFile = ""
   LadexDir = ""
@@ -128,13 +142,10 @@ Function setting(Optional reCheckFlg As Boolean)
   'ブックの設定
   Set BK_ThisBook = ThisWorkbook
   
+  
   '設定値読み込み--------------------------------
   Set BK_setVal = Nothing
   Set BK_setVal = CreateObject("Scripting.Dictionary")
-  
-  Set FrmVal = Nothing
-  Set FrmVal = CreateObject("Scripting.Dictionary")
-  
   
   endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 0 Then
@@ -147,9 +158,18 @@ Function setting(Optional reCheckFlg As Boolean)
     End If
   Next
     
+  'ユーザーフォームからの受け取り用--------------
+  Set FrmVal = Nothing
+  Set FrmVal = CreateObject("Scripting.Dictionary")
+  FrmVal.add "commentVal", ""
+  
+  
+  
+  
   'レジストリ設定項目取得------------------------
   tmpRegList = GetAllSettings(thisAppName, "Main")
   For line = 0 To UBound(tmpRegList)
+'    Debug.Print tmpRegList(line, 0) & "<-->" & tmpRegList(line, 1)
     BK_setVal.add tmpRegList(line, 0), tmpRegList(line, 1)
   Next
     

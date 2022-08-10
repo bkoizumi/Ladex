@@ -9,7 +9,7 @@
 ; インストーラーの識別子
 !define PRODUCT_NAME "Ladex"
 ; インストーラーのバージョン。
-!define PRODUCT_VERSION "1.3.4.0"
+!define PRODUCT_VERSION "1.4.4.0"
 
 ; 多言語で使用する場合はここをUnicodeにすることを推奨
 Unicode true
@@ -92,7 +92,6 @@ Section "Ladex" sec_Main
   ; ディレクトリ/ファイルをコピー
   File    "ExcelOpen_ViewProtected.vbs"
   File    "README.pdf"
-  File    "メンテナンス用.xlsm"
   CreateDirectory $INSTDIR\Images
   CreateDirectory $INSTDIR\log
   File /r "Ladex\RibbonImg"
@@ -112,7 +111,6 @@ Section "Ladex" sec_Main
   ;スタートメニューの作成
   SetShellVarContext current
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\メンテナンス用.lnk"  "$INSTDIR\メンテナンス用.xlsm"
   CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"    "$INSTDIR\スタイル情報.xlsx"
   CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"          "$INSTDIR\README.pdf"
   CreateShortCut  "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"       "$INSTDIR\Uninstall.exe"
@@ -142,7 +140,6 @@ Section "Uninstall"
   SetShellVarContext current
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\読み取り専用で開く.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\メンテナンス用.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\スタイル情報.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\README.lnk"
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\Excelを新プロセスで開く.lnk"

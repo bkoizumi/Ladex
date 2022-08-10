@@ -25,6 +25,7 @@ Function showFrm_sampleData(showType As String)
         .MultiPage1.Pages.Item(3).Visible = False
         .MultiPage1.Pages.Item(4).Visible = False
         .MultiPage1.Pages.Item(5).Visible = False
+        .MultiPage1.Pages.Item(6).Visible = False
       
       Case "【数値】桁数固定"
         .MultiPage1.Pages.Item(0).Visible = False
@@ -32,6 +33,7 @@ Function showFrm_sampleData(showType As String)
         .MultiPage1.Pages.Item(3).Visible = False
         .MultiPage1.Pages.Item(4).Visible = False
         .MultiPage1.Pages.Item(5).Visible = False
+        .MultiPage1.Pages.Item(6).Visible = False
         
         .Frame1.Caption = showType
       
@@ -41,6 +43,7 @@ Function showFrm_sampleData(showType As String)
         .MultiPage1.Pages.Item(3).Visible = False
         .MultiPage1.Pages.Item(4).Visible = False
         .MultiPage1.Pages.Item(5).Visible = False
+        .MultiPage1.Pages.Item(6).Visible = False
         
         .Frame2.Caption = showType
       
@@ -50,10 +53,25 @@ Function showFrm_sampleData(showType As String)
         .MultiPage1.Pages.Item(2).Visible = False
         .MultiPage1.Pages.Item(4).Visible = False
         .MultiPage1.Pages.Item(5).Visible = False
+        .MultiPage1.Pages.Item(6).Visible = False
         
         .Frame3.Caption = showType
         
       Case "【日付】日", "【日付】時間", "【日付】日時"
+        .MultiPage1.Pages.Item(0).Visible = False
+        .MultiPage1.Pages.Item(1).Visible = False
+        .MultiPage1.Pages.Item(2).Visible = False
+        .MultiPage1.Pages.Item(3).Visible = False
+        .MultiPage1.Pages.Item(5).Visible = False
+        .MultiPage1.Pages.Item(6).Visible = False
+        
+        .minVal4 = #4/1/2021#
+        .maxVal4 = #3/31/2022#
+        
+        .Frame4.Caption = showType
+        
+        
+      Case "休日リスト生成"
         .MultiPage1.Pages.Item(0).Visible = False
         .MultiPage1.Pages.Item(1).Visible = False
         .MultiPage1.Pages.Item(2).Visible = False
@@ -65,12 +83,14 @@ Function showFrm_sampleData(showType As String)
         
         .Frame4.Caption = showType
         
+        
       Case "【その他】文字"
         .MultiPage1.Pages.Item(0).Visible = False
         .MultiPage1.Pages.Item(1).Visible = False
         .MultiPage1.Pages.Item(2).Visible = False
         .MultiPage1.Pages.Item(3).Visible = False
         .MultiPage1.Pages.Item(4).Visible = False
+        .MultiPage1.Pages.Item(6).Visible = False
         
         .maxCount5 = 25
         .strType01 = False
@@ -213,51 +233,51 @@ Function パターン選択(Optional maxCount As Long)
     Call Library.showDebugForm("varDic", varDic, "debug")
     Select Case varDic
       Case "氏名(姓)"
-        LadexSh_InputData.Range("A1:A" & maxCount).Copy Selection
+        LadexSh_InputData.Range("A1:A" & maxCount).copy Selection
       Case "氏名(名)"
-        LadexSh_InputData.Range("B1:B" & maxCount).Copy Selection
+        LadexSh_InputData.Range("B1:B" & maxCount).copy Selection
 
       Case "氏名(フルネーム)"
-        LadexSh_InputData.Range("C1:C" & maxCount).Copy Selection
+        LadexSh_InputData.Range("C1:C" & maxCount).copy Selection
 
       Case "[カナ]氏名(姓)"
-        LadexSh_InputData.Range("D1:D" & maxCount).Copy Selection
+        LadexSh_InputData.Range("D1:D" & maxCount).copy Selection
       Case "[カナ]氏名(名)"
-        LadexSh_InputData.Range("E1:E" & maxCount).Copy Selection
+        LadexSh_InputData.Range("E1:E" & maxCount).copy Selection
       Case "[カナ]氏名(フルネーム)"
-        LadexSh_InputData.Range("F1:F" & maxCount).Copy Selection
+        LadexSh_InputData.Range("F1:F" & maxCount).copy Selection
       Case "性別"
-        LadexSh_InputData.Range("G1:G" & maxCount).Copy Selection
+        LadexSh_InputData.Range("G1:G" & maxCount).copy Selection
       Case "血液型"
-        LadexSh_InputData.Range("H1:H" & maxCount).Copy Selection
+        LadexSh_InputData.Range("H1:H" & maxCount).copy Selection
       Case "生年月日"
-        LadexSh_InputData.Range("I1:I" & maxCount).Copy Selection
+        LadexSh_InputData.Range("I1:I" & maxCount).copy Selection
       Case "年齢"
-        LadexSh_InputData.Range("J1:J" & maxCount).Copy Selection
+        LadexSh_InputData.Range("J1:J" & maxCount).copy Selection
       Case "電話番号"
-        LadexSh_InputData.Range("K1:K" & maxCount).Copy Selection
+        LadexSh_InputData.Range("K1:K" & maxCount).copy Selection
       Case "メールアドレス"
-        LadexSh_InputData.Range("L1:L" & maxCount).Copy Selection
+        LadexSh_InputData.Range("L1:L" & maxCount).copy Selection
       Case "都道府県コード"
-        LadexSh_InputData.Range("M1:M" & maxCount).Copy Selection
+        LadexSh_InputData.Range("M1:M" & maxCount).copy Selection
       Case "郵便番号"
-        LadexSh_InputData.Range("N1:N" & maxCount).Copy Selection
+        LadexSh_InputData.Range("N1:N" & maxCount).copy Selection
       Case "都道府県"
-        LadexSh_InputData.Range("O1:O" & maxCount).Copy Selection
+        LadexSh_InputData.Range("O1:O" & maxCount).copy Selection
       Case "市区郡町村"
-        LadexSh_InputData.Range("P1:P" & maxCount).Copy Selection
+        LadexSh_InputData.Range("P1:P" & maxCount).copy Selection
       Case "町域"
-        LadexSh_InputData.Range("Q1:Q" & maxCount).Copy Selection
+        LadexSh_InputData.Range("Q1:Q" & maxCount).copy Selection
       Case "丁目・字名・番地"
-        LadexSh_InputData.Range("R1:R" & maxCount).Copy Selection
+        LadexSh_InputData.Range("R1:R" & maxCount).copy Selection
       Case "[カナ]都道府県"
-        LadexSh_InputData.Range("S1:S" & maxCount).Copy Selection
+        LadexSh_InputData.Range("S1:S" & maxCount).copy Selection
       Case "[カナ]市区郡町村"
-        LadexSh_InputData.Range("T1:T" & maxCount).Copy Selection
+        LadexSh_InputData.Range("T1:T" & maxCount).copy Selection
       Case "[カナ]町域"
-        LadexSh_InputData.Range("U1:U" & maxCount).Copy Selection
+        LadexSh_InputData.Range("U1:U" & maxCount).copy Selection
       Case "[カナ]丁目・字名・番地"
-        LadexSh_InputData.Range("V1:V" & maxCount).Copy Selection
+        LadexSh_InputData.Range("V1:V" & maxCount).copy Selection
       
       Case Else
     End Select
@@ -271,10 +291,10 @@ Function パターン選択(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -288,7 +308,7 @@ End Function
 '==================================================================================================
 Function 数値_桁数固定(Optional maxCount As Long)
   Dim line As Long, endLine As Long
-  Const funcName As String = "Ctl_SampleData.名前定義削除"
+  Const funcName As String = "Ctl_SampleData.数値_桁数固定"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -320,10 +340,10 @@ Function 数値_桁数固定(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -381,10 +401,10 @@ Function 数値_範囲(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -433,10 +453,10 @@ Function 名前_姓(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -485,10 +505,10 @@ Function 名前_名(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -541,10 +561,10 @@ Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean 
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -595,10 +615,10 @@ Function 日付_日(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -653,10 +673,10 @@ Function 日付_時間(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -715,10 +735,10 @@ Function 日時(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -776,10 +796,10 @@ Function その他_文字(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -836,10 +856,10 @@ Function メールアドレス(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -906,10 +926,10 @@ Function 住所(maxCount As Long, ParamArray addressFlgs())
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -953,10 +973,10 @@ Function 電話番号(Optional maxCount As Long)
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -967,3 +987,64 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
+'==================================================================================================
+Function 休日リスト生成()
+  Dim line As Long, endLine As Long
+  Dim targetDay As Date, startDay As Date, endDay As Date
+  Dim targetRange As Range
+  Dim HollydayName As String
+  Const funcName As String = "Ctl_SampleData.休日リスト生成"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  PrgP_Max = 2
+  PrgP_Cnt = 1
+  Call Ctl_ProgressBar.showStart
+  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  '----------------------------------------------
+  line = 0
+  Set targetRange = ActiveCell
+  
+  Call showFrm_sampleData("休日リスト生成")
+
+  startDay = BK_setVal("minVal")
+  endDay = BK_setVal("maxVal")
+  
+  
+  For targetDay = #4/1/2022# To #3/31/2023#
+    If Ctl_Hollyday.GetHollyday(targetDay, HollydayName) = True Then
+      targetRange.Offset(line).Select
+      targetRange.Offset(line) = targetDay
+      line = line + 1
+    End If
+  Next
+  targetRange.Select
+  Set targetRange = Nothing
+  
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時====================================
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

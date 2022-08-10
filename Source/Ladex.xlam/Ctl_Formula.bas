@@ -27,7 +27,7 @@ Function 数式確認()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  '既存のファイル削除
+  '既存のオブジェクト削除
   For Each objShp In ActiveSheet.Shapes
     If objShp.Name Like "confirmFormulaName_*" Then
       ActiveSheet.Shapes(objShp.Name).delete
@@ -51,10 +51,10 @@ Function 数式確認()
   '処理終了--------------------------------------
   Call Library.endScript
   If runFlg = False Then
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -115,10 +115,10 @@ Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -157,18 +157,18 @@ Function GetCurPosition()
   
   'カーソル位置取得
   GetCursorPos p
-  If TypeName(ActiveWindow.RangeFromPoint(p.X, p.Y)) = "Range" Then
-    ActiveWindow.RangeFromPoint(p.X, p.Y).Select
+  If TypeName(ActiveWindow.RangeFromPoint(p.X, p.y)) = "Range" Then
+    ActiveWindow.RangeFromPoint(p.X, p.y).Select
   End If
   Call Ctl_Formula.数式確認
   
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -267,10 +267,10 @@ Function getFormulaRange(ByVal argRange As Range) As Range()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -322,10 +322,10 @@ Function エラー防止_空白()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -372,10 +372,10 @@ Function エラー防止_ゼロ()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -423,10 +423,10 @@ Function ゼロ非表示()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function

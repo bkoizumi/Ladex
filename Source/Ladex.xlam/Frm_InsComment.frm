@@ -156,7 +156,10 @@ Private Sub OK_Button_Click()
   
   Set slctCells = Range(Replace(Label1.Caption, "選択セル：", ""))
   On Error GoTo catchError
-  If TextBox.Value <> "" Then
+  
+  FrmVal("commentVal") = TextBox.Value
+  
+  If FrmVal("commentVal") <> "" Then
     If TypeName(slctCells.Comment) = "Comment" Then
       slctCells.ClearComments
     End If
@@ -165,7 +168,9 @@ Private Sub OK_Button_Click()
   End If
   Set slctCells = Nothing
   Unload Me
+  
   Exit Sub
+  
 'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, " [" & Err.Number & "]" & Err.Description & ">", True)

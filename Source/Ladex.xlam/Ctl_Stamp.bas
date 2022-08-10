@@ -2,126 +2,227 @@ Attribute VB_Name = "Ctl_Stamp"
 Option Explicit
 
 '==================================================================================================
-Function 押印_済印()
-
-  Dim ShapeName As String
-  Dim ActvSheet As Worksheet
-  Dim ActvCell As Range
-  Dim objShp As Shape
-  Dim addShapeLeft
+Function 済印()
   
-  On Error GoTo catchError
-
-  Call Library.startScript
-  Call init.setting
-  Set ActvSheet = ActiveSheet
-  Set ActvCell = ActiveCell
+  Const funcName As String = "Ctl_Stamp.済印"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Set targetSheet = ActiveSheet
+  Set targetRange = ActiveCell
   
   LadexSh_Stamp.Activate
-'  sheetsetting.Shapes.Range(Array("TB_日付")).Select
-'  'Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Date, "yyyy/mm/dd")
-'  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Now(), "mm/dd hh:nn")
-'
-'  sheetsetting.Shapes.Range(Array("TB_名前")).Select
-'  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = setVal("name")
-'
-'  sheetsetting.Shapes.Range(Array("TB_済")).Select
-'  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = checkFlg
-  
   LadexSh_Stamp.Shapes.Range(Array("済印")).Select
-  Selection.Copy
+  Selection.copy
   
-  'Call Library.waitTime(1000)
-'  ActiveWorkbook.Activate
-  ActvSheet.Activate
-  
-  ActiveSheet.Range(ActvCell.Address).Select
-  
-  
-  
-  addShapeLeft = 0
-  ShapeName = "済印"
-  
-  
-  
+  targetSheet.Activate
   ActiveSheet.PasteSpecial Format:="図 (PNG)", Link:=False, DisplayAsIcon:=False
   Selection.Placement = xlMoveAndSize
   Selection.ShapeRange.LockAspectRatio = msoFalse
   
-  Selection.ShapeRange.Width = 15
-  Selection.ShapeRange.Height = 15
-  Selection.ShapeRange.Name = ShapeName
-'  Selection.ShapeRange.IncrementLeft 2.8 + addShapeLeft
-'  Selection.ShapeRange.IncrementTop 2.8
-    
-  ActiveSheet.Range(ActvCell.Address).Select
+  Selection.ShapeRange.Width = 30
+  Selection.ShapeRange.Height = 30
+  Selection.ShapeRange.Name = "済印_" & Format(Now(), "yyyymmdd_hhnnss")
   
-  Call Library.endScript
+  targetRange.Select
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+
+  'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(400, Err.Description, True)
-  Call Library.endScript
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
 
 
 '==================================================================================================
-Function 押印_確認印(Optional nameVal As String, Optional FontName As String, Optional ShapeName As String)
-
+Function 確認印(Optional StampName As String, Optional StampVal As String, Optional StampFont As String, Optional imgName As String)
   
-  Dim ActvSheet As Worksheet
-  Dim ActvCell As Range
-  Dim objShp As Shape
-  Dim addShapeLeft
+  Const funcName As String = "Ctl_Stamp.確認印"
   
-  On Error GoTo catchError
-
-  Call Library.startScript
-  Call init.setting
-  Set ActvSheet = ActiveSheet
-  Set ActvCell = ActiveCell
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+'    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
   
-
+  Set targetSheet = ActiveSheet
+  Set targetRange = ActiveCell
+  
+  If StampName = "" Then
+    StampName = Library.getRegistry("Main", "StampName")
+    StampFont = Library.getRegistry("Main", "StampFont")
+    StampVal = Library.getRegistry("Main", "StampVal")
+  End If
   
   
   LadexSh_Stamp.Activate
-'  sheetsetting.Shapes.Range(Array("TB_日付")).Select
-'  'Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Date, "yyyy/mm/dd")
-'  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Now(), "mm/dd hh:nn")
-'
-  LadexSh_Stamp.Shapes.Range(Array("TB_名前2")).Select
-  If nameVal = "" Then
-    nameVal = Library.getRegistry("Main", "StampVal")
-  End If
-  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = nameVal
+  LadexSh_Stamp.Shapes.Range(Array("TB_済")).Select
+  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = StampVal
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameComplexScript = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameFarEast = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Name = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Size = Ctl_shap.TextToFitShape(Selection.ShapeRange(1), True)
   
-  LadexSh_Stamp.Shapes.Range(Array("認印")).Select
-  Selection.Copy
+  LadexSh_Stamp.Shapes.Range(Array("TB_名前1")).Select
+  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = StampName
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Size = 80
   
-  ActvSheet.Activate
-  ActiveSheet.Range(ActvCell.Address).Select
-  addShapeLeft = 0
-  If ShapeName = "" Then
-    ShapeName = "押印_確認印"
-  End If
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameComplexScript = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameFarEast = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Name = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Size = Ctl_shap.TextToFitShape(Selection.ShapeRange(1), False)
+
+  Selection.ShapeRange.TextFrame2.TextRange.ParagraphFormat.Alignment = msoAlignCenter
   
   
+  
+  LadexSh_Stamp.Shapes.Range(Array("TB_日付")).Select
+  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Format(Now(), "yyyy/m/d")
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameComplexScript = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameFarEast = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Name = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Size = Ctl_shap.TextToFitShape(Selection.ShapeRange(1), True)
+  
+  
+  LadexSh_Stamp.Shapes.Range(Array("確認印")).Select
+  Selection.copy
+  
+  targetSheet.Activate
   ActiveSheet.PasteSpecial Format:="図 (PNG)", Link:=False, DisplayAsIcon:=False
   Selection.Placement = xlMoveAndSize
   Selection.ShapeRange.LockAspectRatio = msoFalse
   
-  Selection.ShapeRange.Width = 45
-  Selection.ShapeRange.Height = 45
-  Selection.ShapeRange.Name = ShapeName
-'  Selection.ShapeRange.IncrementLeft 2.8 + addShapeLeft
-'  Selection.ShapeRange.IncrementTop 2.8
-    
-  ActiveSheet.Range(ActvCell.Address).Select
+  Selection.ShapeRange.Width = 75
+  Selection.ShapeRange.Height = 75
   
-  Call Library.endScript
+  If imgName = "" Then
+    Selection.ShapeRange.Name = "確認印_" & Format(Now(), "yyyymmdd_hhnnss")
+  Else
+    Selection.ShapeRange.Name = imgName
+  End If
+    
+  targetRange.Select
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+
+  'エラー発生時------------------------------------
 catchError:
-  'Call Library.showNotice(400, Err.Description, True)
-  Call Library.endScript
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+End Function
+
+
+'==================================================================================================
+Function 名前()
+  Dim StampName As String, StampFont As String
+  Const funcName As String = "Ctl_Stamp.名前"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Set targetSheet = ActiveSheet
+  Set targetRange = ActiveCell
+  
+  'StampFont = Library.getRegistry("Main", "StampFont")
+  StampFont = "HG行書体"
+  StampName = Library.getRegistry("Main", "StampName")
+  
+  
+  LadexSh_Stamp.Activate
+  LadexSh_Stamp.Shapes.Range(Array("TB_名前2")).Select
+  Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = Split(StampName, " ")(0)
+  'Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = StampName
+  
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameComplexScript = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.NameFarEast = StampFont
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Name = StampFont
+  
+  Selection.ShapeRange.TextFrame2.TextRange.Font.Size = Ctl_shap.TextToFitShape(Selection.ShapeRange(1))
+
+  
+  LadexSh_Stamp.Shapes.Range(Array("認印")).Select
+  Selection.copy
+  
+  targetSheet.Activate
+  ActiveSheet.PasteSpecial Format:="図 (PNG)", Link:=False, DisplayAsIcon:=False
+  Selection.Placement = xlMoveAndSize
+  Selection.ShapeRange.LockAspectRatio = msoFalse
+  
+  Selection.ShapeRange.Width = 55
+  Selection.ShapeRange.Height = 55
+  Selection.ShapeRange.Name = "認印_" & Format(Now(), "yyyymmdd_hhnnss")
+    
+  targetRange.Select
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+  'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function

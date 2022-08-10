@@ -32,10 +32,10 @@ Function コメント整形()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -83,10 +83,10 @@ Function 移動やサイズ変更をする()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -134,10 +134,10 @@ Function 移動する()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -185,10 +185,10 @@ Function 移動やサイズ変更をしない()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -234,10 +234,10 @@ Function 上下余白ゼロ()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -285,10 +285,10 @@ Function 左右余白ゼロ()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function

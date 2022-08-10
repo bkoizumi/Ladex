@@ -46,7 +46,7 @@ Function showHelp()
   
   BK_ThisBook.Activate
   LadexSh_Help.Activate
-  Sheets("Help").Copy
+  Sheets("Help").copy
   ActiveWindow.DisplayGridlines = False
   Set targetBook = ActiveWorkbook
   
@@ -86,7 +86,7 @@ Function showHelp()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -135,7 +135,7 @@ Function initialization()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -170,9 +170,8 @@ Function showOption()
     .Show
   End With
 
+  ThisWorkbook.Save
   Call init.setting(True)
-  
-  
   Call Main.setShortcutKey
 
 
@@ -181,7 +180,7 @@ Function showOption()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -222,7 +221,7 @@ Function HighLight()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -263,7 +262,7 @@ Function Comment()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------

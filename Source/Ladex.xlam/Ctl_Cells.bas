@@ -23,6 +23,16 @@ Function Trim01()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = Trim(arrCells(i, 1))
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "中黒点付与")
+'  Next
+'  Selection.Value = arrCells
+  
+  
   For Each slctCells In Selection
     slctCells.Value = Trim(slctCells.Text)
     DoEvents
@@ -31,10 +41,10 @@ Function Trim01()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -49,6 +59,7 @@ End Function
 Function 全空白削除()
   Dim slctCells As Range
   Dim resVal As String
+  
   Const funcName As String = "Ctl_Cells.Trim01"
 
   '処理開始--------------------------------------
@@ -63,9 +74,21 @@ Function 全空白削除()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = Replace(arrCells(i, 1), " ", "")
+'    arrCells(i, 1) = Replace(arrCells(i, 1), "　", "")
+'
+'    slctCellsCnt = slctCellsCnt + 1
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "全空白削除")
+'  Next
+'  Selection.Value = arrCells
+'
+  
+  
   For Each slctCells In Selection
     resVal = slctCells.Text
-    
+
     If resVal <> "" Then
       resVal = Replace(resVal, " ", "")
       resVal = Replace(resVal, "　", "")
@@ -77,10 +100,10 @@ Function 全空白削除()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -94,8 +117,9 @@ End Function
 '==================================================================================================
 Function 中黒点付与()
   Dim line As Long, endLine As Long
-  Dim slctCells As Range
   Dim Reg As Object
+  Dim slctCells
+  
   Const funcName As String = "Ctl_Cells.中黒点付与"
   
   Set Reg = CreateObject("VBScript.RegExp")
@@ -117,6 +141,17 @@ Function 中黒点付与()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = "・" & Reg.Replace(arrCells(i, 1), "")
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "中黒点付与")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  
   For Each slctCells In Selection
     slctCells.Value = "・" & Reg.Replace(slctCells.Value, "")
     DoEvents
@@ -125,10 +160,10 @@ Function 中黒点付与()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -143,6 +178,8 @@ End Function
 Function 連番設定()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
+  Dim i As Long
+  Dim slctCellsCnt As Long
   Const funcName As String = "Ctl_Cells.連番設定"
   
   '処理開始--------------------------------------
@@ -156,10 +193,27 @@ Function 連番設定()
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
-  
   line = 1
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = line
+'
+'    slctCellsCnt = slctCellsCnt + 1
+'    line = line + 1
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "連番追加")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  
+  If Selection.Item(1) = "" Then
+    line = Selection.Item(1)
+  Else
+    line = 1
+  End If
+  
   For Each slctCells In Selection
-    slctCells.NumberFormatLocal = "###"
+    Call Library.showDebugForm("設定前セル値", slctCells.Value, "debug")
     slctCells.Value = line
     line = line + 1
     DoEvents
@@ -168,10 +222,10 @@ Function 連番設定()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -208,7 +262,24 @@ Function 連番追加()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   line = 1
+  
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = line & "．" & Reg.Replace(arrCells(i, 1), "")
+'
+'    slctCellsCnt = slctCellsCnt + 1
+'    line = line + 1
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "連番追加")
+'  Next
+'  Selection.NumberFormatLocal = "@"
+'  Selection.Value = arrCells
+
+
+
+
   For Each slctCells In Selection
+    Call Library.showDebugForm("設定前セル値", slctCells.Value, "debug")
+
     slctCells.NumberFormatLocal = "@"
     slctCells.Value = line & "．" & Reg.Replace(slctCells.Value, "")
     line = line + 1
@@ -218,10 +289,10 @@ Function 連番追加()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -235,8 +306,9 @@ End Function
 '==================================================================================================
 Function 英数字全⇒半角変換()
   Dim line As Long, endLine As Long
-  Dim slctCells As Range
   Dim slctCellsCnt As Long
+  Dim i As Long
+  Dim arrCells
   Const funcName As String = "Ctl_Cells.英数字全⇒半角変換"
 
   '処理開始--------------------------------------
@@ -253,10 +325,22 @@ Function 英数字全⇒半角変換()
   '----------------------------------------------
   slctCellsCnt = 0
   
-  For Each slctCells In Selection
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    If arrCells(i, 1) <> "" Then
+'      arrCells(i, 1) = Library.convZen2Han(arrCells(i, 1))
+'    End If
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "英数字全⇒半角変換")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  For Each arrCells In Selection
     Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "英数字全⇒半角変換")
-    If slctCells.Value <> "" Then
-      slctCells.Value = Library.convZen2Han(slctCells.Value)
+    If arrCells.Value <> "" Then
+      arrCells.Value = Library.convZen2Han(arrCells.Value)
     End If
     slctCellsCnt = slctCellsCnt + 1
     DoEvents
@@ -266,10 +350,10 @@ Function 英数字全⇒半角変換()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -283,8 +367,9 @@ End Function
 '==================================================================================================
 Function 英数字半⇒全角変換()
   Dim line As Long, endLine As Long
-  Dim slctCells As Range
   Dim slctCellsCnt As Long
+  Dim i As Long
+  Dim arrCells
   Const funcName As String = "Ctl_Cells.英数字半⇒全角変換"
 
   '処理開始--------------------------------------
@@ -301,10 +386,22 @@ Function 英数字半⇒全角変換()
   '----------------------------------------------
   slctCellsCnt = 0
   
-  For Each slctCells In Selection
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    If arrCells(i, 1) <> "" Then
+'      arrCells(i, 1) = Library.convHan2Zen(CStr(arrCells(i, 1)))
+'    End If
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "英数字全⇒半角変換")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  For Each arrCells In Selection
     Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "英数字半⇒全角変換")
-    If slctCells.Value <> "" Then
-      slctCells.Value = Library.convHan2Zen(slctCells.Value)
+    If arrCells.Value <> "" Then
+      arrCells.Value = Library.convHan2Zen(arrCells.Value)
     End If
     slctCellsCnt = slctCellsCnt + 1
     DoEvents
@@ -314,10 +411,10 @@ Function 英数字半⇒全角変換()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -357,10 +454,10 @@ Function 取り消し線設定()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -382,14 +479,12 @@ Function コメント挿入()
   If runFlg = False Then
     Call init.setting
     Call Library.startScript
-    Call Library.showDebugForm("", , "start")
-    Call init.unsetting
+    Call Library.showDebugForm(funcName, , "start")
   Else
-    Call Library.showDebugForm("", , "start1")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   '----------------------------------------------
   For Each slctCells In Selection
-    commentVal = ""
     
     '結合されている場合
     If slctCells.MergeCells Then
@@ -406,6 +501,11 @@ Function コメント挿入()
       CommentFont = slctCells.Comment.Shape.TextFrame.Characters.Font.Name
       CommentFontColor = slctCells.Comment.Shape.TextFrame.Characters.Font.Color
     End If
+    
+    If FrmVal("commentVal") <> "" Then
+      commentVal = FrmVal("commentVal")
+    End If
+      
     With Frm_InsComment
       .TextBox = commentVal
       
@@ -427,10 +527,10 @@ LBl_nextFor:
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
   Exit Function
@@ -453,7 +553,7 @@ Function コメント削除()
     Call Library.startScript
     Else
     On Error GoTo catchError
-    Call Library.showDebugForm("  " & funcName, , "start1")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
@@ -471,10 +571,10 @@ Function コメント削除()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
   Exit Function
@@ -488,7 +588,7 @@ End Function
 '==================================================================================================
 Function 行例を入れ替えて貼付け()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.コメント削除"
+  Const funcName As String = "Ctl_Cells.行例を入れ替えて貼付け"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -507,10 +607,10 @@ Function 行例を入れ替えて貼付け()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
   Exit Function
@@ -537,6 +637,9 @@ Function ゼロ埋め()
   End If
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
+'  On Error Resume Next
+'  Selection.SpecialCells(xlCellTypeBlanks).Value = 0
+'  On Error GoTo 0
   
   For Each slctCells In Selection
     If slctCells.Text = "" Then
@@ -549,10 +652,10 @@ Function ゼロ埋め()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
   Exit Function
@@ -582,25 +685,39 @@ Function 改行削除()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
-  For Each slctCells In Selection
-    resVal = slctCells.Text
+  arrCells = Selection.Value
+  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+    arrCells(i, 1) = Replace(arrCells(i, 1), vbCrLf, "")
+    arrCells(i, 1) = Replace(arrCells(i, 1), vbCr, "")
+    arrCells(i, 1) = Replace(arrCells(i, 1), vbLf, "")
     
-    If resVal <> "" Then
-      resVal = Replace(resVal, vbCrLf, "")
-      resVal = Replace(resVal, vbCr, "")
-      resVal = Replace(resVal, vbLf, "")
-      slctCells.Value = resVal
-      DoEvents
-    End If
+    slctCellsCnt = slctCellsCnt + 1
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "改行削除")
   Next
+  Selection.Value = arrCells
+  
+  
+  
+  
+'  For Each slctCells In Selection
+'    resVal = slctCells.Text
+'
+'    If resVal <> "" Then
+'      resVal = Replace(resVal, vbCrLf, "")
+'      resVal = Replace(resVal, vbCr, "")
+'      resVal = Replace(resVal, vbLf, "")
+'      slctCells.Value = resVal
+'      DoEvents
+'    End If
+'  Next
   
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -636,10 +753,10 @@ Function 行挿入()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -676,10 +793,10 @@ Function 列挿入()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -717,10 +834,10 @@ Function 定数削除()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
   End If
   '----------------------------------------------
   Exit Function
@@ -741,7 +858,11 @@ Function セル幅調整()
   Dim colLine As Long, endColLine As Long
   Dim colName As String
   Dim slctCells As Range
+  Dim maxColumnWidth As Integer
   Const funcName As String = "Ctl_Cells.セル幅調整"
+  
+  maxColumnWidth = 40
+  
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -757,19 +878,25 @@ Function セル幅調整()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   If Selection.CountLarge > 1 Then
+    '自動調整
     Columns(Library.getColumnName(Selection(1).Column) & ":" & Library.getColumnName(Selection(Selection.CountLarge).Column)).EntireColumn.AutoFit
     
     For Each slctCells In Selection
       colName = Library.getColumnName(slctCells.Column)
+      
       If IsNumeric(slctCells.Value) Then
         If CInt(slctCells.Value) > 1 Then
           Columns(colName & ":" & colName).ColumnWidth = slctCells.Value
         End If
+      
+      ElseIf Columns(colName & ":" & colName).ColumnWidth > maxColumnWidth Then
+        Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
+      
+      Else
+        Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0)
+      
       End If
       
-      If Columns(colName & ":" & colName).ColumnWidth > 60 Then
-        Columns(colName & ":" & colName).ColumnWidth = 60
-      End If
     Next
 
   Else
@@ -780,11 +907,13 @@ Function セル幅調整()
         If CInt(Cells(1, colLine)) > 1 Then
           Columns(colName & ":" & colName).ColumnWidth = Cells(1, colLine).Value
         End If
-      End If
       
-      If Cells(1, colLine).ColumnWidth > 60 Then
-        colName = Library.getColumnName(colLine)
-        Columns(colName & ":" & colName).ColumnWidth = 60
+      ElseIf Cells(1, colLine).ColumnWidth > maxColumnWidth Then
+        Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
+      
+      Else
+        Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0)
+
       End If
     Next
   End If
@@ -793,10 +922,10 @@ Function セル幅調整()
   If runFlg = False Then
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript(True)
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
   
@@ -831,10 +960,10 @@ Function セル高さ調整()
   If runFlg = False Then
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript(True)
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 
@@ -843,3 +972,432 @@ Function セル高さ調整()
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
+
+
+'==================================================================================================
+Function 大⇒小変変換()
+  Dim line As Long, endLine As Long
+  Dim slctCellsCnt As Long
+  Dim arrCells
+  
+  Const funcName As String = "Ctl_Cells.大⇒小変変換"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  slctCellsCnt = 0
+
+  
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    If arrCells(i, 1) <> "" Then
+'      arrCells(i, 1) = LCase(arrCells(i, 1))
+'    End If
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "英数字全⇒半角変換")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  For Each arrCells In Selection
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "英数字半⇒全角変換")
+    If arrCells.Value <> "" Then
+      arrCells.Value = LCase(arrCells.Value)
+    End If
+    slctCellsCnt = slctCellsCnt + 1
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function 小⇒大変変換()
+  Dim line As Long, endLine As Long
+  Dim slctCellsCnt As Long
+  Dim arrCells
+  
+  Const funcName As String = "Ctl_Cells.小⇒大変変換"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  slctCellsCnt = 0
+  
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    If arrCells(i, 1) <> "" Then
+'      arrCells(i, 1) = UCase(arrCells(i, 1))
+'    End If
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "英数字全⇒半角変換")
+'  Next
+'  Selection.Value = arrCells
+'
+    
+  For Each arrCells In Selection
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "英数字半⇒全角変換")
+    If arrCells.Value <> "" Then
+      arrCells.Value = UCase(arrCells.Value)
+    End If
+    slctCellsCnt = slctCellsCnt + 1
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 丸数字⇒数値()
+  Dim line As Long, endLine As Long
+  Dim slctCells As Range
+  Dim slctCellsCnt As Long
+  Const funcName As String = "Ctl_Cells.丸数字⇒数値"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  slctCellsCnt = 0
+  
+  For Each slctCells In Selection
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "丸数字⇒数値")
+    
+    Debug.Print AscW(slctCells.Value)
+    Select Case AscW(slctCells.Value)
+      Case 9450
+        slctCells.Value = 0
+      
+      '1～20
+      Case 9312 To 9332
+        slctCells.Value = AscW(slctCells.Value) - 9311
+      
+      '21～35
+      Case 12881 To 12901
+        slctCells.Value = AscW(slctCells.Value) - 12881 + 21
+
+      '36～50
+      Case 12977 To 13027
+        slctCells.Value = AscW(slctCells.Value) - 12941
+        
+      Case Else
+    End Select
+    slctCellsCnt = slctCellsCnt + 1
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 数値⇒丸数字()
+  Dim line As Long, endLine As Long
+  Dim slctCells As Range
+  Dim slctCellsCnt As Long
+  Const funcName As String = "Ctl_Cells.数値⇒丸数字"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "function")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  slctCellsCnt = 0
+  
+  For Each slctCells In Selection
+    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, Selection.CountLarge, "数値⇒丸数字")
+    
+    Select Case slctCells.Value
+      Case 1 To 20
+        slctCells.Value = Chr(Asc("①") + slctCells.Value - 1)
+        
+      Case 21 To 35
+        slctCells.Value = ChrW(12881 + slctCells.Value - 21)
+      
+      Case 36 To 50
+        slctCells.Value = ChrW(12941 + slctCells.Value)
+        
+      Case 0
+        slctCells.Value = ChrW(9450)
+      Case Else
+    End Select
+    slctCellsCnt = slctCellsCnt + 1
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
+'エラー発生時--------------------------------------------------------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function URLエンコード()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.URLエンコード"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = Trim(arrCells(i, 1))
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "中黒点付与")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  For Each slctCells In Selection
+    slctCells.Value = Library.convURLEncode(slctCells.Text)
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function URLデコード()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.URLデコード"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+'  arrCells = Selection.Value
+'  For i = LBound(arrCells, 1) To UBound(arrCells, 1)
+'    arrCells(i, 1) = Trim(arrCells(i, 1))
+'    slctCellsCnt = slctCellsCnt + 1
+'
+'    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, slctCellsCnt, UBound(arrCells, 1), "中黒点付与")
+'  Next
+'  Selection.Value = arrCells
+  
+  
+  For Each slctCells In Selection
+    slctCells.Value = Library.convURLDecode(slctCells.Text)
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function Unicodeエスケープ()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.Unicodeエスケープ"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  For Each slctCells In Selection
+    slctCells.Value = Library.convUnicodeEscape(slctCells.Text)
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function Unicodeアンエスケープ()
+  Dim slctCells As Range
+  Const funcName As String = "Ctl_Cells.Unicodeアンエスケープ"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+
+  
+  For Each slctCells In Selection
+    slctCells.Value = Library.convUnicodeunEscape(slctCells.Text)
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+

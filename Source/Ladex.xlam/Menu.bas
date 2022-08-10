@@ -39,11 +39,11 @@ Sub ladex_ƒV[ƒgˆê——æ“¾()
 End Sub
 
 Sub ladex_ƒZƒ‹‘I‘ğ()
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
 End Sub
 
 Sub ladex_ƒZƒ‹‘I‘ğ_•Û‘¶()
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
   ActiveWorkbook.Save
 End Sub
 
@@ -115,6 +115,7 @@ Sub ladex_æ‚èÁ‚µü()
 End Sub
 
 Sub ladex_ƒRƒƒ“ƒg‘}“ü()
+  Call init.unsetting
   Call Ctl_Cells.ƒRƒƒ“ƒg‘}“ü
 End Sub
 
@@ -164,117 +165,201 @@ Sub ladex_‰æ‘œ•Û‘¶()
 End Sub
 
 Sub ladex_Œrü_ƒNƒŠƒA()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_ƒNƒŠƒA
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_ƒNƒŠƒA_’†‰›ü_‰¡()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_’†‰›üíœ_‰¡
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_ƒNƒŠƒA_’†‰›ü_c()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_’†‰›üíœ_c
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_•\_Àü()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_Šiq
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_•\_”jüA()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_•\
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_•\_”jüB()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_Šiq
   Call Library.Œrü_Àü_…•½
   Call Library.Œrü_Àü_ˆÍ‚İ
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_…•½()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_…•½
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_‚’¼()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_‚’¼
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_¶()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_¶
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_‰E()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_‰E
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_¶‰E()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_¶‰E
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_ã()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_ã
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_‰º()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_‰º
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_ã‰º()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_ã‰º
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_ˆÍ‚İ()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_ˆÍ‚İ
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_”jü_Šiq()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_”jü_Šiq
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_Àü_…•½()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_…•½
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_Àü_‚’¼()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_‚’¼
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_Àü_¶‰E()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_¶‰E
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_Àü_ã‰º()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_ã‰º
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_Àü_ˆÍ‚İ()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_ˆÍ‚İ
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_Àü_Šiq()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_Àü_Šiq
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_“ñdü_¶()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_“ñdü_¶
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_“ñdü_¶‰E()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_“ñdü_¶‰E
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_“ñdü_ã()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_“ñdü_ã
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_“ñdü_‰º()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_“ñdü_‰º
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_“ñdü_ã‰º()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_“ñdü_ã‰º
+  Call Library.endScript
 End Sub
 
 Sub ladex_Œrü_“ñdü_ˆÍ‚İ()
+  Call init.setting
+  Call Library.startScript
   Call Library.Œrü_“ñdü_ˆÍ‚İ
+  Call Library.endScript
 End Sub
 
 Sub ladex_˜A”Ôİ’è()
@@ -320,3 +405,21 @@ End Sub
 Sub ladex_ƒf[ƒ^¶¬_•¶š()
   Call Ctl_sampleData.‚»‚Ì‘¼_•¶š
 End Sub
+
+Sub ladex_ƒJƒXƒ^ƒ€01()
+  Call Ctl_ƒJƒXƒ^ƒ€.ƒJƒXƒ^ƒ€01
+End Sub
+Sub ladex_ƒJƒXƒ^ƒ€02()
+  Call Ctl_ƒJƒXƒ^ƒ€.ƒJƒXƒ^ƒ€02
+End Sub
+Sub ladex_ƒJƒXƒ^ƒ€03()
+  Call Ctl_ƒJƒXƒ^ƒ€.ƒJƒXƒ^ƒ€03
+End Sub
+Sub ladex_ƒJƒXƒ^ƒ€04()
+  Call Ctl_ƒJƒXƒ^ƒ€.ƒJƒXƒ^ƒ€04
+End Sub
+Sub ladex_ƒJƒXƒ^ƒ€05()
+  Call Ctl_ƒJƒXƒ^ƒ€.ƒJƒXƒ^ƒ€05
+End Sub
+
+

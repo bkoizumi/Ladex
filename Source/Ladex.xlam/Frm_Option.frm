@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Option 
    Caption         =   "オプション"
-   ClientHeight    =   7400
+   ClientHeight    =   7410
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   7605
@@ -127,28 +127,6 @@ Private Sub UserForm_Initialize()
     Next
     .BaseFontSize.ListIndex = ListIndex
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
     'デバッグ関連--------------------------------
     .LogLevel.AddItem "1.Error"
     .LogLevel.AddItem "2.warning"
@@ -175,7 +153,7 @@ Private Sub UserForm_Initialize()
     
     '透明度
     .HighlightTransparentRate.Min = 0
-    .HighlightTransparentRate.Max = 100
+    .HighlightTransparentRate.max = 100
     HighlightTransparentRate = Library.getRegistry("Main", "HighLightTransparentRate")
     If HighlightTransparentRate = "0" Then
       .HighlightTransparentRate.Value = 70
@@ -272,32 +250,35 @@ Private Sub UserForm_Initialize()
     Set cBox = Nothing
     
     '電子印鑑タブ--------------------------------
-    '電子印鑑非表示(公開一時停止)
-    .MultiPage1.Page4.Visible = False
+    '.MultiPage1.Page4.Visible = False        '電子印鑑非表示(公開一時停止)
 
-'    StampVal = Library.getRegistry("Main", "StampVal")
-'    StampFont = Library.getRegistry("Main", "StampFont")
-'
-'    .StampVal.Value = StampVal
-'    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
-'
-'      For i = 1 To cBox.ListCount
-'        .StampFont.AddItem cBox.list(i)
-'        If cBox.list(i) = StampFont Then
-'          ListIndex = i - 1
-'        End If
-'      Next
-'    .StampFont.ListIndex = ListIndex
-'
-'    'プレビュー
-'    imageName = thisAppName & "StampImg" & ".jpg"
-'    previewImgPath = LadexDir & "\RibbonImg\" & imageName
-'    If Library.chkFileExists(previewImgPath) = False Then
-'      imageName = thisAppName & "NoStampImg" & ".jpg"
-'      previewImgPath = LadexDir & "\RibbonImg\" & imageName
-'    End If
-'    .StampImg.Picture = LoadPicture(previewImgPath)
-'    Set cBox = Nothing
+    StampName = Library.getRegistry("Main", "StampName")
+    StampFont = Library.getRegistry("Main", "StampFont")
+    StampVal = Library.getRegistry("Main", "StampVal")
+
+    .StampName.Value = StampName
+    .StampVal.Value = StampVal
+    
+    Set cBox = Application.CommandBars("Formatting").Controls.Item(1)
+      For i = 1 To cBox.ListCount
+        .StampFont.AddItem cBox.list(i)
+        If cBox.list(i) = StampFont Then
+          ListIndex = i - 1
+        End If
+      Next
+    .StampFont.ListIndex = ListIndex
+
+
+
+    'プレビュー
+    imageName = thisAppName & "StampImg" & ".jpg"
+    previewImgPath = LadexDir & "\RibbonImg\" & imageName
+    If Library.chkFileExists(previewImgPath) = False Then
+      imageName = thisAppName & "NoStampImg" & ".jpg"
+      previewImgPath = LadexDir & "\RibbonImg\" & imageName
+    End If
+    .StampImg.Picture = LoadPicture(previewImgPath)
+    Set cBox = Nothing
     
     'ショートカットタブ-------------------------
     onAlt.Value = True
@@ -332,8 +313,9 @@ Private Sub UserForm_Initialize()
     
     'キーリスト
     endLine = LadexSh_Config.Cells(Rows.count, 13).End(xlUp).Row
+    endLine = 59
     
-     ReDim ShortcutKeyList(endLine - 3, 2)
+    ReDim ShortcutKeyList(endLine - 3, 2)
     For line = 3 To endLine
       If LadexSh_Config.Range("N" & line) <> "" Then
         ShortcutKeyList(line - 3, 0) = CStr(LadexSh_Config.Range("N" & line))
@@ -443,7 +425,8 @@ Function doHighLightPreview()
 '  Range("A1:D4").Clear
 '  Call Library.罫線_実線_格子(Range("A1:C3"))
   
-  Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+  'Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+  Call Ctl_HighLight.showStart(Range("B2"))
   
   imageName = thisAppName & "HighLightImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
@@ -496,22 +479,17 @@ End Function
 '==================================================================================================
 Function doStampPreview()
   Dim previewImgPath As String
-  Dim StampVal As String, StampFont As String
   
   Call init.setting(True)
-  Set LadexSh_HiLight = ActiveWorkbook.Worksheets("HighLight")
   
   LadexSh_HiLight.Activate
-  LadexSh_HiLight.Range("F10").Activate
+  LadexSh_HiLight.Range("F12").Activate
   
-  StampVal = StampVal.Value
-  StampFont = StampFont.Value
-  
-  Call Ctl_Stamp.押印_確認印(StampVal, StampFont, thisAppName & "StampImg")
+  Call Ctl_Stamp.確認印(StampName.Value, StampVal.Value, StampFont.Value, thisAppName & "StampImg")
   
   imageName = thisAppName & "StampImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("E10:H12"), imageName)
+  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("E12:I16"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
@@ -649,6 +627,34 @@ Private Sub CommentFontSize_Change()
   CommentFontColor.Caption = ""
   If InitializeFlg = False Then
     Call doCommentPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub StampName_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+  If InitializeFlg = False Then
+    Call doStampPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub StampName_Change()
+  If InitializeFlg = False Then
+    Call doStampPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub StampVal_Exit(ByVal Cancel As MSForms.ReturnBoolean)
+  If InitializeFlg = False Then
+    Call doStampPreview
+  End If
+End Sub
+
+'==================================================================================================
+Private Sub StampVal_Change()
+  If InitializeFlg = False Then
+    Call doStampPreview
   End If
 End Sub
 
@@ -820,6 +826,8 @@ Private Sub Cancel_Click()
 '  Call Library.setRegistry("UserForm", "OptionTop", Top)
 '  Call Library.setRegistry("UserForm", "OptionLeft", Left)
   
+  InitializeFlg = True
+  
   Unload Me
 End Sub
 
@@ -827,6 +835,8 @@ End Sub
 ' 実行
 Private Sub run_Click()
   Dim execDay As Date
+  
+  InitializeFlg = True
   
 '  Call Library.setRegistry("UserForm", "OptionTop", Top)
 '  Call Library.setRegistry("UserForm", "OptionLeft", Left)
@@ -892,6 +902,8 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "CommentFontColor", CommentFontColor.BackColor)
   Call Library.setRegistry("Main", "CommentFontSize", CommentFontSize.Value)
 
+  'スタンプ--------------------------------------
+  Call Library.setRegistry("Main", "StampName", StampName.Value)
   Call Library.setRegistry("Main", "StampVal", StampVal.Value)
   Call Library.setRegistry("Main", "StampFont", StampFont.Value)
   

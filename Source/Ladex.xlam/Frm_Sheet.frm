@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Sheet
    ClientHeight    =   6420
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9945.001
+   ClientWidth     =   9675.001
    OleObjectBlob   =   "Frm_Sheet.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -15,8 +15,10 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Public InitializeFlg   As Boolean
-Public selectLine   As Long
+Public InitializeFlg  As Boolean
+Public selectLine     As Long
+
+
 
 '**************************************************************************************************
 ' * 初期設定
@@ -42,7 +44,7 @@ Private Sub UserForm_Initialize()
   InitializeFlg = True
   
   With Frm_Sheet
-    .Caption = "シート管理 " & thisAppName
+    .Caption = "[" & thisAppName & "] シート管理 "
     .inputSheetName.Value = ActiveSheet.Name
     With SheetList
       .View = lvwReport
@@ -80,6 +82,13 @@ Private Sub UserForm_Initialize()
     End With
   End With
   
+'  add.Accelerator = "a"     'シート追加
+'  edit.Accelerator = "r"    'シート名変更
+'  display.Accelerator = "s" 'シート表示/非表示
+'  del.Accelerator = "d"     'シート削除
+'  copy.Accelerator = "c"     'シートコピー
+  
+    
   InitializeFlg = False
   
   Exit Sub
@@ -282,6 +291,42 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Sub
 
+'==================================================================================================
+'シートコピー
+Private Sub copy_Click()
+  Dim sheetName As String
+   
+  Const funcName As String = "Frm_Sheet.copy_Click"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
+  
+  sheetName = SheetList.SelectedItem.SubItems(2)
+  ActiveWorkbook.Sheets(sheetName).Select
+  
+  If Library.chkSheetExists(inputSheetName.Value) = False Then
+    Call Library.startScript
+    ActiveWorkbook.Sheets(sheetName).copy After:=Sheets(Worksheets.count)
+    ActiveSheet.Name = inputSheetName.Value
+    
+    ActiveSheet.Move After:=ActiveWorkbook.Sheets(sheetName)
+    
+    
+    Call Library.endScript
+  Else
+    sheetInfo.Caption = inputSheetName.Value & "はすでに存在します"
+  End If
+  
+  Call reLoadList
+  
+  Exit Sub
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+End Sub
 
 '==================================================================================================
 'シート削除
@@ -339,21 +384,14 @@ catchError:
 End Sub
 
 '==================================================================================================
-'シートの選択
-Private Sub active_Click()
-  Dim sheetName As String, sheetDspFLg As String
-  
-  sheetName = SheetList.SelectedItem.SubItems(2)
-  
-  If ActiveWorkbook.Worksheets(sheetName).Visible = True Then
-    ActiveWorkbook.Worksheets(sheetName).Select
-  Else
-    ActiveWorkbook.Worksheets(sheetName).Visible = True
-    ActiveWorkbook.Worksheets(sheetName).Select
-  End If
-  Call reLoadList
-
+'複数シート生成
+Private Sub addSheets_Click()
+  Unload Me
+  Call Ctl_Sheet.連続シート追加
+  Call Ctl_Sheet.シート管理_フォーム表示
 End Sub
+
+
 
 '==================================================================================================
 'キャンセル処理

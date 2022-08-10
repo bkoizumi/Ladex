@@ -1,57 +1,93 @@
 Attribute VB_Name = "Ctl_Favorite"
 Option Explicit
 
+
+
 '**************************************************************************************************
 ' * お気に入り
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+
 '==================================================================================================
 Function getList()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long, cateEndLine As Long
   Dim tmp, i As Long, buf As String
-  
+
   Call init.setting
-  Call Library.delSheetData(LadexSh_Favorite, 2)
+  Call Library.delSheetData(LadexSh_Favorite)
   tmp = GetAllSettings(thisAppName, "FavoriteList")
   
+  
+  colLine = 1
+  line = 1
   If Not IsEmpty(tmp) Then
+    'カテゴリー抽出------------------------------
     For i = 0 To UBound(tmp)
-      LadexSh_Favorite.Range("A" & i + 2) = tmp(i, 1)
-    Next i
+      LadexSh_Favorite.Range("A" & line) = Split(tmp(i, 0), "<Ladex>")(0)
+      line = line + 1
+    Next
+    
+    '重複削除
+    endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+    LadexSh_Favorite.Range("A1:A" & endLine).RemoveDuplicates Columns:=1, Header:=xlNo
+    endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+
+    colLine = 2
+    For line = 1 To endLine
+      For i = 0 To UBound(tmp)
+        If tmp(i, 0) Like LadexSh_Favorite.Range("A" & line) & "<Ladex>*" Then
+          cateEndLine = LadexSh_Favorite.Cells(Rows.count, colLine).End(xlUp).Row
+          If LadexSh_Favorite.Cells(cateEndLine, colLine) <> "" Then
+            cateEndLine = cateEndLine + 1
+          End If
+          LadexSh_Favorite.Cells(cateEndLine, colLine) = tmp(i, 1)
+        End If
+      Next
+      cateEndLine = 1
+      colLine = colLine + 1
+    Next
   End If
 End Function
 
 
 '==================================================================================================
 Function addList()
-
   Dim line As Long, endLine As Long
+  Dim cateLine As Long, cateEndLine As Long
   
   Call init.setting
-  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  cateEndLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
 
-  Call Library.delRegistry("FavoriteList")
+  Call Library.delRegistry("FavoriteList", "")
   
-  For line = 2 To endLine
-    Call Library.setRegistry("FavoriteList", "Favorite" & line - 1, LadexSh_Favorite.Range("A" & line))
-  Next
+  If LadexSh_Favorite.Range("A1") <> "" And LadexSh_Favorite.Range("B1") <> "" Then
+    For cateLine = 1 To cateEndLine
+      For line = 1 To LadexSh_Favorite.Cells(Rows.count, cateLine + 1).End(xlUp).Row
+        Call Library.setRegistry("FavoriteList", LadexSh_Favorite.Range("A" & cateLine) & "<Ladex>" & line - 1, LadexSh_Favorite.Cells(line, cateLine + 1))
+      Next
+    Next
+  End If
 End Function
 
 
 '==================================================================================================
 'お気に入り追加
-Function add(Optional filePath As String)
-
+Function add(Optional setCategory As Long = 1, Optional filePath As String)
   Dim line As Long, endLine As Long
   
   Call init.setting
-  Call Ctl_Favorite.getList
-  line = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row + 1
+
+  endLine = LadexSh_Favorite.Cells(Rows.count, setCategory + 1).End(xlUp).Row
+  If endLine <> 1 Then
+    endLine = endLine + 1
+  End If
   
   If filePath = "" Then
     filePath = ActiveWorkbook.FullName
   End If
-  LadexSh_Favorite.Range("A" & line) = filePath
+  
+  LadexSh_Favorite.Cells(endLine, setCategory + 1) = filePath
   
   Call addList
 
@@ -71,11 +107,11 @@ Function detail()
     Exit Function
   End If
   
-  Call getList
+  Call Ctl_Favorite.getList
   With Frm_Favorite
     .Show vbModeless
   End With
-  Call RefreshListBox
+'  Call Ctl_Favorite.RefreshListBox_new
   
   Exit Function
 'エラー発生時--------------------------------------------------------------------------------------
@@ -85,31 +121,8 @@ End Function
 
 
 
-'==================================================================================================
-Function RefreshListBox()
-  Dim line As Long, endLine As Long
-  Dim FSO As Object
-  
-  Const funcName As String = "Ctl_Favorite.RefreshListBox"
-  
-  Call init.setting
-  Call Library.showDebugForm(funcName, , "start1")
-  
-  
-  Set FSO = CreateObject("Scripting.FileSystemObject")
-  
-  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
-  
-  Frm_Favorite.Lst_Favorite.Clear
-  For line = 2 To endLine
-    Frm_Favorite.Lst_Favorite.AddItem FSO.GetBaseName(LadexSh_Favorite.Range("A" & line))
-    
-    Call Library.showDebugForm(LadexSh_Favorite.Range("A" & line), , "debug")
-  Next
-  Set FSO = Nothing
-  
-  'ThisWorkbook.Save
-End Function
+
+
 
 
 '**************************************************************************************************
@@ -119,7 +132,7 @@ End Function
 '**************************************************************************************************
 '==================================================================================================
 Function moveTop()
-  Dim line As Long
+  Dim line As Long, colLine As Long
   Dim filePath As String
   
   If Frm_Favorite.Lst_Favorite.ListIndex = 0 Then
@@ -127,87 +140,126 @@ Function moveTop()
   End If
   
   Call init.setting
+  Call Library.startScript
   
-  line = Frm_Favorite.Lst_Favorite.ListIndex + 2
+  line = Frm_Favorite.Lst_Favorite.ListIndex + 1
+  If Frm_Favorite.Lst_FavCategory.ListIndex = -1 Then
+    colLine = 2
+  Else
+    colLine = Frm_Favorite.Lst_FavCategory.ListIndex + 2
+  End If
   
-  LadexSh_Favorite.Range("A" & line).Cut
-  LadexSh_Favorite.Range("A" & 2).Insert Shift:=xlDown
+  LadexSh_Favorite.Cells(line, colLine).Cut
+  LadexSh_Favorite.Cells(1, colLine).Insert Shift:=xlDown
   
-  Call RefreshListBox
+  Call Frm_Favorite.RefreshListBox
+  Frm_Favorite.Lst_FavCategory.ListIndex = colLine - 2
+  
 End Function
 
 
 '==================================================================================================
 Function moveUp()
-  Dim line As Long
+  Dim line As Long, colLine As Long
   Dim filePath As String
   
   Call init.setting
-  line = Frm_Favorite.Lst_Favorite.ListIndex + 2
+  Call Library.startScript
   
-  LadexSh_Favorite.Range("A" & line).Cut
-  LadexSh_Favorite.Range("A" & line - 1).Insert Shift:=xlDown
+  line = Frm_Favorite.Lst_Favorite.ListIndex + 1
+  If Frm_Favorite.Lst_FavCategory.ListIndex = -1 Then
+    colLine = 2
+  Else
+    colLine = Frm_Favorite.Lst_FavCategory.ListIndex + 2
+  End If
   
-  Call RefreshListBox
+  
+  LadexSh_Favorite.Cells(line, colLine).Cut
+  LadexSh_Favorite.Cells(line - 1, colLine).Insert Shift:=xlDown
+  
+  Call Frm_Favorite.RefreshListBox
+  Frm_Favorite.Lst_FavCategory.ListIndex = colLine - 2
 End Function
 
 
 '==================================================================================================
 Function moveDown()
-  Dim line As Long, endLine As Long
+  Dim line As Long, endLine As Long, colLine As Long
   Dim filePath As String
   
   Call init.setting
-  line = Frm_Favorite.Lst_Favorite.ListIndex + 2
-  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  Call Library.startScript
+  
+  line = Frm_Favorite.Lst_Favorite.ListIndex + 1
+  If Frm_Favorite.Lst_FavCategory.ListIndex = -1 Then
+    colLine = 2
+  Else
+    colLine = Frm_Favorite.Lst_FavCategory.ListIndex + 2
+  End If
+  
+  endLine = LadexSh_Favorite.Cells(Rows.count, colLine).End(xlUp).Row
   
   If line >= endLine Then
     Exit Function
   End If
-  LadexSh_Favorite.Range("A" & line).Cut
-  LadexSh_Favorite.Range("A" & line + 2).Insert Shift:=xlDown
+  LadexSh_Favorite.Cells(line, colLine).Cut
+  LadexSh_Favorite.Cells(line + 1, colLine).Insert Shift:=xlDown
   
-  Call RefreshListBox
+  Call Frm_Favorite.RefreshListBox
+  Frm_Favorite.Lst_FavCategory.ListIndex = colLine - 2
+  Frm_Favorite.Lst_Favorite.ListIndex = line - 1
+  
 End Function
 
 
 '==================================================================================================
 Function moveBottom()
-  Dim line As Long, endLine As Long
+  Dim line As Long, endLine As Long, colLine As Long
   Dim filePath As String
   
   Call init.setting
-  line = Frm_Favorite.Lst_Favorite.ListIndex + 2
-  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  Call Library.startScript
+  
+  line = Frm_Favorite.Lst_Favorite.ListIndex + 1
+  If Frm_Favorite.Lst_FavCategory.ListIndex = -1 Then
+    colLine = 1
+  Else
+    colLine = Frm_Favorite.Lst_FavCategory.ListIndex + 2
+  End If
+  
+  endLine = LadexSh_Favorite.Cells(Rows.count, colLine).End(xlUp).Row
   
   If line >= endLine Then
     Exit Function
   End If
-  LadexSh_Favorite.Range("A" & line).Cut
-  LadexSh_Favorite.Range("A" & endLine).Insert Shift:=xlDown
+  LadexSh_Favorite.Cells(line, colLine).Cut
+  LadexSh_Favorite.Cells(endLine + 1, colLine).Insert Shift:=xlDown
   
-  Call RefreshListBox
+  Call Frm_Favorite.RefreshListBox
+  Frm_Favorite.Lst_FavCategory.ListIndex = colLine - 2
+  
 End Function
 
 
 '==================================================================================================
 Function delete()
-  Dim line As Long
+  Dim line As Long, colLine As Long
   Dim filePath As String
   
   Call init.setting
-  line = Frm_Favorite.Lst_Favorite.ListIndex + 2
+  Call Library.startScript
   
-  LadexSh_Favorite.Rows(line & ":" & line).delete Shift:=xlUp
+  line = Frm_Favorite.Lst_Favorite.ListIndex + 1
+  If Frm_Favorite.Lst_FavCategory.ListIndex = -1 Then
+    colLine = 1
+  Else
+    colLine = Frm_Favorite.Lst_FavCategory.ListIndex + 1
+  End If
   
-  Call RefreshListBox
+  LadexSh_Favorite.Cells(line, colLine + 1).delete Shift:=xlUp
+  Call Frm_Favorite.RefreshListBox
+  Frm_Favorite.Lst_FavCategory.ListIndex = colLine - 1
+
 End Function
-
-
-
-
-
-
-
 
 

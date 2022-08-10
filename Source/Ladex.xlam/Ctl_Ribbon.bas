@@ -39,6 +39,7 @@ Function onLoad(ribbon As IRibbonUI)
   
   'BK_ribbonUI.ActivateTab ("Ladex")
   BK_ribbonUI.Invalidate
+
   
   Exit Function
 'エラー発生時------------------------------------
@@ -127,7 +128,8 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Const funcName As String = "Ctl_Ribbon.HighLight"
   
   '処理開始--------------------------------------
-'  On Error GoTo catchError
+  runFlg = True
+  '  On Error GoTo catchError
   Call init.setting
   Call Library.startScript
   Call Library.showDebugForm("" & funcName, , "function")
@@ -140,24 +142,21 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   BKh_rbPressed = pressed
   
   If pressed = False Then
-    Set targetBook = Workbooks(Library.getRegistry("targetInfo", "Book", "String"))
-    Set targetSheet = targetBook.Worksheets(Library.getRegistry("targetInfo", "Sheet", "String"))
-  
-    If Library.chkShapeName("HighLight_X", targetSheet) = True Then
-      targetSheet.Shapes("HighLight_X").delete
-    End If
-    If Library.chkShapeName("HighLight_Y", targetSheet) = True Then
-      targetSheet.Shapes("HighLight_Y").delete
-    End If
+      If Library.chkShapeName("HighLight_X", ActiveSheet) = True Then
+        ActiveSheet.Shapes("HighLight_X").delete
+      End If
+      If Library.chkShapeName("HighLight_Y", ActiveSheet) = True Then
+        ActiveSheet.Shapes("HighLight_Y").delete
+      End If
     
-    Call Library.delRegistry("Main", "HighLightFlg")
-    Call Library.delRegistry("targetInfo", "Book")
-    Call Library.delRegistry("targetInfo", "Sheet")
+    Call Library.setRegistry("Main", "HighLightFlg", pressed)
+    Call Library.delRegistry("targetInfo", "HighLight_Book")
+    Call Library.delRegistry("targetInfo", "HighLight_Sheet")
   
   Else
     Call Library.setRegistry("Main", "HighLightFlg", pressed)
-    Call Library.setRegistry("targetInfo", "Book", ActiveWorkbook.Name)
-    Call Library.setRegistry("targetInfo", "Sheet", ActiveSheet.Name)
+    Call Library.setRegistry("targetInfo", "HighLight_Book", ActiveWorkbook.Name)
+    Call Library.setRegistry("targetInfo", "HighLight_Sheet", ActiveSheet.Name)
     
     Call Ctl_HighLight.showStart(ActiveCell)
   End If
@@ -181,6 +180,7 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   Const funcName As String = "Ctl_Ribbon.Zoom"
   
   '処理開始--------------------------------------
+  runFlg = True
   On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
@@ -217,6 +217,7 @@ Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Const funcName As String = "Ctl_Ribbon.confirmFormula"
   
   '処理開始--------------------------------------
+  runFlg = True
   On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
@@ -226,6 +227,14 @@ Function confirmFormula(control As IRibbonControl, pressed As Boolean)
   Ctl_Event.InitializeBookSheets
   BKcf_rbPressed = pressed
   
+  
+  If BKcf_rbPressed = True Then
+    Call Library.setRegistry("targetInfo", "Formula_Book", ActiveWorkbook.Name)
+    Call Library.setRegistry("targetInfo", "Formula_Sheet", ActiveSheet.Name)
+  Else
+    Call Library.delRegistry("targetInfo", "Formula_Book")
+    Call Library.delRegistry("targetInfo", "Formula_Sheet")
+  End If
   Call Ctl_Formula.数式確認
   
   Exit Function
@@ -249,15 +258,16 @@ Function FavoriteFileOpen(control As IRibbonControl)
   Dim objFso As New FileSystemObject
   Const funcName As String = "Ctl_Ribbon.FavoriteFileOpen"
   
+  runFlg = True
   Call Library.startScript
-  fileNamePath = Library.getRegistry("FavoriteList", control.ID)
+  fileNamePath = Library.getRegistry("FavoriteList", Replace(control.ID, ".-.", "<Ladex>"))
   
   If Library.chkFileExists(fileNamePath) Then
     If Library.chkBookOpened(fileNamePath) = True Then
       Call Library.showNotice(415, "", True)
     Else
       Select Case objFso.GetExtensionName(fileNamePath)
-        Case "xls", "xlsx", "xlsm"
+        Case "xls", "xlsx", "xlsm", "xlam"
           Workbooks.Open fileName:=fileNamePath
         Case Else
           CreateObject("Shell.Application").ShellExecute fileNamePath
@@ -266,9 +276,30 @@ Function FavoriteFileOpen(control As IRibbonControl)
   Else
     Call Library.showNotice(404, fileNamePath, True)
   End If
-  
   Call Library.endScript
 End Function
+
+
+'==================================================================================================
+'お気に入りファイル追加
+Function FavoriteAddFile(control As IRibbonControl)
+  Dim fileNamePath As String
+  Dim line As Long
+  Dim setCategory As Long
+  
+  Const funcName As String = "Ctl_Ribbon.FavoriteFileOpen"
+  
+  runFlg = True
+  Call Library.startScript
+  Call Library.showDebugForm("control.ID", control.ID, "debug")
+  
+  setCategory = Replace(control.ID, "M_FavoriteCategory", "")
+  Call Ctl_Favorite.add(setCategory, ActiveWorkbook.FullName)
+  
+  Call Library.delSheetData(LadexSh_Favorite)
+  Call Library.endScript
+End Function
+
 
 '**************************************************************************************************
 ' * リボンメニュー表示/非表示切り替え
@@ -424,19 +455,108 @@ catchError:
   Call Library.showNotice(400, Err.Description, True)
 End Function
 
+'==================================================================================================
+' お気に入り追加メニュー
+Function AddToFavorites(control As IRibbonControl, ByRef returnedVal)
+  Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object, CategoryMenu As Object
+  Dim regLists As Variant, i As Long
+  Dim line As Long, endLine As Long
+  Dim objFso As New FileSystemObject
+  Dim MenuSepa, tmp, Category
+  Const funcName As String = "Ctl_Ribbon.AddToFavorites"
+
+  '処理開始--------------------------------------
+  runFlg = True
+'  On Error GoTo catchError
+  Call init.setting
+  Call Library.showDebugForm("" & funcName, , "function")
+  '----------------------------------------------
+  
+  Call Ctl_Favorite.getList
+  
+  If BK_ribbonUI Is Nothing Then
+    #If VBA7 And Win64 Then
+      Set BK_ribbonUI = GetRibbon(CLngPtr(Library.getRegistry("Main", "BK_ribbonUI")))
+    #Else
+      Set BK_ribbonUI = GetRibbon(CLng(Library.getRegistry("Main", "BK_ribbonUI")))
+    #End If
+  End If
+  
+  Set DOMDoc = CreateObject("Msxml2.DOMDocument")
+  Set Menu = DOMDoc.createElement("menu") ' menuの作成
+
+  Menu.SetAttribute "xmlns", "http://schemas.microsoft.com/office/2009/07/customui"
+  Menu.SetAttribute "itemSize", "normal"
+
+'  Call Ctl_Favorite.getList
+'  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  tmp = GetAllSettings(thisAppName, "FavoriteList")
+  
+  Set MenuSepa = DOMDoc.createElement("menuSeparator")
+  With MenuSepa
+    .SetAttribute "id", "MS_お気に入り追加カテゴリー"
+    .SetAttribute "title", "お気に入り追加カテゴリー"
+  End With
+  Menu.AppendChild MenuSepa
+  Set MenuSepa = Nothing
+  
+  
+  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  If IsEmpty(tmp) Then
+    LadexSh_Favorite.Range("A1") = "Category01"
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "M_FavoriteCategory" & 1
+      .SetAttribute "label", "Category01"
+      .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.FavoriteAddFile"
+    End With
+
+    Menu.AppendChild Button
+    Set Button = Nothing
+  Else
+    For line = 1 To endLine
+      Set Button = DOMDoc.createElement("button")
+      With Button
+        .SetAttribute "id", "M_FavoriteCategory" & line
+        .SetAttribute "label", LadexSh_Favorite.Range("A" & line)
+        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.FavoriteAddFile"
+      End With
+  
+      Menu.AppendChild Button
+      Set Button = Nothing
+    Next
+  End If
+  
+  DOMDoc.AppendChild Menu
+  returnedVal = DOMDoc.XML
+  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+  
+  Set CategoryMenu = Nothing
+  Set Menu = Nothing
+  Set DOMDoc = Nothing
+  
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Set Menu = Nothing
+  Set DOMDoc = Nothing
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
 '==================================================================================================
 ' お気に入りメニュー
 Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
-  Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object
+  Dim DOMDoc As Object, Menu As Object, Button As Object, FunctionMenu As Object, CategoryMenu As Object, CategorymenuSeparator As Object
   Dim regLists As Variant, i As Long
   Dim line As Long, endLine As Long
   Dim objFso As New FileSystemObject
-  Dim MenuSepa, tmp
+  Dim MenuSepa, tmp, Category
   Const funcName As String = "Ctl_Ribbon.FavoriteMenu"
 
   '処理開始--------------------------------------
-  On Error GoTo catchError
+  runFlg = True
+'  On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
@@ -461,59 +581,90 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   
   Set MenuSepa = DOMDoc.createElement("menuSeparator")
   With MenuSepa
-    .SetAttribute "id", "MS_お気に入り一覧"
-    .SetAttribute "title", "お気に入り一覧"
+    .SetAttribute "id", "MS_カテゴリー一覧"
+    .SetAttribute "title", "カテゴリー一覧"
   End With
   Menu.AppendChild MenuSepa
   Set MenuSepa = Nothing
+  
   If Not IsEmpty(tmp) Then
     For line = 0 To UBound(tmp)
-      Set Button = DOMDoc.createElement("button")
-      With Button
-        .SetAttribute "id", tmp(line, 0)
-        .SetAttribute "label", objFso.getFileName(tmp(line, 1))
+      Category = Split(tmp(line, 0), "<Ladex>")
+      
+      If Category(1) = 0 Then
+        If line <> 0 Then
+          Menu.AppendChild CategoryMenu
+        End If
         
-        'アイコンの設定
-        Select Case objFso.GetExtensionName(tmp(line, 1))
-          Case "xlsm", "xlsx"
-            .SetAttribute "imageMso", "MicrosoftExcel"
-          Case "xls"
-            .SetAttribute "imageMso", "FileSaveAsExcel97_2003"
+        Set CategoryMenu = DOMDoc.createElement("menu")
+        With CategoryMenu
+          .SetAttribute "id", "M_FavoriteCategory" & Category(0)
+          .SetAttribute "label", Category(0)
+        End With
+      End If
+    
+      If tmp(line, 1) <> "" Then
+        Set Button = DOMDoc.createElement("button")
+        With Button
+          .SetAttribute "id", Replace(tmp(line, 0), "<Ladex>", ".-.")
+          .SetAttribute "label", objFso.getFileName(tmp(line, 1))
           
-          Case "pdf"
-            .SetAttribute "imageMso", "FileSaveAsPdf"
-          Case "docs"
-            .SetAttribute "imageMso", "FileSaveAsWordDocx"
-          Case "text"
-            .SetAttribute "imageMso", "FileNewContext"
-          Case "accdb"
-            .SetAttribute "imageMso", "MicrosoftAccess"
-          Case "pptx"
-            .SetAttribute "imageMso", "MicrosoftPowerPoint"
-          Case "csv"
-            .SetAttribute "imageMso", "FileNewContext"
-          Case "html"
-            .SetAttribute "imageMso", "GroupWebPageNavigation"
+          'アイコンの設定
+          Select Case objFso.GetExtensionName(tmp(line, 1))
+            Case "xlsm", "xlsx", "xlam"
+              .SetAttribute "imageMso", "MicrosoftExcel"
+            Case "xls"
+              .SetAttribute "imageMso", "FileSaveAsExcel97_2003"
+            
+            Case "pdf"
+              .SetAttribute "imageMso", "FileSaveAsPdf"
+            Case "docs"
+              .SetAttribute "imageMso", "FileSaveAsWordDocx"
+            Case "text"
+              .SetAttribute "imageMso", "FileNewContext"
+            Case "accdb"
+              .SetAttribute "imageMso", "MicrosoftAccess"
+            Case "pptx"
+              .SetAttribute "imageMso", "MicrosoftPowerPoint"
+            Case "csv"
+              .SetAttribute "imageMso", "FileNewContext"
+            Case "html"
+              .SetAttribute "imageMso", "GroupWebPageNavigation"
+            
+            Case Else
+              .SetAttribute "imageMso", "FileNewContext"
+              Call Library.showDebugForm("お気に入りアイコン", objFso.GetExtensionName(tmp(line, 1)), "Error")
+          End Select
           
-          Case Else
-            .SetAttribute "imageMso", "FileNewContext"
-            Call Library.showDebugForm("お気に入りアイコン", objFso.GetExtensionName(tmp(line, 1)), "Error")
-        End Select
-        
-        
-        .SetAttribute "supertip", tmp(line, 1)
-        .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.FavoriteFileOpen"
-      End With
-      Menu.AppendChild Button
-      Set Button = Nothing
+          
+          .SetAttribute "supertip", tmp(line, 1)
+          .SetAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.FavoriteFileOpen"
+        End With
+        CategoryMenu.AppendChild Button
+        Set Button = Nothing
+      End If
     Next
+    Menu.AppendChild CategoryMenu
+
+  Else
+    Set Button = DOMDoc.createElement("button")
+    With Button
+      .SetAttribute "id", "未登録"
+      .SetAttribute "label", "未登録"
+      .SetAttribute "imageMso", "FileNewContext"
+      .SetAttribute "supertip", "未登録"
+    End With
+    Menu.AppendChild Button
   End If
   DOMDoc.AppendChild Menu
   returnedVal = DOMDoc.XML
-'  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
-  
+  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+    
+  Set CategoryMenu = Nothing
   Set Menu = Nothing
   Set DOMDoc = Nothing
+  
+  
   
   Exit Function
 'エラー発生時------------------------------------
@@ -534,6 +685,7 @@ Function getRelaxTools(control As IRibbonControl, ByRef returnedVal)
   Const funcName As String = "Ctl_Ribbon.getRelaxTools"
   
   '処理開始--------------------------------------
+  runFlg = True
   On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
@@ -704,6 +856,7 @@ Function selectActiveSheet(control As IRibbonControl)
   Const funcName As String = "Ctl_Ribbon.selectActiveSheet"
   
   '処理開始--------------------------------------
+  runFlg = True
   On Error GoTo catchError
   Call Library.startScript
   Call Library.showDebugForm("" & funcName, , "function")
@@ -734,7 +887,7 @@ Function selectActiveSheet(control As IRibbonControl)
   ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
   
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
   
 '  If BK_ribbonUI Is Nothing Then
 '  Else
@@ -786,10 +939,39 @@ End Function
 '**************************************************************************************************
 '--------------------------------------------------------------------------------------------------
 Function setCenter(control As IRibbonControl)
+  Dim slctCells
+  Dim slctCnt As Long
+  Const funcName As String = "Ctl_Ribbon.setCenter"
+
+  '処理開始--------------------------------------
+  PrgP_Max = 2
+  slctCnt = 1
+  On Error GoTo catchError
   Call init.setting
-  If TypeName(Selection) = "Range" Then
-    Selection.HorizontalAlignment = xlCenterAcrossSelection
-  End If
+  Call Library.showDebugForm(funcName, , "start")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  For Each slctCells In Selection
+    If TypeName(Selection) = "Range" Then
+      Selection.HorizontalAlignment = xlCenterAcrossSelection
+      Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, slctCnt, Selection.count, "")
+      slctCnt = slctCnt + 1
+    End If
+  Next
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  Call Library.endScript
+  Call Library.showDebugForm(funcName, , "end")
+  Call init.unsetting
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -885,6 +1067,7 @@ Function Ctl_Function(control As IRibbonControl)
   Select Case control.ID
     Case "Favorite_detail"
       Call Ctl_Favorite.detail
+      
     Case "お気に入り追加"
       Call Ctl_Favorite.add
     
@@ -912,10 +1095,14 @@ Function Ctl_Function(control As IRibbonControl)
     Case "Help"
       Call Ctl_Option.showHelp
     
-    Case "OptionSheetImport"
-      Call Ctl_RbnMaint.OptionSheetImport
-    Case "OptionSheetExport"
-      Call Ctl_RbnMaint.OptionSheetExport
+    Case "OptionAddin解除"
+      Workbooks(ThisWorkbook.Name).IsAddin = False
+      'Call Ctl_RbnMaint.OptionSheetImport
+    
+    Case "OptionAddin化"
+      Workbooks(ThisWorkbook.Name).IsAddin = True
+      ThisWorkbook.Save
+      'Call Ctl_RbnMaint.OptionSheetExport
     
     'ブック管理----------------------------------
     Case "resetStyle"
@@ -933,11 +1120,19 @@ Function Ctl_Function(control As IRibbonControl)
     Case "シート一覧取得"
       Call Ctl_Book.シートリスト取得
     
+    Case "印刷範囲表示"
+      Call Ctl_Book.印刷範囲の点線を表示
+    Case "印刷範囲非表示"
+      Call Ctl_Book.印刷範囲の点線を非表示
+    
+    
+    
+    
     'シート管理----------------------------------
     Case "セル選択"
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Application.Goto Reference:=Range("A1"), Scroll:=True
     Case "セル選択_保存"
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
+      Application.Goto Reference:=Range("A1"), Scroll:=True
       ActiveWorkbook.Save
     Case "全セル表示"
       Call Ctl_Sheet.すべて表示
@@ -962,15 +1157,37 @@ Function Ctl_Function(control As IRibbonControl)
     Case "フォント一括変更"
       Call Ctl_Sheet.指定フォントに設定
     
+    Case "連続シート追加"
+      Call Ctl_Sheet.連続シート追加
     
-    
-    
-    'ファイル管理--------------------------------
+    'その他管理--------------------------------
     Case "ファイル管理_情報取得"
       Call Ctl_File.ファイルパス情報
+    
+    Case "ファイル管理_フォルダ生成"
+      Call Ctl_File.フォルダ生成
+    
     Case "ファイル管理_画像貼付け"
       Call Ctl_File.画像貼付け
     
+    Case "カスタム01"
+      Call Ctl_カスタム.カスタム01
+    Case "カスタム02"
+      Call Ctl_カスタム.カスタム02
+    Case "カスタム03"
+      Call Ctl_カスタム.カスタム03
+    Case "カスタム04"
+      Call Ctl_カスタム.カスタム04
+    Case "カスタム05"
+      Call Ctl_カスタム.カスタム05
+    
+    Case "はんこ_確認印"
+      Call Ctl_Stamp.確認印
+    Case "はんこ_名前"
+      Call Ctl_Stamp.名前
+    Case "はんこ_済"
+      Call Ctl_Stamp.済印
+      
     
     'ズーム--------------------------------------
     Case "Zoom01"
@@ -1002,6 +1219,28 @@ Function Ctl_Function(control As IRibbonControl)
     Case "半全角変換"
       Call Ctl_Cells.英数字半⇒全角変換
     
+    Case "小大変換"
+      Call Ctl_Cells.小⇒大変変換
+    Case "大小変換"
+      Call Ctl_Cells.大⇒小変変換
+    
+    Case "丸数値を数値に変換"
+      Call Ctl_Cells.丸数字⇒数値
+      
+    Case "数値を丸数字に変換"
+      Call Ctl_Cells.数値⇒丸数字
+      
+    Case "URLエンコード"
+      Call Ctl_Cells.URLエンコード
+    Case "URLデコード"
+      Call Ctl_Cells.URLデコード
+      
+    Case "Unicodeエスケープ"
+      Call Ctl_Cells.Unicodeエスケープ
+    Case "Unicodeアンエスケープ"
+      Call Ctl_Cells.Unicodeアンエスケープ
+      
+      
     Case "delLinefeed"
       Call Ctl_Cells.改行削除
     Case "定数削除"
@@ -1044,6 +1283,8 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_format.上下余白ゼロ
     Case "左右余白ゼロ"
       Call Ctl_format.左右余白ゼロ
+    Case "文字サイズをぴったり"
+      Call Ctl_shap.文字サイズをぴったり
     
     '画像保存------------------------------------
     Case "saveImage"
@@ -1106,6 +1347,9 @@ Function Ctl_Function(control As IRibbonControl)
     '罫線[二重線]----------------------------------
     Case "罫線_二重線_左"
       Call Library.罫線_二重線_左
+    Case "罫線_二重線_右"
+      Call Library.罫線_二重線_右
+    
     Case "罫線_二重線_左右"
       Call Library.罫線_二重線_左右
     Case "罫線_二重線_上"
@@ -1143,7 +1387,7 @@ Function Ctl_Function(control As IRibbonControl)
     Case "パターン選択"
       Call Ctl_sampleData.パターン選択(Selection.Rows.count)
     
-    
+
     Case Else
       Call Library.showDebugForm("リボンメニューなし", control.ID, "Error")
       Call Library.showNotice(406, "リボンメニューなし：" & control.ID, True)
@@ -1151,7 +1395,7 @@ Function Ctl_Function(control As IRibbonControl)
   
   '処理終了--------------------------------------
   Call Library.endScript
-  Call Library.showDebugForm("", , "end")
+  Call Library.showDebugForm(funcName, , "end")
   Call init.unsetting
   '----------------------------------------------
   Exit Function

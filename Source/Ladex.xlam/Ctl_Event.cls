@@ -166,16 +166,21 @@ End Sub
 Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
   Const funcName As String = "Ctl_Event.xlApp_WorkbookOpen"
   
+'  Stop
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
   If Not CheckBook(wb) Then Exit Sub
 
-'  runFlg = True
-'  Call init.setting
-'  Call Library.showDebugForm(funcName, , "start")
-'  Call Library.startScript
-'  Call Main.setShortcutKey
-'  Call Library.endScript
+  If Application.userName = "小泉 文平" Then
+    If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
+      runFlg = True
+      Call init.setting
+      Call Library.showDebugForm(funcName, , "start")
+      Workbooks.Open "C:\WorkSpace\myProject\ExcelMacro\WBS\WBS.xlam"
+      Call Library.endScript
+    End If
+  End If
+  
   Exit Sub
   
 'エラー発生時------------------------------------
@@ -193,6 +198,18 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   If Me.StopEvent Then Exit Sub
   If Not CheckBook(wb) Then Exit Sub
 
+
+'  If Application.userName = "TCI_小泉 文平" Then
+'    If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = True Then
+'      runFlg = True
+'      Call init.setting
+'      Call Library.showDebugForm(funcName, , "start")
+'      Workbooks("WBS.xlam").Close SaveChanges:=False
+'      Call Library.endScript
+'    End If
+'  End If
+  
+  
 '  Call init.setting
 '  Call Library.showDebugForm(funcName, , "start")
 '  Call Library.showDebugForm(funcName, , "end")
@@ -292,8 +309,8 @@ Private Sub xlApp_SheetDeactivate(ByVal Sh As Object)
       Sh.Shapes("HighLight_Y").delete
     End If
       
-    Call Library.setRegistry("targetInfo", "Book", ActiveWorkbook.Name)
-    Call Library.setRegistry("targetInfo", "Sheet", ActiveSheet.Name)
+    Call Library.setRegistry("targetInfo", "HighLight_Book", ActiveWorkbook.Name)
+    Call Library.setRegistry("targetInfo", "HighLight_Sheet", ActiveSheet.Name)
     
     runFlg = True
     Call Ctl_HighLight.showStart(ActiveCell)
@@ -311,6 +328,7 @@ End Sub
 '==================================================================================================
 'ワークシートの選択セルが変更されたときに発生
 Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
+  Dim slctCells As Range
   Const funcName As String = "Ctl_Event.xlApp_SheetSelectionChange"
   
   On Error GoTo catchError
@@ -321,15 +339,39 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   
   'ハイライト機能--------------------------------
   If BKh_rbPressed = True Then
-    If Library.getRegistry("targetInfo", "Book", "String") = ActiveWorkbook.Name Then
+    If Library.getRegistry("targetInfo", "HighLight_Book", "String") = ActiveWorkbook.Name Then
       runFlg = True
-      Call Ctl_HighLight.showStart(Target)
+      Call Ctl_HighLight.showStart(Target, True)
+'      If ActiveWorkbook.Name Like "*WBS*" Then
+'        Application.Run "WBS.xlam!Task.タスクにスクロール"
+'      End If
+
+      For Each slctCells In Selection
+        Call Library.showDebugForm("slctCells.Address", slctCells.Address, "debug")
+        
+        If Selection.Item(1).Address = slctCells.Address Then
+        Else
+        End If
+        DoEvents
+      Next
+      
+    Else
+      Call init.setting
+      Call Library.startScript
+      If Library.chkShapeName("HighLight_X", Sh) = True Then
+        Sh.Shapes("HighLight_X").delete
+      End If
+      If Library.chkShapeName("HighLight_Y", Sh) = True Then
+        Sh.Shapes("HighLight_Y").delete
+      End If
+      Call Library.endScript
     End If
+  
   End If
   
   '数式確認機能----------------------------------
   If BKcf_rbPressed = True Then
-    If Library.getRegistry("targetInfo", "Book", "String") = ActiveWorkbook.Name And Library.getRegistry("targetInfo", "Sheet", "String") = ActiveSheet.Name Then
+    If Library.getRegistry("targetInfo", "Formula_Book", "String") = ActiveWorkbook.Name And Library.getRegistry("targetInfo", "Formula_Sheet", "String") = ActiveSheet.Name Then
       runFlg = True
       Call Ctl_Formula.数式確認
     End If
@@ -338,7 +380,8 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   
 'エラー発生時------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+   Call Library.endScript
 End Sub
 
 

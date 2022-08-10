@@ -69,22 +69,22 @@ Function OptionSheetImport()
   Set targetBook = Workbooks("メンテナンス用.xlsm")
 
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 1, 10, "設定")
-  targetBook.Sheets("設定").Columns("A:Z").Copy ThisWorkbook.Worksheets("設定").Range("A1")
+  targetBook.Sheets("設定").Columns("A:Z").copy ThisWorkbook.Worksheets("設定").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 2, 10, "Notice")
-  targetBook.Sheets("Notice").Columns("A:Z").Copy ThisWorkbook.Worksheets("Notice").Range("A1")
+  targetBook.Sheets("Notice").Columns("A:Z").copy ThisWorkbook.Worksheets("Notice").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 3, 10, "Style")
-  targetBook.Sheets("Style").Columns("A:Z").Copy ThisWorkbook.Worksheets("Style").Range("A1")
+  targetBook.Sheets("Style").Columns("A:Z").copy ThisWorkbook.Worksheets("Style").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 4, 10, "testData")
-  targetBook.Sheets("testData").Columns("A:AZ").Copy ThisWorkbook.Worksheets("testData").Range("A1")
+  targetBook.Sheets("testData").Columns("A:AZ").copy ThisWorkbook.Worksheets("testData").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 5, 10, "Favorite")
-  targetBook.Sheets("Favorite").Columns("A:Z").Copy ThisWorkbook.Worksheets("Favorite").Range("A1")
+  targetBook.Sheets("Favorite").Columns("A:Z").copy ThisWorkbook.Worksheets("Favorite").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 6, 10, "Function")
-  targetBook.Sheets("Function").Columns("A:Z").Copy ThisWorkbook.Worksheets("Function").Range("A1")
+  targetBook.Sheets("Function").Columns("A:Z").copy ThisWorkbook.Worksheets("Function").Range("A1")
   
   
   Application.DisplayAlerts = False
@@ -107,14 +107,27 @@ Function OptionSheetImport()
   For Each objShp In ThisWorkbook.Worksheets("Help").Shapes
     objShp.delete
   Next
-  targetBook.Sheets("Help").Columns("A:AZ").Copy ThisWorkbook.Worksheets("Help").Range("A1")
+  targetBook.Sheets("Help").Columns("A:AZ").copy ThisWorkbook.Worksheets("Help").Range("A1")
   
   'スタンプシート編集----------------------------
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 7, 10, "Stamp")
 
-  ThisWorkbook.Sheets("Stamp").delete
-  ThisWorkbook.Worksheets.add.Name = "Stamp"
-  targetBook.Sheets("Stamp").Columns("A:AP").Copy ThisWorkbook.Worksheets("Stamp").Range("A1")
+  ThisWorkbook.Sheets("Stamp").Shapes.Range(Array("確認印")).Select
+  Selection.delete
+  ThisWorkbook.Sheets("Stamp").Shapes.Range(Array("済印")).Select
+  Selection.delete
+  ThisWorkbook.Sheets("Stamp").Shapes.Range(Array("認印")).Select
+  Selection.delete
+  
+  targetBook.Sheets("Stamp").Shapes.Range(Array("確認印", "済印", "認印")).Select
+  Selection.copy
+  ThisWorkbook.Worksheets("Stamp").Paste
+    
+    
+    
+'  ThisWorkbook.Sheets("Stamp").delete
+'  ThisWorkbook.Worksheets.add.Name = "Stamp"
+'  targetBook.Sheets("Stamp").Columns("A:AP").copy ThisWorkbook.Worksheets("Stamp").Range("A1")
     
  
   Application.DisplayAlerts = True
@@ -134,25 +147,25 @@ Function OptionSheetExport()
   Set targetBook = Workbooks("メンテナンス用.xlsm")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 1, 10, "設定")
-  ThisWorkbook.Sheets("設定").Columns("A:AA").Copy targetBook.Worksheets("設定").Range("A1")
+  ThisWorkbook.Sheets("設定").Columns("A:AA").copy targetBook.Worksheets("設定").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 2, 10, "Notice")
-  ThisWorkbook.Sheets("Notice").Columns("A:B").Copy targetBook.Worksheets("Notice").Range("A1")
+  ThisWorkbook.Sheets("Notice").Columns("A:B").copy targetBook.Worksheets("Notice").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 3, 10, "Style")
-  ThisWorkbook.Sheets("Style").Columns("A:J").Copy targetBook.Worksheets("Style").Range("A1")
+  ThisWorkbook.Sheets("Style").Columns("A:J").copy targetBook.Worksheets("Style").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 4, 10, "testData")
-  ThisWorkbook.Sheets("testData").Columns("A:P").Copy targetBook.Worksheets("testData").Range("A1")
+  ThisWorkbook.Sheets("testData").Columns("A:P").copy targetBook.Worksheets("testData").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 5, 10, "Favorite")
-  ThisWorkbook.Worksheets("Favorite").Columns("A:C").Copy targetBook.Sheets("Favorite").Range("A1")
+  ThisWorkbook.Worksheets("Favorite").Columns("A:C").copy targetBook.Sheets("Favorite").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 6, 10, "Function")
-  ThisWorkbook.Worksheets("Function").Columns("A:Z").Copy targetBook.Sheets("Function").Range("A1")
+  ThisWorkbook.Worksheets("Function").Columns("A:Z").copy targetBook.Sheets("Function").Range("A1")
   
   Call Ctl_ProgressBar.showBar("メンテナンス", 1, 2, 7, 10, "SheetList")
-  ThisWorkbook.Worksheets("SheetList").Columns("A:Z").Copy targetBook.Sheets("SheetList").Range("A1")
+  ThisWorkbook.Worksheets("SheetList").Columns("A:Z").copy targetBook.Sheets("SheetList").Range("A1")
   
 '  Call Library.showDebugForm(ThisWorkbook.Worksheets("Ribbon").Range("A2"))
   

@@ -399,7 +399,7 @@ Function selectActiveSheet(control As IRibbonControl)
   ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
   
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
   
   If BK_ribbonUI Is Nothing Then
   Else
@@ -779,12 +779,12 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function dspDefaultViewSelect(control As IRibbonControl)
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function defaultViewAndSave(control As IRibbonControl)
-  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  Application.Goto Reference:=Range("A1"), Scroll:=True
   ActiveWorkbook.Save
 End Function
 
@@ -873,9 +873,7 @@ Function HighLight(control As IRibbonControl, pressed As Boolean)
   Call Library.setRegistry("Main", "HighLightFlg", pressed)
   
   Call Ctl_HighLight.showStart(ActiveCell)
-  If pressed = False Then
-    Call Library.delRegistry("Main", "HighLightFlg")
-  End If
+
 End Function
 
 '--------------------------------------------------------------------------------------------------
@@ -923,7 +921,6 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   
   If pressed = False Then
     Call Application.OnKey("{F2}")
-    Call Library.delRegistry("Main", "ZoomFlg")
   Else
     Call Application.OnKey("{F2}", "Ctl_Zoom.ZoomIn")
   End If

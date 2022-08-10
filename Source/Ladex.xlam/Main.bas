@@ -49,7 +49,7 @@ Function InitializeBook()
 
   '処理終了--------------------------------------
   Call Library.endScript
-  Call Library.showDebugForm("", , "end1")
+  Call Library.showDebugForm(funcName, , "end1")
   'Call init.unsetting
   '----------------------------------------------
 
@@ -69,7 +69,7 @@ End Function
 Function setShortcutKey()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim keyVal As Variant
-  Dim ShortcutKey As String, ShortcutFunc As String
+  Dim ShortcutKey As String, ShortcutFunc As String, ShortcutKey1 As String
   Const funcName As String = "Main.setShortcutKey"
   
   '処理開始--------------------------------------
@@ -84,10 +84,14 @@ Function setShortcutKey()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
+  Call Application.OnKey("{F1}", "")
+  
   endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
   For line = 2 To endLine
     If LadexSh_Function.Range("E" & line) <> "" Then
       ShortcutKey = ""
+      ShortcutKey1 = ""
+      
       For Each keyVal In Split(LadexSh_Function.Range("E" & line), "+")
         If keyVal = "Ctrl" Then
           ShortcutKey = "^"
@@ -96,7 +100,14 @@ Function setShortcutKey()
         ElseIf keyVal = "Shift" Then
           ShortcutKey = ShortcutKey & "+"
         Else
-          ShortcutKey = ShortcutKey & keyVal
+          Select Case keyVal
+            Case 0 To 9
+              ShortcutKey1 = ShortcutKey & "{" & 96 + keyVal & "}"
+              ShortcutKey = ShortcutKey & keyVal
+              
+            Case Else
+              ShortcutKey = ShortcutKey & keyVal
+          End Select
         End If
       Next
       ShortcutFunc = "Menu.ladex_" & LadexSh_Function.Range("C" & line)
@@ -104,20 +115,25 @@ Function setShortcutKey()
       Call Library.showDebugForm("Function   ", ShortcutFunc, "debug")
       
       Call Application.OnKey(ShortcutKey, ShortcutFunc)
+      
+      If ShortcutKey1 <> "" Then
+        Call Library.showDebugForm("ShortcutKey", ShortcutKey1, "debug")
+        Call Library.showDebugForm("Function   ", ShortcutFunc, "debug")
+        Call Application.OnKey(ShortcutKey1, ShortcutFunc)
+      End If
     End If
   Next
   
 '  Call Application.OnKey("{F1}", "Ctl_Option.showVersion")
-'  Call Application.OnKey("{F1}", "")
 
 
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 
@@ -204,7 +220,7 @@ Function 設定_抽出()
   
   TempName = FSO.GetSpecialFolder(2) & "\BK_Style.xlsx"
   
-  LadexSh_Style.Copy
+  LadexSh_Style.copy
   ActiveWorkbook.SaveAs fileName:=TempName, FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
   
   Call Library.endScript
@@ -224,7 +240,7 @@ Function 設定_取込()
   TempName = FSO.GetSpecialFolder(2) & "\BK_Style.xlsx"
   
   Set targetBook = Workbooks.Open(TempName)
-  targetBook.Sheets("Style").Columns("A:J").Copy ThisWorkbook.Worksheets("Style").Range("A1")
+  targetBook.Sheets("Style").Columns("A:J").copy ThisWorkbook.Worksheets("Style").Range("A1")
   targetBook.Close
   
   Call FSO.DeleteFile(TempName, True)

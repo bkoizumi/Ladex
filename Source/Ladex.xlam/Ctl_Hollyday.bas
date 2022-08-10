@@ -46,10 +46,10 @@ Lbl_exitFunction:
   'ˆ—I—¹--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 
@@ -98,46 +98,46 @@ End Function
 Public Function NationalHollydays(targetdate As Date, HollydayName As String) As Boolean
   Dim targetyear As Integer
   Dim targetmonth As Integer
-  Dim targetday As Integer
+  Dim targetDay As Integer
   Dim hantei As Boolean
   
     targetyear = CInt(Format(targetdate, "yyyy"))
     targetmonth = CInt(Format(targetdate, "m"))
-    targetday = CInt(Format(targetdate, "d"))
+    targetDay = CInt(Format(targetdate, "d"))
     hantei = False
     Select Case targetmonth
     Case 1
-        If targetyear > 1948 And targetday = 1 Then
+        If targetyear > 1948 And targetDay = 1 Then
                 hantei = True
                 HollydayName = "Œ³’U"
         End If
         If targetyear > 1948 Then
             If targetyear < 2000 Then
-                If targetday = 15 Then
+                If targetDay = 15 Then
                     hantei = True
                     HollydayName = "¬l‚Ì“ú"
                 End If
-            ElseIf CInt(Format(DaiXYoubi(targetyear, 1, 2, 1), "d")) = targetday Then
+            ElseIf CInt(Format(DaiXYoubi(targetyear, 1, 2, 1), "d")) = targetDay Then
                     hantei = True
                     HollydayName = "¬l‚Ì“ú"
             End If
         End If
     Case 2
         If targetyear > 1966 Then
-                If targetday = 11 Then
+                If targetDay = 11 Then
                     hantei = True
                     HollydayName = "Œš‘‹L”O‚Ì“ú"
                 End If
          End If
         If targetyear > 2019 Then
-            If targetday = 23 Then
+            If targetDay = 23 Then
                 hantei = True
                 HollydayName = "“Vc’a¶“ú"
             End If
         End If
     Case 3
         If targetyear > 1948 Then
-            If targetday = Syunbun(targetyear) Then
+            If targetDay = Syunbun(targetyear) Then
                 hantei = True
                 HollydayName = "t•ª‚Ì“ú"
             End If
@@ -145,7 +145,7 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
 
         
     Case 4
-        If targetday = 29 Then
+        If targetDay = 29 Then
             If targetyear > 1948 Then
                 If 1989 > targetyear Then
                     hantei = True
@@ -161,15 +161,15 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
         End If
     Case 5
         If targetyear > 1948 Then
-            If targetday = 3 Then
+            If targetDay = 3 Then
                     hantei = True
                     HollydayName = "Œ›–@‹L”O“ú"
             End If
-            If targetday = 5 Then
+            If targetDay = 5 Then
                     hantei = True
                     HollydayName = "‚±‚Ç‚à‚Ì“ú"
             End If
-            If targetday = 4 Then
+            If targetDay = 4 Then
                 If targetyear > 2006 Then
                     hantei = True
                     HollydayName = "‚İ‚Ç‚è‚Ì“ú"
@@ -180,12 +180,12 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
             'ŠC‚Ì“ú[7Œ‚Ì‘æ3Œ—j“ú]---------------------------------------------
             '“Œ‹ƒIƒŠƒ“ƒsƒbƒN‹£‹Z‘å‰ïE“Œ‹ƒpƒ‰ƒŠƒ“ƒsƒbƒN‹£‹Z‘å‰ï“Á•Ê‘[’u–@“™‚Ìˆê•”‚ğ‰ü³‚·‚é–@—¥
             If targetyear = 2020 Then
-              If targetday = 23 Then
+              If targetDay = 23 Then
                 hantei = True
                 HollydayName = "ŠC‚Ì“ú"
               End If
             ElseIf targetyear = 2021 Then
-              If targetday = 22 Then
+              If targetDay = 22 Then
                 hantei = True
                 HollydayName = "ŠC‚Ì“ú"
               End If
@@ -193,12 +193,12 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
             '
             ElseIf targetyear > 1995 Then
               If 2004 > targetyear Then
-                If targetday = 20 Then
+                If targetDay = 20 Then
                     hantei = True
                     HollydayName = "ŠC‚Ì“ú"
                 End If
               Else
-                If CInt(Format(DaiXYoubi(targetyear, 7, 3, 0), "d")) = targetday Then
+                If CInt(Format(DaiXYoubi(targetyear, 7, 3, 0), "d")) = targetDay Then
                   hantei = True
                   HollydayName = "ŠC‚Ì“ú"
                 End If
@@ -208,13 +208,13 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
             
             '“Œ‹ƒIƒŠƒ“ƒsƒbƒN‹£‹Z‘å‰ïE“Œ‹ƒpƒ‰ƒŠƒ“ƒsƒbƒN‹£‹Z‘å‰ï“Á•Ê‘[’u–@“™‚Ìˆê•”‚ğ‰ü³‚·‚é–@—¥
             If targetyear = 2020 Then
-              If targetday = 24 Then
+              If targetDay = 24 Then
                 hantei = True
                 HollydayName = "ƒXƒ|[ƒc‚Ì“ú"
               End If
               
             ElseIf targetyear = 2021 Then
-              If targetday = 23 Then
+              If targetDay = 23 Then
                 hantei = True
                 HollydayName = "ƒXƒ|[ƒc‚Ì“ú"
               End If
@@ -224,17 +224,17 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
             'R‚Ì“ú[8/11]---------------------------------------------
             '“Œ‹ƒIƒŠƒ“ƒsƒbƒN‹£‹Z‘å‰ïE“Œ‹ƒpƒ‰ƒŠƒ“ƒsƒbƒN‹£‹Z‘å‰ï“Á•Ê‘[’u–@“™‚Ìˆê•”‚ğ‰ü³‚·‚é–@—¥
             If targetyear = 2021 Then
-              If targetday = 8 Then
+              If targetDay = 8 Then
                 hantei = True
                 HollydayName = "R‚Ì“ú"
               End If
             ElseIf targetyear = 2020 Then
-              If targetday = 10 Then
+              If targetDay = 10 Then
                 hantei = True
                 HollydayName = "R‚Ì“ú"
               End If
               
-            ElseIf targetyear >= 2016 And targetday = 11 Then
+            ElseIf targetyear >= 2016 And targetDay = 11 Then
               hantei = True
               HollydayName = "R‚Ì“ú"
             End If
@@ -245,19 +245,19 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
     Case 9
         If targetyear > 1965 Then
             If 2004 > targetyear Then
-                If targetday = 15 Then
+                If targetDay = 15 Then
                     hantei = True
                     HollydayName = "Œh˜V‚Ì“ú"
                 End If
             Else
-                If targetyear > 2003 And CInt(Format(DaiXYoubi(targetyear, 9, 3, 1), "d")) = targetday Then
+                If targetyear > 2003 And CInt(Format(DaiXYoubi(targetyear, 9, 3, 1), "d")) = targetDay Then
                     hantei = True
                     HollydayName = "Œh˜V‚Ì“ú"
                 End If
             End If
         End If
         If targetyear > 1947 Then
-            If targetday = Syuubun(targetyear) Then
+            If targetDay = Syuubun(targetyear) Then
                 hantei = True
                 HollydayName = "H•ª‚Ì“ú"
             End If
@@ -266,12 +266,12 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
       '‘Ìˆç‚Ì“ú[10/10¨10Œ‚Ì‘æ2Œ—j“ú]---------------------------------------------
         If targetyear > 1965 Then
           If 2000 > targetyear Then
-            If targetday = 10 Then
+            If targetDay = 10 Then
               hantei = True
               HollydayName = "‘Ìˆç‚Ì“ú"
             End If
           ElseIf targetyear > 1999 And targetyear < 2020 Then
-            If CInt(Format(DaiXYoubi(targetyear, 10, 2, 1), "d")) = targetday Then
+            If CInt(Format(DaiXYoubi(targetyear, 10, 2, 1), "d")) = targetDay Then
               hantei = True
               HollydayName = "‘Ìˆç‚Ì“ú"
             End If
@@ -280,7 +280,7 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
             '7Œ‚ÉˆÚ“®
             
           ElseIf targetyear > 2020 Then
-            If CInt(Format(DaiXYoubi(targetyear, 10, 2, 1), "d")) = targetday Then
+            If CInt(Format(DaiXYoubi(targetyear, 10, 2, 1), "d")) = targetDay Then
               hantei = True
               HollydayName = "ƒXƒ|[ƒc‚Ì“ú"
             End If
@@ -288,17 +288,17 @@ Public Function NationalHollydays(targetdate As Date, HollydayName As String) As
         End If
     Case 11
         If targetyear > 1947 Then
-            If targetday = 3 Then
+            If targetDay = 3 Then
                 hantei = True
                 HollydayName = "•¶‰»‚Ì“ú"
-            ElseIf targetday = 23 Then
+            ElseIf targetDay = 23 Then
                 hantei = True
                 HollydayName = "‹Î˜JŠ´Ó‚Ì“ú"
             End If
         End If
     Case 12
         If targetyear > 1988 And targetyear <= 2018 Then
-            If targetday = 23 Then
+            If targetDay = 23 Then
                 hantei = True
                 HollydayName = "“Vc’a¶“ú"
             End If
@@ -353,8 +353,8 @@ End Function
 '******************************************************************************
 ' ‚ ‚éŒ‚Ì‘æ›¢—j“ú‚ª “ú‚Å‚ ‚é‚©‚ğ’²‚×‚éŠÖ”B
 '******************************************************************************
-Public Function DaiXYoubi(Y, m, n, Yobi As Integer) As String
-    DaiXYoubi = ((9 - Weekday(DateSerial(Y, m, 0))) + (n - 1) * 7 + 1)
+Public Function DaiXYoubi(y, m, n, Yobi As Integer) As String
+    DaiXYoubi = ((9 - Weekday(DateSerial(y, m, 0))) + (n - 1) * 7 + 1)
 End Function
 '******************************************************************************
 ' U‘Ö‹x“ú‚©‚ğ’²‚×‚éŠÖ”B

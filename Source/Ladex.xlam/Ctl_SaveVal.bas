@@ -47,10 +47,10 @@ Function setVal(pType As String, pText As String)
   If runFlg = False Then
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 End Function
@@ -95,10 +95,10 @@ Function getVal(pType As String) As String
   If runFlg = False Then
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 End Function
@@ -132,10 +132,10 @@ Function delVal(pType As String)
   If runFlg = False Then
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-    Call Library.showDebugForm("", , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
   '----------------------------------------------
 End Function

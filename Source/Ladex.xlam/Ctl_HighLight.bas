@@ -8,9 +8,15 @@ Option Explicit
 
 #End If
 
+Dim HighLightColor As String
+Dim HighLightDspDirection As String
+Dim HighLightDspMethod As String
+Dim HighlightTransparentRate As Long
+
+
 Public Type POINTAPI
     X As Long
-    Y As Long
+    y As Long
 End Type
 
 
@@ -31,8 +37,8 @@ Sub getCursorPosition()
   
   'カーソル位置取得
   GetCursorPos p
-  If TypeName(ActiveWindow.RangeFromPoint(p.X, p.Y)) = "Range" Then
-    ActiveWindow.RangeFromPoint(p.X, p.Y).Select
+  If TypeName(ActiveWindow.RangeFromPoint(p.X, p.y)) = "Range" Then
+    ActiveWindow.RangeFromPoint(p.X, p.y).Select
   End If
   
   If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
@@ -48,52 +54,52 @@ Sub getCursorPosition()
 End Sub
 
 '==================================================================================================
+'Function showStart(ByVal Target As Range, _
+'                  Optional HighLightColor As String, _
+'                  Optional HighLightDspDirection As String, _
+'                  Optional HighLightDspMethod As String, _
+'                  Optional HighlightTransparentRate As Long, _
+'                  Optional DelFlg As Boolean = True)
+                  
 Function showStart(ByVal Target As Range, _
-                  Optional HighLightColor As String, _
-                  Optional HighLightDspDirection As String, _
-                  Optional HighLightDspMethod As String, _
-                  Optional HighlightTransparentRate As Long)
-                  
-                  
+                  Optional DelFlg As Boolean = True)
+                                    
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
   Call init.setting
   Call Library.startScript
-  If Library.chkShapeName("HighLight_X") = True Then
-    ActiveSheet.Shapes("HighLight_X").delete
-  End If
-  If Library.chkShapeName("HighLight_Y") = True Then
-    ActiveSheet.Shapes("HighLight_Y").delete
+  
+  If DelFlg = True Then
+    If Library.chkShapeName("HighLight_X") = True Then
+      ActiveSheet.Shapes("HighLight_X").delete
+    End If
+    If Library.chkShapeName("HighLight_Y") = True Then
+      ActiveSheet.Shapes("HighLight_Y").delete
+    End If
   End If
   
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
-        
     If HighLightColor = "" Then
       HighLightColor = Library.getRegistry("Main", "HighLightColor")
-    End If
-    
-    If HighLightDspDirection = "" Then
       HighLightDspDirection = Library.getRegistry("Main", "HighLightDspDirection")
-    End If
-        
-    If HighLightDspMethod = "" Then
       HighLightDspMethod = Library.getRegistry("Main", "HighLightDspMethod")
-    End If
-        
-    If HighlightTransparentRate = 0 Then
       HighlightTransparentRate = CLng(Library.getRegistry("Main", "HighLightTransparentRate"))
     End If
     
-    
-    If HighLightDspDirection Like "[X,B]" Then
+    If ActiveWorkbook.Name Like "*WBS*" And Target.Column >= 23 Then
       Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
-    End If
-    
-    If HighLightDspDirection Like "[Y,B]" Then
       Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+    Else
+      If HighLightDspDirection Like "[X,B]" Then
+        Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+      End If
+      
+      If HighLightDspDirection Like "[Y,B]" Then
+        Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+      End If
     End If
   End If
 

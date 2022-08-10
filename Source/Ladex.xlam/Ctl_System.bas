@@ -39,7 +39,7 @@ Function getScroll()
   'èàóùèIóπ--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -77,7 +77,7 @@ Function setScroll()
   'èàóùèIóπ--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
@@ -126,7 +126,7 @@ Function resetScroll()
   'èàóùèIóπ--------------------------------------
   If runFlg = False Then
     Call Library.endScript
-    Call Library.showDebugForm("", , "end")
+    Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   End If
   '----------------------------------------------
