@@ -40,7 +40,7 @@ Function ZoomIn(Optional slctCellAddress As String)
     .TextBox.IMEMode = fmIMEModeOn
 
 '    .TextBox.Font.Name = ActiveCell.Font.Name
-'    .TextBox.Font.Name = BK_setVal("BaseFont")
+'    .TextBox.Font.Name = LadexsetVal("BaseFont")
     .TextBox.Font.Name = "メイリオ"
     
     .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)

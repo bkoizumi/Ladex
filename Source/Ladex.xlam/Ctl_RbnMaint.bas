@@ -31,7 +31,7 @@ Function ‚»‚Ì‘¼()
   Dim line As Long, endLine As Long
   
   Call init.setting(True)
-  BK_ThisBook.Sheets("Help").Activate
+  LadexBook.Sheets("Help").Activate
 '  Cells.Select
 '  Selection.ColumnWidth = 5
   

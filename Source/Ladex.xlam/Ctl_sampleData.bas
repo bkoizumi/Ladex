@@ -153,7 +153,7 @@ Function パターン選択(Optional maxCount As Long)
   If sampleDataList Is Nothing Then
     End
   End If
-  maxCount = BK_setVal("maxCount")
+  maxCount = LadexsetVal("maxCount")
 
   Call Library.delSheetData(LadexSh_InputData)
   LadexSh_InputData.Cells.NumberFormatLocal = "@"
@@ -327,13 +327,13 @@ Function 数値_桁数固定(Optional maxCount As Long)
   Call showFrm_sampleData("【数値】桁数固定")
   
   If IsMissing(maxCount) Then
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   line = Selection(1).Row
   
   For count = 0 To (maxCount - 1)
     Cells(line + count, ActiveCell.Column).NumberFormatLocal = "###"
-    Cells(line + count, ActiveCell.Column) = BK_setVal("addFirst") & Library.makeRandomDigits(BK_setVal("digits")) & BK_setVal("addEnd")
+    Cells(line + count, ActiveCell.Column) = LadexsetVal("addFirst") & Library.makeRandomDigits(LadexsetVal("digits")) & LadexsetVal("addEnd")
   Next
 
   '処理終了--------------------------------------
@@ -380,19 +380,19 @@ Function 数値_範囲(Optional maxCount As Long)
   If Selection.CountLarge > 1 Then
     For Each slctCells In Selection
       slctCells.NumberFormatLocal = "###"
-      slctCells.Value = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
+      slctCells.Value = Library.makeRandomNo(LadexsetVal("minVal"), LadexsetVal("maxVal"))
       DoEvents
     Next
   Else
     line = Selection(1).Row
   
     If maxCount = 0 Then
-      maxCount = BK_setVal("maxCount")
+      maxCount = LadexsetVal("maxCount")
     End If
   
     For count = 0 To (maxCount - 1)
       Cells(line + count, ActiveCell.Column).NumberFormatLocal = "###"
-      Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(BK_setVal("minVal"), BK_setVal("maxVal"))
+      Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(LadexsetVal("minVal"), LadexsetVal("maxVal"))
       Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
     Next
   End If
@@ -438,7 +438,7 @@ Function 名前_姓(Optional maxCount As Long)
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】姓")
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   line = Selection(1).Row
   
@@ -490,7 +490,7 @@ Function 名前_名(Optional maxCount As Long)
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】名")
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   
   line = Selection(1).Row
@@ -542,7 +542,7 @@ Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean 
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】フルネーム")
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   
   line = Selection(1).Row
@@ -596,12 +596,12 @@ Function 日付_日(Optional maxCount As Long)
   '----------------------------------------------
   Call showFrm_sampleData("【日付】日")
   If IsMissing(maxCount) Then
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   line = Selection(1).Row
 
-  fstDate = BK_setVal("minVal")
-  lstDate = BK_setVal("maxVal")
+  fstDate = LadexsetVal("minVal")
+  lstDate = LadexsetVal("maxVal")
   
   For count = 0 To (maxCount - 1)
     Randomize
@@ -652,7 +652,7 @@ Function 日付_時間(Optional maxCount As Long)
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【日付】時間")
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   
   
@@ -711,12 +711,12 @@ Function 日時(Optional maxCount As Long)
   
   Call showFrm_sampleData("【日付】日")
   If IsMissing(maxCount) Then
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   line = Selection(1).Row
 
-  fstDate = BK_setVal("minVal")
-  lstDate = BK_setVal("maxVal")
+  fstDate = LadexsetVal("minVal")
+  lstDate = LadexsetVal("maxVal")
   
   line = Selection(1).Row
   For count = 0 To maxCount - 1
@@ -774,17 +774,17 @@ Function その他_文字(Optional maxCount As Long)
   
   Call showFrm_sampleData("【その他】文字")
   If IsMissing(maxCount) Then
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   
   makeStr = ""
-  If BK_setVal("strType01") Then makeStr = makeStr & SymbolCharacters
-  If BK_setVal("strType02") Then makeStr = makeStr & HalfWidthCharacters
-  If BK_setVal("strType03") Then makeStr = makeStr & StrConv(HalfWidthCharacters, vbLowerCase)
-  If BK_setVal("strType04") Then makeStr = makeStr & HalfWidthDigit
-  If BK_setVal("strType05") Then makeStr = makeStr & JapaneseCharacters
-  If BK_setVal("strType06") Then makeStr = makeStr & StrConv(JapaneseCharacters, vbKatakana)
-  If BK_setVal("strType07") Then makeStr = makeStr & MachineDependentCharacters
+  If LadexsetVal("strType01") Then makeStr = makeStr & SymbolCharacters
+  If LadexsetVal("strType02") Then makeStr = makeStr & HalfWidthCharacters
+  If LadexsetVal("strType03") Then makeStr = makeStr & StrConv(HalfWidthCharacters, vbLowerCase)
+  If LadexsetVal("strType04") Then makeStr = makeStr & HalfWidthDigit
+  If LadexsetVal("strType05") Then makeStr = makeStr & JapaneseCharacters
+  If LadexsetVal("strType06") Then makeStr = makeStr & StrConv(JapaneseCharacters, vbKatakana)
+  If LadexsetVal("strType07") Then makeStr = makeStr & MachineDependentCharacters
 
   For Each slctRange In Selection
     slctRange.Value = Library.makeRandomString(maxCount, makeStr)
@@ -834,7 +834,7 @@ Function メールアドレス(Optional maxCount As Long)
   
   endLine = LadexSh_TestData.Cells(Rows.count, 10).End(xlUp).Row
   If IsMissing(maxCount) Then
-    maxCount = BK_setVal("maxCount")
+    maxCount = LadexsetVal("maxCount")
   End If
   
   line = Selection(1).Row
@@ -1015,8 +1015,8 @@ Function 休日リスト生成()
   
   Call showFrm_sampleData("休日リスト生成")
 
-  startDay = BK_setVal("minVal")
-  endDay = BK_setVal("maxVal")
+  startDay = LadexsetVal("minVal")
+  endDay = LadexsetVal("maxVal")
   
   
   For targetDay = #4/1/2022# To #3/31/2023#

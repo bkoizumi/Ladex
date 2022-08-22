@@ -132,3 +132,155 @@ catchError:
 End Function
 
 
+'==================================================================================================
+Function QRコード生成()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim slctCells As Range, targetCells As Range
+  
+  Dim chartAPIURL As String
+  Dim QRCodeImgName As String
+  Dim colSize As Long, colHeight As Long, colWidth As Long
+  
+  Const funcName As String = "Ctl_Shap.QRコード生成"
+  Const chartAPI = "https://chart.googleapis.com/chart?cht=qr&chld=l|1&"
+  
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+  With Frm_mkQRCode
+    .Show
+  End With
+  
+  
+  For Each slctCells In Selection
+    QRCodeImgName = "QRCode_" & slctCells.Address(False, False)
+    
+    '既存を削除
+    If Library.chkShapeName(QRCodeImgName) Then
+      ActiveSheet.Shapes.Range(Array(QRCodeImgName)).Select
+      Selection.delete
+    End If
+    
+    colHeight = FrmVal("codeSize") * 0.75 + 4
+    colWidth = FrmVal("codeSize") * 0.118 + 4
+    Set targetCells = Range(FrmVal("CellAddress") & slctCells.Row)
+    
+    With targetCells
+      .Select
+      If .rowHeight < colHeight Then .rowHeight = colHeight
+      If .ColumnWidth < colWidth Then .ColumnWidth = colWidth
+    End With
+    
+    chartAPIURL = chartAPI & "chs=" & FrmVal("codeSize") & "x" & FrmVal("codeSize")
+    chartAPIURL = chartAPIURL & "&chl=" & Library.convURLEncode(slctCells.Text)
+    
+    Call Library.showDebugForm("chartAPIURL", chartAPIURL, "debug")
+    
+    With ActiveSheet.Pictures.Insert(chartAPIURL)
+      .ShapeRange.Top = targetCells.Top + (targetCells.Height - .ShapeRange.Height) / 2
+      .ShapeRange.Left = targetCells.Left + (targetCells.Width - .ShapeRange.Width) / 2
+      .Placement = xlMove
+      
+      'QRコードの名前設定
+      .ShapeRange.Name = QRCodeImgName
+      .Name = QRCodeImgName
+    
+    End With
+    DoEvents
+    Set targetCells = Nothing
+  Next
+  
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+End Function
+
+
+'==================================================================================================
+Function セルの中央に配置()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim slctCells As Range, targetRange As Range
+  Dim ShapeImg As Shape
+  
+  Const funcName As String = "Ctl_Shap.セルの中央に配置"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+   
+  For Each slctCells In Selection
+    For Each ShapeImg In ActiveSheet.Shapes
+      Set targetRange = Range(ShapeImg.TopLeftCell, ShapeImg.BottomRightCell)
+      If Not (Intersect(targetRange, slctCells) Is Nothing) Then
+        Call Library.showDebugForm("ShapeImg.Name  ", ShapeImg.Name, "debug")
+        Call Library.showDebugForm("ShapeImg.Width  ", ShapeImg.Width, "debug")
+        Call Library.showDebugForm("ShapeImg.Height ", ShapeImg.Height, "debug")
+        Call Library.showDebugForm("slctCells.Width ", slctCells.Width, "debug")
+        Call Library.showDebugForm("slctCells.Height", slctCells.Height, "debug")
+        
+        With ShapeImg
+          .Top = slctCells.Top + (slctCells.Height - ShapeImg.Height) / 2
+          .Left = slctCells.Left + (slctCells.Width - ShapeImg.Width) / 2
+        End With
+        
+      End If
+    Next
+  Next
+  
+  
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+End Function

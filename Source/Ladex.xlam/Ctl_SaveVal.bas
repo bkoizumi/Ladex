@@ -25,13 +25,13 @@ Function setVal(pType As String, pText As String)
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   chkFlg = False
-  BK_ThisBook.Activate
+  LadexBook.Activate
   
   endLine = Cells(Rows.count, 4).End(xlUp).Row
   For line = 3 To LadexSh_Config.Cells(Rows.count, 4).End(xlUp).Row
-    If LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = pType Then
-      LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = pType
-      LadexSh_Config.Range(BK_setVal("Cells_pText") & line) = pText
+    If LadexSh_Config.Range(LadexsetVal("Cells_pType") & line) = pType Then
+      LadexSh_Config.Range(LadexsetVal("Cells_pType") & line) = pType
+      LadexSh_Config.Range(LadexsetVal("Cells_pText") & line) = pText
       
       chkFlg = True
       Exit For
@@ -39,8 +39,8 @@ Function setVal(pType As String, pText As String)
   Next
    
   If chkFlg = False Then
-    LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = pType
-    LadexSh_Config.Range(BK_setVal("Cells_pText") & line) = pText
+    LadexSh_Config.Range(LadexsetVal("Cells_pType") & line) = pType
+    LadexSh_Config.Range(LadexsetVal("Cells_pText") & line) = pText
   End If
   
   'èàóùèIóπ--------------------------------------
@@ -79,8 +79,8 @@ Function getVal(pType As String) As String
   Set resetObjVal = CreateObject("Scripting.Dictionary")
   
   For line = 3 To LadexSh_Config.Cells(Rows.count, 4).End(xlUp).Row
-    If LadexSh_Config.Range(BK_setVal("Cells_pType") & line) <> "" Then
-      resetObjVal.add LadexSh_Config.Range(BK_setVal("Cells_pType") & line).Text, LadexSh_Config.Range(BK_setVal("Cells_pText") & line).Text
+    If LadexSh_Config.Range(LadexsetVal("Cells_pType") & line) <> "" Then
+      resetObjVal.add LadexSh_Config.Range(LadexsetVal("Cells_pType") & line).Text, LadexSh_Config.Range(LadexsetVal("Cells_pText") & line).Text
     End If
   Next
   
@@ -122,9 +122,9 @@ Function delVal(pType As String)
   '----------------------------------------------
   
   For line = 3 To LadexSh_Config.Cells(Rows.count, 4).End(xlUp).Row
-    If LadexSh_Config.Range(BK_setVal("Cells_pType") & line) Like "*" & pType Then
-      LadexSh_Config.Range(BK_setVal("Cells_pType") & line) = ""
-      LadexSh_Config.Range(BK_setVal("Cells_pText") & line) = ""
+    If LadexSh_Config.Range(LadexsetVal("Cells_pType") & line) Like "*" & pType Then
+      LadexSh_Config.Range(LadexsetVal("Cells_pType") & line) = ""
+      LadexSh_Config.Range(LadexsetVal("Cells_pText") & line) = ""
     End If
   Next
  

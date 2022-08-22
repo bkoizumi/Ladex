@@ -9,16 +9,16 @@ Private Const WS_THICKFRAME = &H40000
 '// Win32API参照宣言
 '// 64bit版
 #If VBA7 And Win64 Then
-    Private Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As Long
-    Private Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+    Private Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As Long
+    Private Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
     Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As LongPtr
-    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hwnd As LongPtr) As Long
+    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hWnd As LongPtr) As Long
 '// 32bit版
 #Else
-    Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
-    Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+    Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
+    Private Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
     Private Declare Function GetActiveWindow Lib "user32" () As Long
-    Private Declare Function DrawMenuBar Lib "user32" (ByVal hwnd As Long) As Long
+    Private Declare Function DrawMenuBar Lib "user32" (ByVal hWnd As Long) As Long
 #End If
 
 
@@ -28,19 +28,19 @@ Private Const WS_THICKFRAME = &H40000
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function FormResize()
-  Dim hwnd  As Long, style As Long
+  Dim hWnd  As Long, style As Long
   
   'ウインドウハンドル取得
-  hwnd = GetActiveWindow()
+  hWnd = GetActiveWindow()
   
   'ウインドウのスタイルを取得
-  style = GetWindowLong(hwnd, GWL_STYLE)
+  style = GetWindowLong(hWnd, GWL_STYLE)
   
   'ウインドウのスタイルにウインドウサイズ可変＋最小ボタン＋最大ボタンを追加
   style = style Or WS_THICKFRAME Or WS_MAXIMIZEBOX
   
   'ウインドウのスタイルを再設定
-  Call SetWindowLong(hwnd, GWL_STYLE, style)
+  Call SetWindowLong(hWnd, GWL_STYLE, style)
 End Function
 
 
@@ -193,4 +193,71 @@ Attribute getWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
   getWorkDay = Application.WorksheetFunction.WorkDay(firstDay - 1, bsnDay, arryHollyday)
   
 End Function
+
+
+'==================================================================================================
+'Function mkQRcode(ByVal codeVal As String, Optional ByVal QRSize As Long = 140) As String
+'  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+'  Dim slctCells As Range
+'
+'  Dim chartAPIURL As String
+'  Dim QRCodeImgName As String
+'
+'  Const funcName As String = "Ctl_Shap.QRコード生成"
+'  Const chartAPI = "https://chart.googleapis.com/chart?cht=qr&chld=l|1&"
+'
+'
+'  '処理開始--------------------------------------
+''  On Error GoTo catchError
+'  Call init.setting
+'  Call Library.startScript
+'  '----------------------------------------------
+'
+'  Set slctCells = Application.Caller
+'  QRCodeImgName = "QRCode_" & Application.Caller.Address(False, False)
+'
+'  Call Library.showDebugForm("slctCells", slctCells.Address, "debug")
+'  Call Library.showDebugForm("codeVal", codeVal, "debug")
+'  Call Library.showDebugForm("QRCodeImgName", QRCodeImgName, "debug")
+'
+'
+'  If Library.chkShapeName(QRCodeImgName) Then
+'    ActiveSheet.Shapes.Range(Array(QRCodeImgName)).Select
+'    Selection.delete
+'  End If
+'
+'
+'  chartAPIURL = chartAPI & "chs=" & QRSize & "x" & QRSize
+'  chartAPIURL = chartAPIURL & "&chl=" & Library.convURLEncode(codeVal)
+'  Call Library.showDebugForm("chartAPIURL", chartAPIURL, "debug")
+'
+'  With ActiveSheet.Pictures.Insert(chartAPIURL)
+'    .ShapeRange.Top = slctCells.Top + (slctCells.Height - .ShapeRange.Height) / 2
+'    .ShapeRange.Left = slctCells.Left + (slctCells.Width - .ShapeRange.Width) / 2
+'
+'    .Placement = xlMove
+'
+'    'QRコードの名前設定
+'    .ShapeRange.Name = QRCodeImgName
+'    .Name = QRCodeImgName
+'  End With
+'
+'  mkQRcode = ""
+''  ActiveSheet.Select
+''  slctCells.Select
+'  Set slctCells = Nothing
+'
+'  '処理終了--------------------------------------
+'Lbl_endFunction:
+'  Call Library.endScript
+'  Call Library.showDebugForm(funcName, , "end")
+'  Call init.unsetting
+'  '----------------------------------------------
+'  Exit Function
+'
+''エラー発生時------------------------------------
+'catchError:
+'  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+'End Function
+
 

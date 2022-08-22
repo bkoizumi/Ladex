@@ -179,7 +179,7 @@ Function –¼‘O()
   Set targetRange = ActiveCell
   
   'StampFont = Library.getRegistry("Main", "StampFont")
-  StampFont = "HGs‘‘Ì"
+  StampFont = "HGSs‘‘Ì"
   StampName = Library.getRegistry("Main", "StampName")
   
   

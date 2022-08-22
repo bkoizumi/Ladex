@@ -162,13 +162,17 @@ Private Sub Lst_Favorite_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
   
   If Lst_FavCategory.ListIndex < 0 Then
     Frm_Favorite.DetailMeg.Value = "登録するカテゴリーを選択してください"
+    MsgBox "登録するカテゴリーを選択してください", vbExclamation
   
   ElseIf Lst_FavCategory.list(Lst_FavCategory.ListIndex, 0) = addCategoryVal Then
-    Frm_Favorite.DetailMeg.Value = "カテゴリーを登録・選択してください"
+    Frm_Favorite.DetailMeg.Value = "カテゴリーの登録・選択してください"
+    MsgBox "カテゴリーの登録・選択してください", vbExclamation
+    
+    
   Else
     filePath = Library.getFilePath("C:", "", "お気に入りに追加するファイル", 1)
     If filePath <> "" Then
-      Call Ctl_Favorite.add(Lst_FavCategory.ListIndex, filePath)
+      Call Ctl_Favorite.add(Lst_FavCategory.ListIndex + 1, filePath)
       Call Frm_Favorite.RefreshListBox
     End If
   End If
@@ -231,13 +235,20 @@ Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
   
   
   If newCategoryName <> "" Then
-    If line = -1 Then
-      endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
-      LadexSh_Favorite.Range("A" & endLine + 1) = newCategoryName
-      
+    '重複チェック
+    endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+    If WorksheetFunction.CountIf(LadexSh_Favorite.Range("A1:A" & endLine), newCategoryName) > 1 Then
+      Frm_Favorite.DetailMeg.Value = "登録するカテゴリーが重複しています"
+      MsgBox "登録するカテゴリーが重複しています", vbExclamation
+    
     Else
-      LadexSh_Favorite.Range("A" & line + 1) = newCategoryName
+      If line <> -1 Then
+        endLine = line + 1
+      End If
+      
+      LadexSh_Favorite.Range("A" & endLine) = newCategoryName
     End If
+    
   End If
   Call Frm_Favorite.RefreshListBox
 End Sub
@@ -249,11 +260,7 @@ Function RefreshListBox()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim line2 As Long, oldEndLine As Long
   
-'  Dim LadexSh_Favorite As Worksheet
-'  Set LadexSh_Favorite = ThisWorkbook.Worksheets("Favorite")
-  
   Const funcName As String = "Frm_Favorite.RefreshListBox"
-  
   
   Call init.setting
   Call Library.showDebugForm(funcName, , "start1")
@@ -261,6 +268,10 @@ Function RefreshListBox()
   
   Erase arrFavCategory
   endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  
+  If endLine = 1 And LadexSh_Favorite.Range("A1") = "" Then
+    LadexSh_Favorite.Range("A1") = "Category01"
+  End If
   
   Frm_Favorite.Lst_FavCategory.Clear
   Frm_Favorite.Lst_Favorite.Clear

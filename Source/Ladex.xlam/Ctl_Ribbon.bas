@@ -260,7 +260,7 @@ Function FavoriteFileOpen(control As IRibbonControl)
   
   runFlg = True
   Call Library.startScript
-  fileNamePath = Library.getRegistry("FavoriteList", Replace(control.ID, ".-.", "<Ladex>"))
+  fileNamePath = Library.getRegistry("FavoriteList", Replace(control.ID, ".-.", "<L|>"))
   
   If Library.chkFileExists(fileNamePath) Then
     If Library.chkBookOpened(fileNamePath) = True Then
@@ -472,6 +472,11 @@ Function AddToFavorites(control As IRibbonControl, ByRef returnedVal)
   Call Library.showDebugForm("" & funcName, , "function")
   '----------------------------------------------
   
+  If Workbooks.count = 0 Then
+    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
+    Call Library.errorHandle
+    Exit Function
+  End If
   Call Ctl_Favorite.getList
   
   If BK_ribbonUI Is Nothing Then
@@ -589,7 +594,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   
   If Not IsEmpty(tmp) Then
     For line = 0 To UBound(tmp)
-      Category = Split(tmp(line, 0), "<Ladex>")
+      Category = Split(tmp(line, 0), "<L|>")
       
       If Category(1) = 0 Then
         If line <> 0 Then
@@ -606,7 +611,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
       If tmp(line, 1) <> "" Then
         Set Button = DOMDoc.createElement("button")
         With Button
-          .SetAttribute "id", Replace(tmp(line, 0), "<Ladex>", ".-.")
+          .SetAttribute "id", Replace(tmp(line, 0), "<L|>", ".-.")
           .SetAttribute "label", objFso.getFileName(tmp(line, 1))
           
           'アイコンの設定
@@ -658,7 +663,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   End If
   DOMDoc.AppendChild Menu
   returnedVal = DOMDoc.XML
-  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+'  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
     
   Set CategoryMenu = Nothing
   Set Menu = Nothing
@@ -1170,6 +1175,10 @@ Function Ctl_Function(control As IRibbonControl)
     Case "ファイル管理_画像貼付け"
       Call Ctl_File.画像貼付け
     
+    Case "QRコード生成"
+      Call Ctl_shap.QRコード生成
+    
+    
     Case "カスタム01"
       Call Ctl_カスタム.カスタム01
     Case "カスタム02"
@@ -1285,6 +1294,8 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_format.左右余白ゼロ
     Case "文字サイズをぴったり"
       Call Ctl_shap.文字サイズをぴったり
+    Case "セル内の中央に配置"
+      Call Ctl_shap.セルの中央に配置
     
     '画像保存------------------------------------
     Case "saveImage"

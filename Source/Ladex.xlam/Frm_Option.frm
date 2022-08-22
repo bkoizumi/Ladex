@@ -133,14 +133,14 @@ Private Sub UserForm_Initialize()
     .LogLevel.AddItem "3.notice"
     .LogLevel.AddItem "4.info"
     .LogLevel.AddItem "5.debug"
-    .LogLevel.Text = BK_setVal("LogLevel")
+    .LogLevel.Text = LadexsetVal("LogLevel")
     
     .debugMode.AddItem "all"
     .debugMode.AddItem "File"
     .debugMode.AddItem "Speak"
     .debugMode.AddItem "none"
     .debugMode.AddItem "develop"
-    .debugMode.Text = BK_setVal("debugMode")
+    .debugMode.Text = LadexsetVal("debugMode")
   
     'ハイライトタブ------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
@@ -859,8 +859,8 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "debugMode", debugMode.Value)
   Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
   
-  BK_setVal("debugMode") = debugMode.Value
-  BK_setVal("LogLevel") = LogLevel.Value
+  LadexsetVal("debugMode") = debugMode.Value
+  LadexsetVal("LogLevel") = LogLevel.Value
   
   Application.userName = userName.Value
   

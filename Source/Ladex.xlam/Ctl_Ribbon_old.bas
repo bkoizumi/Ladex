@@ -613,11 +613,11 @@ Public Function getDescription(control As IRibbonControl, ByRef setRibbonVal)
 End Function
 
 'getImageMso ê›íË----------------------------------------------------------------------------------
-Public Function getImage(control As IRibbonControl, ByRef image)
+Public Function getImage(control As IRibbonControl, ByRef Image)
   On Error GoTo catchError
   
   Call init.setting
-  image = BK_ribbonVal("Img_" & control.ID)
+  Image = BK_ribbonVal("Img_" & control.ID)
   Exit Function
 'ÉGÉâÅ[î≠ê∂éû--------------------------------------------------------------------------------------
 catchError:
@@ -655,7 +655,7 @@ Function getEnabled(control As IRibbonControl, ByRef returnedVal)
   
   If Workbooks.count = 0 Then
     returnedVal = False
-  ElseIf BK_setVal("debugMode") = "develop" Then
+  ElseIf LadexsetVal("debugMode") = "develop" Then
     returnedVal = True
   Else
     returnedVal = False

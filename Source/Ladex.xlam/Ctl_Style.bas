@@ -76,7 +76,7 @@ Function Import()
     Set setStyleBook = Workbooks.Open(LadexDir & "\" & "スタイル情報.xlsx")
     Call Library.startScript
   End If
-  setStyleBook.Sheets("Style").Columns("A:J").copy BK_ThisBook.Worksheets("Style").Range("A1")
+  setStyleBook.Sheets("Style").Columns("A:J").copy LadexBook.Worksheets("Style").Range("A1")
   
   Call Ctl_SaveVal.delVal("ExportStyleFilePaht")
   Call Ctl_SaveVal.delVal("ExportStyleFileName")
@@ -224,18 +224,14 @@ Function スタイル設定()
   For Each s In ActiveWorkbook.Styles
     Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
     
-    'If s.BuiltIn = False Then
-      If Library.chkArrayVal(useStyle, s.Name) = False Then
-        Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
-        Select Case s.Name
-          Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
-          Case Else
-            s.delete
-        End Select
-        
-        
-      End If
-    'End If
+    If Library.chkArrayVal(useStyle, s.Name) = False Then
+      Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
+      Select Case s.Name
+        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
+        Case Else
+          s.delete
+      End Select
+    End If
     count = count + 1
   Next
   
@@ -247,7 +243,7 @@ Function スタイル設定()
       Set setStyleBook = Workbooks.Open(LadexDir & "\" & "スタイル情報.xlsx")
       Call Library.startScript
     End If
-    setStyleBook.Sheets("Style").Columns("A:J").copy BK_ThisBook.Worksheets("Style").Range("A1")
+    setStyleBook.Sheets("Style").Columns("A:J").copy LadexBook.Worksheets("Style").Range("A1")
     setStyleBook.Close
   End If
   Set setStyleBook = Nothing

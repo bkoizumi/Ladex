@@ -207,11 +207,12 @@ Function 連番設定()
   
   
   If Selection.Item(1) = "" Then
-    line = Selection.Item(1)
-  Else
     line = 1
+  Else
+    line = Selection.Item(1)
   End If
   
+  Selection.HorizontalAlignment = xlCenter
   For Each slctCells In Selection
     Call Library.showDebugForm("設定前セル値", slctCells.Value, "debug")
     slctCells.Value = line

@@ -24,19 +24,21 @@ Function getList()
   If Not IsEmpty(tmp) Then
     'カテゴリー抽出------------------------------
     For i = 0 To UBound(tmp)
-      LadexSh_Favorite.Range("A" & line) = Split(tmp(i, 0), "<Ladex>")(0)
+      LadexSh_Favorite.Range("A" & line) = Split(tmp(i, 0), "<L|>")(0)
       line = line + 1
     Next
     
     '重複削除
     endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
-    LadexSh_Favorite.Range("A1:A" & endLine).RemoveDuplicates Columns:=1, Header:=xlNo
+    If endLine > 1 Then
+      LadexSh_Favorite.Range("A1:A" & endLine).RemoveDuplicates Columns:=1, Header:=xlNo
+    End If
     endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
 
     colLine = 2
     For line = 1 To endLine
       For i = 0 To UBound(tmp)
-        If tmp(i, 0) Like LadexSh_Favorite.Range("A" & line) & "<Ladex>*" Then
+        If tmp(i, 0) Like LadexSh_Favorite.Range("A" & line) & "<L|>*" Then
           cateEndLine = LadexSh_Favorite.Cells(Rows.count, colLine).End(xlUp).Row
           If LadexSh_Favorite.Cells(cateEndLine, colLine) <> "" Then
             cateEndLine = cateEndLine + 1
@@ -61,10 +63,10 @@ Function addList()
 
   Call Library.delRegistry("FavoriteList", "")
   
-  If LadexSh_Favorite.Range("A1") <> "" And LadexSh_Favorite.Range("B1") <> "" Then
+  If LadexSh_Favorite.Range("A1").Text <> "" And LadexSh_Favorite.Range("B1").Text <> "" Then
     For cateLine = 1 To cateEndLine
       For line = 1 To LadexSh_Favorite.Cells(Rows.count, cateLine + 1).End(xlUp).Row
-        Call Library.setRegistry("FavoriteList", LadexSh_Favorite.Range("A" & cateLine) & "<Ladex>" & line - 1, LadexSh_Favorite.Cells(line, cateLine + 1))
+        Call Library.setRegistry("FavoriteList", LadexSh_Favorite.Range("A" & cateLine) & "<L|>" & line - 1, LadexSh_Favorite.Cells(line, cateLine + 1))
       Next
     Next
   End If
@@ -76,9 +78,22 @@ End Function
 Function add(Optional setCategory As Long = 1, Optional filePath As String)
   Dim line As Long, endLine As Long
   
+  Const funcName As String = "Ctl_Favorite.add"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
   Call init.setting
-
-  endLine = LadexSh_Favorite.Cells(Rows.count, setCategory + 1).End(xlUp).Row
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  If setCategory = -1 Then
+    endLine = 2
+    setCategory = 0
+    LadexSh_Favorite.Range("A1") = "Category01"
+  Else
+    endLine = LadexSh_Favorite.Cells(Rows.count, setCategory + 1).End(xlUp).Row
+  End If
   If endLine <> 1 Then
     endLine = endLine + 1
   End If
@@ -87,10 +102,20 @@ Function add(Optional setCategory As Long = 1, Optional filePath As String)
     filePath = ActiveWorkbook.FullName
   End If
   
+  Call Library.showDebugForm("filePath", filePath, "debug")
+  Call Library.showDebugForm("Cells", Cells(endLine, setCategory + 1).Address, "debug")
   LadexSh_Favorite.Cells(endLine, setCategory + 1) = filePath
   
+  Call Library.setRegistry("targetInfo", "FavoriteDirPath", ActiveWorkbook.path)
   Call addList
 
+  '処理終了--------------------------------------
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
 
 
@@ -118,11 +143,6 @@ Function detail()
 catchError:
     Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
-
-
-
-
-
 
 
 '**************************************************************************************************

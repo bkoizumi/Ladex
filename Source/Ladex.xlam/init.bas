@@ -3,7 +3,7 @@ Option Explicit
 
 
 'ワークブック用変数------------------------------
-Public BK_ThisBook          As Workbook
+Public LadexBook            As Workbook
 Public targetBook           As Workbook
 
 'ワークシート用変数------------------------------
@@ -35,7 +35,7 @@ Public RegistrySubKey       As String
 
 
 '設定値保持--------------------------------------
-Public BK_setVal            As Object
+Public LadexsetVal          As Object
 Public sampleDataList       As Object
 Public FrmVal               As Object
 
@@ -81,10 +81,10 @@ Function unsetting(Optional flg As Boolean = True)
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Const funcName As String = "init.unsetting"
 
-  Set BK_ThisBook = Nothing
+  Set LadexBook = Nothing
   
   '設定値読み込み
-  Set BK_setVal = Nothing
+  Set LadexsetVal = Nothing
   Set BK_ribbonVal = Nothing
   Set FrmVal = Nothing
   
@@ -130,7 +130,7 @@ Function setting(Optional reCheckFlg As Boolean)
 '  End If
   '----------------------------------------------
 
-  If LadexDir = "" Or BK_setVal Is Nothing Or reCheckFlg = True Then
+  If LadexDir = "" Or LadexsetVal Is Nothing Or reCheckFlg = True Then
     Call init.unsetting(False)
   Else
     Exit Function
@@ -140,12 +140,12 @@ Function setting(Optional reCheckFlg As Boolean)
   RegistrySubKey = "Main"
   
   'ブックの設定
-  Set BK_ThisBook = ThisWorkbook
+  Set LadexBook = ThisWorkbook
   
   
   '設定値読み込み--------------------------------
-  Set BK_setVal = Nothing
-  Set BK_setVal = CreateObject("Scripting.Dictionary")
+  Set LadexsetVal = Nothing
+  Set LadexsetVal = CreateObject("Scripting.Dictionary")
   
   endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 0 Then
@@ -154,7 +154,7 @@ Function setting(Optional reCheckFlg As Boolean)
   
   For line = 3 To endLine
     If LadexSh_Config.Range("A" & line) <> "" Then
-      BK_setVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
+      LadexsetVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
     End If
   Next
     
@@ -170,7 +170,7 @@ Function setting(Optional reCheckFlg As Boolean)
   tmpRegList = GetAllSettings(thisAppName, "Main")
   For line = 0 To UBound(tmpRegList)
 '    Debug.Print tmpRegList(line, 0) & "<-->" & tmpRegList(line, 1)
-    BK_setVal.add tmpRegList(line, 0), tmpRegList(line, 1)
+    LadexsetVal.add tmpRegList(line, 0), tmpRegList(line, 1)
   Next
     
     
@@ -184,7 +184,7 @@ Function setting(Optional reCheckFlg As Boolean)
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
   
-'  LogLevel = Split(BK_setVal("LogLevel"), ".")(0)
+'  LogLevel = Split(LadexsetVal("LogLevel"), ".")(0)
   
   Exit Function
   

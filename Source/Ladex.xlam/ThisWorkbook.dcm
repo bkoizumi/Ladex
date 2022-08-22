@@ -10,6 +10,7 @@ Attribute VB_Exposed = True
 Private Ctl_Event As New Ctl_Event
 
 
+
 '==================================================================================================
 Private Sub Workbook_Open()
 
@@ -22,5 +23,17 @@ Private Sub Workbook_Open()
 '  clsEvent.StopEvent = False
   
 '  Call Main.InitializeBook
+End Sub
+
+
+
+'==================================================================================================
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
+  If Workbooks(ThisWorkbook.Name).IsAddin = False Then
+    Workbooks(ThisWorkbook.Name).IsAddin = True
+    ThisWorkbook.Save
+    Cancel = True
+  End If
+  Call Ctl_Ribbon.RefreshRibbon
 End Sub
 

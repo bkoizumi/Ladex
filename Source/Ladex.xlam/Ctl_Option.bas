@@ -44,7 +44,7 @@ Function showHelp()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  BK_ThisBook.Activate
+  LadexBook.Activate
   LadexSh_Help.Activate
   Sheets("Help").copy
   ActiveWindow.DisplayGridlines = False
@@ -117,14 +117,14 @@ Function initialization()
   Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
   '----------------------------------------------
   
-  BK_ThisBook.Activate
-  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(BK_setVal("Cells_RegistryKey"))).End(xlUp).Row
+  LadexBook.Activate
+  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(LadexsetVal("Cells_RegistryKey"))).End(xlUp).Row
   
   Call Library.delRegistry("Main")
   For line = 3 To endLine
-    RegistryKey = LadexSh_Config.Range(BK_setVal("Cells_RegistryKey") & line)
-    RegistrySubKey = LadexSh_Config.Range(BK_setVal("Cells_RegistrySubKey") & line)
-    RegistryVal = LadexSh_Config.Range(BK_setVal("Cells_RegistryValue") & line)
+    RegistryKey = LadexSh_Config.Range(LadexsetVal("Cells_RegistryKey") & line)
+    RegistrySubKey = LadexSh_Config.Range(LadexsetVal("Cells_RegistrySubKey") & line)
+    RegistryVal = LadexSh_Config.Range(LadexsetVal("Cells_RegistryValue") & line)
     
     If RegistryKey <> "" Then
      Call Library.setRegistry(RegistryKey, RegistrySubKey, RegistryVal)

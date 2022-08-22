@@ -362,10 +362,10 @@ Function 体裁一括変更()
     slctObect.Select
     slctObect.Placement = xlMove
     With Selection.ShapeRange.TextFrame2
-      .TextRange.Font.NameComplexScript = BK_setVal("BaseFont")
-      .TextRange.Font.NameFarEast = BK_setVal("BaseFont")
-      .TextRange.Font.Name = BK_setVal("BaseFont")
-      .TextRange.Font.Size = BK_setVal("BaseFontSize")
+      .TextRange.Font.NameComplexScript = LadexsetVal("BaseFont")
+      .TextRange.Font.NameFarEast = LadexsetVal("BaseFont")
+      .TextRange.Font.Name = LadexsetVal("BaseFont")
+      .TextRange.Font.Size = LadexsetVal("BaseFontSize")
       
       If .TextRange.Text <> "" Then
         .AutoSize = msoAutoSizeShapeToFitText
@@ -379,7 +379,7 @@ Function 体裁一括変更()
   On Error GoTo catchError
   
   'ガイドラインを非表示--------------------------
-  setGgridLine = BK_setVal("GridLine")
+  setGgridLine = LadexsetVal("GridLine")
   If setGgridLine = "表示しない" Then
     ActiveWindow.DisplayGridlines = False
   ElseIf setGgridLine = "表示する" Then
@@ -389,17 +389,17 @@ Function 体裁一括変更()
   '高さ設定--------------------------------------
   Cells.Select
   Range("A1").Activate
-  Selection.rowHeight = BK_setVal("rowHeight")
+  Selection.rowHeight = LadexsetVal("rowHeight")
   
   'フォント設定----------------------------------
   With Selection
-    .Font.Name = BK_setVal("BaseFont")
-    .Font.Size = BK_setVal("BaseFontSize")
+    .Font.Name = LadexsetVal("BaseFont")
+    .Font.Size = LadexsetVal("BaseFontSize")
     .VerticalAlignment = xlCenter
   End With
   
   '表示倍率--------------------------------------
-  ActiveWindow.Zoom = BK_setVal("ZoomLevel")
+  ActiveWindow.Zoom = LadexsetVal("ZoomLevel")
   
   Application.Goto Reference:=Range("A1"), Scroll:=True
 
@@ -444,10 +444,10 @@ Function 指定フォントに設定()
   For Each slctObect In ActiveSheet.Shapes
     slctObect.Select
     With Selection.ShapeRange.TextFrame2
-      .TextRange.Font.NameComplexScript = BK_setVal("BaseFont")
-      .TextRange.Font.NameFarEast = BK_setVal("BaseFont")
-      .TextRange.Font.Name = BK_setVal("BaseFont")
-      .TextRange.Font.Size = BK_setVal("BaseFontSize")
+      .TextRange.Font.NameComplexScript = LadexsetVal("BaseFont")
+      .TextRange.Font.NameFarEast = LadexsetVal("BaseFont")
+      .TextRange.Font.Name = LadexsetVal("BaseFont")
+      .TextRange.Font.Size = LadexsetVal("BaseFontSize")
       If .TextRange.Text <> "" Then
         .AutoSize = msoAutoSizeShapeToFitText
         .AutoSize = msoAutoSizeNone
@@ -462,8 +462,8 @@ Function 指定フォントに設定()
   'フォント設定----------------------------------
   Cells.Select
   With Selection
-    .Font.Name = BK_setVal("BaseFont")
-    .Font.Size = BK_setVal("BaseFontSize")
+    .Font.Name = LadexsetVal("BaseFont")
+    .Font.Size = LadexsetVal("BaseFontSize")
     .VerticalAlignment = xlCenter
   End With
 
