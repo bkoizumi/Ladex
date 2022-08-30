@@ -797,14 +797,16 @@ End Function
 ' *
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
-Function convURLEncode(ByVal str As String) As String
-  Dim EncodeURL As String
+Function convURLEncode(ByVal strVal As String) As String
+'  Dim EncodeURL As String
 
-  With CreateObject("ScriptControl")
-    .Language = "JScript"
-    EncodeURL = .CodeObject.encodeURIComponent(str)
-  End With
-  convURLEncode = EncodeURL
+'  With CreateObject("ScriptControl")
+'    .Language = "JScript"
+'    EncodeURL = .CodeObject.encodeURIComponent(strVal)
+'  End With
+'  convURLEncode = EncodeURL
+  
+  convURLEncode = WorksheetFunction.EncodeURL(strVal)
 End Function
 
 
@@ -813,12 +815,12 @@ End Function
 ' *
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
-Function convURLDecode(ByVal str As String) As String
+Function convURLDecode(ByVal strVal As String) As String
   Dim DecodeURL As String
 
   With CreateObject("ScriptControl")
     .Language = "JScript"
-    DecodeURL = .CodeObject.decodeURIComponent(str)
+    DecodeURL = .CodeObject.decodeURIComponent(strVal)
   End With
   convURLDecode = DecodeURL
 End Function

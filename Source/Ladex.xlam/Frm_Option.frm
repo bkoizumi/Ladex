@@ -480,7 +480,11 @@ End Function
 Function doStampPreview()
   Dim previewImgPath As String
   
-  Call init.setting(True)
+  If StampName.Value = "" Or StampVal.Value = "" Then
+    Exit Function
+  End If
+  
+  Call init.setting
   
   LadexSh_HiLight.Activate
   LadexSh_HiLight.Range("F12").Activate

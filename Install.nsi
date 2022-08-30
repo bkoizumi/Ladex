@@ -43,7 +43,8 @@ SetCompressor /solid lzma
 ; インストーラー名
 Name "Ladex [Addin For Excel Library]"
 ; 出力されるファイル名
-OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}-setup.exe"
+; OutFile "${PRODUCT_NAME}-${PRODUCT_VERSION}-setup.exe"
+OutFile "${PRODUCT_NAME}-setup.exe"
 
 ; インストール/アンインストール時の進捗画面
 ShowInstDetails   show

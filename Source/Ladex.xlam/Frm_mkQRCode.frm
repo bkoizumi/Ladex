@@ -29,13 +29,13 @@ Public selectLine     As Long
 '**************************************************************************************************
 Private Sub UserForm_Initialize()
   Dim line As Long, endLine As Long
-  Const funcName As String = "Frm_Sheet.UserForm_Initialize"
+  Const funcName As String = "Frm_mkQRCode.UserForm_Initialize"
 
   '処理開始--------------------------------------
 '  On Error GoTo catchError
 '  Call init.setting
 '  Call Library.startScript
-  Call Library.showDebugForm(funcName, , "function")
+  Call Library.showDebugForm("funcName", funcName, "function")
   '----------------------------------------------
   
   '表示位置指定----------------------------------
@@ -74,6 +74,7 @@ Private Sub OKButton_Click()
   
   FrmVal.add "CellAddress", CellAddress.Text
   FrmVal.add "codeSize", codeSize.Text
+  FrmVal.add "onReSize", onReSize.Value
   
   Unload Me
 

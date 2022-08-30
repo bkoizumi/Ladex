@@ -87,7 +87,6 @@ Function ämîFàÛ(Optional StampName As String, Optional StampVal As String, Optio
     StampVal = Library.getRegistry("Main", "StampVal")
   End If
   
-  
   LadexSh_Stamp.Activate
   LadexSh_Stamp.Shapes.Range(Array("TB_çœ")).Select
   Selection.ShapeRange(1).TextFrame2.TextRange.Characters.Text = StampVal

@@ -153,7 +153,7 @@ Function QRコード生成()
     Call Ctl_ProgressBar.showStart
     PrgP_Max = 2
   Else
-    On Error GoTo catchError
+'    On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
@@ -180,8 +180,10 @@ Function QRコード生成()
     
     With targetCells
       .Select
-      If .rowHeight < colHeight Then .rowHeight = colHeight
-      If .ColumnWidth < colWidth Then .ColumnWidth = colWidth
+      If FrmVal("onReSize") = True Then
+        If .rowHeight < colHeight Then .rowHeight = colHeight
+        If .ColumnWidth < colWidth Then .ColumnWidth = colWidth
+      End If
     End With
     
     chartAPIURL = chartAPI & "chs=" & FrmVal("codeSize") & "x" & FrmVal("codeSize")
@@ -190,8 +192,14 @@ Function QRコード生成()
     Call Library.showDebugForm("chartAPIURL", chartAPIURL, "debug")
     
     With ActiveSheet.Pictures.Insert(chartAPIURL)
-      .ShapeRange.Top = targetCells.Top + (targetCells.Height - .ShapeRange.Height) / 2
-      .ShapeRange.Left = targetCells.Left + (targetCells.Width - .ShapeRange.Width) / 2
+      If FrmVal("onReSize") = True Then
+        .ShapeRange.Top = targetCells.Top + (targetCells.Height - .ShapeRange.Height) / 2
+        .ShapeRange.Left = targetCells.Left + (targetCells.Width - .ShapeRange.Width) / 2
+      Else
+        .ShapeRange.Top = targetCells.Top
+        .ShapeRange.Left = targetCells.Left
+      End If
+      
       .Placement = xlMove
       
       'QRコードの名前設定
