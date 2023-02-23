@@ -41,7 +41,7 @@ Function showHelp()
   Else
     On Error GoTo catchError
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   LadexBook.Activate
@@ -114,17 +114,17 @@ Function initialization()
   Else
     On Error GoTo catchError
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   LadexBook.Activate
-  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(LadexsetVal("Cells_RegistryKey"))).End(xlUp).Row
+  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(LadexSetVal("Cells_RegistryKey"))).End(xlUp).Row
   
   Call Library.delRegistry("Main")
   For line = 3 To endLine
-    RegistryKey = LadexSh_Config.Range(LadexsetVal("Cells_RegistryKey") & line)
-    RegistrySubKey = LadexSh_Config.Range(LadexsetVal("Cells_RegistrySubKey") & line)
-    RegistryVal = LadexSh_Config.Range(LadexsetVal("Cells_RegistryValue") & line)
+    RegistryKey = LadexSh_Config.Range(LadexSetVal("Cells_RegistryKey") & line)
+    RegistrySubKey = LadexSh_Config.Range(LadexSetVal("Cells_RegistrySubKey") & line)
+    RegistryVal = LadexSh_Config.Range(LadexSetVal("Cells_RegistryValue") & line)
     
     If RegistryKey <> "" Then
      Call Library.setRegistry(RegistryKey, RegistrySubKey, RegistryVal)
@@ -159,10 +159,10 @@ Function showOption()
     Call Library.showDebugForm("" & funcName, , "function")
     Call Library.startScript
   Else
-    On Error GoTo catchError
+'    On Error GoTo catchError
     Call Library.showDebugForm("" & funcName, , "function")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   With Frm_Option
     .MultiPage1.SelectedItem.Index = 0
@@ -206,7 +206,7 @@ Function HighLight()
   Else
     On Error GoTo catchError
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   With Frm_Option
@@ -247,7 +247,7 @@ Function Comment()
   Else
     On Error GoTo catchError
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   With Frm_Option

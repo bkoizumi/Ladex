@@ -1,7 +1,6 @@
 Attribute VB_Name = "init"
 Option Explicit
 
-
 'ワークブック用変数------------------------------
 Public LadexBook            As Workbook
 Public targetBook           As Workbook
@@ -9,6 +8,7 @@ Public targetBook           As Workbook
 'ワークシート用変数------------------------------
 Public targetSheet          As Worksheet
 
+'セル用変数--------------------------------------
 Public targetRange          As Range
 
 
@@ -22,7 +22,7 @@ Public resetVal             As String
 Public runFlg               As Boolean
 Public PrgP_Cnt             As Long
 Public PrgP_Max             As Long
-'Public LogLevel             As Long
+
 Public arrFavCategory()
 Public useStyle()
 Public arrCells()
@@ -35,7 +35,7 @@ Public RegistrySubKey       As String
 
 
 '設定値保持--------------------------------------
-Public LadexsetVal          As Object
+Public LadexSetVal          As Object
 Public sampleDataList       As Object
 Public FrmVal               As Object
 
@@ -84,8 +84,7 @@ Function unsetting(Optional flg As Boolean = True)
   Set LadexBook = Nothing
   
   '設定値読み込み
-  Set LadexsetVal = Nothing
-  Set BK_ribbonVal = Nothing
+  Set LadexSetVal = Nothing
   Set FrmVal = Nothing
   
   Set targetSheet = Nothing
@@ -99,6 +98,8 @@ Function unsetting(Optional flg As Boolean = True)
   LadexDir = ""
   
   If flg = True Then
+    PrgP_Max = 2
+    PrgP_Cnt = 0
     runFlg = False
   End If
   
@@ -130,7 +131,7 @@ Function setting(Optional reCheckFlg As Boolean)
 '  End If
   '----------------------------------------------
 
-  If LadexDir = "" Or LadexsetVal Is Nothing Or reCheckFlg = True Then
+  If LadexDir = "" Or LadexSetVal Is Nothing Or reCheckFlg = True Then
     Call init.unsetting(False)
   Else
     Exit Function
@@ -144,8 +145,8 @@ Function setting(Optional reCheckFlg As Boolean)
   
   
   '設定値読み込み--------------------------------
-  Set LadexsetVal = Nothing
-  Set LadexsetVal = CreateObject("Scripting.Dictionary")
+  Set LadexSetVal = Nothing
+  Set LadexSetVal = CreateObject("Scripting.Dictionary")
   
   endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 0 Then
@@ -154,7 +155,7 @@ Function setting(Optional reCheckFlg As Boolean)
   
   For line = 3 To endLine
     If LadexSh_Config.Range("A" & line) <> "" Then
-      LadexsetVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
+      LadexSetVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
     End If
   Next
     
@@ -163,14 +164,10 @@ Function setting(Optional reCheckFlg As Boolean)
   Set FrmVal = CreateObject("Scripting.Dictionary")
   FrmVal.add "commentVal", ""
   
-  
-  
-  
   'レジストリ設定項目取得------------------------
   tmpRegList = GetAllSettings(thisAppName, "Main")
   For line = 0 To UBound(tmpRegList)
-'    Debug.Print tmpRegList(line, 0) & "<-->" & tmpRegList(line, 1)
-    LadexsetVal.add tmpRegList(line, 0), tmpRegList(line, 1)
+    LadexSetVal.add tmpRegList(line, 0), tmpRegList(line, 1)
   Next
     
     
@@ -184,7 +181,7 @@ Function setting(Optional reCheckFlg As Boolean)
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
   
-'  LogLevel = Split(LadexsetVal("LogLevel"), ".")(0)
+'  LogLevel = Split(LadexSetVal("LogLevel"), ".")(0)
   
   Exit Function
   
@@ -235,3 +232,37 @@ catchError:
   Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  " & Err.Description
 End Function
 
+'==================================================================================================
+Function resetLadexSetVal()
+
+  Dim line As Long, endLine As Long
+  Dim tmpRegList
+  
+  Const funcName As String = "init.LadexSetVal"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  '----------------------------------------------
+  
+  '設定値読み込み--------------------------------
+  Set LadexSetVal = Nothing
+  Set LadexSetVal = CreateObject("Scripting.Dictionary")
+  
+  endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
+  If endLine = 0 Then
+    endLine = 11
+  End If
+  
+  'レジストリ設定項目取得------------------------
+  tmpRegList = GetAllSettings(thisAppName, "Main")
+  For line = 0 To UBound(tmpRegList)
+    LadexSetVal.add tmpRegList(line, 0), tmpRegList(line, 1)
+  Next
+    
+  Exit Function
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  " & Err.Description
+End Function

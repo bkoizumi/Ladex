@@ -3,7 +3,7 @@ Option Explicit
 
 Public Const PAGE_EXECUTE_READWRITE = &H40
  
-Public Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As LongPtr, Source As LongPtr, ByVal Length As LongPtr)
+Public Declare PtrSafe Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As LongPtr, source As LongPtr, ByVal Length As LongPtr)
 Public Declare PtrSafe Function VirtualProtect Lib "kernel32" (lpAddress As LongPtr, ByVal dwSize As LongPtr, ByVal flNewProtect As LongPtr, lpflOldProtect As LongPtr) As LongPtr
 Public Declare PtrSafe Function GetModuleHandleA Lib "kernel32" (ByVal lpModuleName As String) As LongPtr
 Public Declare PtrSafe Function GetProcAddress Lib "kernel32" (ByVal hModule As LongPtr, ByVal lpProcName As String) As LongPtr
@@ -19,7 +19,7 @@ Sub VBAProjectパスワード解除()
   If HookFlag Then
     Debug.Print "VBA Project を解除しました"
   Else
-    Debug.Print "VBA Project を解除に失敗しました"
+    MsgBox "VBA Project を解除に失敗しました"
   End If
 End Sub
 

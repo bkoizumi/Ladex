@@ -115,6 +115,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
 Function スタイル削除()
   Dim s
   Dim count As Long, endCount As Long
@@ -154,23 +155,117 @@ Function スタイル削除()
   count = 1
   endCount = ActiveWorkbook.Styles.count
   
-  Call Ctl_Style.スタイル利用確認
+'  Call Ctl_Style.スタイル利用確認
+'  For Each s In ActiveWorkbook.Styles
+'    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
+'
+'    If s.BuiltIn = False Then
+'      If Library.chkArrayVal(useStyle, s.Name) = False Then
+'        Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
+'        s.delete
+'      End If
+'    End If
+'    count = count + 1
+'  Next
   
+  
+  Call Ctl_Style.スタイル利用確認
+  For Each s In ActiveWorkbook.Styles
+'    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
+    
+    If Library.chkArrayVal(useStyle, s.Name) = False Then
+      Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
+      Select Case s.Name
+        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
+        Case Else
+          s.delete
+      End Select
+    End If
+    count = count + 1
+  Next
+  
+  
+  
+  
+  
+  
+  
+  '処理終了--------------------------------------
+  If runFlg = False Then
+'    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function スタイル_全削除()
+  Dim s
+  Dim count As Long, endCount As Long
+  Dim line As Long, endLine As Long
+  Dim tempSheet As Object
+  Dim useStyleName As Variant
+  
+  Const funcName As String = "Ctl_Style.スタイル_全削除"
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 4
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  'ブックの保護確認
+  If ActiveWorkbook.ProtectWindows = True Then
+    Call Library.showNotice(412, , True)
+  End If
+
+  'シートの保護確認
+  For Each tempSheet In Sheets
+    If Worksheets(tempSheet.Name).ProtectContents = True Then
+      Worksheets(tempSheet.Name).Select
+      Call Library.showNotice(413, , True)
+    End If
+  Next
+  
+  count = 1
+  endCount = ActiveWorkbook.Styles.count
+  
+    
   For Each s In ActiveWorkbook.Styles
     Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
     
-    If s.BuiltIn = False Then
-      If Library.chkArrayVal(useStyle, s.Name) = False Then
-        Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
-        s.delete
-      End If
-    End If
+      Select Case s.Name
+        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
+        Case Else
+          s.delete
+      End Select
+      
+
     count = count + 1
   Next
   
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -418,8 +513,17 @@ Function スタイル利用確認()
   Const funcName As String = "Ctl_Style.スタイル利用確認"
 
   '処理開始--------------------------------------
-  On Error GoTo catchError
-  Call Library.showDebugForm(funcName, , "start1")
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
@@ -434,6 +538,10 @@ Function スタイル利用確認()
       styleName = slctRange.style.NameLocal
 
       If Library.chkArrayVal(useStyle, styleName) = False Then
+      
+'        Call Library.showDebugForm("sheetName", sheetName, "debug")
+'        Call Library.showDebugForm("styleName", styleName, "debug")
+      
         ReDim Preserve useStyle(i)
         useStyle(i) = styleName
         i = i + 1
@@ -442,7 +550,15 @@ Function スタイル利用確認()
   Next
 
   '処理終了--------------------------------------
-  Call Library.showDebugForm(funcName, , "end1")
+  If runFlg = False Then
+    'Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
   '----------------------------------------------
   Exit Function
 
@@ -450,3 +566,98 @@ Function スタイル利用確認()
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
+
+
+
+'==================================================================================================
+Function 標準スタイルの見た目変更()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Const funcName As String = "Ctl_Style.標準スタイルの見た目変更"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+  With ActiveWorkbook.Styles("Percent")
+    .IncludeNumber = True
+    .IncludeFont = True
+    .IncludeAlignment = True
+    .IncludeBorder = True
+    .IncludePatterns = True
+    .IncludeProtection = True
+  
+    'フォント
+    .Font.Name = "メイリオ"
+    .Font.Size = 9
+    .Font.Color = ""
+    .Font.Bold = ""
+  
+    '配置
+    .HorizontalAlignment = ""
+    .VerticalAlignment = ""
+  
+    '罫線
+    .Borders(xlDiagonalDown).LineStyle = ""
+    .Borders(xlDiagonalDown).Weight = ""
+    .Borders(xlDiagonalDown).Color = ""
+    .Borders(xlDiagonalUp).LineStyle = ""
+    .Borders(xlDiagonalUp).Weight = ""
+    .Borders(xlDiagonalUp).Color = ""
+  
+    .Borders(xlLeft).LineStyle = ""
+    .Borders(xlLeft).Weight = ""
+    .Borders(xlLeft).Color = ""
+  
+    .Borders(xlRight).LineStyle = ""
+    .Borders(xlRight).Weight = ""
+    .Borders(xlRight).Color = ""
+  
+    .Borders(xlTop).LineStyle = ""
+    .Borders(xlTop).Weight = ""
+    .Borders(xlTop).Color = ""
+  
+    .Borders(xlBottom).LineStyle = ""
+    .Borders(xlBottom).Weight = ""
+    .Borders(xlBottom).Color = ""
+  
+    '背景色
+    .Interior.Color = ""
+   End With
+  
+
+
+
+
+
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+

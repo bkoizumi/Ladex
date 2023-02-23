@@ -146,14 +146,14 @@ Function パターン選択(Optional maxCount As Long)
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
   
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Call showFrm_sampleData("パターン選択")
   If sampleDataList Is Nothing Then
     End
   End If
-  maxCount = LadexsetVal("maxCount")
+  maxCount = LadexSetVal("maxCount")
 
   Call Library.delSheetData(LadexSh_InputData)
   LadexSh_InputData.Cells.NumberFormatLocal = "@"
@@ -322,18 +322,18 @@ Function 数値_桁数固定(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   Call showFrm_sampleData("【数値】桁数固定")
   
   If IsMissing(maxCount) Then
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   line = Selection(1).Row
   
   For count = 0 To (maxCount - 1)
     Cells(line + count, ActiveCell.Column).NumberFormatLocal = "###"
-    Cells(line + count, ActiveCell.Column) = LadexsetVal("addFirst") & Library.makeRandomDigits(LadexsetVal("digits")) & LadexsetVal("addEnd")
+    Cells(line + count, ActiveCell.Column) = LadexSetVal("addFirst") & Library.makeRandomDigits(LadexSetVal("digits")) & LadexSetVal("addEnd")
   Next
 
   '処理終了--------------------------------------
@@ -372,7 +372,7 @@ Function 数値_範囲(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Call showFrm_sampleData("【数値】範囲指定")
@@ -380,19 +380,19 @@ Function 数値_範囲(Optional maxCount As Long)
   If Selection.CountLarge > 1 Then
     For Each slctCells In Selection
       slctCells.NumberFormatLocal = "###"
-      slctCells.Value = Library.makeRandomNo(LadexsetVal("minVal"), LadexsetVal("maxVal"))
+      slctCells.Value = Library.makeRandomNo(LadexSetVal("minVal"), LadexSetVal("maxVal"))
       DoEvents
     Next
   Else
     line = Selection(1).Row
   
     If maxCount = 0 Then
-      maxCount = LadexsetVal("maxCount")
+      maxCount = LadexSetVal("maxCount")
     End If
   
     For count = 0 To (maxCount - 1)
       Cells(line + count, ActiveCell.Column).NumberFormatLocal = "###"
-      Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(LadexsetVal("minVal"), LadexsetVal("maxVal"))
+      Cells(line + count, ActiveCell.Column) = Library.makeRandomNo(LadexSetVal("minVal"), LadexSetVal("maxVal"))
       Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, count, maxCount, "データ生成")
     Next
   End If
@@ -432,13 +432,13 @@ Function 名前_姓(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】姓")
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   line = Selection(1).Row
   
@@ -484,13 +484,13 @@ Function 名前_名(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】名")
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   
   line = Selection(1).Row
@@ -536,13 +536,13 @@ Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean 
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【名前】フルネーム")
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   
   line = Selection(1).Row
@@ -592,16 +592,16 @@ Function 日付_日(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   Call showFrm_sampleData("【日付】日")
   If IsMissing(maxCount) Then
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   line = Selection(1).Row
 
-  fstDate = LadexsetVal("minVal")
-  lstDate = LadexsetVal("maxVal")
+  fstDate = LadexSetVal("minVal")
+  lstDate = LadexSetVal("maxVal")
   
   For count = 0 To (maxCount - 1)
     Randomize
@@ -647,12 +647,12 @@ Function 日付_時間(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   PrgP_Max = 2
   PrgP_Cnt = 1
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   If IsMissing(maxCount) Then
     Call showFrm_sampleData("【日付】時間")
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   
   
@@ -706,17 +706,17 @@ Function 日時(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   PrgP_Max = 2
   PrgP_Cnt = 1
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Call showFrm_sampleData("【日付】日")
   If IsMissing(maxCount) Then
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   line = Selection(1).Row
 
-  fstDate = LadexsetVal("minVal")
-  lstDate = LadexsetVal("maxVal")
+  fstDate = LadexSetVal("minVal")
+  lstDate = LadexSetVal("maxVal")
   
   line = Selection(1).Row
   For count = 0 To maxCount - 1
@@ -769,22 +769,22 @@ Function その他_文字(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Call showFrm_sampleData("【その他】文字")
   If IsMissing(maxCount) Then
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   
   makeStr = ""
-  If LadexsetVal("strType01") Then makeStr = makeStr & SymbolCharacters
-  If LadexsetVal("strType02") Then makeStr = makeStr & HalfWidthCharacters
-  If LadexsetVal("strType03") Then makeStr = makeStr & StrConv(HalfWidthCharacters, vbLowerCase)
-  If LadexsetVal("strType04") Then makeStr = makeStr & HalfWidthDigit
-  If LadexsetVal("strType05") Then makeStr = makeStr & JapaneseCharacters
-  If LadexsetVal("strType06") Then makeStr = makeStr & StrConv(JapaneseCharacters, vbKatakana)
-  If LadexsetVal("strType07") Then makeStr = makeStr & MachineDependentCharacters
+  If LadexSetVal("strType01") Then makeStr = makeStr & SymbolCharacters
+  If LadexSetVal("strType02") Then makeStr = makeStr & HalfWidthCharacters
+  If LadexSetVal("strType03") Then makeStr = makeStr & StrConv(HalfWidthCharacters, vbLowerCase)
+  If LadexSetVal("strType04") Then makeStr = makeStr & HalfWidthDigit
+  If LadexSetVal("strType05") Then makeStr = makeStr & JapaneseCharacters
+  If LadexSetVal("strType06") Then makeStr = makeStr & StrConv(JapaneseCharacters, vbKatakana)
+  If LadexSetVal("strType07") Then makeStr = makeStr & MachineDependentCharacters
 
   For Each slctRange In Selection
     slctRange.Value = Library.makeRandomString(maxCount, makeStr)
@@ -829,12 +829,12 @@ Function メールアドレス(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   endLine = LadexSh_TestData.Cells(Rows.count, 10).End(xlUp).Row
   If IsMissing(maxCount) Then
-    maxCount = LadexsetVal("maxCount")
+    maxCount = LadexSetVal("maxCount")
   End If
   
   line = Selection(1).Row
@@ -890,7 +890,7 @@ Function 住所(maxCount As Long, ParamArray addressFlgs())
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   endLine = LadexSh_TestData.Cells(Rows.count, 16).End(xlUp).Row
@@ -957,7 +957,7 @@ Function 電話番号(Optional maxCount As Long)
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   endLine = LadexSh_TestData.Cells(Rows.count, 15).End(xlUp).Row
@@ -1008,15 +1008,15 @@ Function 休日リスト生成()
   PrgP_Max = 2
   PrgP_Cnt = 1
   Call Ctl_ProgressBar.showStart
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   line = 0
   Set targetRange = ActiveCell
   
   Call showFrm_sampleData("休日リスト生成")
 
-  startDay = LadexsetVal("minVal")
-  endDay = LadexsetVal("maxVal")
+  startDay = LadexSetVal("minVal")
+  endDay = LadexSetVal("maxVal")
   
   
   For targetDay = #4/1/2022# To #3/31/2023#

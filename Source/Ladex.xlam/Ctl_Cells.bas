@@ -138,7 +138,7 @@ Function 中黒点付与()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
 '  arrCells = Selection.Value
@@ -191,7 +191,7 @@ Function 連番設定()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   line = 1
 '  arrCells = Selection.Value
@@ -260,7 +260,7 @@ Function 連番追加()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   line = 1
   
@@ -441,7 +441,7 @@ Function 取り消し線設定()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   For Each slctCells In Selection
     If slctCells.Font.Strikethrough = True Then
@@ -556,7 +556,7 @@ Function コメント削除()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   If ActiveSheet.ProtectContents = True Then
@@ -599,7 +599,7 @@ Function 行例を入れ替えて貼付け()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-'  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+'  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks:=False, Transpose:=True
@@ -636,7 +636,7 @@ Function ゼロ埋め()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
 '  On Error Resume Next
 '  Selection.SpecialCells(xlCellTypeBlanks).Value = 0
@@ -857,12 +857,14 @@ End Function
 '==================================================================================================
 Function セル幅調整()
   Dim colLine As Long, endColLine As Long
+  Dim slctStartColLine As Long, slctEndColLine As Long, useEndColLine As Long
+  
+  
   Dim colName As String
   Dim slctCells As Range
-  Dim maxColumnWidth As Integer
   Const funcName As String = "Ctl_Cells.セル幅調整"
   
-  maxColumnWidth = 40
+  Const maxColumnWidth As Integer = 60
   
   
   '処理開始--------------------------------------
@@ -878,46 +880,36 @@ Function セル幅調整()
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  
+  useEndColLine = Selection.SpecialCells(xlLastCell).Column
+  
+  '選択範囲がある場合----------------------------
   If Selection.CountLarge > 1 Then
-    '自動調整
-    Columns(Library.getColumnName(Selection(1).Column) & ":" & Library.getColumnName(Selection(Selection.CountLarge).Column)).EntireColumn.AutoFit
-    
-    For Each slctCells In Selection
-      colName = Library.getColumnName(slctCells.Column)
-      
-      If IsNumeric(slctCells.Value) Then
-        If CInt(slctCells.Value) > 1 Then
-          Columns(colName & ":" & colName).ColumnWidth = slctCells.Value
-        End If
-      
-      ElseIf Columns(colName & ":" & colName).ColumnWidth > maxColumnWidth Then
-        Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
-      
-      Else
-        Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0)
-      
-      End If
-      
-    Next
-
+    Selection.EntireColumn.AutoFit
+  
+    slctStartColLine = Selection.Column
+    slctEndColLine = Selection.Column + Selection.Columns.count
+  
+  '選択範囲がない場合----------------------------
   Else
     Cells.EntireColumn.AutoFit
-    For colLine = 1 To Columns.count
-      colName = Library.getColumnName(colLine)
-      If IsNumeric(Cells(1, colLine)) Then
-        If CInt(Cells(1, colLine)) > 1 Then
-          Columns(colName & ":" & colName).ColumnWidth = Cells(1, colLine).Value
-        End If
-      
-      ElseIf Cells(1, colLine).ColumnWidth > maxColumnWidth Then
-        Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
-      
-      Else
-        Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0)
-
-      End If
-    Next
+  
+    slctStartColLine = 1
+    slctEndColLine = useEndColLine
+  
   End If
+  
+  For colLine = slctStartColLine To slctEndColLine
+    colName = Library.getColumnName(colLine)
+    
+    If Cells(1, colLine).ColumnWidth > maxColumnWidth Then
+      Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
+    Else
+      Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0) + 1
+    End If
+  Next
+  
+  
   
   '処理終了--------------------------------------
   If runFlg = False Then
@@ -1401,4 +1393,5 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
 

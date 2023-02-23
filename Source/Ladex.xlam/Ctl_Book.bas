@@ -20,7 +20,7 @@ Function 名前定義削除()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
 '  For Each wb In Workbooks
@@ -64,7 +64,7 @@ Function シートリスト取得()
     On Error GoTo catchError
      Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each tempSheet In Sheets
@@ -114,7 +114,7 @@ Function 印刷範囲の点線を非表示()
     On Error GoTo catchError
      Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each tempSheet In Sheets
@@ -156,7 +156,7 @@ Function 印刷範囲の点線を表示()
     On Error GoTo catchError
      Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each tempSheet In Sheets

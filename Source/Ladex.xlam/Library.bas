@@ -416,7 +416,7 @@ Function chkLocalDrive(targetPath As String)
       Call Library.showDebugForm("Library.chkLocalDrive", "ïsñæÅAÉlÉbÉgÉèÅ[ÉNÉhÉâÉCÉuÅACDÉhÉâÉCÉuÇ»Ç«")
   End Select
 
-  If LadexsetVal("debugMode") = "develop" Then
+  If LadexSetVal("debugMode") = "develop" Then
     retVal = False
   End If
   chkLocalDrive = retVal
@@ -797,16 +797,14 @@ End Function
 ' *
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
-Function convURLEncode(ByVal strVal As String) As String
-'  Dim EncodeURL As String
+Function convURLEncode(ByVal str As String) As String
+  Dim EncodeURL As String
 
-'  With CreateObject("ScriptControl")
-'    .Language = "JScript"
-'    EncodeURL = .CodeObject.encodeURIComponent(strVal)
-'  End With
-'  convURLEncode = EncodeURL
-  
-  convURLEncode = WorksheetFunction.EncodeURL(strVal)
+  With CreateObject("ScriptControl")
+    .Language = "JScript"
+    EncodeURL = .CodeObject.encodeURIComponent(str)
+  End With
+  convURLEncode = EncodeURL
 End Function
 
 
@@ -815,12 +813,12 @@ End Function
 ' *
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
-Function convURLDecode(ByVal strVal As String) As String
+Function convURLDecode(ByVal str As String) As String
   Dim DecodeURL As String
 
   With CreateObject("ScriptControl")
     .Language = "JScript"
-    DecodeURL = .CodeObject.decodeURIComponent(strVal)
+    DecodeURL = .CodeObject.decodeURIComponent(str)
   End With
   convURLDecode = DecodeURL
 End Function
@@ -879,7 +877,7 @@ End Function
 '**************************************************************************************************
 ' * UnicodeÉGÉXÉPÅ[Év
 ' *
-' * @link   http://tech7.blog.shinobi.jp/vba/unicode%E3%82%A8%E3%82%B9%E3%82%B1%E3%83%BC%E3%83%97%E3%81%95%E3%82%8C%E3%81%9F%E6%96%87%E5%AD%97%E5%88%97%E3%82%92%E6%96%87%E5%AD%97%E3%81%AB%E6%88%BB%E3%81%99%E6%96%B9%E6%B3%95
+' * @link   http://tech7.blog.shinobi.jp/vba/unicodeÉGÉXÉPÅ[ÉvÇ≥ÇÍÇΩï∂éöóÒÇï∂éöÇ…ñﬂÇ∑ï˚ñ@
 '**************************************************************************************************
 Public Function convUnicodeunEscape(ByVal strTarget As String) As String
   Dim str As String
@@ -1114,7 +1112,7 @@ Function delTableData()
   Cells.Select
   Selection.NumberFormatLocal = "G/ïWèÄ"
 
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 
@@ -2167,10 +2165,11 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
     meg1 = meg1 & " : " & Application.WorksheetFunction.Trim(CStr(meg2))
   End If
 
-  If CInt(LogLevel) <= CInt(Split(LadexsetVal("LogLevel"), ".")(0)) Then
+  If CInt(LogLevel) <= CInt(Split(LadexSetVal("LogLevel"), ".")(0)) Then
     Call outputLog(runTime, meg1)
   End If
-  If LadexsetVal("debugMode") = "develop" Then
+  
+  If LadexSetVal("debugMode") = "develop" Then
     Debug.Print runTime & "  " & meg1
   End If
   DoEvents
@@ -2251,7 +2250,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     message = Replace(message, "<BR>", vbNewLine)
   End If
 
-  If LadexsetVal("debugMode") = "speak" Or LadexsetVal("debugMode") = "develop" Or LadexsetVal("debugMode") = "all" Then
+  If LadexSetVal("debugMode") = "speak" Or LadexSetVal("debugMode") = "develop" Or LadexSetVal("debugMode") = "all" Then
     Application.Speech.Speak Text:=speakerMeg, SpeakAsync:=True, SpeakXML:=True
   End If
 
@@ -2621,19 +2620,19 @@ End Function
 Function setFontClor(a_sSearch, a_lColor, a_bBold)
   Dim f   As Font
   Dim i, iLen
-  Dim R   As Range
+  Dim r   As Range
 
   iLen = Len(a_sSearch)
   i = 1
 
-  For Each R In Selection
+  For Each r In Selection
     Do
-      i = InStr(i, R.Value, a_sSearch)
+      i = InStr(i, r.Value, a_sSearch)
       If (i = 0) Then
         i = 1
         Exit Do
       End If
-      Set f = R.Characters(i, iLen).Font
+      Set f = r.Characters(i, iLen).Font
       f.Color = a_lColor
       f.Bold = a_bBold
       i = i + 1
@@ -2652,17 +2651,17 @@ Function setRegistry(RegistrySubKey As String, RegistryKey As String, setVal As 
   
   'èàóùäJén--------------------------------------
   On Error GoTo catchError
-  Call Library.showDebugForm(funcName, , "start1")
+'  Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
   
-  Call Library.showDebugForm("MainKey", thisAppName, "debug")
-  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
-  Call Library.showDebugForm("Key    ", RegistryKey, "debug")
-  Call Library.showDebugForm("Val    ", CStr(setVal), "debug")
-  
+'  Call Library.showDebugForm("MainKey", thisAppName, "debug")
+'  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
+'  Call Library.showDebugForm("Key    ", RegistryKey, "debug")
+'  Call Library.showDebugForm("Val    ", CStr(setVal), "debug")
+
   Call SaveSetting(thisAppName, RegistrySubKey, RegistryKey, setVal)
   
-  Call Library.showDebugForm(funcName, , "end1")
+'  Call Library.showDebugForm(funcName, , "end1")
   Exit Function
   
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
@@ -2677,17 +2676,17 @@ Function getRegistry(RegistryKey As String, RegistrySubKey As String, Optional t
   Const funcName As String = "Library.getRegistry"
 
   On Error GoTo catchError
-  Call Library.showDebugForm(funcName, , "start1")
+'  Call Library.showDebugForm(funcName, , "start1")
   
   If RegistryKey <> "" Then
     regVal = GetSetting(thisAppName, RegistryKey, RegistrySubKey)
   End If
   
-  Call Library.showDebugForm("MainKey", thisAppName, "debug")
-  Call Library.showDebugForm("Key    ", RegistryKey, "debug")
-  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
-  Call Library.showDebugForm("Val    ", regVal, "debug")
-  Call Library.showDebugForm("type   ", typeVal, "debug")
+'  Call Library.showDebugForm("MainKey", thisAppName, "debug")
+'  Call Library.showDebugForm("Key    ", RegistryKey, "debug")
+'  Call Library.showDebugForm("SubKey ", RegistrySubKey, "debug")
+'  Call Library.showDebugForm("Val    ", regVal, "debug")
+'  Call Library.showDebugForm("type   ", typeVal, "debug")
   
   Select Case typeVal
     Case "Boolean", "Long"
@@ -2702,7 +2701,7 @@ Function getRegistry(RegistryKey As String, RegistrySubKey As String, Optional t
     Case Else
   End Select
   
-  Call Library.showDebugForm(funcName, , "end1")
+'  Call Library.showDebugForm(funcName, , "end1")
   Exit Function
 
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
@@ -2787,10 +2786,10 @@ Function setValandRange(keyName As String, val As String)
   Const funcName As String = "Library.setValandRange"
 
 '  Range(keyName) = val
-  If LadexsetVal Is Nothing Then
+  If LadexSetVal Is Nothing Then
     Call init.setting
   Else
-    LadexsetVal(keyName) = val
+    LadexSetVal(keyName) = val
   End If
   Call Library.showDebugForm(funcName, keyName & "/" & val, "info")
 End Function
@@ -2972,7 +2971,7 @@ Function årê¸_ï\(Optional SetArea As Range, Optional LineColor As Variant)
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3038,7 +3037,7 @@ Function årê¸_îjê¸_àÕÇ›(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3086,7 +3085,7 @@ Function årê¸_îjê¸_äiéq(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3144,7 +3143,7 @@ Function årê¸_îjê¸_ç∂(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3175,7 +3174,7 @@ Function årê¸_îjê¸_âE(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3206,7 +3205,7 @@ Function årê¸_îjê¸_ç∂âE(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3245,7 +3244,7 @@ Function årê¸_îjê¸_è„(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3275,7 +3274,7 @@ Function årê¸_îjê¸_â∫(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3305,7 +3304,7 @@ Function årê¸_îjê¸_è„â∫(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3343,7 +3342,7 @@ Function årê¸_îjê¸_êÇíº(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3371,7 +3370,7 @@ Function årê¸_îjê¸_êÖïΩ(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3403,7 +3402,7 @@ Function årê¸_é¿ê¸_àÕÇ›(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3453,7 +3452,7 @@ Function årê¸_é¿ê¸_äiéq(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3542,7 +3541,7 @@ Function årê¸_é¿ê¸_âE(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3572,7 +3571,7 @@ Function årê¸_é¿ê¸_ç∂âE(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3610,7 +3609,7 @@ Function årê¸_é¿ê¸_è„(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3640,7 +3639,7 @@ Function årê¸_é¿ê¸_â∫(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3670,7 +3669,7 @@ Function årê¸_é¿ê¸_è„â∫(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3708,7 +3707,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3738,7 +3737,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3768,7 +3767,7 @@ Function årê¸_ìÒèdê¸_àÕÇ›(Optional SetArea As Range, Optional LineColor As Varia
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3808,7 +3807,7 @@ Function årê¸_ìÒèdê¸_ç∂(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3837,7 +3836,7 @@ Function årê¸_ìÒèdê¸_âE(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3867,7 +3866,7 @@ Function årê¸_ìÒèdê¸_ç∂âE(Optional SetArea As Range, Optional LineColor As Varia
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3899,7 +3898,7 @@ Function årê¸_ìÒèdê¸_è„(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3925,7 +3924,7 @@ Function årê¸_ìÒèdê¸_â∫(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3954,7 +3953,7 @@ Function årê¸_ìÒèdê¸_è„â∫(Optional SetArea As Range, Optional LineColor As Varia
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3984,7 +3983,7 @@ Function årê¸_îjê¸_ãtLéö(Optional SetArea As Range, Optional LineColor As Varian
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexsetVal("LineColor")
+    LineColor = LadexSetVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
   
@@ -4091,11 +4090,11 @@ Function getURLStatusCode(ByVal strURL As String) As Integer
   With Http
     .Open "GET", strURL, False
 
-    If LadexsetVal("proxyURL") <> "" Then
-      .SetProxy 2, LadexsetVal("proxyURL") & ":" & LadexsetVal("proxyPort")
+    If LadexSetVal("proxyURL") <> "" Then
+      .SetProxy 2, LadexSetVal("proxyURL") & ":" & LadexSetVal("proxyPort")
     End If
-    If LadexsetVal("proxyUser") <> "" Then
-      .setProxyCredentials LadexsetVal("proxyUser"), LadexsetVal("proxyPasswd")
+    If LadexSetVal("proxyUser") <> "" Then
+      .setProxyCredentials LadexSetVal("proxyUser"), LadexSetVal("proxyPasswd")
     End If
 
     .Send
@@ -4600,5 +4599,42 @@ Function getRightString(targetStr, strCnt As Long) As String
 
   getRightString = getStr
 End Function
+
+
+'==================================================================================================
+' * ÉNÉCÉbÉNÉ\Å[Ég
+Sub Sort_QuickSort(ByRef argAry As Variant, ByVal lngMin As Long, ByVal lngMax As Long, ByVal keyPos As Long)
+  Dim i As Long
+  Dim j As Long
+  Dim k As Long
+  Dim vBase As Variant
+  Dim vSwap As Variant
+  
+  vBase = argAry(Int((lngMin + lngMax) / 2), keyPos)
+  i = lngMin
+  j = lngMax
+  Do
+    Do While argAry(i, keyPos) < vBase
+      i = i + 1
+    Loop
+    Do While argAry(j, keyPos) > vBase
+      j = j - 1
+    Loop
+    If i >= j Then Exit Do
+    For k = LBound(argAry, 2) To UBound(argAry, 2)
+      vSwap = argAry(i, k)
+      argAry(i, k) = argAry(j, k)
+      argAry(j, k) = vSwap
+    Next
+    i = i + 1
+    j = j - 1
+  Loop
+  If (lngMin < i - 1) Then
+    Call Library.Sort_QuickSort(argAry, lngMin, i - 1, keyPos)
+  End If
+  If (lngMax > j + 1) Then
+    Call Library.Sort_QuickSort(argAry, j + 1, lngMax, keyPos)
+  End If
+End Sub
 
 

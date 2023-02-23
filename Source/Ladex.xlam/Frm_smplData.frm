@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_smplData 
    Caption         =   "sampleData"
-   ClientHeight    =   6010
+   ClientHeight    =   6015
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   9525.001
@@ -34,7 +34,7 @@ Private Sub UserForm_Initialize()
   Caption = "ƒf[ƒ^¶¬ |  " & thisAppName
 
   With Frm_smplData
-    For Each cmdVal In LadexSh_Config.Range(LadexsetVal("Cells_sampleData") & "3:" & LadexsetVal("Cells_sampleData") & LadexSh_Config.Cells(Rows.count, 11).End(xlUp).Row)
+    For Each cmdVal In LadexSh_Config.Range(LadexSetVal("Cells_sampleData") & "3:" & LadexSetVal("Cells_sampleData") & LadexSh_Config.Cells(Rows.count, 11).End(xlUp).Row)
       ListBox1.AddItem indexCnt & "." & cmdVal
       indexCnt = indexCnt + 1
     Next
@@ -73,7 +73,7 @@ Private Sub Cancel_Click()
 '  Call Library.setRegistry("UserForm", "mkSmpDtTop", Me.Top)
 '  Call Library.setRegistry("UserForm", "mkSmpDtLeft", Me.Left)
   
-'  LadexsetVal.add "mkSmpDtCancel", "True"
+'  LadexSetVal.add "mkSmpDtCancel", "True"
   
   Unload Me
   End
@@ -90,41 +90,41 @@ Private Sub run_Click()
   With Me
     Select Case .Caption
       Case "y”’lzŒ…”ŒÅ’è"
-        LadexsetVal.add "digits", Me.digits1.Text
-        LadexsetVal.add "maxCount", Me.maxCount1.Text
-        LadexsetVal.add "addFirst", Me.addFirst.Text
-        LadexsetVal.add "addEnd", Me.addEnd.Text
+        LadexSetVal.add "digits", Me.digits1.Text
+        LadexSetVal.add "maxCount", Me.maxCount1.Text
+        LadexSetVal.add "addFirst", Me.addFirst.Text
+        LadexSetVal.add "addEnd", Me.addEnd.Text
         
       Case "y”’lz”ÍˆÍw’è"
-        LadexsetVal.add "maxCount", Me.maxCount2.Text
+        LadexSetVal.add "maxCount", Me.maxCount2.Text
         
-        LadexsetVal.add "minVal", Me.minVal2.Text
-        LadexsetVal.add "maxVal", Me.maxVal2.Text
-        LadexsetVal.add "addFirst", Me.addFirst.Text
-        LadexsetVal.add "addEnd", Me.addEnd.Text
+        LadexSetVal.add "minVal", Me.minVal2.Text
+        LadexSetVal.add "maxVal", Me.maxVal2.Text
+        LadexSetVal.add "addFirst", Me.addFirst.Text
+        LadexSetVal.add "addEnd", Me.addEnd.Text
       
       Case "y–¼‘Oz©", "y–¼‘Oz–¼", "y–¼‘Ozƒtƒ‹ƒl[ƒ€"
-        LadexsetVal.add "maxCount", Me.maxCount3.Text
+        LadexSetVal.add "maxCount", Me.maxCount3.Text
         
       Case "y“ú•tz“ú", "y“ú•tzŠÔ", "y“ú•tz“ú"
-        LadexsetVal.add "maxCount", Me.maxCount4.Text
+        LadexSetVal.add "maxCount", Me.maxCount4.Text
       
-        LadexsetVal.add "minVal", Me.minVal4.Text
-        LadexsetVal.add "maxVal", Me.maxVal4.Text
+        LadexSetVal.add "minVal", Me.minVal4.Text
+        LadexSetVal.add "maxVal", Me.maxVal4.Text
         
       Case "y‚»‚Ì‘¼z•¶š"
-        LadexsetVal.add "maxCount", Me.maxCount5.Text
+        LadexSetVal.add "maxCount", Me.maxCount5.Text
       
-        LadexsetVal.add "strType01", Me.strType01.Value
-        LadexsetVal.add "strType02", Me.strType02.Value
-        LadexsetVal.add "strType03", Me.strType03.Value
-        LadexsetVal.add "strType04", Me.strType04.Value
-        LadexsetVal.add "strType05", Me.strType05.Value
-        LadexsetVal.add "strType06", Me.strType06.Value
-        LadexsetVal.add "strType07", Me.strType07.Value
+        LadexSetVal.add "strType01", Me.strType01.Value
+        LadexSetVal.add "strType02", Me.strType02.Value
+        LadexSetVal.add "strType03", Me.strType03.Value
+        LadexSetVal.add "strType04", Me.strType04.Value
+        LadexSetVal.add "strType05", Me.strType05.Value
+        LadexSetVal.add "strType06", Me.strType06.Value
+        LadexSetVal.add "strType07", Me.strType07.Value
         
       Case "ƒpƒ^[ƒ“‘I‘ğ"
-        LadexsetVal.add "maxCount", Me.maxCount0.Text
+        LadexSetVal.add "maxCount", Me.maxCount0.Text
         
         Set sampleDataList = Nothing
         Set sampleDataList = CreateObject("Scripting.Dictionary")

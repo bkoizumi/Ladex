@@ -115,7 +115,7 @@ Function 文字サイズをぴったり()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -153,7 +153,7 @@ Function QRコード生成()
     Call Ctl_ProgressBar.showStart
     PrgP_Max = 2
   Else
-'    On Error GoTo catchError
+    On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
@@ -214,7 +214,7 @@ Function QRコード生成()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -277,7 +277,7 @@ Function セルの中央に配置()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")

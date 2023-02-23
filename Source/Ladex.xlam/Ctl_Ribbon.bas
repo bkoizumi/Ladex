@@ -534,7 +534,7 @@ Function AddToFavorites(control As IRibbonControl, ByRef returnedVal)
   
   DOMDoc.AppendChild Menu
   returnedVal = DOMDoc.XML
-  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+'  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
   
   Set CategoryMenu = Nothing
   Set Menu = Nothing
@@ -679,6 +679,8 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
+
 
 '==================================================================================================
 'RelaxTools
@@ -892,7 +894,7 @@ Function selectActiveSheet(control As IRibbonControl)
   ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
   
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   
 '  If BK_ribbonUI Is Nothing Then
 '  Else
@@ -1102,12 +1104,10 @@ Function Ctl_Function(control As IRibbonControl)
     
     Case "OptionAddin解除"
       Workbooks(ThisWorkbook.Name).IsAddin = False
-      'Call Ctl_RbnMaint.OptionSheetImport
     
     Case "OptionAddin化"
       Workbooks(ThisWorkbook.Name).IsAddin = True
       ThisWorkbook.Save
-      'Call Ctl_RbnMaint.OptionSheetExport
     
     'ブック管理----------------------------------
     Case "resetStyle"
@@ -1135,9 +1135,9 @@ Function Ctl_Function(control As IRibbonControl)
     
     'シート管理----------------------------------
     Case "セル選択"
-      Application.Goto Reference:=Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
     Case "セル選択_保存"
-      Application.Goto Reference:=Range("A1"), Scroll:=True
+      Application.GoTo Reference:=Range("A1"), Scroll:=True
       ActiveWorkbook.Save
     Case "全セル表示"
       Call Ctl_Sheet.すべて表示
@@ -1197,11 +1197,20 @@ Function Ctl_Function(control As IRibbonControl)
     Case "はんこ_済"
       Call Ctl_Stamp.済印
       
+    Case "パスワード生成"
+      Frm_mkPasswd.Show vbModeless
+      
     
     'ズーム--------------------------------------
-    Case "Zoom01"
-      Call Ctl_Zoom.Zoom01
-    
+    Case "全画面表示"
+      Call Ctl_Zoom.全画面表示
+      
+    Case "指定倍率"
+      Call Ctl_Zoom.指定倍率
+      
+      
+      
+      
     'セル調整------------------------------------
     Case "セル調整_幅"
       Call Ctl_Cells.セル幅調整
@@ -1272,14 +1281,20 @@ Function Ctl_Function(control As IRibbonControl)
     
     
     '数式編集------------------------------------
-    Case "エラー防止_空白"
+    Case "数式追加_エラー防止_空白"
       Call Ctl_Formula.エラー防止_空白
-    Case "エラー防止_ゼロ"
+    Case "数式追加_エラー防止_ゼロ"
       Call Ctl_Formula.エラー防止_ゼロ
       
-    Case "ゼロ非表示"
+    Case "数式追加_ゼロ非表示"
       Call Ctl_Formula.ゼロ非表示
     
+    Case "数式追加_row-XX追加"
+      Call Ctl_Formula.行番号追加
+      
+    Case "数式追加_シート名追加"
+      Call Ctl_Formula.数式挿入("SheetName")
+      
     
     '整形------------------------------------
     Case "整形_1"

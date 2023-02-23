@@ -24,7 +24,7 @@ Function 数式確認()
     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.startScript
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   '既存のオブジェクト削除
@@ -79,7 +79,7 @@ Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   If formulaVals.Worksheet.Name <> ActiveSheet.Name Then
@@ -145,7 +145,7 @@ Function GetCurPosition()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each objShp In ActiveSheet.Shapes
@@ -196,7 +196,7 @@ Function getFormulaRange(ByVal argRange As Range) As Range()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   '=以降の計算式
   sFormula = Mid(argRange.FormulaLocal, 2)
@@ -301,7 +301,7 @@ Function エラー防止_空白()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctCells In Selection
@@ -351,7 +351,7 @@ Function エラー防止_ゼロ()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctCells In Selection
@@ -402,7 +402,7 @@ Function ゼロ非表示()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   
@@ -431,6 +431,96 @@ Function ゼロ非表示()
   '----------------------------------------------
   Exit Function
 
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 行番号追加()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim slctCells As Range
+  
+  Const funcName As String = "Ctl_Formula.行番号追加"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  line = Selection.Row - 1
+  For Each slctCells In Selection
+    slctCells.FormulaR1C1 = "=ROW()-" & line
+    DoEvents
+  Next
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function 数式挿入(formulaType As String)
+  Dim confirmFormulaName As String
+  Dim count As Long
+  Dim formulaVals As Variant
+  Dim objShp, aryRange
+  Const funcName As String = "Ctl_Formula.数式挿入"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.showDebugForm("formulaType", formulaType, "debug")
+  '----------------------------------------------
+  
+  Select Case formulaType
+    Case "SheetName"
+      ActiveCell.FormulaR1C1 = "=MID(CELL(""filename"",RC),FIND(""]"",CELL(""filename"",RC))+1,31)"
+
+
+    Case Else
+  End Select
+
+  
+  '処理終了--------------------------------------
+  Call Library.endScript
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end")
+  End If
+  '----------------------------------------------
+  Exit Function
+  
 'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")

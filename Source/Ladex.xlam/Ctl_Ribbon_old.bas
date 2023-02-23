@@ -399,7 +399,7 @@ Function selectActiveSheet(control As IRibbonControl)
   ActiveWindow.ScrollWorkbookTabs Sheets:=sheetCount
   Sheets(sheetNameID).Select
   
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   
   If BK_ribbonUI Is Nothing Then
   Else
@@ -655,7 +655,7 @@ Function getEnabled(control As IRibbonControl, ByRef returnedVal)
   
   If Workbooks.count = 0 Then
     returnedVal = False
-  ElseIf LadexsetVal("debugMode") = "develop" Then
+  ElseIf LadexSetVal("debugMode") = "develop" Then
     returnedVal = True
   Else
     returnedVal = False
@@ -779,12 +779,12 @@ End Function
 
 '--------------------------------------------------------------------------------------------------
 Function dspDefaultViewSelect(control As IRibbonControl)
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Function
 
 '--------------------------------------------------------------------------------------------------
 Function defaultViewAndSave(control As IRibbonControl)
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   ActiveWorkbook.Save
 End Function
 

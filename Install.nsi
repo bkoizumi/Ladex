@@ -62,7 +62,7 @@ VIAddVersionKey FileDescription "${PRODUCT_NAME}"
 VIAddVersionKey FileVersion     "${PRODUCT_VERSION}"
 
 ; デフォルトのファイルのインストール先
- InstallDir "$appData\Bkoizumi\Ladex"
+InstallDir "$appData\Bkoizumi\Ladex"
 
 ;実行権限 [user/admin]
 RequestExecutionLevel user

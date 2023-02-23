@@ -2,10 +2,12 @@ Attribute VB_Name = "Ctl_HighLight"
 Option Explicit
 
 #If VBA7 And Win64 Then
-    Public Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+  Public Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
 #Else
-    Public Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
-
+  Public Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+  
+  Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Long) As Long
+  
 #End If
 
 Dim HighLightColor As String
@@ -41,6 +43,8 @@ Sub getCursorPosition()
     ActiveWindow.RangeFromPoint(p.X, p.y).Select
   End If
   
+'  Call Ctl_HighLight.showStart(ActiveCell, True)
+  
   If Library.getRegistry(RegistrySubKey, "HighLightDspDirection") Like "[X,B]" Then
     ActiveSheet.Shapes("HighLight_X").Visible = True
   End If
@@ -54,51 +58,45 @@ Sub getCursorPosition()
 End Sub
 
 '==================================================================================================
-'Function showStart(ByVal Target As Range, _
-'                  Optional HighLightColor As String, _
-'                  Optional HighLightDspDirection As String, _
-'                  Optional HighLightDspMethod As String, _
-'                  Optional HighlightTransparentRate As Long, _
-'                  Optional DelFlg As Boolean = True)
-                  
-Function showStart(ByVal Target As Range, _
-                  Optional DelFlg As Boolean = True)
-                                    
+Function showStart(ByVal Target As Range, Optional DelFlg As Boolean = True, Optional targetSheet As Worksheet)
+
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
   
   Call init.setting
   Call Library.startScript
   
+  If targetSheet Is Nothing Then
+    Set targetSheet = ActiveSheet
+  End If
+  
   If DelFlg = True Then
     If Library.chkShapeName("HighLight_X") = True Then
-      ActiveSheet.Shapes("HighLight_X").delete
+      targetSheet.Shapes("HighLight_X").delete
     End If
     If Library.chkShapeName("HighLight_Y") = True Then
-      ActiveSheet.Shapes("HighLight_Y").delete
+      targetSheet.Shapes("HighLight_Y").delete
     End If
   End If
   
   If BKh_rbPressed = True Then
     Set Rng = Range("A" & Target.Row)
     
-    If HighLightColor = "" Then
-      HighLightColor = Library.getRegistry("Main", "HighLightColor")
-      HighLightDspDirection = Library.getRegistry("Main", "HighLightDspDirection")
-      HighLightDspMethod = Library.getRegistry("Main", "HighLightDspMethod")
-      HighlightTransparentRate = CLng(Library.getRegistry("Main", "HighLightTransparentRate"))
-    End If
+    HighLightColor = Library.getRegistry("Main", "HighLightColor")
+    HighLightDspDirection = Library.getRegistry("Main", "HighLightDspDirection")
+    HighLightDspMethod = Library.getRegistry("Main", "HighLightDspMethod")
+    HighlightTransparentRate = CLng(Library.getRegistry("Main", "HighLightTransparentRate"))
     
     If ActiveWorkbook.Name Like "*WBS*" And Target.Column >= 23 Then
-      Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
-      Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+      Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate, ActiveSheet)
+      Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate, ActiveSheet)
     Else
       If HighLightDspDirection Like "[X,B]" Then
-        Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+        Call showStart_X(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate, ActiveSheet)
       End If
       
       If HighLightDspDirection Like "[Y,B]" Then
-        Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
+        Call showStart_Y(Target, HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate, ActiveSheet)
       End If
     End If
   End If
@@ -115,7 +113,8 @@ Function showStart_X(ByVal Target As Range, _
                   HighLightColor As String, _
                   HighLightDspDirection As String, _
                   HighLightDspMethod As String, _
-                  HighlightTransparentRate As Long)
+                  HighlightTransparentRate As Long, _
+                  Optional targetSheet As Worksheet)
                   
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
@@ -123,7 +122,11 @@ Function showStart_X(ByVal Target As Range, _
   Dim HighLight_X
   
   If BKh_rbPressed = True Then
-    Set Rng = Range("A" & Target.Row)
+    If Target.Rows.count > 1 Then
+      Set Rng = Range("A" & Target.Row & ":A" & Target.Row + Target.Rows.count - 1)
+    Else
+      Set Rng = Range("A" & Target.Row)
+    End If
     
     'MaxWidth = Application.Width
     'MaxWidth = Range(Cells(1, 1), Cells(1, Columns.count)).Width
@@ -142,7 +145,7 @@ Function showStart_X(ByVal Target As Range, _
     'ë—(ìhÇËÇ¬Ç‘Çµ)
     If HighLightDspMethod = "0" Then
       HighLight_X.Fill.ForeColor.RGB = HighLightColor
-      ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
+      targetSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
       Selection.ShapeRange.Fill.Visible = msoTrue
@@ -152,7 +155,7 @@ Function showStart_X(ByVal Target As Range, _
     
     'àÕÇ›ê¸
     ElseIf HighLightDspMethod = "1" Then
-      ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
+      targetSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
@@ -164,7 +167,7 @@ Function showStart_X(ByVal Target As Range, _
     ElseIf HighLightDspMethod = "2" Then
 '      Set Rng = Range("A" & Target.Row + 1)
       
-      ActiveSheet.Shapes.Range(Array("HighLight_X")).Select
+      targetSheet.Shapes.Range(Array("HighLight_X")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
@@ -188,7 +191,8 @@ Function showStart_Y(ByVal Target As Range, _
                   HighLightColor As String, _
                   HighLightDspDirection As String, _
                   HighLightDspMethod As String, _
-                  HighlightTransparentRate As Long)
+                  HighlightTransparentRate As Long, _
+                  Optional targetSheet As Worksheet)
                    
   Dim Rng  As Range
   Dim ActvCellTop As Long, ActvCellLeft As Long
@@ -198,8 +202,12 @@ Function showStart_Y(ByVal Target As Range, _
   If BKh_rbPressed = True Then
     MaxHeight = 169056
     
+    If Target.Rows.count > 1 Then
+      Set Rng = Range(Cells(1, Target.Column), Cells(1, Target.Column + Target.Columns.count - 1))
+    Else
+      Set Rng = Cells(1, Target.Column)
+    End If
     
-    Set Rng = Cells(1, Target.Column)
     
     Set HighLight_Y = ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, _
       Left:=Rng.Left, Top:=Rng.Top, Width:=Rng.Width, Height:=MaxHeight)
@@ -212,14 +220,14 @@ Function showStart_Y(ByVal Target As Range, _
     'ë—(ìhÇËÇ¬Ç‘Çµ)
     If HighLightDspMethod = "0" Then
       HighLight_Y.Fill.ForeColor.RGB = HighLightColor
-      ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
+      targetSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.line.Visible = msoFalse
       Selection.ShapeRange.Fill.Transparency = HighlightTransparentRate / 100
     
     'àÕÇ›ê¸
     ElseIf HighLightDspMethod = "1" Then
-      ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
+      targetSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
@@ -230,7 +238,7 @@ Function showStart_Y(ByVal Target As Range, _
     'íºê¸
     ElseIf HighLightDspMethod = "2" Then
       
-      ActiveSheet.Shapes.Range(Array("HighLight_Y")).Select
+      targetSheet.Shapes.Range(Array("HighLight_Y")).Select
       
       Selection.ShapeRange.Fill.Visible = msoFalse
       Selection.ShapeRange.line.Visible = msoTrue
@@ -251,7 +259,7 @@ End Function
 
 
 '==================================================================================================
-Sub Sample()
+Sub sample()
     Dim rngStart As Range, rngEnd As Range
     Dim BX As Single, BY As Single, ex As Single, EY As Single
     

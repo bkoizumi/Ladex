@@ -11,6 +11,14 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
+#If VBA7 And Win64 Then
+  Private Declare PtrSafe Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As LongPtr) As Long
+
+#Else
+  Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Long) As Long
+#End If
+
+
 '対象のExcelアプリケーション
 Private WithEvents xlApp As Excel.Application
 Attribute xlApp.VB_VarHelpID = -1
@@ -164,22 +172,87 @@ End Sub
 '==================================================================================================
 'ブックが開かれたときに発生
 Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
+  Dim macroPath As String
   Const funcName As String = "Ctl_Event.xlApp_WorkbookOpen"
   
-'  Stop
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
   If Not CheckBook(wb) Then Exit Sub
 
-  If Application.userName = "小泉 文平" Then
-    If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
-      runFlg = True
-      Call init.setting
-      Call Library.showDebugForm(funcName, , "start")
-      Workbooks.Open "C:\WorkSpace\myProject\ExcelMacro\WBS\WBS.xlam"
-      Call Library.endScript
+  macroPath = ""
+  Call init.setting
+  If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
+    If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
+      macroPath = LadexDir & "\WBS.xlam"
+    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam") = True Then
+      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam"
     End If
+  
+  ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
+    If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
+      macroPath = LadexDir & "\TestCase.xlam"
+    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam") = True Then
+      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam"
+    End If
+    
   End If
+  
+  If macroPath <> "" Then
+    runFlg = True
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.showDebugForm("macroPath", macroPath, "debug")
+    Workbooks.Open macroPath
+    Call Library.endScript
+  End If
+
+  Exit Sub
+  
+'エラー発生時------------------------------------
+catchError:
+  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+End Sub
+
+
+'==================================================================================================
+'ブックが閉じられる直前に発生
+Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
+  Dim macroPath  As String
+  
+  Const funcName As String = "Ctl_Event.xlApp_WorkbookBeforeClose"
+  
+  On Error GoTo catchError
+  If Me.StopEvent Then Exit Sub
+  If Not CheckBook(wb) Then Exit Sub
+
+  Call init.setting
+  If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
+    If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
+      macroPath = "\WBS.xlam"
+    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam") = True Then
+      macroPath = "\WBS.xlam"
+    End If
+  
+  ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
+    If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
+      macroPath = "TestCase.xlam"
+    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam") = True Then
+      macroPath = "TestCase.xlam"
+    End If
+    
+  End If
+  
+  If macroPath <> "" Then
+    runFlg = True
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.showDebugForm("macroPath", macroPath, "debug")
+    
+    Workbooks(macroPath).Close
+    
+    Call Library.endScript
+  End If
+  
   
   Exit Sub
   
@@ -190,36 +263,28 @@ End Sub
 
 
 '==================================================================================================
-'ブックが閉じられる直前に発生
-Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
-  Const funcName As String = "Ctl_Event.xlApp_WorkbookBeforeClose"
-  
-  On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckBook(wb) Then Exit Sub
-
-
-'  If Application.userName = "TCI_小泉 文平" Then
-'    If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = True Then
-'      runFlg = True
-'      Call init.setting
-'      Call Library.showDebugForm(funcName, , "start")
-'      Workbooks("WBS.xlam").Close SaveChanges:=False
-'      Call Library.endScript
-'    End If
-'  End If
-  
-  
+'ブックが非アクティブになったとき
+'Private Sub xlApp_SheetDeactivate()
+'  Const funcName As String = "Ctl_Event.xlApp_SheetDeactivate"
+'
+'  On Error GoTo catchError
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
+'
 '  Call init.setting
 '  Call Library.showDebugForm(funcName, , "start")
+'
+'  Call Ctl_System.resetScroll
+'
 '  Call Library.showDebugForm(funcName, , "end")
-  
-  Exit Sub
-  
-'エラー発生時------------------------------------
-catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
-End Sub
+'
+'  Exit Sub
+'
+''エラー発生時------------------------------------
+'catchError:
+'  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+'End Sub
+
 
 '==================================================================================================
 '新しいブックが作成されたときに発生
@@ -249,15 +314,42 @@ End Sub
 '==================================================================================================
 'シートがアクティブになったときに発生
 Private Sub xlApp_SheetActivate(ByVal Sh As Object)
+  Dim wb As Workbook
+  Dim macroPath As String
+  
   Const funcName As String = "Ctl_Event.xlApp_SheetActivate"
   
+  Set wb = ActiveWorkbook
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
+  If Not CheckBook(wb) Then Exit Sub
 
-'  Call init.setting
-'  Call Library.showDebugForm(funcName, , "start")
-'  Call Library.showDebugForm(funcName, , "end")
+  macroPath = ""
+  Call init.setting
+  If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
+    If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
+      macroPath = LadexDir & "\WBS.xlam"
+    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam") = True Then
+      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam"
+    End If
+  
+  ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
+    If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
+      macroPath = LadexDir & "\TestCase.xlam"
+    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam") = True Then
+      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam"
+    End If
+    
+  End If
+  
+  If macroPath <> "" Then
+    runFlg = True
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.showDebugForm("macroPath", macroPath, "debug")
+    Workbooks.Open macroPath
+    Call Library.endScript
+  End If
   
   Exit Sub
   
@@ -313,7 +405,7 @@ Private Sub xlApp_SheetDeactivate(ByVal Sh As Object)
     Call Library.setRegistry("targetInfo", "HighLight_Sheet", ActiveSheet.Name)
     
     runFlg = True
-    Call Ctl_HighLight.showStart(ActiveCell)
+    Call Ctl_HighLight.showStart(ActiveCell, True)
     Call Library.endScript
   End If
   
@@ -329,7 +421,9 @@ End Sub
 'ワークシートの選択セルが変更されたときに発生
 Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
   Dim slctCells As Range
+  
   Const funcName As String = "Ctl_Event.xlApp_SheetSelectionChange"
+ 
   
   On Error GoTo catchError
   If Me.StopEvent Then Exit Sub
@@ -341,20 +435,10 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   If BKh_rbPressed = True Then
     If Library.getRegistry("targetInfo", "HighLight_Book", "String") = ActiveWorkbook.Name Then
       runFlg = True
-      Call Ctl_HighLight.showStart(Target, True)
-'      If ActiveWorkbook.Name Like "*WBS*" Then
-'        Application.Run "WBS.xlam!Task.タスクにスクロール"
-'      End If
-
-      For Each slctCells In Selection
-        Call Library.showDebugForm("slctCells.Address", slctCells.Address, "debug")
-        
-        If Selection.Item(1).Address = slctCells.Address Then
-        Else
-        End If
-        DoEvents
-      Next
       
+      Call Library.showDebugForm("Target ", Target.Address, "debug")
+      Call Ctl_HighLight.showStart(Target, True)
+    
     Else
       Call init.setting
       Call Library.startScript

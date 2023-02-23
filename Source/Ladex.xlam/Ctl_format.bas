@@ -18,7 +18,7 @@ Function コメント整形()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   If TypeName(ActiveCell) = "Range" Then
     Call Library.setComment(Library.getRegistry("Main", "CommentBgColor") _
@@ -60,7 +60,7 @@ Function 移動やサイズ変更をする()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctObect In Selection.ShapeRange
@@ -111,7 +111,7 @@ Function 移動する()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctObect In Selection.ShapeRange
@@ -162,7 +162,7 @@ Function 移動やサイズ変更をしない()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctObect In Selection.ShapeRange
@@ -213,7 +213,7 @@ Function 上下余白ゼロ()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctObect In Selection.ShapeRange
@@ -263,7 +263,7 @@ Function 左右余白ゼロ()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   For Each slctObect In Selection.ShapeRange

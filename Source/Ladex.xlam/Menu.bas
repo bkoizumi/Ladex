@@ -39,11 +39,11 @@ Sub ladex_シート一覧取得()
 End Sub
 
 Sub ladex_セル選択()
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
 End Sub
 
 Sub ladex_セル選択_保存()
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   ActiveWorkbook.Save
 End Sub
 

@@ -94,7 +94,7 @@ Sub –ÚŸ¶¬()
     End If
   
   Next
-  Application.Goto Reference:=Range("A1"), Scroll:=True
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
   
   
   Exit Sub

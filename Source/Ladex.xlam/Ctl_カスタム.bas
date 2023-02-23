@@ -29,7 +29,7 @@ Function カスタム01()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -74,7 +74,7 @@ Function カスタム02()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -120,7 +120,7 @@ Function カスタム03()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -166,7 +166,7 @@ Function カスタム04()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -212,7 +212,7 @@ Function カスタム05()
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -227,5 +227,9 @@ Function カスタム05()
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
+
+
+
+
 
 

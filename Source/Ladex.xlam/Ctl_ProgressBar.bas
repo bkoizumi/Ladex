@@ -148,6 +148,9 @@ Public Function showBar( _
 '  L_PrgP_Cnt = L_PrgP_Cnt - 1
 '  L_PrgC_Cnt = L_PrgC_Cnt - 1
   
+  If PrgP_Max = 0 Then
+    PrgP_Max = 2
+  End If
   If L_PrgP_Cnt = 0 Then
     PrgP_Prg = 0
     PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"

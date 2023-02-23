@@ -41,7 +41,7 @@ Function 済印()
   
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -86,6 +86,7 @@ Function 確認印(Optional StampName As String, Optional StampVal As String, Optio
     StampFont = Library.getRegistry("Main", "StampFont")
     StampVal = Library.getRegistry("Main", "StampVal")
   End If
+  
   
   LadexSh_Stamp.Activate
   LadexSh_Stamp.Shapes.Range(Array("TB_済")).Select
@@ -137,7 +138,7 @@ Function 確認印(Optional StampName As String, Optional StampVal As String, Optio
   
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
@@ -210,7 +211,7 @@ Function 名前()
   
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")

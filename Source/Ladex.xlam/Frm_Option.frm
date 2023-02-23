@@ -46,7 +46,7 @@ Private Sub UserForm_Initialize()
 '  On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm("" & funcName, , "function")
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   Application.Cursor = xlDefault
@@ -66,13 +66,18 @@ Private Sub UserForm_Initialize()
     
     '基本タブ-----------------------------------
     .userName.Value = Application.userName
-    For Each zoomLevelVal In Split("25,50,75,85,100", ",")
+    
+    .ZoomLevel.Value = setZoomLevel
+    For Each zoomLevelVal In Split("25,50,75,85,100,125,150", ",")
       .ZoomLevel.AddItem zoomLevelVal
       If zoomLevelVal = setZoomLevel Then
         .ZoomLevel.ListIndex = indexCnt
+        Exit For
       End If
       indexCnt = indexCnt + 1
     Next
+    
+    SpecifyZoomLevel.Value = Library.getRegistry("Main", "SpecifyZoomLevel")
     
     '枠線の表示----------------------------------
     .GridLine.AddItem "表示しない"
@@ -90,7 +95,7 @@ Private Sub UserForm_Initialize()
     
     '行の高さ、列の幅----------------------------
     .ColumnWidth.Value = Library.getRegistry("Main", "ColumnWidth")
-    .rowHeight.Value = Library.getRegistry("Main", "rowHeight")
+    .rowHeight.Value = LadexSetVal("rowHeight")
     
     .BgColor.Value = Library.getRegistry("Main", "bgColor")
       
@@ -133,14 +138,14 @@ Private Sub UserForm_Initialize()
     .LogLevel.AddItem "3.notice"
     .LogLevel.AddItem "4.info"
     .LogLevel.AddItem "5.debug"
-    .LogLevel.Text = LadexsetVal("LogLevel")
+    .LogLevel.Text = LadexSetVal("LogLevel")
     
     .debugMode.AddItem "all"
     .debugMode.AddItem "File"
     .debugMode.AddItem "Speak"
     .debugMode.AddItem "none"
     .debugMode.AddItem "develop"
-    .debugMode.Text = LadexsetVal("debugMode")
+    .debugMode.Text = LadexSetVal("debugMode")
   
     'ハイライトタブ------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
@@ -197,8 +202,8 @@ Private Sub UserForm_Initialize()
     If Library.chkFileExists(previewImgPath) = False Then
       imageName = thisAppName & "NoHighLightImg" & ".jpg"
       previewImgPath = LadexDir & "\RibbonImg\" & imageName
-    Else
-      Call doHighLightPreview
+'    Else
+'      Call doHighLightPreview
     End If
     HighLightImg.Picture = LoadPicture(previewImgPath)
     
@@ -387,8 +392,8 @@ Function doHighLightPreview()
   Dim previewImgPath As String
   Dim HighLightColor As String, HighLightDspDirection As String, HighLightDspMethod As String, HighlightTransparentRate   As Long
   
+  runFlg = True
   Call init.setting
-
   
   HighLightColor = Me.HighLightColor.BackColor
 
@@ -426,7 +431,7 @@ Function doHighLightPreview()
 '  Call Library.罫線_実線_格子(Range("A1:C3"))
   
   'Call Ctl_HighLight.showStart(Range("B2"), HighLightColor, HighLightDspDirection, HighLightDspMethod, HighlightTransparentRate)
-  Call Ctl_HighLight.showStart(Range("B2"))
+  Call Ctl_HighLight.showStart(Range("B2"), , LadexSh_HiLight)
   
   imageName = thisAppName & "HighLightImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
@@ -441,7 +446,7 @@ Function doHighLightPreview()
   HighLightImg.Picture = LoadPicture(previewImgPath)
   
   BKh_rbPressed = old_BKh_rbPressed
-  Call Ctl_HighLight.showStart(Range("C4"))
+  Call Ctl_HighLight.showStart(Range("C4"), , LadexSh_HiLight)
   
 End Function
 
@@ -451,6 +456,7 @@ Function doCommentPreview()
   Dim previewImgPath As String
   Dim commentBgColor, CommentFontColor, CommentFont, CommentFontSize
 
+  runFlg = True
   Call init.setting
 '  Set LadexSh_HiLight = ActiveWorkbook.Worksheets("HighLight")
   
@@ -480,29 +486,28 @@ End Function
 Function doStampPreview()
   Dim previewImgPath As String
   
-  If StampName.Value = "" Or StampVal.Value = "" Then
-    Exit Function
-  End If
-  
-  Call init.setting
+  runFlg = True
+  Call init.setting(True)
   
   LadexSh_HiLight.Activate
   LadexSh_HiLight.Range("F12").Activate
   
-  Call Ctl_Stamp.確認印(StampName.Value, StampVal.Value, StampFont.Value, thisAppName & "StampImg")
-  
-  imageName = thisAppName & "StampImg" & ".jpg"
-  previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("E12:I16"), imageName)
-  
-  
-  If Library.chkFileExists(previewImgPath) = False Then
-    imageName = thisAppName & "NoCommentImg" & ".jpg"
+  If StampName.Value <> "" And StampVal.Value <> "" And StampFont.Value <> "" Then
+    Call Ctl_Stamp.確認印(StampName.Value, StampVal.Value, StampFont.Value, thisAppName & "StampImg")
+    imageName = thisAppName & "StampImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
+    Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("E12:I16"), imageName)
+    
+    
+    If Library.chkFileExists(previewImgPath) = False Then
+      imageName = thisAppName & "NoCommentImg" & ".jpg"
+      previewImgPath = LadexDir & "\RibbonImg\" & imageName
+    End If
+    StampImg.Picture = LoadPicture(previewImgPath)
+    
+    LadexSh_HiLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
   End If
-  StampImg.Picture = LoadPicture(previewImgPath)
   
-  LadexSh_HiLight.Shapes.Range(Array(thisAppName & "StampImg")).delete
 End Function
 
 
@@ -839,6 +844,20 @@ End Sub
 ' 実行
 Private Sub run_Click()
   Dim execDay As Date
+  Dim ObjCtrl As control
+
+'  For Each ObjCtrl In Controls
+'    If TypeName(ObjCtrl) <> "Label" And TypeName(ObjCtrl) <> "Frame" And TypeName(ObjCtrl) <> "Image" And TypeName(ObjCtrl) <> "ListView4" Then
+'
+'      Call Library.showDebugForm("TypeName     ", TypeName(ObjCtrl), "debug")
+'      Call Library.showDebugForm("ObjCtrl.Name ", ObjCtrl.Name, "debug")
+'      Call Library.showDebugForm("ObjCtrl.Value", ObjCtrl.Value, "debug")
+'    End If
+'  Next
+
+  
+  
+  
   
   InitializeFlg = True
   
@@ -846,6 +865,8 @@ Private Sub run_Click()
 '  Call Library.setRegistry("UserForm", "OptionLeft", Left)
   
   Call Library.setRegistry("Main", "ZoomLevel", ZoomLevel.Text)
+  Call Library.setRegistry("Main", "SpecifyZoomLevel", SpecifyZoomLevel.Text)
+  
   Call Library.setRegistry("Main", "GridLine", GridLine.Value)
   Call Library.setRegistry("Main", "bgColor", BgColor.Value)
   Call Library.setRegistry("Main", "LineColor", LineColor.BackColor)
@@ -863,8 +884,8 @@ Private Sub run_Click()
   Call Library.setRegistry("Main", "debugMode", debugMode.Value)
   Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
   
-  LadexsetVal("debugMode") = debugMode.Value
-  LadexsetVal("LogLevel") = LogLevel.Value
+  LadexSetVal("debugMode") = debugMode.Value
+  LadexSetVal("LogLevel") = LogLevel.Value
   
   Application.userName = userName.Value
   

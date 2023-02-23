@@ -19,7 +19,8 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
   End If
   PrgP_Max = 2
   PrgP_Cnt = 1
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Ctl_ProgressBar.showStart
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   If dirPath = "" Then
     With Frm_GetFile
@@ -158,7 +159,7 @@ Function 画像貼付け()
   PrgP_Max = 2
   PrgP_Cnt = 1
   chfkFlg = False
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
 
   For Each imgFile In Library.getFilesPath(ActiveWorkbook.path, "画像", "img", "pasteImgPath")

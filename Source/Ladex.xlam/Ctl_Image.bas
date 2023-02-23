@@ -20,10 +20,10 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
     Call Library.showDebugForm("" & funcName, , "function")
     Call Library.startScript
   Else
-    On Error GoTo catchError
+'    On Error GoTo catchError
     Call Library.showDebugForm("" & funcName, , "function")
   End If
-  Call Library.showDebugForm("runFlg", CStr(runFlg), "debug")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   DisplayGridlineFlg = False
   '----------------------------------------------
 
@@ -49,6 +49,8 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
         ActiveWindow.DisplayGridlines = False
         DisplayGridlineFlg = True
       End If
+      slctArea.Activate
+      Call Library.waitTime(100)
       slctArea.CopyPicture Appearance:=xlScreen, Format:=xlPicture
     
     Case "ChartArea", "Picture", "GroupObject", "TextBox", "Rectangle"
@@ -63,7 +65,7 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   ActiveSheet.Select
 '  Call Library.waitTime(1000)
   
-  Set targetImg = ActiveSheet.ChartObjects.add(0, 0, slctArea.Width, slctArea.Height).Chart
+  Set targetImg = ActiveSheet.ChartObjects.add(900, 900, slctArea.Width, slctArea.Height).Chart
   With targetImg
     .Parent.Select
     .Paste

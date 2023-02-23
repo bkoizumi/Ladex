@@ -40,7 +40,7 @@ Function ZoomIn(Optional slctCellAddress As String)
     .TextBox.IMEMode = fmIMEModeOn
 
 '    .TextBox.Font.Name = ActiveCell.Font.Name
-'    .TextBox.Font.Name = LadexsetVal("BaseFont")
+'    .TextBox.Font.Name = LadexSetVal("BaseFont")
     .TextBox.Font.Name = "メイリオ"
     
     .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
@@ -52,6 +52,7 @@ End Function
 
 '==================================================================================================
 Function ZoomOut(Text As String, SetTargetAddress As String)
+  On Error Resume Next
   
   SetTargetAddress = Replace(SetTargetAddress, "選択セル：", "")
   
@@ -65,7 +66,7 @@ End Function
 
 '==================================================================================================
 '全画面表示
-Function Zoom01()
+Function 全画面表示()
   Dim topPosition As Long, leftPosition As Long
   
   Application.DisplayFullScreen = True
@@ -88,3 +89,49 @@ Function defaultZoom()
   Call Library.endScript
 End Function
 
+
+'==================================================================================================
+Function 指定倍率()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Const funcName As String = "Ctl_Zoom.指定倍率"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+  ActiveWindow.View = xlNormalView
+  ActiveWindow.Zoom = Library.getRegistry("Main", "SpecifyZoomLevel")
+  
+
+
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

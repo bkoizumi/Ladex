@@ -16,7 +16,8 @@ Attribute VB_Exposed = False
 Dim myMenu As Variant
 Dim arrFavCategory()
 
-Const addCategoryVal    As String = "≪カテゴリー追加≫"
+Const addCategoryVal  As String = "≪カテゴリー追加≫"
+Const moduleDebug     As Boolean = False
 
 '**************************************************************************************************
 ' * 初期設定
@@ -24,6 +25,13 @@ Const addCategoryVal    As String = "≪カテゴリー追加≫"
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Private Sub UserForm_Initialize()
+
+  If moduleDebug = True Then
+    Set targetSheet = ActiveWorkbook.Worksheets("Favorite")
+  Else
+    Set targetSheet = ThisWorkbook.Worksheets("Favorite")
+  End If
+  
   
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
@@ -89,8 +97,8 @@ Private Sub Submit_Click()
 '  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
 '  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
 
-  Call Ctl_Favorite.addList
-'  Call Library.delSheetData(LadexSh_Favorite)
+  Call Ctl_Favorite.レジストリ登録
+'  Call Library.delSheetData(targetSheet)
   Unload Me
   Call init.unsetting
 End Sub
@@ -103,7 +111,7 @@ Private Sub add_Click()
   
   filePath = Library.getFilePath("C:", "", "お気に入りに追加するファイル", 1)
   If filePath <> "" Then
-    Call Ctl_Favorite.add(Lst_FavCategory.ListIndex, filePath)
+    Call Ctl_Favorite.add(Lst_FavCategory.ListIndex + 1, filePath)
     Call Frm_Favorite.RefreshListBox
   End If
   
@@ -233,11 +241,18 @@ Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     newCategoryName = InputBox("カテゴリー名を入力してください", "カテゴリー名入力", Lst_FavCategory.list(line))
   End If
   
+  If moduleDebug = True Then
+    Set targetSheet = ActiveWorkbook.Worksheets("Favorite")
+  Else
+    Set targetSheet = ThisWorkbook.Worksheets("Favorite")
+  End If
+    
+    
   
   If newCategoryName <> "" Then
     '重複チェック
-    endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
-    If WorksheetFunction.CountIf(LadexSh_Favorite.Range("A1:A" & endLine), newCategoryName) > 1 Then
+    endLine = targetSheet.Cells(Rows.count, 1).End(xlUp).Row
+    If WorksheetFunction.CountIf(targetSheet.Range("A1:A" & endLine), newCategoryName) > 1 Then
       Frm_Favorite.DetailMeg.Value = "登録するカテゴリーが重複しています"
       MsgBox "登録するカテゴリーが重複しています", vbExclamation
     
@@ -246,7 +261,7 @@ Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
         endLine = line + 1
       End If
       
-      LadexSh_Favorite.Range("A" & endLine) = newCategoryName
+      targetSheet.Range("A" & endLine) = newCategoryName
     End If
     
   End If
@@ -267,29 +282,30 @@ Function RefreshListBox()
   
   
   Erase arrFavCategory
-  endLine = LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = targetSheet.Cells(Rows.count, 1).End(xlUp).Row
   
-  If endLine = 1 And LadexSh_Favorite.Range("A1") = "" Then
-    LadexSh_Favorite.Range("A1") = "Category01"
+  If endLine = 1 And targetSheet.Range("A1") = "" Then
+    targetSheet.Range("A1") = "Category01"
   End If
   
   Frm_Favorite.Lst_FavCategory.Clear
   Frm_Favorite.Lst_Favorite.Clear
   
   'カテゴリーリスト生成
-  If LadexSh_Favorite.Range("A1") <> "" Then
-    For line = 1 To LadexSh_Favorite.Cells(Rows.count, 1).End(xlUp).Row
-      Call Library.showDebugForm("Lst_FavCategory", LadexSh_Favorite.Range("A" & line), "debug")
-      Frm_Favorite.Lst_FavCategory.AddItem LadexSh_Favorite.Range("A" & line)
+  If targetSheet.Range("A1") <> "" Then
+    For line = 1 To targetSheet.Cells(Rows.count, 1).End(xlUp).Row
+      Call Library.showDebugForm("Lst_FavCategory", targetSheet.Range("A" & line), "debug")
+      Frm_Favorite.Lst_FavCategory.AddItem targetSheet.Range("A" & line)
     Next
   End If
   
   
   '配列の要素数確認------------------------------
-  endColLine = LadexSh_Favorite.Cells(1, Columns.count).End(xlToLeft).Column
+  endColLine = targetSheet.Cells(1, Columns.count).End(xlToLeft).Column
   oldEndLine = 1
+  
   For colLine = 2 To endColLine
-    endLine = LadexSh_Favorite.Cells(Rows.count, colLine).End(xlUp).Row
+    endLine = targetSheet.Cells(Rows.count, colLine).End(xlUp).Row
     If oldEndLine < endLine Then
       oldEndLine = endLine
     End If
@@ -297,14 +313,14 @@ Function RefreshListBox()
   ReDim Preserve arrFavCategory(1 To endColLine, 0 To oldEndLine)
   
   For colLine = 2 To endColLine
-    endLine = LadexSh_Favorite.Cells(Rows.count, colLine).End(xlUp).Row
-    arrFavCategory(colLine - 1, 0) = LadexSh_Favorite.Range("A" & colLine - 1)
+    endLine = targetSheet.Cells(Rows.count, colLine).End(xlUp).Row
+    arrFavCategory(colLine - 1, 0) = targetSheet.Range("A" & colLine - 1)
     
     For line = 1 To endLine
-      arrFavCategory(colLine - 1, line) = LadexSh_Favorite.Cells(line, colLine)
+      arrFavCategory(colLine - 1, line) = targetSheet.Cells(line, colLine)
       
       If colLine = 2 Then
-        Frm_Favorite.Lst_Favorite.AddItem Library.getFileInfo(LadexSh_Favorite.Cells(line, colLine), , "fileName")
+        Frm_Favorite.Lst_Favorite.AddItem Library.getFileInfo(targetSheet.Cells(line, colLine), , "fileName")
       End If
     Next
   Next
