@@ -15,7 +15,6 @@ Dim DataLength  As Integer
 Dim DataReqFlg As Boolean
 
 Dim resultCell As Long
-Dim evidenceCell As Long
 
 
 Const defPageHeight As Long = 1200
@@ -34,17 +33,15 @@ Function 開始()
   Const funcName As String = "Ctl_Selenium.開始"
 
   '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
-    PrgP_Max = 2
-  Else
-'    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  runFlg = True
+  On Error GoTo catchError
+  Call init.setting(True)
+  Call Library.showDebugForm(funcName, , "start")
+  Call Library.startScript
+  PrgP_Max = 4
+  resetCellFlg = True
+  runFlg = True
+  Call Ctl_ProgressBar.showStart
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   Set targetBook = ActiveWorkbook
@@ -54,57 +51,37 @@ Function 開始()
   
   Call Ctl_TestCase.セル範囲設定(startLine, endLine)
   
+  
   '結果入力セルの設定----------------------------
-    Range(resultArea1).ClearContents
-    Range(resultArea1).ClearComments
+  Frm_start.Show
+  Select Case FrmVal("testCnt")
+    Case "1"
     
-    Range(resultArea2).ClearContents
-    Range(resultArea2).ClearComments
-    
-    Range(resultArea3).ClearContents
-    Range(resultArea3).ClearComments
-    
-    Range(resultArea4).ClearContents
-    Range(resultArea4).ClearComments
-    
-    Range(resultArea5).ClearContents
-    Range(resultArea5).ClearComments
-    
-    resultCell = 15
-    evidenceCell = 19
+      Range("R" & startLine & ":S" & endLine).ClearContents
+      Range("R" & startLine & ":S" & endLine).ClearComments
+      resultCell = 15
+    Case "2"
+      Range(resultArea2).ClearContents
+      Range(resultArea2).ClearComments
+      resultCell = 21
+  Case "3"
+      Range(resultArea3).ClearContents
+      Range(resultArea3).ClearComments
+      resultCell = 27
+  Case "4"
+      Range(resultArea4).ClearContents
+      Range(resultArea4).ClearComments
+      resultCell = 33
+  Case "5"
+      Range(resultArea5).ClearContents
+      Range(resultArea5).ClearComments
+      resultCell = 39
+  Case Else
+      End
+  End Select
 
-'  If Range("Q9").value <> Range("Q10").value Then
-'    Range(resultArea1).ClearContents
-'    Range(resultArea1).ClearComments
-'    resultCell = 15
-'    evidenceCell = 19
-'
-'  ElseIf Range("W9").value <> Range("W10").value Then
-'    Range(resultArea2).ClearContents
-'    Range(resultArea2).ClearComments
-'    resultCell = 21
-'    evidenceCell = 25
-'
-'  ElseIf Range("AC9").value <> Range("AC10").value Then
-'    Range(resultArea3).ClearContents
-'    Range(resultArea3).ClearComments
-'    resultCell = 27
-'    evidenceCell = 31
-'
-'  ElseIf Range("AI9").value <> Range("AI10").value Then
-'    Range(resultArea4).ClearContents
-'    Range(resultArea4).ClearComments
-'    resultCell = 33
-'    evidenceCell = 37
-'
-'  ElseIf Range("AO9").value <> Range("AO10").value Then
-'    Range(resultArea5).ClearContents
-'    Range(resultArea5).ClearComments
-'    resultCell = 39
-'    evidenceCell = 43
-'  End If
-  
-  
+  Range("K11") = FrmVal("URL")
+  Range("M11") = FrmVal("Server")
   
   
   Call Ctl_Base.Chrome起動
@@ -192,7 +169,6 @@ End Function
 Function 手動確認()
   Dim meg As String
   
-  
   Const funcName As String = "Ctl_Selenium.手動確認"
 
   '処理開始--------------------------------------
@@ -201,21 +177,28 @@ Function 手動確認()
   Call Library.endScript
   '----------------------------------------------
   
+  If Cells(ActivLine, resultCell) = "OK" Then
+    Call Ctl_Selenium.テスト結果(True)
+    Exit Function
+  End If
   
-  Application.Goto Reference:=Range("A" & ActivLine), Scroll:=True
+  Application.Goto Reference:=Range("G" & ActivLine), Scroll:=True
   DoEvents
   
   meg = "確認をお願いします。"
+  meg = ""
+  
   
   If Range("J" & ActivLine) <> "" Then
     meg = "手動操作および確認をお願いします。"
   End If
   
-  If Range("H" & ActivLine - 1) <> "手動確認/操作" Then
+
+  If Range("H" & ActivLine - 1) <> "手動確認/操作" And meg <> "" Then
     Application.Speech.Speak Text:=meg, SpeakAsync:=True, SpeakXML:=True
   End If
   
-  With Frm_Wait
+  With Frm_Confirm
     .StartUpPosition = 0
     .Top = Application.Top + (ActiveWindow.Width / 8)
     .Left = Application.Left + (ActiveWindow.Height / 8)
@@ -228,6 +211,7 @@ Function 手動確認()
     .TextBox2.value = Range("L" & ActivLine)
     .Show
   End With
+
 
 
   '処理終了--------------------------------------
@@ -550,10 +534,9 @@ Function 画面キャプチャ(getEvidenceFlg As Boolean)
   Call Library.showDebugForm("imgSaveName", imgSavePath & "\" & imgSaveName, "debug")
   
   driver.TakeScreenshot.SaveAs imgSavePath & "\" & imgSaveName
-
   driver.Window.SetSize defPageWidth, defPageHeight
 
-  'エビデンの設定
+  'エビデンの設定--------------------------------
   If getEvidenceFlg = True Then
     With Cells(ActivLine, resultCell + 4)
       If TypeName(.Comment) = "Comment" Then
@@ -611,7 +594,7 @@ Function テスト結果(resultFlg As Boolean, Optional strMeg As String)
   If resultFlg = False Then
     Application.Goto Reference:=Range("G" & ActivLine), Scroll:=True
     Application.Speech.Speak Text:="テスト結果NG", SpeakAsync:=True, SpeakXML:=True
-    Stop
+'    Stop
   End If
   
   Exit Function
@@ -832,16 +815,29 @@ Function チェックボックス選択()
       
     Case "id"
       For Each element In elements
+        
+        '選択されていない ⇒ 選択状態にする
         If element.IsSelected = False And value = 1 Then
           element.Click
           chkFlg = True
+        
+        '選択されていない ⇒ 非選択状態にする
+        ElseIf element.IsSelected = False And value = 1 Then
+          chkFlg = True
+        
+        
+        '選択されている ⇒ 非選択状態にする
         ElseIf element.IsSelected = True And value = 0 Then
           element.Click
           chkFlg = True
         
-        ElseIf element.IsSelected = True And value = 1 Then
+        '選択されている ⇒ 非選択状態にする
+        ElseIf element.IsSelected = True And value = 0 Then
+          element.Click
           chkFlg = True
-          chkMeg = "すでに選択されている状態"
+        
+        
+        
         End If
       Next
   Case Else
@@ -858,8 +854,8 @@ Function チェックボックス選択()
 
 'エラー発生時------------------------------------
 catchError:
-  Call Ctl_Selenium.テスト結果(False)
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Ctl_Selenium.テスト結果(False)
 End Function
 
 '==================================================================================================

@@ -38,7 +38,7 @@ Private Const g_cnsAddTop2 As Long = 25                         ' Topí≤êÆíl(ÉtÉå
   Private Declare PtrSafe Function GetForegroundWindow Lib "user32" () As LongPtr
   Private Declare PtrSafe Function SetWindowPos Lib "user32" (ByVal hWnd As LongPtr, ByVal hWndInsertAfter As LongPtr, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
 #Else
-  Private Declare Function GetAsyncKeyState Lib "User32.dll" (ByVal vkey As Long) As Integer
+  Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Long) As Integer
   Private Declare Function GetForegroundWindow Lib "user32" () As Long
   Private Declare Function SetWindowPos Lib "user32" (ByVal hWnd As Long, ByVal hWndInsertAfter As Long, ByVal x As Long, ByVal y As Long, ByVal cx As Long, ByVal cy As Long, ByVal wFlags As Long) As Long
 #End If

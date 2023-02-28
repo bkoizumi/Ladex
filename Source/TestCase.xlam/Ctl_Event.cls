@@ -13,10 +13,10 @@ Option Explicit
 
 #If VBA7 And Win64 Then
   Private Declare PtrSafe Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As LongPtr) As Long
-
 #Else
   Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Long) As Long
 #End If
+
 
 
 '対象のExcelアプリケーション

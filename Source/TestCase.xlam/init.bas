@@ -37,7 +37,7 @@ Public targetURL            As String
 Public binPath              As String
 Public BrowserProfilesDir   As String
 Public waitFlg              As Boolean
-
+Public openingPath          As String
 
 Public resultArea1 As String
 Public resultArea2 As String
@@ -99,11 +99,7 @@ Function setting(Optional reCheckFlg As Boolean = False)
   Dim line As Long
   Const funcName As String = "init.setting"
   
-'  On Error GoTo catchError
-  
-  If Workbooks.count = 0 Then
-    Exit Function
-  End If
+  On Error GoTo catchError
   
   If logFile = "" Or setVal Is Nothing Or reCheckFlg = True Then
     Call init.unsetting(False)
@@ -119,8 +115,9 @@ Function setting(Optional reCheckFlg As Boolean = False)
   Dim wsh As Object
   Set wsh = CreateObject("WScript.Shell")
   logFile = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex\log\TestCase_ExcelMacro.log"
-  binPath = wsh.SpecialFolders("AppData") & "\Bkoizumi\WebTools\bin\SeleniumBasic"
-  BrowserProfilesDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\WebTools\BrowserProfiles"
+  binPath = wsh.SpecialFolders("AppData") & "\Bkoizumi\SeleniumBasic"
+'  BrowserProfilesDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\WebTools\BrowserProfiles"
+  openingPath = wsh.SpecialFolders("AppData") & "\Bkoizumi\opening"
   
   Set wsh = Nothing
   
@@ -137,6 +134,13 @@ Function setting(Optional reCheckFlg As Boolean = False)
     End If
   Next
   On Error GoTo catchError
+  
+  'フォーム設定値クリア--------------------------
+  Set FrmVal = Nothing
+  Set FrmVal = CreateObject("Scripting.Dictionary")
+  
+  
+  
   
   Exit Function
   

@@ -93,7 +93,7 @@ Function タスクチェック()
   
   
   For line = startLine To endLine
-    If Range("B" & line) <> Range("C" & line).IndentLevel + 1 Then
+    If Range("B" & line) = "" Or Range("B" & line) <> Range("C" & line).IndentLevel + 1 Then
       Range("C" & line).IndentLevel = Range("B" & line) - 1
     End If
     

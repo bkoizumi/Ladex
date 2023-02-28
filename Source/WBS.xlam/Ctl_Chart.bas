@@ -1,5 +1,82 @@
 Attribute VB_Name = "Ctl_Chart"
 
+'**************************************************************************************************
+' * 濱さんWBS用チャート生成
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function 濱さんWBS用チャート生成()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Const funcName As String = "Ctl_Chart.濱さんWBS用チャート生成"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  targetBookName = ActiveWorkbook.Name
+  
+  '濱さん作成VBAの呼び出し
+  Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!Sheet5.CommandButton1_Click"
+  Call Ctl_ProgressBar.showCount(thisAppName, PrgP_Cnt, PrgP_Max, 1, 5, "")
+
+  Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!Sheet_Module.Title_Format_Check"
+  Call Ctl_ProgressBar.showCount(thisAppName, PrgP_Cnt, PrgP_Max, 1, 5, "")
+
+  Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!Sheet_Module.CALC_MANUAL"
+  Call Ctl_ProgressBar.showCount(thisAppName, PrgP_Cnt, PrgP_Max, 1, 5, "")
+
+  Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!Chart_Module.Make_Chart"
+  Call Ctl_ProgressBar.showCount(thisAppName, PrgP_Cnt, PrgP_Max, 1, 5, "")
+
+  Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!Sheet_Module.BUTTON_CLEAR"
+  Call Ctl_ProgressBar.showCount(thisAppName, PrgP_Cnt, PrgP_Max, 1, 5, "")
+  
+  'タイムラインに追加----------------------------
+  Call Library.startScript
+  Rows("6:6").RowHeight = 40
+  
+  For Each objShp In ActiveSheet.Shapes
+    If objShp.Name Like "TimeLine_*" Then
+      ActiveSheet.Shapes(objShp.Name).Delete
+    End If
+  Next
+  
+  
+  For line = 2 To Sh_PARAM.Cells(Rows.count, 38).End(xlUp).Row
+    If Sh_PARAM.Range("AL" & line).Text <> "" Then
+      Call Ctl_Chart.タイムラインに追加(CLng(Sh_PARAM.Range("AL" & line).Text), True)
+    End If
+  Next
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.Goto Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
 
 
 '**************************************************************************************************

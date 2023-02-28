@@ -29,23 +29,17 @@ Function Ctl_Function(control As IRibbonControl)
   Const funcName As String = "Ctl_Ribbon.Ctl_Function"
   
   '処理開始--------------------------------------
-  If Workbooks.count <> 0 Then
-    On Error GoTo catchError
-    
-    Call init.setting(True)
-    Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    PrgP_Max = 4
-    resetCellFlg = True
-    runFlg = True
-    Call Ctl_ProgressBar.showStart
-  End If
-  
-  runFlg = True
+'  runFlg = True
+'  On Error GoTo catchError
+'  Call init.setting(True)
+'  Call Library.showDebugForm(funcName, , "start")
+'  Call Library.startScript
+'  PrgP_Max = 4
+'  resetCellFlg = True
+'  runFlg = True
+'  Call Ctl_ProgressBar.showStart
   '----------------------------------------------
 
-  'ActiveWorkbook.Save
-  
   Call Library.showDebugForm("control.ID", control.ID, "debug")
   
   Select Case control.ID
@@ -55,12 +49,6 @@ Function Ctl_Function(control As IRibbonControl)
     Case "OptionAddin解除"
       Workbooks(ThisWorkbook.Name).IsAddin = False
     
-    Case "OptionAddin化"
-      Workbooks(ThisWorkbook.Name).IsAddin = True
-      ThisWorkbook.Save
-      
-      
-      
     'テスト仕様書--------------------------------
     Case "シート追加"
       Call Ctl_TestCase.シート追加

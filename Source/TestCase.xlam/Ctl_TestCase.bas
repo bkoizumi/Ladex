@@ -32,12 +32,15 @@ Function 再設定()
   Const funcName As String = "Ctl_TestCase.再設定"
 
   '処理開始--------------------------------------
-'  On Error GoTo catchError
-  
-  PrgP_Max = 2
-  
-  Call Library.showDebugForm(funcName, , "start1")
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  runFlg = True
+  On Error GoTo catchError
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start")
+  Call Library.startScript
+  PrgP_Max = 4
+  resetCellFlg = True
+  runFlg = True
+  Call Ctl_ProgressBar.showStart
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
@@ -102,6 +105,8 @@ Function 再設定()
     If Range("C" & line) <> "" Then
       Range("B" & line) = Format(WorksheetFunction.CountA(Range("C" & startLine & ":C" & line)), "00")
       categoryLine01 = 1
+      categoryLine02 = 1
+      categoryLine03 = 1
     End If
     
     If Range("E" & line) <> "" Then
@@ -378,12 +383,13 @@ Function シート追加()
   Const funcName As String = "Ctl_TestCase.シート追加"
 
   '処理開始--------------------------------------
+  runFlg = True
   On Error GoTo catchError
-  
-  PrgP_Max = 2
-  
-  Call Library.showDebugForm(funcName, , "start1")
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start")
+  Call Library.startScript
+  resetCellFlg = True
+  runFlg = True
   '----------------------------------------------
   
   meg = "追加するシート名は？"

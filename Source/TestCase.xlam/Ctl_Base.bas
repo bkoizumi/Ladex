@@ -4,8 +4,8 @@ Option Explicit
 
 '==================================================================================================
 Function Chrome起動(Optional showType As String)
-
   Dim shellProcID  As Long
+  Dim openHtml As String
   Const funcName As String = "Ctl_Base.Chrome起動"
   
   'chromeDriver の更新確認-------------------------------------------------------------------------
@@ -15,9 +15,11 @@ Function Chrome起動(Optional showType As String)
   
   Call Library.showDebugForm("targetURL", targetURL, "debug")
   
+  openHtml = openingPath & "\start.html"
+  
   With driver
     .AddArgument ("--lang=ja")
-    .AddArgument ("--user-data-dir=" & BrowserProfilesDir)
+    '.AddArgument ("--user-data-dir=" & BrowserProfilesDir)
     .AddArgument ("--window-size=1200,1200")
     
     '拡張機能を無効
@@ -42,7 +44,8 @@ Function Chrome起動(Optional showType As String)
         '画像非表示
         .AddArgument ("--blink-settings=imagesEnabled=false")
       Case "app"
-        .AddArgument ("--app=" & Ctl_Base.基本認証(targetURL))
+        '.AddArgument ("--app=" & Ctl_Base.基本認証(targetURL))
+        .AddArgument ("--app=" & openHtml)
       
       Case "headless"
         .AddArgument ("--disable-gpu")
@@ -57,7 +60,7 @@ Function Chrome起動(Optional showType As String)
     
     '画面位置
     '.Window.SetPosition Windows(targetBook.Name).Left, Windows(targetBook.Name).Top
-    .Wait 1000
+    
     
     'ページのロードの待ち時間
     .Timeouts.PageLoad = 60000
@@ -68,13 +71,16 @@ Function Chrome起動(Optional showType As String)
     '要素が見つかるまでの待ち時間
     .Timeouts.ImplicitWait = 1000
     
+    If showType <> "app" Then
+      .Get openHtml
+      .Wait 5000
+    End If
+      
     If targetURL <> "" Then
       .Get Ctl_Base.基本認証(targetURL)
     End If
-    
   End With
-  
-    
+
 End Function
 
 '==================================================================================================

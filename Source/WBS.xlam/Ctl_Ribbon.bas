@@ -170,8 +170,8 @@ Function Ctl_Function(control As IRibbonControl)
       
       '濱さん作成VBAの呼び出し
       Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!sheet5.CommandButton7_Click"
-
-
+      Call Ctl_Chart.濱さんWBS用チャート生成
+    
     Case "Option"
       Call Ctl_Option.オプション画面表示
       
@@ -182,7 +182,8 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Chart.タイムラインに追加(ActiveCell.Row)
         
     Case "makeChart"
-         Menu.M_ガントチャート生成
+      'call Menu.M_ガントチャート生成
+      Call Ctl_Chart.濱さんWBS用チャート生成
          
     Case "makeCalendar"
       Call Ctl_Calendar.カレンダー生成
