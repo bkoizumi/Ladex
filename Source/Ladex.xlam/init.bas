@@ -74,7 +74,7 @@ Public arryHollyday()       As Date
 Public defaultZoomInVal     As String
 
 '‚¨‹C‚É“ü‚èŠÖ˜A----------------------------------
-Public Const favoriteDebug  As Boolean = True
+Public Const favoriteDebug  As Boolean = False
 
 
 

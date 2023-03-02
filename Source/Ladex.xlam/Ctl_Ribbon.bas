@@ -430,7 +430,7 @@ Function FavoritesToAdd(control As IRibbonControl, ByRef returnedVal)
   
   DOMDoc.appendChild Menu
   returnedVal = DOMDoc.XML
-  'Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
   
   Set CategoryMenu = Nothing
   Set Menu = Nothing
@@ -438,7 +438,8 @@ Function FavoritesToAdd(control As IRibbonControl, ByRef returnedVal)
   
   'èàóùèIóπ--------------------------------------
   Call Library.showDebugForm(funcName, , "end")
-  Call init.unsetting
+  Call init.resetGlobalVal
+  Exit Function
   '----------------------------------------------
 
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
