@@ -387,7 +387,7 @@ End Sub
 '複数シート生成
 Private Sub addSheets_Click()
   Unload Me
-  Call Ctl_Sheet.連続シート追加
+  Call Ctl_Book.連続シート追加
   Call Ctl_Sheet.シート管理_フォーム表示
 End Sub
 

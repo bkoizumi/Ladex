@@ -28,7 +28,7 @@
             <button id="OptionAddin解除"                label="Addin解除"   imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" supertip="Addin化を解除し、通常Bookとしてメンテナンスする" />
           </menu>
 
-          <menuSeparator id="MS_Help" title="Help" />
+          <menuSeparator id="MS_Help" title="Hlp" />
           <button id="Help"     label="Help"    imageMso="Help" screentip="Helpを表示"  supertip="Helpを表示"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
           <button id="Version"  label="Version" imageMso="Help" screentip="Version情報" supertip="Version情報"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
 
@@ -42,7 +42,7 @@
         <button id="Favorite_detail" label="お気に入り&#xD;&#xA;" imageMso="Favorites" screentip="お気に入り" supertip="お気に入り登録リスト表示" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
           <menu id="Favorite_Menu" screentip="お気に入りメニュー"  supertip="お気に入りメニュー表示" itemSize="large">
             <menuSeparator id="Favorite_SP1" title="お気に入り" />
-            <dynamicMenu  id="お気に入り追加"  label="お気に入りに追加"    imageMso="AddToFavorites"  invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.AddToFavorites" />
+            <dynamicMenu  id="お気に入り追加"  label="お気に入りに追加"    imageMso="AddToFavorites"  invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.FavoritesToAdd" />
             <dynamicMenu  id="お気に入り一覧"  label="お気に入り一覧"    imageMso="Favorites"  invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.FavoriteMenu" />
           </menu>
       </splitButton>

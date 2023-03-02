@@ -448,7 +448,7 @@ Function s”Ô†’Ç‰Á()
   'ˆ—ŠJn--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError

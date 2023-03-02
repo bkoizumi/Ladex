@@ -9,10 +9,10 @@ Private Const WS_THICKFRAME = &H40000
 '// Win32API参照宣言
 '// 64bit版
 #If VBA7 And Win64 Then
-    Private Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As Long
-    Private Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-    Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As LongPtr
-    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hWnd As LongPtr) As Long
+    Private Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
+    Private Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+    Private Declare PtrSafe Function GetActiveWindow Lib "user32" () As Long
+    Private Declare PtrSafe Function DrawMenuBar Lib "user32" (ByVal hWnd As Long) As Long
 '// 32bit版
 #Else
     Private Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
@@ -110,7 +110,7 @@ End Function
 '==================================================================================================
 Function Textjoin(Delim As String, ParamArray par())
 Attribute Textjoin.VB_Description = "文字列連結"
-Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n19"
+Attribute Textjoin.VB_ProcData.VB_Invoke_Func = " \n20"
   Dim i As Integer
   Dim tR As Range
 
@@ -138,7 +138,7 @@ End Function
 '==================================================================================================
 Function chkWorkDay(ByVal checkDate As Date, ByVal bsnDay As Long) As Boolean
 Attribute chkWorkDay.VB_Description = "第N営業日かチェックし、True/Falseを返す"
-Attribute chkWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
+Attribute chkWorkDay.VB_ProcData.VB_Invoke_Func = " \n20"
   Dim getDay As Date, firstDay As Date
   
   
@@ -161,7 +161,7 @@ End Function
 '==================================================================================================
 Function chkWeekNum(ByVal checkDate As Date, ByVal checkWeekday As Long, ByVal weekNum As Long) As Boolean
 Attribute chkWeekNum.VB_Description = "第N週X曜日の日付かチェックし、True/Falseを返す"
-Attribute chkWeekNum.VB_ProcData.VB_Invoke_Func = " \n19"
+Attribute chkWeekNum.VB_ProcData.VB_Invoke_Func = " \n20"
   Dim getDay As Date, firstDay As Long, diff As Long
   
 '  Application.Volatile
@@ -181,7 +181,7 @@ End Function
 '==================================================================================================
 Function getWorkDay(ByVal cYear As Long, ByVal cMonth As Long, ByVal bsnDay As Long) As Date
 Attribute getWorkDay.VB_Description = "第N営業日をシリアル値で返す"
-Attribute getWorkDay.VB_ProcData.VB_Invoke_Func = " \n19"
+Attribute getWorkDay.VB_ProcData.VB_Invoke_Func = " \n20"
   Dim getDay As Date, firstDay As Date
   
 '  Application.Volatile

@@ -19,6 +19,12 @@ Option Explicit
   Private Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
   Private Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
 
+  'Shellä÷êîÇ≈ãNìÆÇµÇΩÉvÉçÉOÉâÉÄÇÃèIóπÇë“Ç¬
+  Private Declare PtrSafe Function OpenProcess Lib "kernel32" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As Long
+  Private Declare PtrSafe Function GetExitCodeProcess Lib "kernel32" (ByVal hProcess As Long, lpExitCode As Long) As Long
+  Private Declare PtrSafe Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
+
+
 #Else
   'ÉfÉBÉXÉvÉåÉCÇÃâëúìxéÊìæóp
   Declare Function GetSystemMetrics Lib "user32" (ByVal nIndex As Long) As Long
@@ -35,9 +41,10 @@ Option Explicit
   Private Declare Function OpenProcess Lib "kernel32" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As Long
   Private Declare Function GetExitCodeProcess Lib "kernel32" (ByVal hProcess As Long, lpExitCode As Long) As Long
   Private Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
-  Private Const PROCESS_QUERY_INFORMATION = &H400&
-  Private Const STILL_ACTIVE = &H103&
 #End If
+
+Private Const PROCESS_QUERY_INFORMATION = &H400&
+Private Const STILL_ACTIVE = &H103&
 
 
 'ÉèÅ[ÉNÉuÉbÉNópïœêî------------------------------
@@ -70,6 +77,13 @@ Public Const MachineDependentCharacters = "á@áAáBáCáDáEáFáGáHáIáJáKáLáMáNáOáPáQá
 Public ThisBook As Workbook
 
 
+'ÉXÉ^ÉCÉãä÷òA------------------------------------
+Public useStyle()           As Variant
+
+
+
+
+
 '**************************************************************************************************
 ' * ÉGÉâÅ[éûÇÃèàóù
 ' *
@@ -94,9 +108,7 @@ Function startScript()
   Const funcName As String = "Library.startScript"
 
   On Error Resume Next
-  If logFile <> "" Then
-    Call Library.showDebugForm(funcName, , "function1")
-  End If
+  Call Library.showDebugForm(funcName, , "function")
   
   'ÉAÉNÉeÉBÉuÉZÉãÇÃéÊìæ
   If TypeName(Selection) = "Range" Then
@@ -135,9 +147,7 @@ Function endScript(Optional reCalflg As Boolean = False, Optional flg As Boolean
   Const funcName As String = "Library.endScript"
 
   On Error Resume Next
-  If logFile <> "" Then
-    Call Library.showDebugForm(funcName, , "function1")
-  End If
+  Call Library.showDebugForm(funcName, , "function")
 
   'ã≠êßìIÇ…çƒåvéZÇ≥ÇπÇÈ
   If reCalflg = True Then
@@ -416,7 +426,7 @@ Function chkLocalDrive(targetPath As String)
       Call Library.showDebugForm("Library.chkLocalDrive", "ïsñæÅAÉlÉbÉgÉèÅ[ÉNÉhÉâÉCÉuÅACDÉhÉâÉCÉuÇ»Ç«")
   End Select
 
-  If LadexSetVal("debugMode") = "develop" Then
+  If dicVal("debugMode") = "develop" Then
     retVal = False
   End If
   chkLocalDrive = retVal
@@ -725,7 +735,7 @@ End Function
 ' *
 ' * @link   http://www.ka-net.org/blog/?p=4524
 '**************************************************************************************************
-Function convBase64EncodeForFile(ByVal filePath As String) As String
+Function convBase64EncodeForFile(ByVal FilePath As String) As String
   Dim elm As Object
   Dim ret As String
   Const adTypeBinary = 1
@@ -737,7 +747,7 @@ Function convBase64EncodeForFile(ByVal filePath As String) As String
   With CreateObject("ADODB.Stream")
     .Type = adTypeBinary
     .Open
-    .LoadFromFile filePath
+    .LoadFromFile FilePath
     elm.dataType = "bin.base64"
     elm.nodeTypedValue = .Read(adReadAll)
     ret = elm.Text
@@ -796,14 +806,30 @@ End Function
 ' * URLÉGÉìÉRÅ[Éh
 ' *
 ' * @link   http://www.ka-net.org/blog/?p=4524
+' * @link   https://www.ka-net.org/office/of32.html
 '**************************************************************************************************
 Function convURLEncode(ByVal str As String) As String
   Dim EncodeURL As String
 
+#If VBA7 And Win64 Then
+  Dim d As Object
+  Dim elm As Object
+  
+  str = Replace(str, "\", "\\")
+  str = Replace(str, "'", "\'")
+  Set d = CreateObject("htmlfile")
+  Set elm = d.createElement("span")
+  elm.setAttribute "id", "result"
+  d.body.appendChild elm
+  d.parentWindow.execScript "document.getElementById('result').innerText = encodeURIComponent('" & str & "');", "JScript"
+  EncodeURL = elm.innerText
+#Else
   With CreateObject("ScriptControl")
     .Language = "JScript"
     EncodeURL = .CodeObject.encodeURIComponent(str)
   End With
+#End If
+
   convURLEncode = EncodeURL
 End Function
 
@@ -816,10 +842,25 @@ End Function
 Function convURLDecode(ByVal str As String) As String
   Dim DecodeURL As String
 
+#If VBA7 And Win64 Then
+  Dim d As Object
+  Dim elm As Object
+  
+  str = Replace(str, "\", "\\")
+  str = Replace(str, "'", "\'")
+  Set d = CreateObject("htmlfile")
+  Set elm = d.createElement("span")
+  elm.setAttribute "id", "result"
+  d.body.appendChild elm
+  d.parentWindow.execScript "document.getElementById('result').innerText = decodeURIComponent('" & str & "');", "JScript"
+  DecodeURL = elm.innerText
+#Else
   With CreateObject("ScriptControl")
     .Language = "JScript"
     DecodeURL = .CodeObject.decodeURIComponent(str)
   End With
+#End If
+  
   convURLDecode = DecodeURL
 End Function
 
@@ -1025,7 +1066,6 @@ Function delSheetData(Optional targetSheet As Worksheet, Optional line As Long, 
     Next shp
   End If
   
-'  Application.GoTo Reference:=Range("A1"), Scroll:=True
   Call Library.showDebugForm(funcName, , "end1")
   
 '  Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, 1, 1, "ÉfÅ[É^è¡ãéÅF" & targetSheet.name)
@@ -1129,11 +1169,11 @@ Function execCopy(srcPath As String, dstPath As String)
   Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  Call showDebugForm("  ÉRÉsÅ[å≥ÅF" & srcPath)
-  Call showDebugForm("  ÉRÉsÅ[êÊÅF" & dstPath)
+  Call Library.showDebugForm("  ÉRÉsÅ[å≥ÅF" & srcPath)
+  Call Library.showDebugForm("  ÉRÉsÅ[êÊÅF" & dstPath)
 
   If chkFileExists(srcPath) = False Then
-    Call showinfo(404, "ÉRÉsÅ[å≥", True)
+    Call Library.showNotice(404, "ÉRÉsÅ[å≥", True)
   End If
 
   If chkDirExists(getParentDir(dstPath)) = False Then
@@ -1160,11 +1200,11 @@ Function execMove(srcPath As String, dstPath As String)
   Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  Call showDebugForm("  à⁄ìÆå≥ÅF" & srcPath)
-  Call showDebugForm("  à⁄ìÆêÊÅF" & dstPath)
+  Call Library.showDebugForm("  à⁄ìÆå≥ÅF" & srcPath)
+  Call Library.showDebugForm("  à⁄ìÆêÊÅF" & dstPath)
 
   If chkFileExists(srcPath) = False Then
-    Call showinfo(404, "à⁄ìÆå≥", True)
+    Call Library.showNotice(404, "à⁄ìÆå≥", True)
   End If
 
   FSO.MoveFile srcPath, dstPath
@@ -1188,11 +1228,11 @@ Function execDeldir(srcPath As String)
   Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  Call showDebugForm("  çÌèúëŒè€ÅF" & srcPath)
+  Call Library.showDebugForm("  çÌèúëŒè€ÅF" & srcPath)
 
   If srcPath Like "*[*]*" Then
   ElseIf chkDirExists(srcPath) = False Then
-    Call showinfo(404, "çÌèúëŒè€", True)
+    Call Library.showNotice(404, "çÌèúëŒè€", True)
   End If
 
   FSO.DeleteFolder srcPath
@@ -1216,11 +1256,11 @@ Function execDel(srcPath As String)
   Call Library.showDebugForm(funcName, , "start1")
 
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  Call showDebugForm("çÌèúëŒè€", srcPath, "debug")
+  Call Library.showDebugForm("çÌèúëŒè€", srcPath, "debug")
 
   If srcPath Like "*[*]*" Then
   ElseIf chkFileExists(srcPath) = False Then
-    Call showNotice(404, "çÌèúëŒè€", True)
+    Call Library.showNotice(404, "çÌèúëŒè€", True)
   End If
 
   FSO.DeleteFile srcPath
@@ -1244,13 +1284,13 @@ Function execRename(srcPath As String, oldFileName As String, fileName As String
   errFlg = False
   On Error GoTo catchError
   Call Library.showDebugForm(funcName, , "start1")
-  Call showDebugForm("ïœçXå≥", srcPath)
-  Call showDebugForm("ãåñºèÃ", oldFileName)
-  Call showDebugForm("êVñºèÃ", fileName)
+  Call Library.showDebugForm("ïœçXå≥", srcPath)
+  Call Library.showDebugForm("ãåñºèÃ", oldFileName)
+  Call Library.showDebugForm("êVñºèÃ", fileName)
 
   If chkFileExists(srcPath & "\" & oldFileName) = False Then
     If IsMissing(errMeg) Then
-      Call showinfo(404, "ïœçXå≥", True)
+      Call Library.showNotice(404, "ïœçXå≥", True)
     Else
       errMeg = "ïœçXå≥ÇÃÉtÉ@ÉCÉãÇ™Ç†ÇËÇ‹ÇπÇÒ[" & oldFileName & "]"
       errFlg = True
@@ -1259,7 +1299,7 @@ Function execRename(srcPath As String, oldFileName As String, fileName As String
   End If
   If chkFileExists(srcPath & "\" & fileName) = True Then
     If IsMissing(errMeg) Then
-      Call showinfo(414, fileName, True)
+      Call Library.showNotice(414, fileName, True)
     Else
       errMeg = "ìØñºÇÃÉtÉ@ÉCÉãÇ™ë∂ç›ÇµÇ‹Ç∑[" & fileName & "]"
       errFlg = True
@@ -1292,7 +1332,7 @@ Function execMkdir(fullPath As String)
     Exit Function
   End If
 
-  Call showDebugForm("execMkdir", fullPath, "debug")
+  Call Library.showDebugForm("execMkdir", fullPath, "debug")
   Call chkParentDir(fullPath)
 End Function
 
@@ -1331,11 +1371,11 @@ Function execCompress(srcPath As String, zipFilePath As String) As Boolean
   Dim ex  As WshExec
   Dim cmd As String
   Set Sh = CreateObject("WScript.Shell")
-  Call showDebugForm("ëŒè€ÉfÉBÉåÉNÉgÉäÅF" & srcPath)
-  Call showDebugForm("zipÉtÉ@ÉCÉã     ÅF" & zipFilePath)
+  Call Library.showDebugForm("ëŒè€ÉfÉBÉåÉNÉgÉäÅF" & srcPath)
+  Call Library.showDebugForm("zipÉtÉ@ÉCÉã     ÅF" & zipFilePath)
 
   If chkDirExists(srcPath) = False Then
-    Call showinfo(403, "ëŒè€ÉfÉBÉåÉNÉgÉä", True)
+    Call Library.showNotice(403, "ëŒè€ÉfÉBÉåÉNÉgÉä", True)
   End If
 
   'îºäpÉXÉyÅ[ÉXÇÉoÉbÉNÉNÉHÅ[ÉgÇ≈ÉGÉXÉPÅ[Év
@@ -1343,7 +1383,7 @@ Function execCompress(srcPath As String, zipFilePath As String) As Boolean
   zipFilePath = Replace(zipFilePath, " ", "` ")
 
   cmd = "Compress-Archive -Path " & srcPath & " -DestinationPath " & zipFilePath & " -Force"
-  Call showDebugForm("cmdÅF" & cmd)
+  Call Library.showDebugForm("cmdÅF" & cmd)
   Set ex = Sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
 
   If ex.Status = WshFailed Then
@@ -1366,14 +1406,14 @@ Function execUncompress(zipFilePath As String, dstPath As String) As Boolean
   Dim cmd As String
 
   Set Sh = CreateObject("WScript.Shell")
-  Call showDebugForm("zipÉtÉ@ÉCÉã     ", zipFilePath)
-  Call showDebugForm("ëŒè€ÉfÉBÉåÉNÉgÉä", dstPath)
+  Call Library.showDebugForm("zipÉtÉ@ÉCÉã     ", zipFilePath)
+  Call Library.showDebugForm("ëŒè€ÉfÉBÉåÉNÉgÉä", dstPath)
 
   If chkFileExists(zipFilePath) = False Then
-    Call showinfo(404, "âìÄëŒè€", True)
+    Call Library.showNotice(404, "âìÄëŒè€", True)
   End If
   If chkDirExists(dstPath) = False Then
-    Call showinfo(403, "âìÄêÊ", True)
+    Call Library.showNotice(403, "âìÄêÊ", True)
   End If
 
   'îºäpÉXÉyÅ[ÉXÇÉoÉbÉNÉNÉHÅ[ÉgÇ≈ÉGÉXÉPÅ[Év
@@ -1381,7 +1421,7 @@ Function execUncompress(zipFilePath As String, dstPath As String) As Boolean
   dstPath = Replace(dstPath, " ", "` ")
 
   cmd = "Expand-Archive -Path " & zipFilePath & " -DestinationPath " & dstPath & " -Force"
-  Call showDebugForm("cmdÅF" & cmd)
+  Call Library.showDebugForm("cmdÅF" & cmd)
   Set ex = Sh.exec("powershell -NoLogo -ExecutionPolicy RemoteSigned -Command " & cmd)
 
   If ex.Status = WshFailed Then
@@ -1644,7 +1684,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function getSaveFilePath(CurrentDirectory As String, saveFileName As String, FileTypeNo As Long)
-  Dim filePath As String
+  Dim FilePath As String
   Dim Result As Long
   Dim fileName As Variant
 
@@ -1654,7 +1694,7 @@ Function getSaveFilePath(CurrentDirectory As String, saveFileName As String, Fil
       FilterIndex:=FileTypeNo)
 
   If fileName <> "False" Then
-    getSaveFilePath = filePath
+    getSaveFilePath = FilePath
   Else
     getSaveFilePath = ""
   End If
@@ -1666,7 +1706,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function getFilePath(CurrentDirectory As String, fileName As String, title As String, fileType As String)
-  Dim filePath As String
+  Dim FilePath As String
   Dim Result As Long
 
   With Application.FileDialog(msoFileDialogFilePicker)
@@ -1722,12 +1762,12 @@ Function getFilePath(CurrentDirectory As String, fileName As String, title As St
     .title = title & "ÇëIëÇµÇƒÇ≠ÇæÇ≥Ç¢"
 
     If .Show = -1 Then
-      filePath = .SelectedItems(1)
+      FilePath = .SelectedItems(1)
     Else
-      filePath = ""
+      FilePath = ""
     End If
   End With
-  getFilePath = filePath
+  getFilePath = FilePath
 End Function
 
 '**************************************************************************************************
@@ -1736,7 +1776,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function getFilesPath(CurrentDirectory As String, title As String, fileType As String, Optional setRegPathName As String = "")
-  Dim filePath() As Variant
+  Dim FilePath() As Variant
   Dim tmpPath As String
   Dim Result As Long, i As Integer
 
@@ -1798,16 +1838,16 @@ Function getFilesPath(CurrentDirectory As String, title As String, fileType As S
     If .Show = -1 Then
       Call Library.setRegistry("targetInfo", setRegPathName, Library.getFileInfo(.SelectedItems(1), , "CurrentDir"))
       
-      ReDim Preserve filePath(.SelectedItems.count - 1)
+      ReDim Preserve FilePath(.SelectedItems.count - 1)
       For i = 1 To .SelectedItems.count
-        filePath(i - 1) = .SelectedItems(i)
+        FilePath(i - 1) = .SelectedItems(i)
       Next i
     Else
-      ReDim Preserve filePath(0)
-      filePath(0) = ""
+      ReDim Preserve FilePath(0)
+      FilePath(0) = ""
     End If
   End With
-  getFilesPath = filePath
+  getFilesPath = FilePath
 End Function
 
 '**************************************************************************************************
@@ -2105,7 +2145,7 @@ Function showExpansionForm(Text As String, SetSelectTargetRows As String)
 End Function
 
 '**************************************************************************************************
-' * ÉfÉoÉbÉOópâÊñ ï\é¶
+' * ÉfÉoÉbÉOópï\é¶
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
@@ -2142,18 +2182,16 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
       meg1 = Library.convFixedLength("", 62, "=")
       LogLevel = 0
       
-    Case "function"
-      meg1 = meg1
-      LogLevel = 0
-    
     Case "start1"
-      meg1 = Library.convFixedLength("  " & meg1, 60, "-")
+      meg1 = Library.convFixedLength("  " & meg1 & " ", 60, "-")
       LogLevel = 0
     Case "end1"
       meg1 = Library.convFixedLength("  ", 60, "-")
       LogLevel = 0
-    Case "function1"
-      meg1 = "  " & meg1
+      
+    
+    Case "function", "function1"
+      meg1 = "  Call " & meg1
       LogLevel = 0
       
     Case Else
@@ -2165,11 +2203,11 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
     meg1 = meg1 & " : " & Application.WorksheetFunction.Trim(CStr(meg2))
   End If
 
-  If CInt(LogLevel) <= CInt(Split(LadexSetVal("LogLevel"), ".")(0)) Then
+  If CLng(LogLevel) <= G_LogLevel Then
     Call outputLog(runTime, meg1)
   End If
-  
-  If LadexSetVal("debugMode") = "develop" Then
+
+  If dicVal("debugMode") = "develop" Then
     Debug.Print runTime & "  " & meg1
   End If
   DoEvents
@@ -2181,8 +2219,7 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
 
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
 catchError:
-  
-  Debug.Print runTime & "  [ERROR] " & Err.Description; "  " & meg1
+  Debug.Print runTime & "  " & meg1
   Exit Function
 End Function
 
@@ -2250,7 +2287,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
     message = Replace(message, "<BR>", vbNewLine)
   End If
 
-  If LadexSetVal("debugMode") = "speak" Or LadexSetVal("debugMode") = "develop" Or LadexSetVal("debugMode") = "all" Then
+  If dicVal("debugMode") = "speak" Or dicVal("debugMode") = "develop" Or dicVal("debugMode") = "all" Then
     Application.Speech.Speak Text:=speakerMeg, SpeakAsync:=True, SpeakXML:=True
   End If
 
@@ -2346,7 +2383,9 @@ Function outputLog(runTime As String, message As String)
 '  On Error GoTo catchError
   If logFile = "" Then
     Debug.Print "ÉçÉOÉtÉ@ÉCÉãÇ™ê›íËÇ≥ÇÍÇƒÇ¢Ç‹ÇπÇÒ"
-    End
+    Stop
+    Exit Function
+  
   ElseIf chkFileExists(logFile) Then
     fileTimestamp = FileDateTime(logFile)
   Else
@@ -2364,7 +2403,9 @@ Function outputLog(runTime As String, message As String)
     .SaveToFile logFile, 2
     .Close
   End With
+  
   Exit Function
+  
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
 catchError:
   Debug.Print "[" & Err.Number & "] ÉçÉOèoóÕé∏îsÅF" & Err.Description
@@ -2391,6 +2432,7 @@ Function outputText(message As String, outputFilePath As String, Optional encode
     .SaveToFile outputFilePath, 2
     .Close
   End With
+  
   Exit Function
   
 'ÉGÉâÅ[î≠ê∂éû------------------------------------
@@ -2410,7 +2452,7 @@ End Function
 ' * @link   https://www.tipsfound.com/vba/18014
 '**************************************************************************************************
 '==================================================================================================
-Function importCsv(filePath As String, Optional encode As String = "sjis", Optional readLine As Long, Optional TextFormat As Variant)
+Function importCsv(FilePath As String, Optional encode As String = "sjis", Optional readLine As Long, Optional TextFormat As Variant)
   Dim ws As Worksheet
   Dim qt As QueryTable
   Dim count As Long, line As Long, endLine As Long
@@ -2427,7 +2469,7 @@ Function importCsv(filePath As String, Optional encode As String = "sjis", Optio
   End If
 
   Set ws = ActiveSheet
-  Set qt = ws.QueryTables.add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A" & endLine))
+  Set qt = ws.QueryTables.add(Connection:="TEXT;" & FilePath, Destination:=ws.Range("A" & endLine))
   With qt
     If encode = "sjis" Then
       .TextFilePlatform = 932
@@ -2457,13 +2499,13 @@ End Function
 
 '==================================================================================================
 ' * ÉtÉ@ÉCÉãÉCÉìÉ|Å[Ég
-Function importText(filePath As String, Optional encode As String = "sjis")
+Function importText(FilePath As String, Optional encode As String = "sjis")
   Dim buf As String, tmp As Variant, tmpJ As Variant, i As Long, j As Long
 
   With CreateObject("ADODB.Stream")
     .Charset = encode
     .Open
-    .LoadFromFile filePath
+    .LoadFromFile FilePath
     buf = .ReadText
     .Close
   End With
@@ -2478,13 +2520,13 @@ Function importText(filePath As String, Optional encode As String = "sjis")
 End Function
 
 '==================================================================================================
-Function importXlsx(filePath As String, targeSheet As String, targeArea As String, dictSheet As Worksheet, Optional passWord As String)
+Function importXlsx(FilePath As String, targeSheet As String, targeArea As String, dictSheet As Worksheet, Optional passWord As String)
 
   On Error GoTo catchError
   If passWord <> "" Then
-    Workbooks.Open fileName:=filePath, ReadOnly:=True, passWord:=passWord
+    Workbooks.Open fileName:=FilePath, ReadOnly:=True, passWord:=passWord
   Else
-    Workbooks.Open fileName:=filePath, ReadOnly:=True
+    Workbooks.Open fileName:=FilePath, ReadOnly:=True
   End If
 
   If Worksheets(targeSheet).Visible = False Then
@@ -2710,12 +2752,12 @@ catchError:
 End Function
 
 '==================================================================================================
-Function delRegistry(RegistryKey As String, RegistrySubKey As String)
+Function delRegistry(RegistryKey As String, Optional RegistrySubKey As String = "")
   Dim regVal As String
 
   Const funcName As String = "Library.delRegistry"
   On Error GoTo catchError
-  'Call Library.showDebugForm(funcName, , "function1")
+  'Call Library.showDebugForm(funcName, , "function")
 
   If RegistrySubKey = "" Then
     Call DeleteSetting(thisAppName, RegistryKey)
@@ -2786,10 +2828,10 @@ Function setValandRange(keyName As String, val As String)
   Const funcName As String = "Library.setValandRange"
 
 '  Range(keyName) = val
-  If LadexSetVal Is Nothing Then
+  If dicVal Is Nothing Then
     Call init.setting
   Else
-    LadexSetVal(keyName) = val
+    dicVal(keyName) = val
   End If
   Call Library.showDebugForm(funcName, keyName & "/" & val, "info")
 End Function
@@ -2971,7 +3013,7 @@ Function årê¸_ï\(Optional SetArea As Range, Optional LineColor As Variant)
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3037,7 +3079,7 @@ Function årê¸_îjê¸_àÕÇ›(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3085,7 +3127,7 @@ Function årê¸_îjê¸_äiéq(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3143,7 +3185,7 @@ Function årê¸_îjê¸_ç∂(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3174,7 +3216,7 @@ Function årê¸_îjê¸_âE(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3205,7 +3247,7 @@ Function årê¸_îjê¸_ç∂âE(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3244,7 +3286,7 @@ Function årê¸_îjê¸_è„(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3274,7 +3316,7 @@ Function årê¸_îjê¸_â∫(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3304,7 +3346,7 @@ Function årê¸_îjê¸_è„â∫(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3342,7 +3384,7 @@ Function årê¸_îjê¸_êÇíº(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3370,7 +3412,7 @@ Function årê¸_îjê¸_êÖïΩ(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3402,7 +3444,7 @@ Function årê¸_é¿ê¸_àÕÇ›(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3452,7 +3494,7 @@ Function årê¸_é¿ê¸_äiéq(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3541,7 +3583,7 @@ Function årê¸_é¿ê¸_âE(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3571,7 +3613,7 @@ Function årê¸_é¿ê¸_ç∂âE(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3609,7 +3651,7 @@ Function årê¸_é¿ê¸_è„(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3639,7 +3681,7 @@ Function årê¸_é¿ê¸_â∫(Optional SetArea As Range, Optional LineColor As Variant, 
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3669,7 +3711,7 @@ Function årê¸_é¿ê¸_è„â∫(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3707,7 +3749,7 @@ Function årê¸_é¿ê¸_êÇíº(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3737,7 +3779,7 @@ Function årê¸_é¿ê¸_êÖïΩ(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3767,7 +3809,7 @@ Function årê¸_ìÒèdê¸_àÕÇ›(Optional SetArea As Range, Optional LineColor As Varia
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3807,7 +3849,7 @@ Function årê¸_ìÒèdê¸_ç∂(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3836,7 +3878,7 @@ Function årê¸_ìÒèdê¸_âE(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3866,7 +3908,7 @@ Function årê¸_ìÒèdê¸_ç∂âE(Optional SetArea As Range, Optional LineColor As Varia
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3898,7 +3940,7 @@ Function årê¸_ìÒèdê¸_è„(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3924,7 +3966,7 @@ Function årê¸_ìÒèdê¸_â∫(Optional SetArea As Range, Optional LineColor As Variant
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3953,7 +3995,7 @@ Function årê¸_ìÒèdê¸_è„â∫(Optional SetArea As Range, Optional LineColor As Varia
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
 
@@ -3983,7 +4025,7 @@ Function årê¸_îjê¸_ãtLéö(Optional SetArea As Range, Optional LineColor As Varian
   Dim Red As Long, Green As Long, Blue As Long
 
   If IsMissing(LineColor) = True Then
-    LineColor = LadexSetVal("LineColor")
+    LineColor = dicVal("LineColor")
   End If
   Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
   
@@ -4052,7 +4094,7 @@ Function setColumnWidth()
   'èàóùäJén--------------------------------------
   On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm(funcName, , "function1")
+  Call Library.showDebugForm(funcName, , "function")
   '----------------------------------------------
   endColLine = Cells(1, Columns.count).End(xlToLeft).Column
 
@@ -4090,11 +4132,11 @@ Function getURLStatusCode(ByVal strURL As String) As Integer
   With Http
     .Open "GET", strURL, False
 
-    If LadexSetVal("proxyURL") <> "" Then
-      .SetProxy 2, LadexSetVal("proxyURL") & ":" & LadexSetVal("proxyPort")
+    If dicVal("proxyURL") <> "" Then
+      .SetProxy 2, dicVal("proxyURL") & ":" & dicVal("proxyPort")
     End If
-    If LadexSetVal("proxyUser") <> "" Then
-      .setProxyCredentials LadexSetVal("proxyUser"), LadexSetVal("proxyPasswd")
+    If dicVal("proxyUser") <> "" Then
+      .setProxyCredentials dicVal("proxyUser"), dicVal("proxyPasswd")
     End If
 
     .Send
@@ -4313,11 +4355,11 @@ Function getScrollRow()
   'èàóùäJén--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -4351,11 +4393,11 @@ Function setScroll(setScrollRow As Long)
   'èàóùäJén--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.showDebugForm("setScrollRow", setScrollRow, "debug")
@@ -4385,7 +4427,7 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function getConfigIni(filePath As String)
+Function getConfigIni(FilePath As String)
   Dim buf As String
   Dim SectionVal As String, keyName As String, keyVal As String
   Dim keys As Variant
@@ -4409,7 +4451,7 @@ Function getConfigIni(filePath As String)
   With CreateObject("ADODB.Stream")
     .Charset = "UTF-8"
     .Open
-    .LoadFromFile filePath
+    .LoadFromFile FilePath
     Do Until .EOS
       buf = .ReadText(-2)
 
@@ -4445,7 +4487,7 @@ catchError:
 End Function
 
 '==================================================================================================
-Function setConfigIni(sectionName As String, keyName As String, filePath As String, setVal As String)
+Function setConfigIni(sectionName As String, keyName As String, FilePath As String, setVal As String)
   Const funcName As String = "Library.setLineHeight"
 
 
@@ -4530,7 +4572,7 @@ Function getLineWidth()
 
   'èàóùäJén--------------------------------------
   On Error GoTo catchError
-  Call Library.showDebugForm(funcName, , "function1")
+  Call Library.showDebugForm(funcName, , "function")
   '----------------------------------------------
 
   Cells.EntireColumn.AutoFit
@@ -4637,4 +4679,149 @@ Sub Sort_QuickSort(ByRef argAry As Variant, ByVal lngMin As Long, ByVal lngMax A
   End If
 End Sub
 
+
+'==================================================================================================
+Function BookÇÃèÛë‘ämîF() As Boolean
+  Dim wb As Workbook, tmp As String
+  Dim retFlg As Boolean
+  
+  Const funcName As String = "Library.BookÇÃèÛë‘ämîF"
+  
+  'èàóùäJén--------------------------------------
+  On Error Resume Next
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  retFlg = False
+  
+  'äJÇ¢ÇƒÇ¢ÇÈBookÇÃêîÇämîF----------------------
+  If Workbooks.count = 0 Then
+    Call Library.showDebugForm("ÉuÉbÉNÇ™äJÇ©ÇÍÇƒÇ¢Ç‹ÇπÇÒ", , "Error")
+    retFlg = False
+  Else
+    Call Library.showDebugForm("Workbooks.count", Workbooks.count, "debug")
+    retFlg = True
+  End If
+  
+
+
+
+  'èàóùèIóπ--------------------------------------
+  If runFlg = False Then
+    Call Library.showDebugForm("retFlg", retFlg, "debug")
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+    BookÇÃèÛë‘ämîF = retFlg
+  End If
+  
+  
+  Exit Function
+  '----------------------------------------------
+  
+'ÉGÉâÅ[î≠ê∂éû------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function ÉXÉ^ÉCÉãóòópämîF()
+  Dim count As Long, endCount As Long
+  Dim i As Long
+  Dim objSheet As Variant
+  Dim sheetName As String, styleName As String
+  Dim slctRange As Range
+  
+  Const funcName As String = "Library.ÉXÉ^ÉCÉãóòópämîF"
+  
+  'èàóùäJén--------------------------------------
+  On Error Resume Next
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  ReDim useStyle(0)
+  useStyle(0) = "ïWèÄ"
+  
+  i = 1
+  For Each objSheet In ActiveWorkbook.Sheets
+    sheetName = objSheet.Name
+    Call Ctl_ProgressBar.showBar("ÉXÉ^ÉCÉãóòópämîF", PrgP_Cnt, PrgP_Max, 1, 2, "ÉVÅ[ÉgÅF" & sheetName)
+    
+    For Each slctRange In Worksheets(sheetName).UsedRange
+      styleName = slctRange.style.NameLocal
+      
+      If Library.chkArrayVal(useStyle, styleName) = False Then
+        ReDim Preserve useStyle(i)
+        useStyle(i) = styleName
+        i = i + 1
+      End If
+    Next
+  Next
+
+
+  'èàóùèIóπ--------------------------------------
+  Call Library.showDebugForm(funcName, , "end1")
+  Exit Function
+  '----------------------------------------------
+  
+'ÉGÉâÅ[î≠ê∂éû------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function ÉXÉ^ÉCÉãçÌèú()
+  Dim objStyle As Variant
+  Dim count As Long, endCount As Long
+  Dim retFlg As Boolean
+  
+  Const funcName As String = "Library.ÉXÉ^ÉCÉãçÌèú"
+  
+  'èàóùäJén--------------------------------------
+  On Error Resume Next
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+  
+  
+  count = 1
+  endCount = ActiveWorkbook.Styles.count
+  
+  
+  For Each objStyle In ActiveWorkbook.Styles
+    Call Ctl_ProgressBar.showBar("íËã`çœÉXÉ^ÉCÉãçÌèú", PrgP_Cnt, PrgP_Max, count, endCount, "ÉVÅ[ÉgÅF" & objStyle.Name)
+    
+    If Library.chkArrayVal(useStyle, objStyle.Name) = False Then
+      Call Library.showDebugForm("çÌèúÉXÉ^ÉCÉã  ", objStyle.Name, "debug")
+      Select Case objStyle.Name
+        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
+        Case Else
+          objStyle.delete
+      End Select
+    End If
+    count = count + 1
+  Next
+  
+
+
+
+  'èàóùèIóπ--------------------------------------
+  Call Library.showDebugForm(funcName, , "end1")
+  Exit Function
+  '----------------------------------------------
+  
+'ÉGÉâÅ[î≠ê∂éû------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 

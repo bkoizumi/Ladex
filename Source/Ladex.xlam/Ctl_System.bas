@@ -33,7 +33,7 @@ Function getScroll()
   SystemParametersInfo GetWheelScrollLines, 0, scrollVal, 0
   
   Call Library.showDebugForm("scrollVal", scrollVal, "debug")
-  LadexSetVal("scrollVal") = scrollVal
+  dicVal("scrollVal") = scrollVal
   
   
   
@@ -118,11 +118,11 @@ Function resetScroll()
 '  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
 
-  LadexSetVal("scrollVal") = Library.getRegistry("Main", "scrollVal")
+  dicVal("scrollVal") = Library.getRegistry("Main", "scrollVal")
   
-  SystemParametersInfo SetWheelScrollLines, LadexSetVal("scrollVal"), 0, SENDCHANGE
+  SystemParametersInfo SetWheelScrollLines, dicVal("scrollVal"), 0, SENDCHANGE
 
-  Call Library.showDebugForm("scrollVal", LadexSetVal("scrollVal"), "debug")
+  Call Library.showDebugForm("scrollVal", dicVal("scrollVal"), "debug")
 
   'èàóùèIóπ--------------------------------------
 '  If runFlg = False Then

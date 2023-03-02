@@ -7,7 +7,7 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Sub ladex_Notation_R1C1()
-  Call Ctl_Sheet.R1C1表記
+  Call Ctl_Book.R1C1表記
 End Sub
 
 Sub ladex_resetStyle()
@@ -52,24 +52,24 @@ Sub ladex_全セル表示()
 End Sub
 
 Sub ladex_セルとシート選択()
-  Call Ctl_Sheet.A1セル選択
+  Call Ctl_Book.A1セル選択
 End Sub
 
 Sub ladex_セルとシート_保存()
-  Call Ctl_Sheet.A1セル選択
+  Call Ctl_Book.A1セル選択
   ActiveWorkbook.Save
 End Sub
 
 Sub ladex_標準画面()
-  Call Ctl_Sheet.標準画面
+  Call Ctl_Book.標準画面
 End Sub
 
 Sub ladex_画面最大化()
-  Call Ctl_Zoom.Zoom01
+  Call Ctl_Zoom.全画面表示
 End Sub
 
 Sub ladex_初期表示倍率()
-  Call Ctl_Zoom.defaultZoom
+  Call Ctl_Zoom.初期表示倍率
 End Sub
 
 
@@ -107,7 +107,8 @@ Sub ladex_連番追加()
 End Sub
 
 Sub ladex_全半角変換()
-  Call Ctl_Cells.英数字全半角変換
+  Call Ctl_Cells.英数字全⇒半角変換
+  
 End Sub
 
 Sub ladex_取り消し線()
@@ -141,7 +142,8 @@ Sub ladex_行例を入れ替えて貼付け()
 End Sub
 
 Sub ladex_数式エラー防止()
-  Call Ctl_Formula.エラー防止
+  Call Ctl_Formula.エラー防止_空白
+  
 End Sub
 
 Sub ladex_整形_1()

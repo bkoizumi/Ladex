@@ -11,7 +11,7 @@ Dim setStyleBook     As Workbook
 '**************************************************************************************************
 '==================================================================================================
 Function Export()
-  Dim filePath As String, fileName As String
+  Dim FilePath As String, fileName As String
   Const funcName As String = "Ctl_Style.Export"
      
   '処理開始--------------------------------------
@@ -30,7 +30,7 @@ Function Export()
   Set setStyleBook = ActiveWorkbook
   setStyleBook.SaveAs LadexDir & "\" & "スタイル情報.xlsx"
   
-  Call Ctl_SaveVal.setVal("ExportStyleFilePaht", filePath)
+  Call Ctl_SaveVal.setVal("ExportStyleFilePaht", FilePath)
   Call Ctl_SaveVal.setVal("ExportStyleFileName", fileName)
 
 
@@ -43,7 +43,7 @@ Function Export()
   '----------------------------------------------
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時----------------------------------------------------------------------------------------------------------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -52,7 +52,7 @@ End Function
 '==================================================================================================
 Function Import()
   Dim styleBookPath As String
-  Dim filePath As String, fileName As String
+  Dim FilePath As String, fileName As String
   Const funcName As String = "Ctl_Style.Import"
   
   '処理開始--------------------------------------
@@ -104,7 +104,7 @@ Function Import()
   '----------------------------------------------
 
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時----------------------------------------------------------------------------------------------------------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -117,8 +117,6 @@ End Function
 '**************************************************************************************************
 '==================================================================================================
 Function スタイル削除()
-  Dim s
-  Dim count As Long, endCount As Long
   Dim line As Long, endLine As Long
   Dim tempSheet As Object
   Dim useStyleName As Variant
@@ -126,17 +124,19 @@ Function スタイル削除()
   Const funcName As String = "Ctl_Style.スタイル削除"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
-    PrgP_Max = 4
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
   'ブックの保護確認
@@ -152,58 +152,23 @@ Function スタイル削除()
     End If
   Next
   
-  count = 1
-  endCount = ActiveWorkbook.Styles.count
-  
-'  Call Ctl_Style.スタイル利用確認
-'  For Each s In ActiveWorkbook.Styles
-'    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
-'
-'    If s.BuiltIn = False Then
-'      If Library.chkArrayVal(useStyle, s.Name) = False Then
-'        Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
-'        s.delete
-'      End If
-'    End If
-'    count = count + 1
-'  Next
-  
-  
-  Call Ctl_Style.スタイル利用確認
-  For Each s In ActiveWorkbook.Styles
-'    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
-    
-    If Library.chkArrayVal(useStyle, s.Name) = False Then
-      Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
-      Select Case s.Name
-        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
-        Case Else
-          s.delete
-      End Select
-    End If
-    count = count + 1
-  Next
-  
-  
-  
-  
-  
-  
+  Call Library.スタイル利用確認
+  Call Library.スタイル削除
+
   
   '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
-'    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
+  'エラー発生時--------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -220,17 +185,19 @@ Function スタイル_全削除()
   Const funcName As String = "Ctl_Style.スタイル_全削除"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
-    PrgP_Max = 4
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
   'ブックの保護確認
@@ -250,33 +217,24 @@ Function スタイル_全削除()
   endCount = ActiveWorkbook.Styles.count
   
     
-  For Each s In ActiveWorkbook.Styles
-    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
-    
-      Select Case s.Name
-        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
-        Case Else
-          s.delete
-      End Select
-      
+  ReDim useStyle(0)
+  useStyle(0) = "標準"
+  Call Library.スタイル削除
 
-    count = count + 1
-  Next
   
   '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -289,46 +247,30 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function スタイル設定()
-  Dim s
-  Dim count As Long, endCount As Long
   Dim line As Long, endLine As Long
   Dim tempSheet As Object
   
   Const funcName As String = "Ctl_Style.スタイル設定"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    PrgP_Max = 4
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
   Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
   '既存スタイル削除------------------------------
-  count = 1
-  endCount = ActiveWorkbook.Styles.count
-  
-  Call Ctl_Style.スタイル利用確認
-  
-  For Each s In ActiveWorkbook.Styles
-    Call Ctl_ProgressBar.showCount("定義済スタイル削除", 1, 2, count, endCount, s.Name)
-    
-    If Library.chkArrayVal(useStyle, s.Name) = False Then
-      Call Library.showDebugForm("削除スタイル  ", s.Name, "debug")
-      Select Case s.Name
-        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
-        Case Else
-          s.delete
-      End Select
-    End If
-    count = count + 1
-  Next
+  Call Library.スタイル利用確認
+  Call Library.スタイル削除
   
   If setStyleBook Is Nothing Then
     If Library.chkIsOpen("スタイル情報.xlsx") Then
@@ -442,17 +384,17 @@ Function スタイル設定()
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
-  Call Library.endScript
   If runFlg = False Then
+    Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
-      Call Library.showDebugForm(funcName, , "end1")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -463,108 +405,67 @@ End Function
 Function スタイル初期化()
   Dim FSO As Object
   Dim setActivBook     As Workbook
-  Dim filePath As String, fileName As String
+  Dim FilePath As String, fileName As String
   
-  '処理開始--------------------------------------
-  'On Error GoTo catchError
-  funcName = "Ctl_Style.スタイル初期化"
+  Const funcName As String = "Ctl_Style.スタイル初期化"
 
-  Call Library.showDebugForm(funcName, , "start")
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
-  Call Ctl_Style.スタイル削除
+  
+  Call Library.スタイル削除
 
   Set setActivBook = ActiveWorkbook
   Set setStyleBook = Workbooks.add
   Set FSO = CreateObject("Scripting.FileSystemObject")
   
+  '新規ブックを作成しスタイルをインポート--------
   With setStyleBook
     With FSO
       fileName = thisAppName & "_" & .GetBaseName(.GetTempName) & ".xlsx"
-      filePath = .GetSpecialFolder(2) & "\" & fileName
+      FilePath = .GetSpecialFolder(2) & "\" & fileName
     End With
-    .SaveAs filePath
+    .SaveAs FilePath
   End With
+  Call Library.showDebugForm("新規ブック作成", FilePath, "debug")
+  Call Library.showDebugForm("スタイルのマージ", , "debug")
+  
   
   setActivBook.Activate
   ActiveWorkbook.Styles.Merge Workbook:=Workbooks(fileName)
   Set FSO = Nothing
   setStyleBook.Close
   
-  Call Library.execDel(filePath)
+  Call Library.execDel(FilePath)
   
   '処理終了--------------------------------------
-  Call Library.showDebugForm(funcName, , "end")
-  '----------------------------------------------
-
-  Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
-catchError:
-  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
-End Function
-
-
-'==================================================================================================
-Function スタイル利用確認()
-  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
-  Dim slctRange As Range
-  Dim objSheet As Object, sheetName As String
-  Dim styleName As String
-  Dim i As Long
-  Const funcName As String = "Ctl_Style.スタイル利用確認"
-
-  '処理開始--------------------------------------
+  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  
-  ReDim useStyle(0)
-  useStyle(0) = "標準"
-  
-  i = 1
-  For Each objSheet In ActiveWorkbook.Sheets
-    sheetName = objSheet.Name
-    
-    For Each slctRange In Worksheets(sheetName).UsedRange
-      styleName = slctRange.style.NameLocal
-
-      If Library.chkArrayVal(useStyle, styleName) = False Then
-      
-'        Call Library.showDebugForm("sheetName", sheetName, "debug")
-'        Call Library.showDebugForm("styleName", styleName, "debug")
-      
-        ReDim Preserve useStyle(i)
-        useStyle(i) = styleName
-        i = i + 1
-      End If
-    Next
-  Next
-
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    'Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.unsetting
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If
-  '----------------------------------------------
   Exit Function
+  '----------------------------------------------
 
-  'エラー発生時------------------------------------
+  'エラー発生時--------------------------------------------------------------------------------------
 catchError:
-    Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
@@ -655,7 +556,7 @@ Function 標準スタイルの見た目変更()
   '----------------------------------------------
   Exit Function
 
-'エラー発生時------------------------------------
+'エラー発生時--------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

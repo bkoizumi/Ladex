@@ -1,6 +1,11 @@
 Attribute VB_Name = "Ctl_File"
 Option Explicit
 
+'**************************************************************************************************
+' * ファイル連携
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
 '==================================================================================================
 Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long)
   Dim endLine As Long, colLine As Long
@@ -236,11 +241,11 @@ Function フォルダ生成()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Ctl_ProgressBar.showStart

@@ -17,16 +17,17 @@ Public PrgMeg   As String
 
 '==================================================================================================
 Public Function showStart()
+  Const funcName As String = "Ctl_ProgressBar.showStart"
   
-'  If PBarFlg = False Then
-'    Exit Function
-'  End If
+  '処理開始--------------------------------------
+  Call Library.showDebugForm(funcName, , "function")
+  '----------------------------------------------
   
   With Frm_Progress
     .StartUpPosition = 0
     .Caption = thisAppName
     
-    '親進捗バー------------------------------------------------------------------------------------
+    '親進捗バー----------------------------------
     'プログレスバーの枠の部分
     With .PrgP_Area
       .BorderStyle = fmBorderStyleSingle
@@ -63,7 +64,7 @@ Public Function showStart()
       .Font.Bold = False
     End With
     
-    '子進捗バー------------------------------------------------------------------------------------
+    '子進捗バー----------------------------------
     'プログレスバーの枠の部分
     With .PrgC_Area
       .BorderStyle = fmBorderStyleSingle
@@ -128,9 +129,9 @@ Public Function showCount( _
                           , PrgC_Cnt As Variant, PrgC_Max As Variant _
                           , PrgMeg As String _
                         )
-
   Call showBar(Prg_Title, PrgP_Cnt, PrgP_Max, PrgC_Cnt, PrgC_Max, PrgMeg)
-  PrgP_Cnt = PrgP_Cnt + 1
+  PrgC_Cnt = PrgC_Cnt + 1
+  
 End Function
 '==================================================================================================
 Public Function showBar( _

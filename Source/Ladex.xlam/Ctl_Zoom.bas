@@ -40,7 +40,7 @@ Function ZoomIn(Optional slctCellAddress As String)
     .TextBox.IMEMode = fmIMEModeOn
 
 '    .TextBox.Font.Name = ActiveCell.Font.Name
-'    .TextBox.Font.Name = LadexSetVal("BaseFont")
+'    .TextBox.Font.Name = dicVal("BaseFont")
     .TextBox.Font.Name = "メイリオ"
     
     .Label1.Caption = "選択セル：" & ActiveCell.Address(RowAbsolute:=False, ColumnAbsolute:=False)
@@ -79,7 +79,7 @@ End Function
 
 '==================================================================================================
 '初期ズーム値に変更
-Function defaultZoom()
+Function 初期表示倍率()
   Call init.setting
   Call Library.startScript
   

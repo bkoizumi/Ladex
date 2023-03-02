@@ -36,7 +36,7 @@ Function showHelp()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError
@@ -92,11 +92,13 @@ Function showHelp()
   '----------------------------------------------
 
   Exit Function
+  
 'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
 
 '==================================================================================================
 Function initialization()
@@ -109,7 +111,7 @@ Function initialization()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError
@@ -118,13 +120,13 @@ Function initialization()
   '----------------------------------------------
   
   LadexBook.Activate
-  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(LadexSetVal("Cells_RegistryKey"))).End(xlUp).Row
+  endLine = LadexSh_Config.Cells(Rows.count, Library.getColumnNo(dicVal("Cells_RegistryKey"))).End(xlUp).Row
   
   Call Library.delRegistry("Main")
   For line = 3 To endLine
-    RegistryKey = LadexSh_Config.Range(LadexSetVal("Cells_RegistryKey") & line)
-    RegistrySubKey = LadexSh_Config.Range(LadexSetVal("Cells_RegistrySubKey") & line)
-    RegistryVal = LadexSh_Config.Range(LadexSetVal("Cells_RegistryValue") & line)
+    RegistryKey = LadexSh_Config.Range(dicVal("Cells_RegistryKey") & line)
+    RegistrySubKey = LadexSh_Config.Range(dicVal("Cells_RegistrySubKey") & line)
+    RegistryVal = LadexSh_Config.Range(dicVal("Cells_RegistryValue") & line)
     
     If RegistryKey <> "" Then
      Call Library.setRegistry(RegistryKey, RegistrySubKey, RegistryVal)
@@ -156,17 +158,16 @@ Function showOption()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
-'    On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   With Frm_Option
     .MultiPage1.SelectedItem.Index = 0
-    '.Show vbModeless
     .Show
   End With
 
@@ -201,7 +202,7 @@ Function HighLight()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError
@@ -242,7 +243,7 @@ Function Comment()
   '処理開始--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
     On Error GoTo catchError

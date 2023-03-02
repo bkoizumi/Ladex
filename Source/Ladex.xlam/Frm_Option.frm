@@ -21,10 +21,6 @@ Public InitializeFlg   As Boolean
 Public selectLine   As Long
 
 
-Private Sub MultiPage1_Change()
-
-End Sub
-
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -43,9 +39,9 @@ Private Sub UserForm_Initialize()
   Const funcName As String = "Frm_Option.UserForm_Initialize"
 
   '処理開始--------------------------------------
-'  On Error GoTo catchError
+  On Error GoTo catchError
   Call init.setting
-  Call Library.showDebugForm("" & funcName, , "function")
+  Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
@@ -95,7 +91,7 @@ Private Sub UserForm_Initialize()
     
     '行の高さ、列の幅----------------------------
     .ColumnWidth.Value = Library.getRegistry("Main", "ColumnWidth")
-    .rowHeight.Value = LadexSetVal("rowHeight")
+    .rowHeight.Value = dicVal("rowHeight")
     
     .BgColor.Value = Library.getRegistry("Main", "bgColor")
       
@@ -138,14 +134,14 @@ Private Sub UserForm_Initialize()
     .LogLevel.AddItem "3.notice"
     .LogLevel.AddItem "4.info"
     .LogLevel.AddItem "5.debug"
-    .LogLevel.Text = LadexSetVal("LogLevel")
+    .LogLevel.Text = dicVal("LogLevel")
     
     .debugMode.AddItem "all"
     .debugMode.AddItem "File"
     .debugMode.AddItem "Speak"
     .debugMode.AddItem "none"
     .debugMode.AddItem "develop"
-    .debugMode.Text = LadexSetVal("debugMode")
+    .debugMode.Text = dicVal("debugMode")
   
     'ハイライトタブ------------------------------
     HighLightColor = Library.getRegistry("Main", "HighLightColor")
@@ -883,9 +879,6 @@ Private Sub run_Click()
   
   Call Library.setRegistry("Main", "debugMode", debugMode.Value)
   Call Library.setRegistry("Main", "LogLevel", LogLevel.Value)
-  
-  LadexSetVal("debugMode") = debugMode.Value
-  LadexSetVal("LogLevel") = LogLevel.Value
   
   Application.userName = userName.Value
   

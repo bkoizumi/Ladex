@@ -26,11 +26,7 @@ Const moduleDebug     As Boolean = False
 '**************************************************************************************************
 Private Sub UserForm_Initialize()
 
-  If moduleDebug = True Then
-    Set targetSheet = ActiveWorkbook.Worksheets("Favorite")
-  Else
-    Set targetSheet = ThisWorkbook.Worksheets("Favorite")
-  End If
+  Call Ctl_Favorite.chkDebugMode
   
   
   StartUpPosition = 0
@@ -74,6 +70,8 @@ Private Sub UserForm_Initialize()
   End With
   
   Call Frm_Favorite.RefreshListBox
+  
+  Frm_Favorite.Lst_FavCategory.ListIndex = 0
 End Sub
 
 
@@ -93,26 +91,35 @@ End Sub
 '==================================================================================================
 '閉じる
 Private Sub Submit_Click()
-
-'  Call Library.setRegistry("UserForm", "FavoriteTop", Me.Top)
-'  Call Library.setRegistry("UserForm", "FavoriteLeft", Me.Left)
-
   Call Ctl_Favorite.レジストリ登録
-'  Call Library.delSheetData(targetSheet)
+  
+  Call Ctl_Favorite.chkDebugMode
+  Call Library.delSheetData(targetSheet)
   Unload Me
-  Call init.unsetting
 End Sub
 
 
 '==================================================================================================
 '追加
 Private Sub add_Click()
-  Dim filePath As String
+  Dim FilePath As String
+  Dim categoryIndex As Variant
   
-  filePath = Library.getFilePath("C:", "", "お気に入りに追加するファイル", 1)
-  If filePath <> "" Then
-    Call Ctl_Favorite.add(Lst_FavCategory.ListIndex + 1, filePath)
+  categoryIndex = Frm_Favorite.Lst_FavCategory.ListIndex
+  
+  FilePath = Library.getRegistry("targetInfo", "FavoriteDirPath")
+  If FilePath = "" Then
+    FilePath = "C:"
+  End If
+  
+  FilePath = Library.getFilePath(FilePath, "", "お気に入りに追加するファイル", 1)
+  If FilePath <> "" Then
+    Call Ctl_Favorite.追加(Lst_FavCategory.ListIndex + 1, FilePath)
     Call Frm_Favorite.RefreshListBox
+    
+    Frm_Favorite.Lst_FavCategory.ListIndex = categoryIndex
+    Frm_Favorite.Lst_Favorite.ListIndex = Frm_Favorite.Lst_Favorite.ListCount - 1
+  
   End If
   
 End Sub
@@ -123,7 +130,7 @@ End Sub
 Private Sub Lst_Favorite_Click()
   Dim DetailMeg As String
   Dim favLine As Long, catLine As Long
-  Dim filePath As String
+  Dim FilePath As String
   
   Dim FSO As Object, fileInfo As Object
   On Error GoTo catchError
@@ -135,15 +142,15 @@ Private Sub Lst_Favorite_Click()
   
   
   
-  filePath = arrFavCategory(catLine, favLine)
+  FilePath = arrFavCategory(catLine, favLine)
   
-  If Library.chkFileExists(filePath) Then
+  If Library.chkFileExists(FilePath) Then
     Set FSO = CreateObject("Scripting.FileSystemObject")
-    Set fileInfo = FSO.GetFile(filePath)
+    Set fileInfo = FSO.GetFile(FilePath)
     
   
     DetailMeg = "<<ファイル情報>>" & vbNewLine
-    DetailMeg = DetailMeg & "パ　ス：" & filePath & vbNewLine
+    DetailMeg = DetailMeg & "パ　ス：" & FilePath & vbNewLine
     DetailMeg = DetailMeg & "作成日：" & Format(fileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
     DetailMeg = DetailMeg & "更新日：" & Format(fileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
     DetailMeg = DetailMeg & "サイズ：" & Library.convscale(fileInfo.Size) & " [" & Format(fileInfo.Size, "#,##0") & " Byte" & "]" & vbNewLine
@@ -166,7 +173,8 @@ End Sub
 '==================================================================================================
 'リストボックス
 Private Sub Lst_Favorite_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-  Dim filePath As String
+  Dim FilePath As String
+  Dim categoryIndex As Variant
   
   If Lst_FavCategory.ListIndex < 0 Then
     Frm_Favorite.DetailMeg.Value = "登録するカテゴリーを選択してください"
@@ -178,10 +186,14 @@ Private Sub Lst_Favorite_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     
     
   Else
-    filePath = Library.getFilePath("C:", "", "お気に入りに追加するファイル", 1)
-    If filePath <> "" Then
-      Call Ctl_Favorite.add(Lst_FavCategory.ListIndex + 1, filePath)
+    FilePath = Library.getFilePath("C:", "", "お気に入りに追加するファイル", 1)
+    If FilePath <> "" Then
+      categoryIndex = Frm_Favorite.Lst_FavCategory.ListIndex
+      Call Ctl_Favorite.追加(Lst_FavCategory.ListIndex + 1, FilePath)
       Call Frm_Favorite.RefreshListBox
+      
+    Frm_Favorite.Lst_FavCategory.ListIndex = categoryIndex
+    Frm_Favorite.Lst_Favorite.ListIndex = Frm_Favorite.Lst_Favorite.ListCount - 1
     End If
   End If
   
@@ -197,7 +209,7 @@ End Sub
 Private Sub Lst_FavCategory_Click()
   Dim DetailMeg As String
   Dim line As Long, y As Long
-  Dim filePath As String
+  Dim FilePath As String
   
   Dim FSO As Object, fileInfo As Object
   On Error GoTo catchError
@@ -274,13 +286,18 @@ End Sub
 Function RefreshListBox()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim line2 As Long, oldEndLine As Long
+  Dim categoryName As String, FilePath As String
   
-  Const funcName As String = "Frm_Favorite.RefreshListBox"
+  Const funcName As String = "Ctl_Favorite.RefreshListBox"
   
+  '処理開始--------------------------------------
+  On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm(funcName, , "start1")
-  
-  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_Favorite.chkDebugMode
+  '----------------------------------------------
   Erase arrFavCategory
   endLine = targetSheet.Cells(Rows.count, 1).End(xlUp).Row
   
@@ -291,46 +308,49 @@ Function RefreshListBox()
   Frm_Favorite.Lst_FavCategory.Clear
   Frm_Favorite.Lst_Favorite.Clear
   
-  'カテゴリーリスト生成
-  If targetSheet.Range("A1") <> "" Then
-    For line = 1 To targetSheet.Cells(Rows.count, 1).End(xlUp).Row
-      Call Library.showDebugForm("Lst_FavCategory", targetSheet.Range("A" & line), "debug")
-      Frm_Favorite.Lst_FavCategory.AddItem targetSheet.Range("A" & line)
-    Next
-  End If
+  endColLine = targetSheet.Cells(1, Columns.count).End(xlToLeft).Column
+  'カテゴリーリスト生成--------------------------
+  For colLine = 1 To endColLine
+    categoryName = targetSheet.Cells(1, colLine)
+    Call Library.showDebugForm("categoryName", categoryName, "debug")
+    
+    Frm_Favorite.Lst_FavCategory.AddItem categoryName
+  Next
   
   
   '配列の要素数確認------------------------------
   endColLine = targetSheet.Cells(1, Columns.count).End(xlToLeft).Column
   oldEndLine = 1
-  
-  For colLine = 2 To endColLine
+
+  For colLine = 1 To endColLine
     endLine = targetSheet.Cells(Rows.count, colLine).End(xlUp).Row
     If oldEndLine < endLine Then
       oldEndLine = endLine
     End If
   Next
   ReDim Preserve arrFavCategory(1 To endColLine, 0 To oldEndLine)
-  
-  For colLine = 2 To endColLine
-    endLine = targetSheet.Cells(Rows.count, colLine).End(xlUp).Row
-    arrFavCategory(colLine - 1, 0) = targetSheet.Range("A" & colLine - 1)
+
+  For colLine = 1 To endColLine
+    arrFavCategory(colLine, 0) = targetSheet.Cells(1, colLine).Value
     
-    For line = 1 To endLine
-      arrFavCategory(colLine - 1, line) = targetSheet.Cells(line, colLine)
-      
-      If colLine = 2 Then
-        Frm_Favorite.Lst_Favorite.AddItem Library.getFileInfo(targetSheet.Cells(line, colLine), , "fileName")
-      End If
+    endLine = targetSheet.Cells(Rows.count, colLine).End(xlUp).Row
+    For line = 2 To endLine
+      arrFavCategory(colLine, line - 1) = targetSheet.Cells(line, colLine).Value
+      Frm_Favorite.Lst_Favorite.AddItem Library.getFileInfo(targetSheet.Cells(line, colLine), , "fileName")
     Next
   Next
-  
+
+  '最後に≪カテゴリー追加≫を追加
   Frm_Favorite.Lst_FavCategory.AddItem addCategoryVal
   
-  
-  
-  Call Library.endScript
-  'ThisWorkbook.Save
-  
-End Function
+  '処理終了--------------------------------------
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end1")
+  Exit Function
+  '----------------------------------------------
 
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

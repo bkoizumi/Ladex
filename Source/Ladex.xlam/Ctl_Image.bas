@@ -17,11 +17,11 @@ Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageNam
   'èàóùäJén--------------------------------------
   If runFlg = False Then
     Call init.setting
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
 '    On Error GoTo catchError
-    Call Library.showDebugForm("" & funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   DisplayGridlineFlg = False

@@ -3,11 +3,10 @@ Option Explicit
 
 #If VBA7 And Win64 Then
   Public Declare PtrSafe Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
+  Private Declare PtrSafe Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As LongPtr) As Long
 #Else
   Public Declare Function GetCursorPos Lib "user32" (lpPoint As POINTAPI) As Long
-  
   Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Long) As Long
-  
 #End If
 
 Dim HighLightColor As String

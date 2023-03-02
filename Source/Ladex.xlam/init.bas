@@ -16,17 +16,20 @@ Public targetRange          As Range
 Public Const thisAppName    As String = "Ladex"
 Public Const thisAppVersion As String = "1.4.4.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
+Public Const thisAppPasswd  As String = "Ladex"
+
 
 Public funcName             As String
-Public resetVal             As String
 Public runFlg               As Boolean
-Public PrgP_Cnt             As Long
-Public PrgP_Max             As Long
+Public G_LogLevel           As Long
 
 Public arrFavCategory()
-Public useStyle()
 Public arrCells()
 
+'プログレスバー関連------------------------------
+Public PrgP_Cnt             As Long
+Public PrgP_Max             As Long
+Public PbarCnt              As Long
 
 
 'レジストリ登録用キー----------------------------
@@ -35,9 +38,11 @@ Public RegistrySubKey       As String
 
 
 '設定値保持--------------------------------------
-Public LadexSetVal          As Object
-Public sampleDataList       As Object
+Public dicVal               As Object
 Public FrmVal               As Object
+Public setIni               As Object
+Public sampleDataList       As Object
+Public resetVal             As String
 
 
 'ファイル/ディレクトリ関連-----------------------
@@ -68,7 +73,8 @@ Public arryHollyday()       As Date
 'ズーム関連--------------------------------------
 Public defaultZoomInVal     As String
 
-
+'お気に入り関連----------------------------------
+Public Const favoriteDebug  As Boolean = True
 
 
 
@@ -79,12 +85,17 @@ Public defaultZoomInVal     As String
 '**************************************************************************************************
 Function unsetting(Optional flg As Boolean = True)
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  
   Const funcName As String = "init.unsetting"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  '----------------------------------------------
 
   Set LadexBook = Nothing
   
   '設定値読み込み
-  Set LadexSetVal = Nothing
+  Set dicVal = Nothing
   Set FrmVal = Nothing
   
   Set targetSheet = Nothing
@@ -98,17 +109,45 @@ Function unsetting(Optional flg As Boolean = True)
   LadexDir = ""
   
   If flg = True Then
-    PrgP_Max = 2
-    PrgP_Cnt = 0
-    runFlg = False
+    Call resetGlobalVal
   End If
   
+  '処理終了--------------------------------------
   Exit Function
+  '----------------------------------------------
+  
 'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
+'==================================================================================================
+Function resetGlobalVal()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  
+  Const funcName As String = "init.resetGlobalVal"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "function")
+  '----------------------------------------------
+
+  PrgP_Max = 2
+  PrgP_Cnt = 0
+  PbarCnt = 1
+  runFlg = False
+  
+  '処理終了--------------------------------------
+  Exit Function
+  '----------------------------------------------
+  
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
 
 '**************************************************************************************************
 ' * 設定
@@ -122,16 +161,10 @@ Function setting(Optional reCheckFlg As Boolean)
   Const funcName As String = "init.setting"
   
   '処理開始--------------------------------------
-  On Error GoTo catchError
-'  ThisWorkbook.Save
-'  If Workbooks.count = 0 Then
-'    Call MsgBox("ブックが開かれていません", vbCritical, thisAppName)
-'    Call Library.endScript
-'    End
-'  End If
+'  On Error GoTo catchError
   '----------------------------------------------
 
-  If LadexDir = "" Or LadexSetVal Is Nothing Or reCheckFlg = True Then
+  If LadexDir = "" Or dicVal Is Nothing Or reCheckFlg = True Then
     Call init.unsetting(False)
   Else
     Exit Function
@@ -143,37 +176,6 @@ Function setting(Optional reCheckFlg As Boolean)
   'ブックの設定
   Set LadexBook = ThisWorkbook
   
-  
-  '設定値読み込み--------------------------------
-  Set LadexSetVal = Nothing
-  Set LadexSetVal = CreateObject("Scripting.Dictionary")
-  
-  endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
-  If endLine = 0 Then
-    endLine = 11
-  End If
-  
-  For line = 3 To endLine
-    If LadexSh_Config.Range("A" & line) <> "" Then
-      LadexSetVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
-    End If
-  Next
-    
-  'ユーザーフォームからの受け取り用--------------
-  Set FrmVal = Nothing
-  Set FrmVal = CreateObject("Scripting.Dictionary")
-  FrmVal.add "commentVal", ""
-  
-  'レジストリ設定項目取得------------------------
-  tmpRegList = GetAllSettings(thisAppName, "Main")
-  For line = 0 To UBound(tmpRegList)
-    LadexSetVal.add tmpRegList(line, 0), tmpRegList(line, 1)
-  Next
-    
-    
-    
-    
-    
   'ログ出力設定----------------------------------
   Dim wsh As Object
   Set wsh = CreateObject("WScript.Shell")
@@ -181,9 +183,51 @@ Function setting(Optional reCheckFlg As Boolean)
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
   
-'  LogLevel = Split(LadexSetVal("LogLevel"), ".")(0)
+  If Library.Bookの状態確認 = True Then
+    '設定値読み込み--------------------------------
+    Set dicVal = Nothing
+    Set dicVal = CreateObject("Scripting.Dictionary")
+    
+    endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
+    If endLine = 0 Then
+      endLine = 11
+    End If
+    
+    For line = 3 To endLine
+      If LadexSh_Config.Range("A" & line) <> "" Then
+        dicVal.add LadexSh_Config.Range("A" & line).Text, LadexSh_Config.Range("B" & line).Text
+      End If
+    Next
+    
+    
+    'ユーザーフォームからの受け取り用--------------
+    Set FrmVal = Nothing
+    Set FrmVal = CreateObject("Scripting.Dictionary")
+    FrmVal.add "commentVal", ""
+    
+    'レジストリ設定項目取得------------------------
+    tmpRegList = GetAllSettings(thisAppName, "Main")
+    For line = 0 To UBound(tmpRegList)
+      dicVal.add tmpRegList(line, 0), tmpRegList(line, 1)
+    Next
+    
+    G_LogLevel = Split(dicVal("LogLevel"), ".")(0)
+    
+  Else
+    Set FrmVal = Nothing
+    Set FrmVal = CreateObject("Scripting.Dictionary")
+    FrmVal.add "LogLevel", "5"
+    G_LogLevel = 5
   
+  End If
+  
+
+  
+  
+  '処理終了--------------------------------------
   Exit Function
+  '----------------------------------------------
+  
   
 'エラー発生時------------------------------------
 catchError:
@@ -233,20 +277,19 @@ catchError:
 End Function
 
 '==================================================================================================
-Function resetLadexSetVal()
-
+Function resetsetVal()
   Dim line As Long, endLine As Long
   Dim tmpRegList
   
-  Const funcName As String = "init.LadexSetVal"
+  Const funcName As String = "init.resetsetVal"
   
   '処理開始--------------------------------------
   On Error GoTo catchError
   '----------------------------------------------
   
   '設定値読み込み--------------------------------
-  Set LadexSetVal = Nothing
-  Set LadexSetVal = CreateObject("Scripting.Dictionary")
+  Set dicVal = Nothing
+  Set dicVal = CreateObject("Scripting.Dictionary")
   
   endLine = LadexSh_Config.Cells(Rows.count, 1).End(xlUp).Row
   If endLine = 0 Then
@@ -256,7 +299,7 @@ Function resetLadexSetVal()
   'レジストリ設定項目取得------------------------
   tmpRegList = GetAllSettings(thisAppName, "Main")
   For line = 0 To UBound(tmpRegList)
-    LadexSetVal.add tmpRegList(line, 0), tmpRegList(line, 1)
+    dicVal.add tmpRegList(line, 0), tmpRegList(line, 1)
   Next
     
   Exit Function

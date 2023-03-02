@@ -2,8 +2,11 @@ Attribute VB_Name = "Main"
 Option Explicit
 
 'ワークブック用変数------------------------------
-'ワークシート用変数------------------------------
+''ワークシート用変数------------------------------
 'グローバル変数----------------------------------
+
+
+
 
 
 '**************************************************************************************************
@@ -167,41 +170,6 @@ Function 画像設定()
 End Function
 
 
-'**************************************************************************************************
-' * ハイライト
-' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
-'**************************************************************************************************
-Function ハイライト()
-'  Dim highLightFlg As String
-'  Dim highLightArea As String
-'
-'  Call Library.startScript
-'  highLightFlg = Library.getRegistry(ActiveWorkbook.Name, "HighLightFlg")
-'
-'  If highLightFlg = "" Then
-'    Call Library.setLineColor(Selection.Address, True, Library.getRegistry("HighLightColor"))
-'
-'    Call Library.setRegistry(ActiveWorkbook.Name, True, "HighLightFlg")
-'    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightSheet", ActiveSheet.Name, "HighLightFlg")
-'    Call Library.setRegistry(ActiveWorkbook.Name & "_HighLightArea", Selection.Address, "HighLightFlg")
-'
-'  Else
-'    highLightArea = Library.getRegistry(ActiveWorkbook.Name & "_HighLightArea")
-'
-'    If highLightArea = "" Then
-'      highLightArea = Selection.Address
-'    End If
-'    Call Library.unsetLineColor(highLightArea)
-'
-'    Call Library.delRegistry(ActiveWorkbook.Name, "HighLightFlg")
-'    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightSheet")
-'    Call Library.delRegistry(ActiveWorkbook.Name & "_HighLightArea")
-'  End If
-'
-'  Call Library.endScript(True)
-
-End Function
 
 
 '**************************************************************************************************

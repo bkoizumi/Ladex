@@ -37,40 +37,40 @@ Private Sub UserForm_Initialize()
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Width) / 2)
   
   '文字数
-  If LadexSetVal("MKPW_PWLen") = "" Then
+  If dicVal("MKPW_PWLen") = "" Then
      PWLen.Value = 12
   Else
-    PWLen.Value = CInt(LadexSetVal("MKPW_PWLen"))
+    PWLen.Value = CInt(dicVal("MKPW_PWLen"))
   End If
   
   
   'a-z
-  If LadexSetVal("MKPW_LowerCaseFlg") = "True" Then
+  If dicVal("MKPW_LowerCaseFlg") = "True" Then
     LowerCaseFlg.Value = True
   End If
   
   'A-Z
-  If LadexSetVal("MKPW_UpperCaseFlg") = "True" Then
+  If dicVal("MKPW_UpperCaseFlg") = "True" Then
     UpperCaseFlg.Value = True
   End If
   
   '0-9
-  If LadexSetVal("MKPW_NumberFlg") = "True" Then
+  If dicVal("MKPW_NumberFlg") = "True" Then
     NumberFlg.Value = True
   End If
   
   '記号
-  If LadexSetVal("MKPW_SymbolVal") = "" Then
-    LadexSetVal("MKPW_SymbolVal") = "!@#$%&"
+  If dicVal("MKPW_SymbolVal") = "" Then
+    dicVal("MKPW_SymbolVal") = "!@#$%&"
   End If
-  If LadexSetVal("MKPW_SymbolFlg") = "True" Then
+  If dicVal("MKPW_SymbolFlg") = "True" Then
     SymbolVal.Enabled = True
   Else
     SymbolVal.Enabled = False
   End If
   
   'オプション
-  If LadexSetVal("MKPW_OptionsFlg") = "True" Then
+  If dicVal("MKPW_OptionsFlg") = "True" Then
     OptionsFlg.Value = True
   End If
 

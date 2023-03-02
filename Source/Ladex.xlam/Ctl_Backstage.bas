@@ -1,4 +1,5 @@
 Attribute VB_Name = "Ctl_Backstage"
+'==================================================================================================
 Public Sub setLisence01(control As IRibbonControl, ByRef Screentip)
   Dim strBuf As String
   
@@ -23,6 +24,9 @@ Public Sub setLisence01(control As IRibbonControl, ByRef Screentip)
   Screentip = strBuf
 
 End Sub
+
+
+'==================================================================================================
 Public Sub setLisence02(control As IRibbonControl, ByRef Screentip)
   Dim strBuf As String
   
@@ -38,6 +42,8 @@ Public Sub setLisence02(control As IRibbonControl, ByRef Screentip)
 
 End Sub
 
+
+'==================================================================================================
 Public Sub setCopyright01(control As IRibbonControl, ByRef Screentip)
   Dim strBuf As String
   
