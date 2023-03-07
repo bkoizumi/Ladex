@@ -2382,8 +2382,8 @@ Function outputLog(runTime As String, message As String)
 
 '  On Error GoTo catchError
   If logFile = "" Then
-    Debug.Print "ログファイルが設定されていません"
-    Stop
+    Debug.Print runTime & vbTab & "[Error] ログファイルが設定されていません"
+    'Stop
     Exit Function
   
   ElseIf chkFileExists(logFile) Then

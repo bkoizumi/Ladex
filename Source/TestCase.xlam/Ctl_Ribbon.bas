@@ -19,7 +19,7 @@ Function onLoad(ribbon As IRibbonUI)
   
   'リボンの表示を更新する
   ribbonUI.Invalidate
-  ribbonUI.ActivateTab "TestCaseTab"
+'  ribbonUI.ActivateTab "TestCaseTab"
 
 End Function
 

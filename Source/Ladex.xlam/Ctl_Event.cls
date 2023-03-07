@@ -225,7 +225,13 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   If Me.StopEvent Then Exit Sub
   If Not CheckBook(wb) Then Exit Sub
 
+  '処理開始--------------------------------------
   Call init.setting
+  Call Library.showDebugForm(funcName, , "start")
+  Call Library.startScript
+  '----------------------------------------------
+  macroPath = ""
+  
   If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
     If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
       macroPath = "\WBS.xlam"
@@ -245,7 +251,6 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   If macroPath <> "" Then
     runFlg = True
     Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
     Call Library.showDebugForm("macroPath", macroPath, "debug")
     
     Workbooks(macroPath).Close
@@ -254,11 +259,17 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   End If
   
   
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Call Library.showDebugForm(funcName, , "end")
+  Call init.resetGlobalVal
   Exit Sub
-  
-'エラー発生時------------------------------------
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
 
 

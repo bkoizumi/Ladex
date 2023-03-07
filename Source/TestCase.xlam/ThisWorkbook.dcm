@@ -7,17 +7,16 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-Private Ctl_Event As New Ctl_Event
 
 
 
 '==================================================================================================
 Private Sub Workbook_Open()
 
-  ThisWorkbook.Activate
-  Set Ctl_Event = New Ctl_Event
-  Set Ctl_Event.ExcelApplication = Application
-  Call Ctl_Event.InitializeBookSheets
+'  ThisWorkbook.Activate
+'  Set Ctl_Event = New Ctl_Event
+'  Set Ctl_Event.ExcelApplication = Application
+'  Call Ctl_Event.InitializeBookSheets
   
   'イベント発生再開
 '  clsEvent.StopEvent = False

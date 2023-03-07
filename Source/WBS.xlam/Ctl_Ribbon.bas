@@ -19,7 +19,7 @@ Function onLoad(ribbon As IRibbonUI)
   
   'リボンの表示を更新する
   ribbonUI.Invalidate
-  ribbonUI.ActivateTab "WBSTab"
+'  ribbonUI.ActivateTab "WBSTab"
 
 End Function
 
@@ -35,10 +35,8 @@ Sub getPressed(control As IRibbonControl, ByRef returnedVal)
       Else
         returnedVal = False
       End If
-      
-      
-      
     Case Else
+  
   End Select
 End Sub
 
@@ -167,6 +165,7 @@ Function Ctl_Function(control As IRibbonControl)
       
     Case "chkTaskList"
       Call Ctl_Task.タスクチェック
+      Range("A" & startLine).Select
       
       '濱さん作成VBAの呼び出し
       Application.run "'" & ActiveWorkbook.path & "\" & ActiveWorkbook.Name & "'!sheet5.CommandButton7_Click"
