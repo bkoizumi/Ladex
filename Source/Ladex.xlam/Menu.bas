@@ -95,7 +95,7 @@ Sub ladex_シート管理_フォーム表示(Optional control As IRibbonControl)
 End Sub
 
 Sub ladex_文頭文末のスペース削除()
-  Call Ctl_Cells.Trim01
+  Call Ctl_Cells.前後のスペース削除
 End Sub
 
 Sub ladex_中黒点付与()

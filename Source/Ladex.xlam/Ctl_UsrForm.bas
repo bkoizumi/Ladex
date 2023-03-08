@@ -1,7 +1,6 @@
 Attribute VB_Name = "Ctl_UsrForm"
 Option Explicit
-
-
+ 
 Private Const GWL_STYLE = -16
 Private Const WS_MAXIMIZEBOX = &H10000
 Private Const WS_MINIMIZEBOX = &H20000
@@ -15,7 +14,7 @@ Private Const WS_THICKFRAME = &H40000
   
   Dim hwnd As LongPtr
   Dim rc As LongPtr
-  
+
 #Else
   Declare Function GetActiveWindow Lib "user32" () As Long
   Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA"(ByVal hwnd As Long, ByVal nIndex As Long) As Long
@@ -26,7 +25,6 @@ Private Const WS_THICKFRAME = &H40000
   Dim rc As Long
     
 #End If
-
 '**************************************************************************************************
 ' * ƒTƒCƒY‚ð‰Â•Ï‰»‚·‚é
 ' *

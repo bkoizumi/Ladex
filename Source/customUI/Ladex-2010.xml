@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui"  xmlns:nsShared="rbnShared" onLoad="Ladex.xlam!Ctl_Ribbon.onLoad">
-   <ribbon startFromScratch="false">
- <tabs>
+  <ribbon startFromScratch="false">
+  <tabs>
       <tab idMso="TabView">
         <group id="dispGroup" label="Ladexタブ表示">
           <checkBox id="Ladex"  label="Ladex"  onAction="Ladex.xlam!Ctl_Ribbon.setDispTab" getPressed="Ladex.xlam!Ctl_Ribbon.getDispTab" supertip="Ladexタブの表示/非表示を切り替えます"  />
@@ -11,77 +11,78 @@
 
     <tab label="Ladex" insertBeforeMso="TabHome" getVisible="Ladex.xlam!Ctl_Ribbon.getVisible" idQ="nsShared:Ladex" >
     <group  id="カスタマイズ" label="カスタマイズ">
-
       <splitButton id="SB_Option" size="large">
         <button id="Option" label="Option" imageMso="CurrentViewSettings" screentip="オプション設定" supertip="オプション画面を表示"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
-        <menu id="OptionMenu" screentip="オプション設定メニュー"  supertip="オプション設定メニュー" itemSize="normal">
 
+        <menu id="OptionMenu" screentip="オプション設定メニュー"  supertip="オプション設定メニュー" itemSize="normal">
           <menu id="スタイル設定_Menu" label="スタイル設定"  itemSize="normal" imageMso="AppointmentColorDialog">
-            <menuSeparator id="MS_スタイル設定" title="スタイル設定" />
+            <menuSeparator id="カスタマイズ_MS01" title="スタイル設定" />
             <button id="スタイル出力"  label="スタイル出力"  imageMso="ExportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="Export" />
             <button id="スタイル取込"  label="スタイル取込"  imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="Import" />
           </menu>
 
           <menu id="メンテナンス用_Menu" label="メンテナンス用"  itemSize="normal" imageMso="CurrentViewSettings">
-            <menuSeparator id="MS_Maintenance" title="メンテナンス用" />
+            <menuSeparator id="カスタマイズ_MS02" title="メンテナンス用" />
             <button id="OptionSheetList_Refresh"  label="リボン更新"    imageMso="DataRefreshAll"     onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" supertip="リボン更新"  />
             <button id="OptionAddin解除"                label="Addin解除"   imageMso="ImportMoreMenu" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" supertip="Addin化を解除し、通常Bookとしてメンテナンスする" />
           </menu>
 
-          <menuSeparator id="MS_Help" title="Help" />
+          <menuSeparator id="カスタマイズ_MS03" title="Help" />
           <button id="Help"     label="Help"    imageMso="Help" screentip="Helpを表示"  supertip="Helpを表示"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
           <button id="Version"  label="Version" imageMso="Help" screentip="Version情報" supertip="Version情報"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
 
-          <menuSeparator id="MS_initialization" title="初期化" />
+          <menuSeparator id="カスタマイズ_MS04" title="初期化" />
           <button id="初期化" label="初期化" imageMso="Undo" screentip="初期化" supertip="初期化" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
         </menu>
       </splitButton>
-
 
       <splitButton id="SB_Favorite" size="large">
         <button id="Favorite_detail" label="お気に入り&#xD;&#xA;" imageMso="Favorites" screentip="お気に入り" supertip="お気に入り登録リスト表示" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
           <menu id="Favorite_Menu" screentip="お気に入りメニュー"  supertip="お気に入りメニュー表示" itemSize="large">
             <menuSeparator id="Favorite_SP1" title="お気に入り" />
-            <dynamicMenu  id="お気に入り追加"  label="お気に入りに追加"    imageMso="AddToFavorites"  invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.FavoritesToAdd" />
-            <dynamicMenu  id="お気に入り一覧"  label="お気に入り一覧"    imageMso="Favorites"  invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.FavoriteMenu" />
+            <dynamicMenu  id="お気に入り追加"  label="お気に入りに追加" imageMso="AddToFavorites" invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.FavoritesToAdd" />
+            <dynamicMenu  id="お気に入り一覧"  label="お気に入り一覧"   imageMso="Favorites"      invalidateContentOnDrop="true"  getContent="Ladex.xlam!Ctl_Ribbon.FavoriteMenu" />
           </menu>
       </splitButton>
 
       <separator id="Sprt01" />
 
       <menu id="ブック管理Menu" label="ブック管理"  itemSize="large" imageMso="MicrosoftExcel">
-        <menuSeparator id="スタイル設定_MS01" title="スタイル設定" />
+        <menuSeparator id="ブック管理_MS01" title="スタイル設定" />
         <menu id="スタイル設定Menu" label="スタイル設定"  itemSize="large" imageMso="AppointmentColorDialog">
-          <menuSeparator id="スタイル設定_MS02" title="スタイル設定" />
+          <menuSeparator id="ブック管理_MS01sub1" title="スタイル設定" />
           <button id="resetStyle" label="初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの初期化&#13;"  supertip="新規Book作成時の状態にします。&#13;ただし、利用中のスタイルは削除しません" />
-          <button id="delStyle"    label="削除"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの削除&#13;"    supertip="設定中のスタイルを削除します。&#13;ただし、利用中のスタイルは削除しません" />
-          <button id="setStyle"    label="設定"   imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの設定&#13;"    supertip="設定中のスタイルを削除後、スタイル情報.xlsxで設定したスタイルを適応します。&#13;ただし、利用中のスタイルは削除しません" />
+          <button id="delStyle"   label="削除"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの削除&#13;"    supertip="設定中のスタイルを削除します。&#13;ただし、利用中のスタイルは削除しません" />
+          <button id="setStyle"   label="設定"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの設定&#13;"    supertip="設定中のスタイルを削除後、スタイル情報.xlsxで設定したスタイルを適応します。&#13;ただし、利用中のスタイルは削除しません" />
         </menu>
-        <menuSeparator id="削除" title="設定を削除" />
+        <menuSeparator id="ブック管理_MS02" title="設定を削除" />
         <button id="del_CellNames"  label="名前定義削除"  image="del_CellNames" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="名前定義を削除&#13;"  supertip="設定されている名前の定義をすべて削除します" />
+
+        <menuSeparator id="ブック管理_MS03" title="A1セルへ移動" />
+        <menu id="全シートA1セルへ移動_Menu" label="A1セルへ移動"  itemSize="large" image="dspDefaultCellSelect">
+          <menuSeparator id="ブック管理_MS03sub1" title="A1セルへ移動" />
+          <button id="全シートA1セルへ移動"       label="全シートA1セルへ移動"        imageMso="BlogHomePage"                     onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させます&#13;"       supertip="全シートのセルの選択位置をA1へ移動させます" />
+          <button id="全シートA1セルへ移動_保存"  label="全シートA1セルへ移動＆保存"  image="dspDefaultCellSelectAllSheet2Save"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させ保存します&#13;" supertip="全シートのセルの選択位置をA1へ移動させ保存します" />
+        </menu>
       </menu>
 
       <menu id="シート管理_Menu" label="シート管理"  itemSize="large" imageMso="HeaderFooterSheetNameInsert">
-        <menuSeparator id="シート管理_sheet" title="シート管理" />
-        <button id="シート一覧取得"   label="シート一覧取得"    imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="シート名のコピー用に表示&#13;"             supertip="シート名のコピーを行いやすく一覧に表示します" />
-        <button id="シート管理"         label="シート管理"          imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="シートの名前変更などの処理をします&#13;"   supertip="名前の変更、表示。非表示の切替、移動等を行います" />
-        <button id="連続シート追加"   label="連続シート追加"    imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="複数シートの新規作成&#13;"                 supertip="複数のシートを新規作成します&#13;コピー元のシートを指定することも可能です" />
+        <menuSeparator id="シート管理_MS01" title="シート管理" />
+        <button id="シート一覧取得" label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="シート名のコピー用に表示&#13;"             supertip="シート名のコピーを行いやすく一覧に表示します" />
+        <button id="シート管理"     label="シート管理"      imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="シートの名前変更などの処理をします&#13;"   supertip="名前の変更、表示。非表示の切替、移動等を行います" />
+        <button id="連続シート追加" label="連続シート追加"  imageMso="HeaderFooterSheetNameInsert" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="複数シートの新規作成&#13;"                 supertip="複数のシートを新規作成します&#13;コピー元のシートを指定することも可能です" />
 
-        <menuSeparator id="A1セルへ移動_ms" title="A1セルへ移動" />
+        <menuSeparator id="シート管理_MS02" title="A1セルへ移動" />
         <menu id="A1セルへ移動_Menu" label="A1セルへ移動"  itemSize="large" image="dspDefaultCellSelect">
-          <menuSeparator id="A1セルへ移動_sheet" title="アクティブシートのみを対象とした処理" />
-          <button id="セル選択"       label="A1セルへ移動"        image="dspDefaultCellSelect"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="セルの選択位置をA1へ移動させます&#13;"         supertip="セルの選択位置をA1へ移動させます" />
-          <button id="セル選択_保存"  label="A1セルへ移動＆保存"  image="dspDefaultCellSelect2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="セルの選択位置をA1へ移動させ保存します&#13;"   supertip="セルの選択位置をA1へ移動させ保存します" />
+          <menuSeparator id="シート管理_MS02sub1" title="アクティブシートのみを対象とした処理" />
+          <button id="セル移動"       label="A1セルへ移動"        image="dspDefaultCellSelect"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="セルの選択位置をA1へ移動させます&#13;"         supertip="セルの選択位置をA1へ移動させます" />
+          <button id="セル移動_保存"  label="A1セルへ移動＆保存"  image="dspDefaultCellSelect2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="セルの選択位置をA1へ移動させ保存します&#13;"   supertip="セルの選択位置をA1へ移動させ保存します" />
           <button id="全セル表示"     label="全セル表示"          imageMso="ViewNormalViewExcel"    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="非表示となっている行・列を表示にします&#13;"   supertip="非表示となっている行・列を表示にします" />
-
-          <menuSeparator id="シート管理_Book" title="アクティブブックを対象とした処理" />
-          <button id="セルとシート選択"   label="全シートA1セルへ移動"        image="dspDefaultCellSelectAllSheet"        onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させます&#13;"       supertip="全シートのセルの選択位置をA1へ移動させます" />
-          <button id="セルとシート_保存"  label="全シートA1セルへ移動＆保存"  image="dspDefaultCellSelectAllSheet2Save"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させ保存します&#13;" supertip="全シートのセルの選択位置をA1へ移動させ保存します" />
         </menu>
 
-        <menuSeparator id="削除_ms" title="削除" />
+        <menuSeparator id="シート管理_MS03" title="削除" />
         <menu id="削除_Menu" label="削除"  itemSize="large" imageMso="ClearNotesProject">
-          <menuSeparator id="削除_MS" title="シート全体の削除" />
+          <menuSeparator id="シート管理_MS03sub1" title="シート全体の削除" />
           <button id="不要データ削除"   label="不要データ削除"    imageMso="Clear"    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="データの存在しないセルを削除&#13;"  />
         </menu>
 
@@ -103,8 +104,8 @@
       <menu id="その他管理_Menu" label="その他管理"  itemSize="large" imageMso="HappyFace">
         <menuSeparator id="その他管理_ファイル" title="ファイル・フォルダ" />
         <menu id="ファイル管理_Menu" label="ファイル管理"  itemSize="large" imageMso="CloseWeb">
-          <button id="ファイル管理_情報取得"    label="ファイル情報取得"  imageMso="AddTextToTextEffect"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="ファイル情報を取得します&#13;"  />
-          <button id="ファイル管理_フォルダ生成"  label="フォルダ生成"    imageMso="AddTextToTextEffect"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォルダ生成します&#13;"  />
+          <button id="ファイル管理_情報取得"      label="ファイル情報取得"  imageMso="AddTextToTextEffect"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="ファイル情報を取得します&#13;"  />
+          <button id="ファイル管理_フォルダ生成"  label="フォルダ生成"      imageMso="AddTextToTextEffect"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォルダ生成します&#13;"  />
         </menu>
         <menuSeparator id="ファイル管理_画像" title="画像貼付け" />
         <button id="ファイル管理_画像貼付け"  label="一括画像貼付け"  imageMso="PasteAsPicture"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="複数の画像を一括で画像貼付けま&#13;す"  />
@@ -138,8 +139,8 @@
         <toggleButton id="ZoomIn"         label="ズーム"      imageMso="ZoomIn"  onAction="Ladex.xlam!Ctl_Ribbon.Zoom"    getPressed="Ladex.xlam!Ctl_Ribbon.ZoomInPressed"     screentip="ズーム"   supertip="セルのダブルクリックで、別画面で編集できるように &#13;F2キーにも対応" />
           <menu id="ZoomIn_Menu"  screentip="ズームメニュー"  supertip="ズームメニュー" itemSize="large">
             <menuSeparator id="ZoomIn_SP1" title="ズーム" />
-            <button id="全画面表示"   label="全画面表示"  imageMso="ZoomFitToWindowVisio" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="画面を最大化します。 &#13; Escキーで元に戻ります&#13;"  supertip="画面を最大化します。 &#13; Escキーで元に戻ります&#13;" />
-            <button id="指定倍率"      label="指定倍率"     imageMso="ZoomToContents"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="指定倍率に変更&#13;"  supertip="指定倍率に変更&#13;" />
+            <button id="全画面表示" label="全画面表示"  imageMso="ZoomFitToWindowVisio" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="画面を最大化します。 &#13; Escキーで元に戻ります&#13;" supertip="画面を最大化します。 &#13; Escキーで元に戻ります&#13;" />
+            <button id="指定倍率"   label="指定倍率"    imageMso="ZoomToContents"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="指定倍率に変更&#13;"                                   supertip="指定倍率に変更&#13;" />
           </menu>
       </splitButton>
 

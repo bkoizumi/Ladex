@@ -193,7 +193,7 @@ End Function
 
 
 'ランダムな1文字を取得-----------------------------------------------------------------------------
-Function RandomCharPicker(source, Optional passWordVal As String)
+Function RandomCharPicker(Source, Optional passWordVal As String)
   Dim location As String
   Dim pickVal As String
   Dim n As Integer, reRunCnt As Integer
@@ -201,8 +201,8 @@ Function RandomCharPicker(source, Optional passWordVal As String)
   reRunCnt = 0
 LBL_restart:
   Randomize
-  n = Int((Len(source) - 1 + 1) * Rnd + 1)
-  pickVal = Mid(source, n, 1)
+  n = Int((Len(Source) - 1 + 1) * Rnd + 1)
+  pickVal = Mid(Source, n, 1)
   
   If InStr(passWordVal, pickVal) = 0 Then
     RandomCharPicker = pickVal
@@ -218,13 +218,13 @@ LBL_restart:
 End Function
 
 '文字列をシャッフル--------------------------------------------------------------------------------
-Function ShuffleString(source)
+Function ShuffleString(Source)
   Dim c As Collection: Set c = New Collection
   Dim i As Long
   
   'まず1文字ずつコレクションに格納していく
-  For i = 1 To Len(source)
-    c.add Mid(source, i, 1)
+  For i = 1 To Len(Source)
+    c.add Mid(Source, i, 1)
   Next
   
   'コレクションが空になるまで、ランダムに取り出す。
