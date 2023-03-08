@@ -15,7 +15,7 @@ Option Explicit
   Private Declare PtrSafe Function Sleep Lib "kernel32" (ByVal ms As LongPtr)
 
   'クリップボード関連
-  Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hWnd As LongPtr) As Long
+  Private Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As LongPtr) As Long
   Private Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
   Private Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
 
@@ -2196,10 +2196,10 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
       LogLevel = 0
       
     Case "start1"
-      meg1 = Library.convFixedLength("  " & meg1 & " ", 60, "-")
+      meg1 = Library.convFixedLength("  " & meg1 & " ", 62, "-")
       LogLevel = 0
     Case "end1"
-      meg1 = Library.convFixedLength("  ", 60, "-")
+      meg1 = Library.convFixedLength("  ", 62, "-")
       LogLevel = 0
       
     
@@ -4701,11 +4701,7 @@ Function Bookの状態確認() As Boolean
   
   '処理開始--------------------------------------
   On Error Resume Next
-  If runFlg = False Then
-    Call Library.showDebugForm(funcName, , "start")
-  Else
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
+  Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
@@ -4720,19 +4716,10 @@ Function Bookの状態確認() As Boolean
     retFlg = True
   End If
   
-
-
-
   '処理終了--------------------------------------
-  If runFlg = False Then
-    Call Library.showDebugForm("retFlg", retFlg, "debug")
-    Call Library.showDebugForm(funcName, , "end")
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-    Bookの状態確認 = retFlg
-  End If
-  
-  
+  Call Library.showDebugForm("retFlg", retFlg, "debug")
+  Call Library.showDebugForm(funcName, , "end1")
+  Bookの状態確認 = retFlg
   Exit Function
   '----------------------------------------------
   

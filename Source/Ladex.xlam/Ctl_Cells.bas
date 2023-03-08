@@ -58,6 +58,153 @@ catchError:
   Call Library.errorHandle
 End Function
 
+'==================================================================================================
+Function セル幅調整()
+  Dim colLine As Long, endColLine As Long
+  Dim slctStartColLine As Long, slctEndColLine As Long, useEndColLine As Long
+  Dim colName As String
+  Dim slctCells As Range
+  
+  Const funcName As String = "Ctl_Cells.セル幅調整"
+  Const maxColumnWidth As Integer = 60
+  
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  useEndColLine = Selection.SpecialCells(xlLastCell).Column
+  
+  '選択範囲がある場合----------------------------
+  If Selection.CountLarge > 1 Then
+    Call Library.showDebugForm("選択範囲あり", , "debug")
+    
+    Selection.EntireColumn.AutoFit
+  
+    slctStartColLine = Selection.Column
+    slctEndColLine = Selection.Column + Selection.Columns.count
+  
+  '選択範囲がない場合----------------------------
+  Else
+    Call Library.showDebugForm("選択範囲なし", , "debug")
+    Cells.EntireColumn.AutoFit
+  
+    slctStartColLine = 1
+    slctEndColLine = useEndColLine
+  
+  End If
+  
+  '最大幅確認------------------------------------
+  For colLine = slctStartColLine To slctEndColLine
+    colName = Library.getColumnName(colLine)
+    Call Library.showDebugForm("最大幅確認", colName, "debug")
+    
+    
+    If Cells(1, colLine).ColumnWidth > maxColumnWidth Then
+      Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
+    Else
+      Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0) + 1
+    End If
+  Next
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function セル高さ調整()
+  Dim line As Long, startLine As Long, endLine As Long
+  Dim SelectionCell As Range
+  
+  Const funcName As String = "Ctl_Cells.セル高さ調整"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Cells.EntireRow.AutoFit
+  
+  If Selection.Rows.count <= 1 Then
+    startLine = 1
+    endLine = Range("A1").SpecialCells(xlLastCell).Row
+  Else
+    startLine = SelectionCell.Row
+    endLine = Range("A1").SpecialCells(xlLastCell).Row
+  End If
+  Selection.EntireRow.AutoFit
+  
+  
+  For line = startLine To endLine
+    Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, line, endLine, "高さ設定")
+    
+    If Rows(line & ":" & line).Hidden = False Then
+      If Rows(line & ":" & line).Height < Int(dicVal("rowHeight")) Then
+        Rows(line & ":" & line).rowHeight = dicVal("rowHeight")
+      
+      ElseIf Rows(line & ":" & line).Height > 200 Then
+        Rows(line & ":" & line).rowHeight = 200
+      End If
+    End If
+  Next
+  
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
 
 
@@ -918,153 +1065,6 @@ catchError:
 End Function
 
 
-'==================================================================================================
-Function セル幅調整()
-  Dim colLine As Long, endColLine As Long
-  Dim slctStartColLine As Long, slctEndColLine As Long, useEndColLine As Long
-  Dim colName As String
-  Dim slctCells As Range
-  
-  Const funcName As String = "Ctl_Cells.セル幅調整"
-  Const maxColumnWidth As Integer = 60
-  
-  
-  '処理開始--------------------------------------
-  Call init.setting
-  If runFlg = False Then
-    Call Library.showDebugForm(funcName, , "start")
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
-  Call Library.startScript
-  Call Ctl_ProgressBar.showStart
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  
-  useEndColLine = Selection.SpecialCells(xlLastCell).Column
-  
-  '選択範囲がある場合----------------------------
-  If Selection.CountLarge > 1 Then
-    Call Library.showDebugForm("選択範囲あり", , "debug")
-    
-    Selection.EntireColumn.AutoFit
-  
-    slctStartColLine = Selection.Column
-    slctEndColLine = Selection.Column + Selection.Columns.count
-  
-  '選択範囲がない場合----------------------------
-  Else
-    Call Library.showDebugForm("選択範囲なし", , "debug")
-    Cells.EntireColumn.AutoFit
-  
-    slctStartColLine = 1
-    slctEndColLine = useEndColLine
-  
-  End If
-  
-  '最大幅確認------------------------------------
-  For colLine = slctStartColLine To slctEndColLine
-    colName = Library.getColumnName(colLine)
-    Call Library.showDebugForm("最大幅確認", colName, "debug")
-    
-    
-    If Cells(1, colLine).ColumnWidth > maxColumnWidth Then
-      Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
-    Else
-      Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0) + 1
-    End If
-  Next
-  
-  '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.resetGlobalVal
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-  End If
-  Exit Function
-  '----------------------------------------------
-
-  'エラー発生時------------------------------------------------------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
-
-
-'==================================================================================================
-Function セル高さ調整()
-  Dim line As Long, startLine As Long, endLine As Long
-  Dim SelectionCell As Range
-  
-  Const funcName As String = "Ctl_Cells.セル高さ調整"
-  
-  '処理開始--------------------------------------
-  Call init.setting
-  If runFlg = False Then
-    Call Library.showDebugForm(funcName, , "start")
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
-  Call Library.startScript
-  Call Ctl_ProgressBar.showStart
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  
-  Cells.EntireRow.AutoFit
-  
-  If Selection.Rows.count <= 1 Then
-    startLine = 1
-    endLine = Range("A1").SpecialCells(xlLastCell).Row
-  Else
-    startLine = SelectionCell.Row
-    endLine = Range("A1").SpecialCells(xlLastCell).Row
-  End If
-  Selection.EntireRow.AutoFit
-  
-  
-  For line = startLine To endLine
-    Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, line, endLine, "高さ設定")
-    
-    If Rows(line & ":" & line).Hidden = False Then
-      If Rows(line & ":" & line).Height < Int(dicVal("rowHeight")) Then
-        Rows(line & ":" & line).rowHeight = dicVal("rowHeight")
-      
-      ElseIf Rows(line & ":" & line).Height > 200 Then
-        Rows(line & ":" & line).rowHeight = 200
-      End If
-    End If
-  Next
-  
-  
-  
-  '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.resetGlobalVal
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-  End If
-  Exit Function
-  '----------------------------------------------
-
-  'エラー発生時------------------------------------------------------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
 
 
 '==================================================================================================

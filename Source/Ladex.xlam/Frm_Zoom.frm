@@ -16,6 +16,36 @@ Attribute VB_Exposed = False
 Option Explicit
 
 '==================================================================================================
+Private Sub UserForm_Activate()
+ 
+    Call Ctl_UsrForm.ResizeForm
+    
+End Sub
+
+
+'==================================================================================================
+Private Sub UserForm_Resize()
+  Dim setWidth As Long, setHeight As Long
+  
+  If Width > 100 Then
+    TextBox.Width = Me.Width - 40
+    
+  End If
+  
+  If Height > 100 Then
+    TextBox.Height = Me.Height - 100
+    
+    Label1.Top = Me.Height - 75
+    Label2.Top = Me.Height - 60
+    OK_Button.Top = Me.Height - 75
+    CancelButton.Top = Me.Height - 75
+  End If
+  
+End Sub
+
+
+
+'==================================================================================================
 Private Sub UserForm_Initialize()
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
@@ -41,3 +71,4 @@ Private Sub TextBox_Change()
   Call init.setting
   Label2.Caption = "“ü—Í•¶š”F" & Library.getLength(TextBox.Value, "•¶š”")
 End Sub
+
