@@ -13,10 +13,10 @@ Attribute VB_Exposed = True
 '==================================================================================================
 Private Sub Workbook_Open()
 
-  ThisWorkbook.Activate
-  Set Ctl_Event = New Ctl_Event
-  Set Ctl_Event.ExcelApplication = Application
-  Call Ctl_Event.InitializeBookSheets
+'  ThisWorkbook.Activate
+'  Set Ctl_Event = New Ctl_Event
+'  Set Ctl_Event.ExcelApplication = Application
+'  Call Ctl_Event.InitializeBookSheets
   
   'イベント発生再開
 '  clsEvent.StopEvent = False

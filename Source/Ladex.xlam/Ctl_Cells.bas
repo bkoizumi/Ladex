@@ -7,6 +7,62 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
+Function セル高さ固定設定(setRowHeight As Integer)
+  Dim line As Long, startLine As Long, endLine As Long
+  Dim SelectionCell As Range
+  
+  Const funcName As String = "Ctl_Cells.セル高さ固定設定"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg      ", runFlg, "debug")
+  Call Library.showDebugForm("setRowHeight", setRowHeight, "debug")
+
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  startLine = Selection(1).Row
+  endLine = Selection(Selection.count)
+  If endLine = 0 Then
+    endLine = startLine
+  End If
+  Rows(startLine & ":" & endLine).rowHeight = setRowHeight
+  
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+
+
+
+'==================================================================================================
 Function 前後のスペース削除()
   Dim slctCells As Range
   
@@ -32,7 +88,6 @@ Function 前後のスペース削除()
     Call Ctl_ProgressBar.showCount(funcName, PrgP_Cnt, PrgP_Max, PbarCnt, Selection.count, slctCells.Text)
     
     slctCells.Value = Trim(slctCells.Text)
-    DoEvents
   Next
 
   '処理終了--------------------------------------
@@ -945,6 +1000,9 @@ End Function
 
 '==================================================================================================
 Function セル高さ調整()
+  Dim line As Long, startLine As Long, endLine As Long
+  Dim SelectionCell As Range
+  
   Const funcName As String = "Ctl_Cells.セル高さ調整"
   
   '処理開始--------------------------------------
@@ -964,6 +1022,31 @@ Function セル高さ調整()
   '----------------------------------------------
   
   Cells.EntireRow.AutoFit
+  
+  If Selection.Rows.count <= 1 Then
+    startLine = 1
+    endLine = Range("A1").SpecialCells(xlLastCell).Row
+  Else
+    startLine = SelectionCell.Row
+    endLine = Range("A1").SpecialCells(xlLastCell).Row
+  End If
+  Selection.EntireRow.AutoFit
+  
+  
+  For line = startLine To endLine
+    Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, line, endLine, "高さ設定")
+    
+    If Rows(line & ":" & line).Hidden = False Then
+      If Rows(line & ":" & line).Height < Int(dicVal("rowHeight")) Then
+        Rows(line & ":" & line).rowHeight = dicVal("rowHeight")
+      
+      ElseIf Rows(line & ":" & line).Height > 200 Then
+        Rows(line & ":" & line).rowHeight = 200
+      End If
+    End If
+  Next
+  
+  
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd

@@ -12,8 +12,13 @@ Function R1C1表記()
   Const funcName As String = "Ctl_Book.R1C1表記"
   
   '処理開始--------------------------------------
-  On Error Resume Next
-  'Call init.setting
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
   '----------------------------------------------
   
   If Application.ReferenceStyle = xlA1 Then
@@ -24,10 +29,16 @@ Function R1C1表記()
   
   
   '処理終了--------------------------------------
-  '----------------------------------------------
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
   Exit Function
+  '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -44,18 +55,19 @@ Function 標準画面()
   Const funcName As String = "Ctl_Book.標準画面"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "function")
-    Call Library.startScript
+    Call Library.showDebugForm(funcName, , "start")
   Else
     On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "function")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
-  PrgP_Max = 4
-  PrgP_Cnt = 2
-  Call Ctl_ProgressBar.showStart
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Max = 2
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
   SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
@@ -65,7 +77,7 @@ Function 標準画面()
   resetBgColor = Library.getRegistry("Main", "bgColor")
   setGgridLine = Library.getRegistry("Main", "gridLine")
   
-  sheetCount = 0
+  sheetCount = 1
   sheetMaxCount = ActiveWorkbook.Sheets.count
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
@@ -131,21 +143,22 @@ Function 標準画面()
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
-  End If
-  '----------------------------------------------
-  Exit Function
 
-'エラー発生時------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call init.resetGlobalVal
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
 
 '==================================================================================================
 Function 名前定義削除()
@@ -153,10 +166,11 @@ Function 名前定義削除()
   Const funcName As String = "Ctl_Book.名前定義削除"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
@@ -166,19 +180,17 @@ Function 名前定義削除()
   
   Call Library.delVisibleNames
   
-  '処理終了--------------------------------------
+ '処理終了--------------------------------------
   If runFlg = False Then
-    Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
-    Call Library.showDebugForm(funcName, , "end")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
-  '----------------------------------------------
-  
   Exit Function
+  '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -194,15 +206,15 @@ Function シートリスト取得()
   Const funcName As String = "Ctl_Book.シートリスト取得"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start1")
-    Call Library.startScript
+    Call Library.showDebugForm(funcName, , "start")
   Else
     On Error GoTo catchError
-     Call Library.showDebugForm(funcName, , "start1")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
   '----------------------------------------------
   
   For Each tempSheet In Sheets
@@ -214,6 +226,7 @@ Function シートリスト取得()
   Next
   
   With Frm_Info
+    .Caption = "シート一覧"
     .TextBox.Value = sheetNameLists
     .Show
   End With
@@ -221,20 +234,19 @@ Function シートリスト取得()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
-    Call Library.showDebugForm(funcName, , "end")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
 
 '==================================================================================================
 Function 印刷範囲の点線を非表示()
@@ -245,13 +257,13 @@ Function 印刷範囲の点線を非表示()
   Const funcName As String = "Ctl_Book.印刷範囲の点線を非表示"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start1")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-     Call Library.showDebugForm(funcName, , "start1")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -264,21 +276,19 @@ Function 印刷範囲の点線を非表示()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
-    Call Library.showDebugForm(funcName, , "end")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
 
 '==================================================================================================
 Function 印刷範囲の点線を表示()
@@ -289,13 +299,13 @@ Function 印刷範囲の点線を表示()
   Const funcName As String = "Ctl_Book.印刷範囲の点線を表示"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start1")
+    Call Library.showDebugForm(funcName, , "start")
     Call Library.startScript
   Else
     On Error GoTo catchError
-     Call Library.showDebugForm(funcName, , "start1")
+    Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -308,16 +318,15 @@ Function 印刷範囲の点線を表示()
   '処理終了--------------------------------------
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
-    Call Library.showDebugForm(funcName, , "end")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -331,16 +340,16 @@ Function 連続シート追加()
   Const funcName As String = "Ctl_Book.連続シート追加"
 
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start1")
-    Call Library.startScript
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")
-  Call Ctl_ProgressBar.showStart
+  Call Library.startScript
   '----------------------------------------------
   
   Set FrmVal = Nothing
@@ -354,10 +363,10 @@ Function 連続シート追加()
     .Show
   End With
   
-  Call Library.showDebugForm("copySheet", FrmVal("copySheet"), "debug")
+  Call Library.showDebugForm("コピー元", FrmVal("copySheet"), "debug")
   
   For Each sheetName In Split(FrmVal("SheetList"), vbNewLine)
-    Call Library.showDebugForm("sheetName", sheetName, "debug")
+    Call Library.showDebugForm("コピー先", sheetName, "debug")
     
     If Library.chkSheetExists(CStr(sheetName)) = False And sheetName <> "" And FrmVal("copySheet") <> "≪新規シート≫" Then
       Worksheets(FrmVal("copySheet")).copy After:=Worksheets(Worksheets.count)
@@ -365,23 +374,27 @@ Function 連続シート追加()
     
     ElseIf Library.chkSheetExists(CStr(sheetName)) = False And sheetName <> "" And FrmVal("copySheet") = "≪新規シート≫" Then
       Worksheets.add(After:=Worksheets(Worksheets.count)).Name = CStr(sheetName)
+    
+    ElseIf Library.chkSheetExists(CStr(sheetName)) = True Then
+      Call Library.showDebugForm("コピー先作成済み", sheetName, "debug")
+    
     End If
     
     Application.GoTo Reference:=Range("A1"), Scroll:=True
   Next
   
   '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -398,16 +411,19 @@ Function A1セル選択()
   Const funcName As String = "Ctl_Book.A1セル選択"
 
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start1")
-    Call Library.startScript
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
   Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
   SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
@@ -426,7 +442,7 @@ Function A1セル選択()
       Application.GoTo Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
     End If
     
-    Call Ctl_ProgressBar.showBar(thisAppName, 1, 2, sheetCount + 1, sheetMaxCount + 1, sheetName & "A1セル選択")
+    Call Ctl_ProgressBar.showBar("A1セル選択", 1, 2, sheetCount + 1, sheetMaxCount + 1, "シート：" & sheetName)
     sheetCount = sheetCount + 1
   Next
   
@@ -436,14 +452,15 @@ Function A1セル選択()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
   End If
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

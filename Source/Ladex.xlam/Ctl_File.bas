@@ -14,19 +14,21 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
   Const funcName As String = "Ctl_File.ファイルパス情報"
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  PrgP_Max = 2
-  PrgP_Cnt = 1
-  Call Ctl_ProgressBar.showStart
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
+  
   If dirPath = "" Then
     With Frm_GetFile
       .Caption = "ファイルパス情報"
@@ -127,99 +129,15 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
-    Call Library.showDebugForm(funcName, , "end")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
-  '----------------------------------------------
   Exit Function
-  
-'エラー発生時====================================
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
-
-
-'==================================================================================================
-Function 画像貼付け()
-  Dim line As Long, endLine As Long
-  Dim imgFile As Variant
-  Dim fileShape As Shape
-  Dim fileInfo As Object
-  Dim chfkFlg As Boolean
-  
-  Const funcName As String = "Ctl_File.画像貼付け"
-  
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  PrgP_Max = 2
-  PrgP_Cnt = 1
-  chfkFlg = False
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
 
-  For Each imgFile In Library.getFilesPath(ActiveWorkbook.path, "画像", "img", "pasteImgPath")
-    If imgFile <> "" Then
-      chfkFlg = True
-      Call Library.showDebugForm("imgFile", imgFile, "debug")
-      Call Library.getFileInfo(CStr(imgFile), fileInfo)
-      
-      Set fileShape = ActiveSheet.Shapes.AddPicture( _
-        fileName:=imgFile, _
-        LinkToFile:=False, _
-        SaveWithDocument:=True, _
-        Left:=ActiveCell.Left, _
-        Top:=ActiveCell.Top, _
-        Width:=0, _
-        Height:=0)
-      
-      fileShape.Name = "Ladex_" & fileInfo("fileName")
-      fileShape.LockAspectRatio = msoTrue
-      
-      '等倍で表示
-      fileShape.ScaleWidth 1, msoTrue
-      fileShape.ScaleHeight 1, msoTrue
-      
-      '枠線設定
-      With fileShape.line
-        .Visible = msoTrue
-        .ForeColor.RGB = RGB(127, 127, 127)
-        .Transparency = 0
-      End With
-      
-      Set fileShape = Nothing
-    End If
-  Next
-  
-  'オブジェクト選択モードにする
-'  If chfkFlg = True Then
-'    With Application.CommandBars.FindControl(ID:=182)
-'      If .State = msoButtonUp Then .Execute
-'    End With
-'  End If
-  
-  '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
-  Else
-    Call Library.showDebugForm(funcName, , "end")
-  End If
-  '----------------------------------------------
-  Exit Function
-  
-'エラー発生時====================================
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -239,16 +157,19 @@ Function フォルダ生成()
   Const funcName As String = "Ctl_File.フォルダ生成"
 
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start1")
-    Call Library.startScript
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
   Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   slctCellsCnt = 0
   basePath = ""
@@ -293,16 +214,110 @@ Function フォルダ生成()
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
-    Call Library.showDebugForm(funcName, , "end")
+    Call Library.showDebugForm(funcName, , "end1")
   End If
-  '----------------------------------------------
   Exit Function
-  
-'エラー発生時====================================
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
+
+'==================================================================================================
+Function 画像貼付け()
+  Dim line As Long, endLine As Long
+  Dim imgFile As Variant
+  Dim fileShape As Shape
+  Dim fileInfo As Object
+  Dim chfkFlg As Boolean
+  Dim topPosition As Long, leftPosition As Long
+  
+  Const funcName As String = "Ctl_File.画像貼付け"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  PrgP_Max = 2
+  chfkFlg = False
+  '----------------------------------------------
+  
+  topPosition = ActiveCell.Top
+  leftPosition = ActiveCell.Left
+  
+  For Each imgFile In Library.getFilesPath(ActiveWorkbook.path, "画像", "img", "pasteImgPath")
+    If imgFile <> "" Then
+      chfkFlg = True
+      Call Library.showDebugForm("imgFile", imgFile, "debug")
+      Call Library.getFileInfo(CStr(imgFile), fileInfo)
+      
+      Set fileShape = ActiveSheet.Shapes.AddPicture( _
+        fileName:=imgFile, _
+        LinkToFile:=False, _
+        SaveWithDocument:=True, _
+        Left:=leftPosition, _
+        Top:=topPosition, _
+        Width:=0, _
+        Height:=0)
+      
+      fileShape.Name = "Ladex_" & fileInfo("fileName")
+      fileShape.LockAspectRatio = msoTrue
+      
+      '等倍で表示
+      fileShape.ScaleWidth 1, msoTrue
+      fileShape.ScaleHeight 1, msoTrue
+      
+      '枠線設定
+      With fileShape.line
+        .Visible = msoTrue
+        .ForeColor.RGB = RGB(127, 127, 127)
+        .Transparency = 0
+      End With
+      
+      topPosition = topPosition + fileShape.Height + 20
+      Set fileShape = Nothing
+    End If
+  Next
+  
+  'オブジェクト選択モードにする
+'  If chfkFlg = True Then
+'    With Application.CommandBars.FindControl(ID:=182)
+'      If .State = msoButtonUp Then .Execute
+'    End With
+'  End If
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call init.resetGlobalVal
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+

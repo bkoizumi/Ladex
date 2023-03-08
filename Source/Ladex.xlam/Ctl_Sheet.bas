@@ -150,8 +150,6 @@ Function 高さ設定()
   
   Set SelectionCell = Selection
   If Selection.Rows.count <= 1 Then
-'    Cells.Select
-'    Range("A1").Activate
     startLine = 1
     endLine = Range("A1").SpecialCells(xlLastCell).Row
   Else
@@ -162,9 +160,15 @@ Function 高さ設定()
   
   
   For line = startLine To endLine
-    If Rows(line & ":" & line).Height < Int(dicVal("rowHeight")) Then
-      Rows(line & ":" & line).rowHeight = dicVal("rowHeight")
-      Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, line, endLine, "高さ設定")
+    Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, line, endLine, "高さ設定")
+    
+    If Rows(line & ":" & line).Hidden = False Then
+      If Rows(line & ":" & line).Height < Int(dicVal("rowHeight")) Then
+        Rows(line & ":" & line).rowHeight = dicVal("rowHeight")
+      
+      ElseIf Rows(line & ":" & line).Height > 200 Then
+        Rows(line & ":" & line).rowHeight = 200
+      End If
     End If
   Next
   
@@ -499,6 +503,7 @@ Function 不要データ削除()
     End If
   Next
 
+  ActiveWorkbook.Save
 Lbl_endfunction:
   
   '処理終了--------------------------------------
@@ -506,8 +511,8 @@ Lbl_endfunction:
     Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
+    Call init.resetGlobalVal
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If

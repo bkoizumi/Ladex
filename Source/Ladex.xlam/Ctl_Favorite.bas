@@ -83,7 +83,7 @@ Function リスト取得()
   Exit Function
   '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -123,7 +123,7 @@ Function レジストリ登録()
   Exit Function
   '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
@@ -169,10 +169,10 @@ Function 追加(Optional setCategory As Long = 1, Optional FilePath As String)
 
   '処理終了--------------------------------------
   Call Library.showDebugForm(funcName, , "end")
-  '----------------------------------------------
   Exit Function
-
-'エラー発生時------------------------------------
+  '----------------------------------------------
+  
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
@@ -205,8 +205,11 @@ Function 詳細表示()
     .Show vbModeless
   End With
   
+  '処理終了--------------------------------------
   Exit Function
-'エラー発生時--------------------------------------------------------------------------------------
+  '----------------------------------------------
+  
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
     Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
 End Function
@@ -252,7 +255,7 @@ Function moveTop()
   Frm_Favorite.Lst_Favorite.ListIndex = 0
   
   '処理終了--------------------------------------
-    Call Library.showDebugForm(funcName, , "end")
+  Call Library.showDebugForm(funcName, , "end")
   Exit Function
   '----------------------------------------------
 
@@ -298,7 +301,7 @@ Function moveUp()
   Frm_Favorite.Lst_Favorite.ListIndex = line - 3
   
   '処理終了--------------------------------------
-    Call Library.showDebugForm(funcName, , "end")
+  Call Library.showDebugForm(funcName, , "end")
   Exit Function
   '----------------------------------------------
 
@@ -350,7 +353,7 @@ Function moveDown()
   Frm_Favorite.Lst_Favorite.ListIndex = line - 1
   
   '処理終了--------------------------------------
-    Call Library.showDebugForm(funcName, , "end")
+  Call Library.showDebugForm(funcName, , "end")
   Exit Function
   '----------------------------------------------
 
@@ -403,7 +406,7 @@ Function moveBottom()
   
   
   '処理終了--------------------------------------
-    Call Library.showDebugForm(funcName, , "end")
+  Call Library.showDebugForm(funcName, , "end")
   Exit Function
   '----------------------------------------------
 
@@ -445,7 +448,7 @@ Function delete()
   Frm_Favorite.Lst_Favorite.ListIndex = 0
 
   '処理終了--------------------------------------
-    Call Library.showDebugForm(funcName, , "end")
+  Call Library.showDebugForm(funcName, , "end")
   Exit Function
   '----------------------------------------------
 

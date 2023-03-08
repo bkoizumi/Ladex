@@ -342,9 +342,9 @@ Private Sub del_Click()
   
   sheetName = SheetList.SelectedItem.SubItems(2)
   
-'  If MsgBox(SheetName & "‚ğíœ‚µ‚Ü‚·(Œ³‚É‚à‚Ç‚¹‚Ü‚¹‚ñ)", vbYesNo + vbExclamation) = vbYes Then
+  If MsgBox(sheetName & "‚ğíœ‚µ‚Ü‚·(Œ³‚É‚à‚Ç‚¹‚Ü‚¹‚ñ)", vbYesNo + vbExclamation) = vbYes Then
     ActiveWorkbook.Sheets(sheetName).delete
-'  End If
+  End If
   
   Call reLoadList
   

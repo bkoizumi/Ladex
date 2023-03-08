@@ -44,7 +44,6 @@ Private Sub UserForm_Initialize()
   InitializeFlg = True
 
   With Frm_GetFile
-    .Caption = "[" & thisAppName & "] ‚¨‹C‚É“ü‚è"
   End With
   InitializeFlg = False
   
@@ -68,7 +67,10 @@ End Sub
 Private Sub DirPath01_Click()
   Dim targetDir As String
   
-  targetDir = Library.getDirPath(targetDir01.Value, , "getFileDirPath")
+  targetDir = Library.getRegistry("targetInfo", "getFileDirPath")
+  
+  
+  targetDir = Library.getDirPath(targetDir, , "getFileDirPath")
   If targetDir <> "" Then
     targetDir01.Value = targetDir
   End If
@@ -78,6 +80,8 @@ End Sub
 'ƒLƒƒƒ“ƒZƒ‹ˆ—
 Private Sub Cancel_Click()
   Unload Me
+  Call Library.errorHandle
+  End
 End Sub
 
 '==================================================================================================

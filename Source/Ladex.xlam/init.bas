@@ -91,7 +91,10 @@ Function unsetting(Optional flg As Boolean = True)
   '処理開始--------------------------------------
   On Error GoTo catchError
   '----------------------------------------------
-
+  If flg = True Then
+    Call resetGlobalVal
+  End If
+  
   Set LadexBook = Nothing
   
   '設定値読み込み
@@ -108,9 +111,7 @@ Function unsetting(Optional flg As Boolean = True)
   logFile = ""
   LadexDir = ""
   
-  If flg = True Then
-    Call resetGlobalVal
-  End If
+
   
   '処理終了--------------------------------------
   Exit Function

@@ -372,21 +372,34 @@ Function chkIsDate(chkVal As Date, startDay As Date, endDay As Date)
 End Function
 
 '==================================================================================================
-Function chkIsOpen(targetBookName As String) As Boolean
+Function chkIsOpen(targetBookName As String, Optional fileCnt As Integer = 0) As Boolean
   Dim openWorkbook As Workbook
   Dim chkFlg As Boolean
+  
   Const funcName As String = "Library.chkIsOpen"
 
+  Call Library.showDebugForm(funcName, , "start1")
+  
   chkFlg = False
+  fileCnt = 0
   For Each openWorkbook In Workbooks
-    If openWorkbook.Name = targetBookName Then
-      chkFlg = True
-      Exit For
+    If InStr(targetBookName, "*") > 0 Then
+      If openWorkbook.Name Like targetBookName Then
+        fileCnt = fileCnt + 1
+      End If
+    Else
+      If openWorkbook.Name = targetBookName Then
+        chkFlg = True
+        fileCnt = 1
+        Exit For
+      End If
     End If
   Next
-  Call Library.showDebugForm(funcName, , "start1")
+  
   Call Library.showDebugForm("targetBookName", targetBookName, "debug")
-  Call Library.showDebugForm("isOpen", chkFlg, "debug")
+  Call Library.showDebugForm("fileCnt", fileCnt, "debug")
+  Call Library.showDebugForm("isOpen ", chkFlg, "debug")
+  
   Call Library.showDebugForm(funcName, , "end1")
   
   chkIsOpen = chkFlg
@@ -2160,19 +2173,19 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
   Select Case LogLevel
     
     Case "Error"
-      meg1 = "  [Error] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [Error]    " & Replace(meg1, vbNewLine, " ")
       LogLevel = 1
 
     Case "warning"
-      meg1 = "  [warn]  " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [Warning]  " & Replace(meg1, vbNewLine, " ")
       LogLevel = 2
 
     Case "info"
-      meg1 = "  [info]  " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [Info    ] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 4
 
     Case "debug"
-      meg1 = "  [debug] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [Debug   ] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 5
 
     Case "start"
@@ -2191,11 +2204,11 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
       
     
     Case "function", "function1"
-      meg1 = "  Call " & meg1
+      meg1 = "  [Function] " & meg1
       LogLevel = 0
       
     Case Else
-      meg1 = "  [] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  [XXXXXXXX] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 6
   End Select
 
@@ -2382,8 +2395,7 @@ Function outputLog(runTime As String, message As String)
 
 '  On Error GoTo catchError
   If logFile = "" Then
-    Debug.Print runTime & vbTab & "[Error] ログファイルが設定されていません"
-    'Stop
+    Debug.Print runTime & "  " & "ログファイルが設定されていません"
     Exit Function
   
   ElseIf chkFileExists(logFile) Then

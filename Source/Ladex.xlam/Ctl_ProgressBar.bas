@@ -208,6 +208,11 @@ End Function
 ' *
 '**************************************************************************************************
 Public Function showEnd()
+  Const funcName As String = "Ctl_ProgressBar.showEnd"
+  
+  '処理開始--------------------------------------
+  Call Library.showDebugForm(funcName, , "function")
+  '----------------------------------------------
   
   'ダイアログを閉じる
   Unload Frm_Progress

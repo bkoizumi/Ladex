@@ -1028,17 +1028,20 @@ Function setCenter(control As IRibbonControl)
   
   
   '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  Call Library.endScript
-  Call Library.showDebugForm(funcName, , "end")
-  Call init.unsetting
-  '----------------------------------------------
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call init.resetGlobalVal
+    Call Library.showDebugForm(funcName, , "end")
+    
   Exit Function
+  '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
 
 '--------------------------------------------------------------------------------------------------
 Function setShrinkToFit(control As IRibbonControl)
@@ -1279,6 +1282,14 @@ Function Ctl_Function(control As IRibbonControl)
       Call Ctl_Cells.セル高さ調整
     Case "セル幅取得"
       Call Library.getColumnWidth
+    
+    Case "高さ固定設定_15"
+      Call Ctl_Cells.セル高さ固定設定(15)
+      
+    Case "高さ固定設定_30"
+      Call Ctl_Cells.セル高さ固定設定(30)
+    
+    
     
     'セル編集------------------------------------
     Case "Trim01"

@@ -156,6 +156,7 @@ Function スタイル削除()
   Call Library.スタイル削除
 
   
+  
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
@@ -168,7 +169,7 @@ Function スタイル削除()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時--------------------------------------------------------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
