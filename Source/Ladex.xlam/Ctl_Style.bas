@@ -10,9 +10,9 @@ Dim setStyleBook     As Workbook
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function Export()
+Function スタイル出力()
   Dim FilePath As String, fileName As String
-  Const funcName As String = "Ctl_Style.Export"
+  Const funcName As String = "Ctl_Style.スタイル出力"
      
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -50,10 +50,10 @@ End Function
 
 
 '==================================================================================================
-Function Import()
+Function スタイル取込()
   Dim styleBookPath As String
   Dim FilePath As String, fileName As String
-  Const funcName As String = "Ctl_Style.Import"
+  Const funcName As String = "Ctl_Style.スタイル取込"
   
   '処理開始--------------------------------------
   If runFlg = False Then

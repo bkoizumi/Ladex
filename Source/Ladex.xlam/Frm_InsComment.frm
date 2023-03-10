@@ -37,7 +37,7 @@ Private Sub UserForm_Initialize()
   indexCnt = 0
   
   StartUpPosition = 0
-  Top = ActiveWindow.Top + ((ActiveWindow.Height - Height) / 2)
+  top = ActiveWindow.top + ((ActiveWindow.Height - Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Width) / 2)
     
   With Frm_InsComment

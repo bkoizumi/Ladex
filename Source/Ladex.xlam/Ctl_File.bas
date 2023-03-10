@@ -7,11 +7,11 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long)
+Function ファイル情報取得(Optional dirPath As String = "", Optional line As Long)
   Dim endLine As Long, colLine As Long
   Dim objFolder As Folder
   Dim objFile As File
-  Const funcName As String = "Ctl_File.ファイルパス情報"
+  Const funcName As String = "Ctl_File.ファイル情報取得"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -81,7 +81,7 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
           ActiveCell.Offset(line, colLine).HorizontalAlignment = xlRight
         End If
         line = line + 1
-        Call Ctl_File.ファイルパス情報(objFolder.path, line)
+        Call Ctl_File.ファイル情報取得(objFolder.path, line)
       Next
     End If
     For Each objFile In .GetFolder(dirPath).Files
@@ -90,7 +90,6 @@ Function ファイルパス情報(Optional dirPath As String = "", Optional line As Long
       Else
         ActiveCell.Offset(line) = objFile.Name
       End If
-      
       
       colLine = 1
       '作成日
@@ -258,7 +257,7 @@ Function 画像貼付け()
   chfkFlg = False
   '----------------------------------------------
   
-  topPosition = ActiveCell.Top
+  topPosition = ActiveCell.top
   leftPosition = ActiveCell.Left
   
   For Each imgFile In Library.getFilesPath(ActiveWorkbook.path, "画像", "img", "pasteImgPath")
@@ -272,7 +271,7 @@ Function 画像貼付け()
         LinkToFile:=False, _
         SaveWithDocument:=True, _
         Left:=leftPosition, _
-        Top:=topPosition, _
+        top:=topPosition, _
         Width:=0, _
         Height:=0)
       

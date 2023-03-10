@@ -38,7 +38,7 @@ Private Sub UserForm_Initialize()
   
   '•\Ž¦ˆÊ’uŽw’è----------------------------------
   StartUpPosition = 0
-  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
     
   InitializeFlg = True

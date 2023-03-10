@@ -173,7 +173,7 @@ Function showOption()
 
   ThisWorkbook.Save
   Call init.setting(True)
-  Call Main.setShortcutKey
+  Call Main.ショートカットキー設定
 
 
   Exit Function
@@ -275,3 +275,82 @@ catchError:
   Call Library.errorHandle
 End Function
 
+'==================================================================================================
+Function Addin解除()
+  Dim line As Long, endLine As Long
+  Const funcName As String = "Ctl_Option.Addin解除"
+
+  '処理開始--------------------------------------
+'  If runFlg = False Then
+'    Call init.setting
+'    Call Library.showDebugForm(funcName, , "start1")
+'    Call Library.startScript
+'  Else
+'    On Error GoTo catchError
+'    Call Library.showDebugForm(funcName, , "start1")
+'  End If
+'  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  '----------------------------------------------
+
+  Workbooks(ThisWorkbook.Name).IsAddin = False
+
+
+  Exit Function
+
+  '処理終了--------------------------------------
+'  If runFlg = False Then
+'    Call Library.endScript
+'    Call Library.showDebugForm(funcName, , "end")
+'    Call init.unsetting
+'  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function 初期化()
+  Dim line As Long, endLine As Long
+  
+  Const funcName As String = "Ctl_Option.初期化"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

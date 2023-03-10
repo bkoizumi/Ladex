@@ -7,7 +7,7 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function saveSelectArea2Image(Optional defSlctArea As Variant, Optional imageName As Variant)
+Function ‰æ‘œ•Û‘¶(Optional defSlctArea As Variant, Optional imageName As Variant)
   Dim slctArea
   Dim targetImg As Chart
   Dim saveDir As String

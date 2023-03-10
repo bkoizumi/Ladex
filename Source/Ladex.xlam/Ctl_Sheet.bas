@@ -53,35 +53,6 @@ End Function
 
 
 '==================================================================================================
-Function シート管理_フォーム表示()
-  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
-  Dim addSheetName As String
-  Const funcName As String = "Ctl_Sheet.シート管理_フォーム表示"
-  
-  '処理開始--------------------------------------
-  Application.Cursor = xlWait
-  On Error GoTo catchError
-  Call init.setting
-  Call Library.startScript
-  Call Library.showDebugForm(funcName, , "function")
-  '----------------------------------------------
-  
-  Frm_Sheet.Show vbModeless
-  
-  '処理終了--------------------------------------
-  Call Library.endScript
-  '----------------------------------------------
-  
-  Exit Function
-
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
-
-
-'==================================================================================================
 Function 幅設定()
   Dim SelectionCell As String
 
@@ -276,10 +247,10 @@ End Function
 
 
 '==================================================================================================
-Function 指定フォントに設定()
+Function フォント一括変更()
   Dim SelectionCell As String
 
-  Const funcName As String = "Ctl_Sheet.指定フォントに設定"
+  Const funcName As String = "Ctl_Sheet.フォント一括変更"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -524,3 +495,93 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
+
+
+
+'==================================================================================================
+Function A1セル選択()
+  
+  Const funcName As String = "Ctl_Sheet.A1セル選択"
+
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call init.resetGlobalVal
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function A1セル選択_保存()
+  
+  Const funcName As String = "Ctl_Sheet.A1セル選択_保存"
+
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Application.GoTo Reference:=Range("A1"), Scroll:=True
+  ActiveWorkbook.Save
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call init.resetGlobalVal
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+

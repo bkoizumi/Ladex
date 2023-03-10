@@ -16,8 +16,8 @@ Function TextToFitShape(targetShape As Excel.Shape, Optional chkFlg As Boolean =
   ' オートシェイプのサイズ取得。
   Dim h(1) As Double: h(0) = targetShape.Height
   Dim w(1) As Double: w(0) = targetShape.Width
-  Dim L As Double: L = targetShape.Left
-  Dim T As Double: T = targetShape.Top
+  Dim l As Double: l = targetShape.Left
+  Dim T As Double: T = targetShape.top
   
   ' オートシェイプを一旦、文字サイズに合わせてサイズ変更。
   targetShape.TextFrame2.AutoSize = msoAutoSizeShapeToFitText
@@ -73,8 +73,8 @@ Function TextToFitShape(targetShape As Excel.Shape, Optional chkFlg As Boolean =
   targetShape.Height = h(0)
   targetShape.Width = w(0)
   
-  targetShape.Left = L
-  targetShape.Top = T
+  targetShape.Left = l
+  targetShape.top = T
   
   ' フォントサイズを最終値に変更。
   targetShape.TextFrame2.TextRange.Font.Size = FontSize
@@ -90,46 +90,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-'==================================================================================================
-Function 文字サイズをぴったり()
-  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
-  Const funcName As String = "Ctl_Shap.文字サイズをぴったり"
 
-  '処理開始--------------------------------------
-  If runFlg = False Then
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  
-  Call Ctl_shap.TextToFitShape(Selection.ShapeRange(1), True)
-
-
-  '処理終了--------------------------------------
-  If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-  End If
-  '----------------------------------------------
-  Exit Function
-
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
-End Function
 
 
 '==================================================================================================
@@ -193,10 +154,10 @@ Function QRコード生成()
     
     With ActiveSheet.Pictures.Insert(chartAPIURL)
       If FrmVal("onReSize") = True Then
-        .ShapeRange.Top = targetCells.Top + (targetCells.Height - .ShapeRange.Height) / 2
+        .ShapeRange.top = targetCells.top + (targetCells.Height - .ShapeRange.Height) / 2
         .ShapeRange.Left = targetCells.Left + (targetCells.Width - .ShapeRange.Width) / 2
       Else
-        .ShapeRange.Top = targetCells.Top
+        .ShapeRange.top = targetCells.top
         .ShapeRange.Left = targetCells.Left
       End If
       
@@ -231,64 +192,43 @@ catchError:
 End Function
 
 
+
+
 '==================================================================================================
-Function セルの中央に配置()
-  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
-  Dim slctCells As Range, targetRange As Range
-  Dim ShapeImg As Shape
-  
-  Const funcName As String = "Ctl_Shap.セルの中央に配置"
+Function パスワード生成()
+  Const funcName As String = "Ctl_Shap.パスワード生成"
+
 
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
     PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
-  PrgP_Cnt = PrgP_Cnt + 1
+  Call Library.startScript
   '----------------------------------------------
-   
-  For Each slctCells In Selection
-    For Each ShapeImg In ActiveSheet.Shapes
-      Set targetRange = Range(ShapeImg.TopLeftCell, ShapeImg.BottomRightCell)
-      If Not (Intersect(targetRange, slctCells) Is Nothing) Then
-        Call Library.showDebugForm("ShapeImg.Name  ", ShapeImg.Name, "debug")
-        Call Library.showDebugForm("ShapeImg.Width  ", ShapeImg.Width, "debug")
-        Call Library.showDebugForm("ShapeImg.Height ", ShapeImg.Height, "debug")
-        Call Library.showDebugForm("slctCells.Width ", slctCells.Width, "debug")
-        Call Library.showDebugForm("slctCells.Height", slctCells.Height, "debug")
-        
-        With ShapeImg
-          .Top = slctCells.Top + (slctCells.Height - ShapeImg.Height) / 2
-          .Left = slctCells.Left + (slctCells.Width - ShapeImg.Width) / 2
-        End With
-        
-      End If
-    Next
-  Next
-  
-  
+
+  Frm_mkPasswd.Show vbModeless
+
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
+    Call init.resetGlobalVal
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If
-  '----------------------------------------------
   Exit Function
+  '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function

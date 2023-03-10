@@ -299,3 +299,104 @@ catchError:
   Call Library.errorHandle
 End Function
 
+'==================================================================================================
+Function 文字サイズをぴったりにする()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Const funcName As String = "Ctl_Format.文字サイズをぴったりにする"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Call Ctl_shap.TextToFitShape(Selection.ShapeRange(1), True)
+
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+End Function
+
+
+'==================================================================================================
+Function セル内の中央に配置()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim slctCells As Range, targetRange As Range
+  Dim ShapeImg As Shape
+  
+  Const funcName As String = "Ctl_Format.セル内の中央に配置"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+   
+  For Each slctCells In Selection
+    For Each ShapeImg In ActiveSheet.Shapes
+      Set targetRange = Range(ShapeImg.TopLeftCell, ShapeImg.BottomRightCell)
+      If Not (Intersect(targetRange, slctCells) Is Nothing) Then
+        Call Library.showDebugForm("ShapeImg.Name  ", ShapeImg.Name, "debug")
+        Call Library.showDebugForm("ShapeImg.Width  ", ShapeImg.Width, "debug")
+        Call Library.showDebugForm("ShapeImg.Height ", ShapeImg.Height, "debug")
+        Call Library.showDebugForm("slctCells.Width ", slctCells.Width, "debug")
+        Call Library.showDebugForm("slctCells.Height", slctCells.Height, "debug")
+        
+        With ShapeImg
+          .top = slctCells.top + (slctCells.Height - ShapeImg.Height) / 2
+          .Left = slctCells.Left + (slctCells.Width - ShapeImg.Width) / 2
+        End With
+        
+      End If
+    Next
+  Next
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+End Function

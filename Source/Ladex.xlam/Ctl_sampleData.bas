@@ -126,12 +126,14 @@ End Function
 
 
 '==================================================================================================
-Function パターン選択(Optional maxCount As Long)
+Function データ生成_パターン選択()
   Dim line As Long, endLine As Long, count As Long, getLine As Long, getLine2 As Long
   Dim varDic
   Dim actRange As Range
   Dim strAddress As String
-  Const funcName As String = "Ctl_SampleData.パターン選択"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_パターン選択"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -148,6 +150,7 @@ Function パターン選択(Optional maxCount As Long)
   
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  maxCount = Selection.Rows.count
   
   Call showFrm_sampleData("パターン選択")
   If sampleDataList Is Nothing Then
@@ -306,8 +309,10 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 数値_桁数固定(Optional maxCount As Long)
+Function 数値_桁数固定()
   Dim line As Long, endLine As Long
+  Dim maxCount As Long
+  
   Const funcName As String = "Ctl_SampleData.数値_桁数固定"
   
   '処理開始--------------------------------------
@@ -324,6 +329,7 @@ Function 数値_桁数固定(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  maxCount = Selection.Rows.count
   Call showFrm_sampleData("【数値】桁数固定")
   
   If IsMissing(maxCount) Then
@@ -355,10 +361,12 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 数値_範囲(Optional maxCount As Long)
+Function 数値_範囲指定()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
-  Const funcName As String = "Ctl_SampleData.数値_範囲"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.数値_範囲指定"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -416,9 +424,11 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 名前_姓(Optional maxCount As Long)
+Function データ生成_姓()
   Dim line As Long, endLine As Long
-  Const funcName As String = "Ctl_SampleData.名前_姓"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_姓"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -434,6 +444,7 @@ Function 名前_姓(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  maxCount = Selection.Rows.count
   endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
   If IsMissing(maxCount) Then
@@ -468,9 +479,11 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 名前_名(Optional maxCount As Long)
+Function データ生成_名()
   Dim line As Long, endLine As Long
-  Const funcName As String = "Ctl_SampleData.名前_名"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_名"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -486,12 +499,13 @@ Function 名前_名(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  maxCount = Selection.Rows.count
   endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
-  If IsMissing(maxCount) Then
-    Call showFrm_sampleData("【名前】名")
-    maxCount = dicVal("maxCount")
-  End If
+'  If IsMissing(maxCount) Then
+'    Call showFrm_sampleData("【名前】名")
+'    maxCount = dicVal("maxCount")
+'  End If
   
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
@@ -520,9 +534,11 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean = False)
+Function データ生成_氏名(Optional kanaFlg As Boolean = False)
   Dim line As Long, endLine As Long
-  Const funcName As String = "Ctl_SampleData.名前_フルネーム"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_氏名"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -538,12 +554,13 @@ Function 名前_フルネーム(Optional maxCount As Long, Optional kanaFlg As Boolean 
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  maxCount = Selection.Rows.count
   endLine = LadexSh_TestData.Cells(Rows.count, 1).End(xlUp).Row
   
-  If IsMissing(maxCount) Then
-    Call showFrm_sampleData("【名前】フルネーム")
-    maxCount = dicVal("maxCount")
-  End If
+'  If IsMissing(maxCount) Then
+'    Call showFrm_sampleData("【名前】フルネーム")
+'    maxCount = dicVal("maxCount")
+'  End If
   
   line = Selection(1).Row
   For count = 0 To (maxCount - 1)
@@ -576,9 +593,11 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 日付_日(Optional maxCount As Long)
+Function データ生成_日付()
   Dim line As Long, endLine As Long
-  Const funcName As String = "Ctl_SampleData.名前_フルネーム"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_日付"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -594,10 +613,11 @@ Function 日付_日(Optional maxCount As Long)
   Call Ctl_ProgressBar.showStart
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
+  maxCount = Selection.Rows.count
   Call showFrm_sampleData("【日付】日")
-  If IsMissing(maxCount) Then
-    maxCount = dicVal("maxCount")
-  End If
+'  If IsMissing(maxCount) Then
+'    maxCount = dicVal("maxCount")
+'  End If
   line = Selection(1).Row
 
   fstDate = dicVal("minVal")
@@ -630,10 +650,12 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 日付_時間(Optional maxCount As Long)
+Function データ生成_時間()
   Dim line As Long, endLine As Long
+  Dim maxCount As Long
   Dim val As Double
-  Const funcName As String = "Ctl_SampleData.日付_時間"
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_時間"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -649,11 +671,11 @@ Function 日付_時間(Optional maxCount As Long)
   PrgP_Cnt = 1
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-  
-  If IsMissing(maxCount) Then
-    Call showFrm_sampleData("【日付】時間")
-    maxCount = dicVal("maxCount")
-  End If
+  maxCount = Selection.Rows.count
+'  If IsMissing(maxCount) Then
+'    Call showFrm_sampleData("【日付】時間")
+'    maxCount = dicVal("maxCount")
+'  End If
   
   
   line = Selection(1).Row
@@ -689,10 +711,12 @@ End Function
 
 
 '==================================================================================================
-Function 日時(Optional maxCount As Long)
+Function データ生成_日時()
   Dim line As Long, endLine As Long
   Dim val As Double
-  Const funcName As String = "Ctl_SampleData.日付_時間"
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_日時"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -708,11 +732,11 @@ Function 日時(Optional maxCount As Long)
   PrgP_Cnt = 1
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-  
+  maxCount = Selection.Rows.count
   Call showFrm_sampleData("【日付】日")
-  If IsMissing(maxCount) Then
-    maxCount = dicVal("maxCount")
-  End If
+'  If IsMissing(maxCount) Then
+'    maxCount = dicVal("maxCount")
+'  End If
   line = Selection(1).Row
 
   fstDate = dicVal("minVal")
@@ -751,11 +775,12 @@ End Function
 
 
 '==================================================================================================
-Function その他_文字(Optional maxCount As Long)
+Function データ生成_文字()
   Dim line As Long, endLine As Long
-  Dim makeStr As String
-  Dim slctRange As Range
-  Const funcName As String = "Ctl_SampleData.その他_文字"
+  Dim makeStr As String, slctRange As Range
+  Dim maxCount As Long
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_文字"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -812,10 +837,11 @@ End Function
 
 
 '==================================================================================================
-Function メールアドレス(Optional maxCount As Long)
+Function データ生成_メールアドレス()
   Dim line As Long, endLine As Long
   Dim makeStr As String
-  Const funcName As String = "Ctl_SampleData.メールアドレス"
+  Dim maxCount As Long
+  Const funcName As String = "Ctl_SampleData.データ生成_メールアドレス"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -872,11 +898,12 @@ End Function
 
 
 '==================================================================================================
-Function 住所(maxCount As Long, ParamArray addressFlgs())
+Function データ生成_住所(maxCount As Long, ParamArray addressFlgs())
   Dim line As Long, endLine As Long
   Dim getLine As Long, getLine2 As Long
   Dim strAddress As String
-  Const funcName As String = "Ctl_SampleData.住所"
+  
+  Const funcName As String = "Ctl_SampleData.データ生成_住所"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -941,9 +968,9 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 電話番号(Optional maxCount As Long)
+Function データ生成_電話番号(Optional maxCount As Long)
   Dim line As Long, endLine As Long
-  Const funcName As String = "Ctl_SampleData.電話番号"
+  Const funcName As String = "Ctl_SampleData.データ生成_電話番号"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -989,12 +1016,12 @@ End Function
 
 
 '==================================================================================================
-Function 休日リスト生成()
+Function データ生成_休日リスト()
   Dim line As Long, endLine As Long
   Dim targetDay As Date, startDay As Date, endDay As Date
   Dim targetRange As Range
   Dim HollydayName As String
-  Const funcName As String = "Ctl_SampleData.休日リスト生成"
+  Const funcName As String = "Ctl_SampleData.データ生成_休日リスト"
   
   '処理開始--------------------------------------
   If runFlg = False Then

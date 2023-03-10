@@ -7,6 +7,35 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
+Function シート管理()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim addSheetName As String
+  Const funcName As String = "Ctl_Book.シート管理"
+  
+  '処理開始--------------------------------------
+  Application.Cursor = xlWait
+  On Error GoTo catchError
+  Call init.setting
+  Call Library.startScript
+  Call Library.showDebugForm(funcName, , "function")
+  '----------------------------------------------
+  
+  Frm_Sheet.Show vbModeless
+  
+  '処理終了--------------------------------------
+  Call Library.endScript
+  '----------------------------------------------
+  
+  Exit Function
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
 Function R1C1表記()
 
   Const funcName As String = "Ctl_Book.R1C1表記"
@@ -19,12 +48,15 @@ Function R1C1表記()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
   If Application.ReferenceStyle = xlA1 Then
     Application.ReferenceStyle = xlR1C1
+    Call Library.showDebugForm("R1C1形式に設定", , "debug")
   Else
     Application.ReferenceStyle = xlA1
+    Call Library.showDebugForm("A1形式に設定", , "debug")
   End If
   
   
@@ -63,11 +95,12 @@ Function 標準画面()
     Call Library.showDebugForm(funcName, , "start1")
   End If
   
+  PrgP_Max = 2
+  PrgP_Cnt = PrgP_Cnt + 1
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
   Call Ctl_ProgressBar.showStart
-  PrgP_Max = 2
-  PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
   SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
@@ -82,7 +115,7 @@ Function 標準画面()
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
     If Worksheets(sheetName).Visible = True Then
-      Call Library.showDebugForm("SheetName", sheetName, "debug")
+      'Call Library.showDebugForm("SheetName", sheetName, "debug")
       
       Worksheets(sheetName).Select
       
@@ -160,6 +193,7 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
 '==================================================================================================
 Function 名前定義削除()
   Dim wb As Workbook, tmp As String
@@ -178,8 +212,9 @@ Function 名前定義削除()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
-  Call Library.delVisibleNames
-  
+  Call Library.セルの名称設定削除
+    
+
  '処理終了--------------------------------------
   If runFlg = False Then
     Call init.resetGlobalVal
@@ -198,12 +233,12 @@ End Function
 
 
 '==================================================================================================
-Function シートリスト取得()
+Function シート一覧取得()
   Dim tempSheet As Object
   Dim sheetNameLists As String
   Dim topPosition As Long, leftPosition As Long
   
-  Const funcName As String = "Ctl_Book.シートリスト取得"
+  Const funcName As String = "Ctl_Book.シート一覧取得"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -248,13 +283,14 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
 '==================================================================================================
-Function 印刷範囲の点線を非表示()
+Function 印刷範囲表示()
   Dim tempSheet As Object
   Dim sheetNameLists As String
   Dim topPosition As Long, leftPosition As Long
   
-  Const funcName As String = "Ctl_Book.印刷範囲の点線を非表示"
+  Const funcName As String = "Ctl_Book.印刷範囲表示"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -290,13 +326,14 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
 '==================================================================================================
-Function 印刷範囲の点線を表示()
+Function 印刷範囲非表示()
   Dim tempSheet As Object
   Dim sheetNameLists As String
   Dim topPosition As Long, leftPosition As Long
   
-  Const funcName As String = "Ctl_Book.印刷範囲の点線を表示"
+  Const funcName As String = "Ctl_Book.印刷範囲非表示"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -447,6 +484,73 @@ Function A1セル選択()
   Next
   
   Worksheets(SetActiveSheet).Select
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call init.resetGlobalVal
+    Call Library.showDebugForm(funcName, , "end")
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function A1セル選択_保存()
+  Dim objSheet As Object
+  Dim sheetName As String, SetActiveSheet As String
+  Dim sheetCount As Long, sheetMaxCount As Long
+  Dim setZoomLevel  As Long
+  
+  Const funcName As String = "Ctl_Book.A1セル選択_保存"
+
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  SetActiveSheet = ActiveWorkbook.ActiveSheet.Name
+  
+  sheetCount = 0
+  sheetMaxCount = ActiveWorkbook.Sheets.count
+  
+  setZoomLevel = Library.getRegistry("Main", "zoomLevel")
+  
+  For Each objSheet In ActiveWorkbook.Sheets
+    sheetName = objSheet.Name
+    If Worksheets(sheetName).Visible = True Then
+      Call Library.showDebugForm("sheetName", sheetName, "debug")
+      
+      ActiveWindow.Zoom = setZoomLevel
+      Application.GoTo Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
+    End If
+    
+    Call Ctl_ProgressBar.showBar("A1セル選択", 1, 2, sheetCount + 1, sheetMaxCount + 1, "シート：" & sheetName)
+    sheetCount = sheetCount + 1
+  Next
+  
+  Worksheets(SetActiveSheet).Select
+  ActiveWorkbook.Save
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd

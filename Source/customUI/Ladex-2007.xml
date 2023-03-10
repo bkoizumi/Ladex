@@ -61,9 +61,11 @@
         <menuSeparator id="ブック管理_MS03" title="A1セルへ移動" />
         <menu id="全シートA1セルへ移動_Menu" label="A1セルへ移動"  itemSize="large" image="dspDefaultCellSelect">
           <menuSeparator id="ブック管理_MS03sub1" title="A1セルへ移動" />
-          <button id="全シートA1セルへ移動"       label="全シートA1セルへ移動"        imageMso="BlogHomePage"                     onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させます&#13;"       supertip="全シートのセルの選択位置をA1へ移動させます" />
+          <button id="全シートA1セルへ移動"       label="全シートA1セルへ移動"        image="dspDefaultCellSelect"                onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させます&#13;"       supertip="全シートのセルの選択位置をA1へ移動させます" />
           <button id="全シートA1セルへ移動_保存"  label="全シートA1セルへ移動＆保存"  image="dspDefaultCellSelectAllSheet2Save"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させ保存します&#13;" supertip="全シートのセルの選択位置をA1へ移動させ保存します" />
         </menu>
+        <button id="標準画面"         label="標準画面"          imageMso="BlogHomePage"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプション設定の基本で設定した内容を反映させます&#13;"  />
+
       </menu>
 
       <menu id="シート管理_Menu" label="シート管理"  itemSize="large" imageMso="HeaderFooterSheetNameInsert">
@@ -90,7 +92,6 @@
 
         <menu id="一括変換_Menu" label="一括変換"  itemSize="large" imageMso="GroupFontStyles">
           <menuSeparator id="一括変換_MS" title="シート表示の一括変換" />
-          <button id="標準画面"         label="標準画面"          imageMso="BlogHomePage"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="オプション設定の基本で設定した内容を反映させます&#13;"  />
           <button id="体裁一括変更"     label="体裁一括変更"      imageMso="AddToContentStore"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォント(セル・オートシェイプ内の文字）、行の高さ、&#13; ガイドラインの表示/非表示、表示倍率を一括で変更します&#13;" />
           <button id="フォント一括変更" label="フォント一括変更"  imageMso="FontsReplaceFonts"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="フォント(セル・オートシェイプ内の文字）を一括で変更します&#13;" />
         </menu>

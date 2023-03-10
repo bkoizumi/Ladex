@@ -9,7 +9,7 @@ Function 画面サイズ変更(Optional widthVal As Long, Optional heightVal As Long)
   Call Library.startScript
   Set actWin = Application.Windows(ActiveWorkbook.Name)
   
-  actWinTop = actWin.Top
+  actWinTop = actWin.top
   actWinLeft = actWin.Left
 
   Call Library.showDebugForm("actWinTop ", actWinTop, "debug")
@@ -24,7 +24,7 @@ Function 画面サイズ変更(Optional widthVal As Long, Optional heightVal As Long)
   actWin.Height = heightVal
   actWin.Width = widthVal
   
-  actWin.Top = actWinTop
+  actWin.top = actWinTop
   actWin.Left = actWinLeft
   Set actWin = Nothing
   

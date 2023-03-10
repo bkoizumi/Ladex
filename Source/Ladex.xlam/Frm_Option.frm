@@ -21,6 +21,8 @@ Public InitializeFlg   As Boolean
 Public selectLine   As Long
 
 
+
+
 '**************************************************************************************************
 ' * 初期設定
 ' *
@@ -43,6 +45,7 @@ Private Sub UserForm_Initialize()
   Call init.setting
   Call Library.showDebugForm(funcName, , "start1")
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
   '----------------------------------------------
   
   Application.Cursor = xlDefault
@@ -52,7 +55,7 @@ Private Sub UserForm_Initialize()
   
   '表示位置指定----------------------------------
   StartUpPosition = 0
-  Top = ActiveWindow.Top + ((ActiveWindow.Height - Height) / 2)
+  top = ActiveWindow.top + ((ActiveWindow.Height - Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Width) / 2)
     
   setZoomLevel = Library.getRegistry("Main", "ZoomLevel")
@@ -268,10 +271,8 @@ Private Sub UserForm_Initialize()
         End If
       Next
     .StampFont.ListIndex = ListIndex
-
-
-
-    'プレビュー
+    
+    'プレビュー----------------------------------
     imageName = thisAppName & "StampImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
     If Library.chkFileExists(previewImgPath) = False Then
@@ -284,35 +285,18 @@ Private Sub UserForm_Initialize()
     'ショートカットタブ-------------------------
     onAlt.Value = True
     indexCnt = 1
-    With funcList
-      .View = lvwReport
-      .LabelEdit = lvwManual
-      .HideSelection = False
-      .AllowColumnReorder = True
-      .FullRowSelect = True
-      .Gridlines = True
-      .ColumnHeaders.add , "_ID", "#", 30
-      .ColumnHeaders.add , "_ShortcutKey", "キー"
-      .ColumnHeaders.add , "_Label", "機能名称", 100
-      .ColumnHeaders.add , "_description", "機能", 400
-      .ColumnHeaders.add , "_KeyID", "KeyID", 0
-      
-      endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
-      For line = 2 To endLine
-        If LadexSh_Function.Range("D" & line).Value <> "" Then
-          With .ListItems.add
-            .Text = indexCnt
-            .SubItems(1) = LadexSh_Function.Range("B" & line).Value
-            .SubItems(2) = LadexSh_Function.Range("C" & line).Value
-            .SubItems(3) = LadexSh_Function.Range("D" & line).Value
-            .SubItems(4) = LadexSh_Function.Range("F" & line).Value
-          End With
-          indexCnt = indexCnt + 1
-        End If
-      Next
-    End With
     
-    'キーリスト
+    
+    '関数カテゴリメニューの表示------------------
+    endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
+    .FuncCategory.AddItem "すべて"
+    For line = 2 To endLine
+      .FuncCategory.AddItem LadexSh_Function.Range("A" & line).Value
+    Next
+    .FuncCategory.ListIndex = 0
+    
+   
+    'キーリスト----------------------------------
     endLine = LadexSh_Config.Cells(Rows.count, 13).End(xlUp).Row
     endLine = 59
     
@@ -339,6 +323,8 @@ Private Sub UserForm_Initialize()
   End With
   
   InitializeFlg = False
+  Call Library.endScript
+  
   Exit Sub
 'エラー発生時------------------------------------
 catchError:
@@ -431,7 +417,7 @@ Function doHighLightPreview()
   
   imageName = thisAppName & "HighLightImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("A1:C3"), imageName)
+  Call Ctl_Image.画像保存(LadexSh_HiLight.Range("A1:C3"), imageName)
   
   
   If Library.chkFileExists(previewImgPath) = False Then
@@ -468,7 +454,7 @@ Function doCommentPreview()
   
   imageName = thisAppName & "CommentImg" & ".jpg"
   previewImgPath = LadexDir & "\RibbonImg\" & imageName
-  Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("N6:R9"), imageName)
+  Call Ctl_Image.画像保存(LadexSh_HiLight.Range("N6:R9"), imageName)
   
   If Library.chkFileExists(previewImgPath) = False Then
     imageName = thisAppName & "NoCommentImg" & ".jpg"
@@ -489,10 +475,10 @@ Function doStampPreview()
   LadexSh_HiLight.Range("F12").Activate
   
   If StampName.Value <> "" And StampVal.Value <> "" And StampFont.Value <> "" Then
-    Call Ctl_Stamp.確認印(StampName.Value, StampVal.Value, StampFont.Value, thisAppName & "StampImg")
+    Call Ctl_Stamp.はんこ_確認印(StampName.Value, StampVal.Value, StampFont.Value, thisAppName & "StampImg")
     imageName = thisAppName & "StampImg" & ".jpg"
     previewImgPath = LadexDir & "\RibbonImg\" & imageName
-    Call Ctl_Image.saveSelectArea2Image(LadexSh_HiLight.Range("E12:I16"), imageName)
+    Call Ctl_Image.画像保存(LadexSh_HiLight.Range("E12:I16"), imageName)
     
     
     If Library.chkFileExists(previewImgPath) = False Then
@@ -677,7 +663,16 @@ Private Sub StampFont_Change()
   End If
 End Sub
 
-''==================================================================================================
+'==================================================================================================
+'関数カテゴリ変更イベント
+Private Sub FuncCategory_Change()
+  Call Library.showDebugForm("FuncCategory    ", FuncCategory.Value, "debug")
+  
+  Call reLoadFuncList(FuncCategory.Value)
+End Sub
+
+
+'==================================================================================================
 Private Sub setShortcutKey_Click()
   Dim keyVal As String
   
@@ -687,6 +682,7 @@ Private Sub setShortcutKey_Click()
   Call Library.showDebugForm("funcList.SubItem1", funcList.SelectedItem.SubItems(1), "debug")
   Call Library.showDebugForm("funcList.SubItem2", funcList.SelectedItem.SubItems(2), "debug")
   Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
+  Call Library.showDebugForm("funcList.SubItem4", funcList.SelectedItem.SubItems(4), "debug")
 
   Call Library.showDebugForm("onCtrl ", onCtrl.Value, "debug")
   Call Library.showDebugForm("onAlt  ", onAlt.Value, "debug")
@@ -695,7 +691,7 @@ Private Sub setShortcutKey_Click()
   Call Library.showDebugForm("ShortcutKey", ShortcutKey.list(ShortcutKey.ListIndex, 1), "debug")
   Call Library.showDebugForm("ShortcutKey", ShortcutKey.list(ShortcutKey.ListIndex, 2), "debug")
 
-  selectLine = funcList.SelectedItem.Text
+  selectLine = funcList.SelectedItem.SubItems(4)
 
   LadexSh_Function.Range("E" & selectLine + 1, "F" & selectLine + 1) = ""
 
@@ -726,19 +722,18 @@ Private Sub setShortcutKey_Click()
 '  keyVal = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 1)
   
   Call Library.showDebugForm("keyVal", keyVal, "debug")
-  If WorksheetFunction.CountIf(LadexSh_Function.Range("B2:B1000"), keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)) > 1 Then
+  If WorksheetFunction.CountIf(LadexSh_Function.Range("I2:I151"), keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)) > 1 Then
     megLabel.Caption = "同じ設定がすでにあります"
+    megLabel.ForeColor = RGB(255, 0, 0)
   Else
-    LadexSh_Function.Range("B" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)
-    LadexSh_Function.Range("E" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 2)
-    LadexSh_Function.Range("F" & selectLine + 1) = ShortcutKey.list(ShortcutKey.ListIndex, 1)
-  
-    Call reLoadFuncList
+    LadexSh_Function.Range("I" & selectLine + 1) = keyVal & "+" & ShortcutKey.list(ShortcutKey.ListIndex, 0)
+    Call reLoadFuncList(FuncCategory.Value)
   End If
 End Sub
 
 '==================================================================================================
-Function reLoadFuncList()
+Function reLoadFuncList(categoryName As String)
+  indexCnt = 1
 
   funcList.ListItems.Clear
   funcList.ColumnHeaders.Clear
@@ -750,28 +745,42 @@ Function reLoadFuncList()
     .FullRowSelect = True
     .Gridlines = True
     .ColumnHeaders.add , "_ID", "#", 30
-    .ColumnHeaders.add , "_ShortcutKey", "キー"
-    .ColumnHeaders.add , "_Label", "機能名称", 100
-    .ColumnHeaders.add , "_description", "機能", 400
-    .ColumnHeaders.add , "_KeyID", "KeyID", 0
-    
-    endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
+    .ColumnHeaders.add , "_ShortcutKey", "ショートカットキー"
+    .ColumnHeaders.add , "_Label", "機能名称", 200
+    .ColumnHeaders.add , "_description", "機能", 0
+    .ColumnHeaders.add , "_RowNo", "RowNo", 0
+  
+  
+    endLine = LadexSh_Function.Cells(Rows.count, 3).End(xlUp).Row
     For line = 2 To endLine
-      If LadexSh_Function.Range("C" & line).Value <> "" Then
-        With .ListItems.add
-          .Text = LadexSh_Function.Range("A" & line).Value
-          .SubItems(1) = LadexSh_Function.Range("B" & line).Value
-          .SubItems(2) = LadexSh_Function.Range("C" & line).Value
-          .SubItems(3) = LadexSh_Function.Range("D" & line).Value
-          .SubItems(4) = LadexSh_Function.Range("F" & line).Value
-        End With
+      If categoryName = "すべて" Then
+        If LadexSh_Function.Range("D" & line).Value <> "" Then
+          With .ListItems.add
+            .Text = indexCnt
+            .SubItems(1) = LadexSh_Function.Range("I" & line).Value   'ショートカットキー
+            .SubItems(2) = LadexSh_Function.Range("G" & line).Value   '機能名称
+            .SubItems(3) = LadexSh_Function.Range("H" & line).Value   '機能説明
+            .SubItems(4) = LadexSh_Function.Range("C" & line).Value   'RowNo
+          End With
+          indexCnt = indexCnt + 1
+        End If
+      Else
+        If LadexSh_Function.Range("D" & line).Value = categoryName Then
+          With .ListItems.add
+            .Text = indexCnt
+            .SubItems(1) = LadexSh_Function.Range("I" & line).Value   'ショートカットキー
+            .SubItems(2) = LadexSh_Function.Range("G" & line).Value   '機能名称
+            .SubItems(3) = LadexSh_Function.Range("H" & line).Value   '機能説明
+            .SubItems(4) = LadexSh_Function.Range("C" & line).Value   'RowNo
+          End With
+          indexCnt = indexCnt + 1
+        End If
       End If
-    Next
-    .ListItems(selectLine).EnsureVisible
-    .ListItems(selectLine).Selected = True
-    .SetFocus
 
+    Next
   End With
+
+  
 End Function
 
 '==================================================================================================
@@ -805,6 +814,9 @@ Private Sub funcList_Click()
     onShift.Value = False
     ShortcutKey.Value = ""
   End If
+  
+  megLabel.Caption = funcList.SelectedItem.SubItems(3)
+  megLabel.ForeColor = RGB(0, 0, 0)
 End Sub
 
 '==================================================================================================
@@ -817,7 +829,8 @@ Private Sub Del_ShortcutKey_Click()
   LadexSh_Function.Range("E" & selectLine + 1) = ""
   LadexSh_Function.Range("F" & selectLine + 1) = ""
   megLabel.Caption = ""
-  Call reLoadFuncList
+  
+  Call reLoadFuncList(FuncCategory.Value)
 End Sub
 
 

@@ -24,7 +24,7 @@ Function InitializeBook()
   On Error GoTo catchError
   runFlg = True
   Call init.setting
-  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm(funcName, , "start")
   Call Library.startScript
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
@@ -47,33 +47,32 @@ Function InitializeBook()
   Call Ctl_UsrFunction.InitializeUsrFunction
   
   'ショートカットキー設定------------------------
-  Call Main.setShortcutKey
+  Call Main.ショートカットキー設定
 
 
   '処理終了--------------------------------------
   Call Library.endScript
-  Call Library.showDebugForm(funcName, , "end1")
-  'Call init.unsetting
+  Call Library.showDebugForm(funcName, , "end")
+  Exit Function
   '----------------------------------------------
 
-  Exit Function
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
 '**************************************************************************************************
 ' * ショートカットキーの設定
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function setShortcutKey()
+Function ショートカットキー設定()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim keyVal As Variant
   Dim ShortcutKey As String, ShortcutFunc As String, ShortcutKey1 As String
-  Const funcName As String = "Main.setShortcutKey"
+  
+  Const funcName As String = "Main.ショートカットキー設定"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -89,13 +88,13 @@ Function setShortcutKey()
   
   Call Application.OnKey("{F1}", "")
   
-  endLine = LadexSh_Function.Cells(Rows.count, 1).End(xlUp).Row
+  endLine = LadexSh_Function.Cells(Rows.count, 3).End(xlUp).Row
   For line = 2 To endLine
-    If LadexSh_Function.Range("E" & line) <> "" Then
+    If LadexSh_Function.Range("I" & line) <> "" Then
       ShortcutKey = ""
       ShortcutKey1 = ""
       
-      For Each keyVal In Split(LadexSh_Function.Range("E" & line), "+")
+      For Each keyVal In Split(LadexSh_Function.Range("I" & line), "+")
         If keyVal = "Ctrl" Then
           ShortcutKey = "^"
         ElseIf keyVal = "Alt" Then
@@ -113,11 +112,13 @@ Function setShortcutKey()
           End Select
         End If
       Next
-      ShortcutFunc = "Menu.ladex_" & LadexSh_Function.Range("C" & line)
-      Call Library.showDebugForm("ShortcutKey", ShortcutKey, "debug")
-      Call Library.showDebugForm("Function   ", ShortcutFunc, "debug")
+      ShortcutFunc = "'Menu.各機能呼び出し """ & LadexSh_Function.Range("E" & line) & """'"
+      Call Library.showDebugForm("ShortcutKey ", ShortcutKey, "debug")
+      Call Library.showDebugForm("ShortcutFunc", ShortcutFunc, "debug")
       
       Call Application.OnKey(ShortcutKey, ShortcutFunc)
+           
+      
       
       If ShortcutKey1 <> "" Then
         Call Library.showDebugForm("ShortcutKey", ShortcutKey1, "debug")
@@ -134,7 +135,7 @@ Function setShortcutKey()
   If runFlg = False Then
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
+    Call init.resetGlobalVal
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If

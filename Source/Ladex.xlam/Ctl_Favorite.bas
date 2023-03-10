@@ -440,7 +440,7 @@ Function delete()
     colLine = Frm_Favorite.Lst_FavCategory.ListIndex + 1
   End If
   
-  targetSheet.Cells(line, colLine).Select
+'  targetSheet.Cells(line, colLine).Select
   targetSheet.Cells(line, colLine).delete Shift:=xlUp
   
   Call Frm_Favorite.RefreshListBox

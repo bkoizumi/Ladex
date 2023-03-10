@@ -38,7 +38,7 @@ Private Sub UserForm_Initialize()
   
   '表示位置指定----------------------------------
   StartUpPosition = 0
-  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
     
   InitializeFlg = True
@@ -388,7 +388,7 @@ End Sub
 Private Sub addSheets_Click()
   Unload Me
   Call Ctl_Book.連続シート追加
-  Call Ctl_Sheet.シート管理_フォーム表示
+  Call Ctl_Book.シート管理
 End Sub
 
 

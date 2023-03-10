@@ -2,72 +2,17 @@ Attribute VB_Name = "Ctl_Cells"
 Option Explicit
 
 '**************************************************************************************************
-' * セル操作
+' * セル調整
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function セル高さ固定設定(setRowHeight As Integer)
-  Dim line As Long, startLine As Long, endLine As Long
-  Dim SelectionCell As Range
-  
-  Const funcName As String = "Ctl_Cells.セル高さ固定設定"
-  
-  '処理開始--------------------------------------
-  Call init.setting
-  If runFlg = False Then
-    Call Library.showDebugForm(funcName, , "start")
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  
-  Call Library.showDebugForm("runFlg      ", runFlg, "debug")
-  Call Library.showDebugForm("setRowHeight", setRowHeight, "debug")
-
-  Call Library.startScript
-  Call Ctl_ProgressBar.showStart
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  
-  startLine = Selection(1).Row
-  endLine = Selection(Selection.count)
-  If endLine = 0 Then
-    endLine = startLine
-  End If
-  Rows(startLine & ":" & endLine).rowHeight = setRowHeight
-  
-  
-  
-  '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.resetGlobalVal
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-  End If
-  Exit Function
-  '----------------------------------------------
-
-  'エラー発生時------------------------------------------------------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
-
-'==================================================================================================
-Function セル幅調整()
-  Dim colLine As Long, endColLine As Long
-  Dim slctStartColLine As Long, slctEndColLine As Long, useEndColLine As Long
+Function セル自動調整_幅()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
   Dim colName As String
-  Dim slctCells As Range
   
-  Const funcName As String = "Ctl_Cells.セル幅調整"
-  Const maxColumnWidth As Integer = 60
-  
+  Const funcName As String = "Ctl_Cells.セル自動調整_幅"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -78,44 +23,28 @@ Function セル幅調整()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
   Call Ctl_ProgressBar.showStart
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
-  useEndColLine = Selection.SpecialCells(xlLastCell).Column
+  Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
+  Columns(Library.getColumnName(startColLine) & ":" & Library.getColumnName(endColLine)).EntireColumn.AutoFit
   
-  '選択範囲がある場合----------------------------
-  If Selection.CountLarge > 1 Then
-    Call Library.showDebugForm("選択範囲あり", , "debug")
-    
-    Selection.EntireColumn.AutoFit
-  
-    slctStartColLine = Selection.Column
-    slctEndColLine = Selection.Column + Selection.Columns.count
-  
-  '選択範囲がない場合----------------------------
-  Else
-    Call Library.showDebugForm("選択範囲なし", , "debug")
-    Cells.EntireColumn.AutoFit
-  
-    slctStartColLine = 1
-    slctEndColLine = useEndColLine
-  
-  End If
-  
-  '最大幅確認------------------------------------
-  For colLine = slctStartColLine To slctEndColLine
+  '最大値確認------------------------------------
+  For colLine = startLine To endColLine
     colName = Library.getColumnName(colLine)
-    Call Library.showDebugForm("最大幅確認", colName, "debug")
+    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, colLine, endColLine, "")
     
+    If Columns(colLine).Hidden = False Then
+      '列幅の自動調整
+      Columns(colLine).EntireColumn.AutoFit
     
-    If Cells(1, colLine).ColumnWidth > maxColumnWidth Then
-      Columns(colName & ":" & colName).ColumnWidth = maxColumnWidth
-    Else
-      Columns(colName & ":" & colName).ColumnWidth = WorksheetFunction.RoundUp(Columns(colName & ":" & colName).ColumnWidth, 0) + 1
+      If Columns(colLine).ColumnWidth > maxColumnWidth Then
+        Columns(colLine).ColumnWidth = maxColumnWidth
+      End If
     End If
   Next
   
@@ -139,11 +68,11 @@ End Function
 
 
 '==================================================================================================
-Function セル高さ調整()
-  Dim line As Long, startLine As Long, endLine As Long
-  Dim SelectionCell As Range
+Function セル自動調整_高さ()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
   
-  Const funcName As String = "Ctl_Cells.セル高さ調整"
+  Const funcName As String = "Ctl_Cells.セル自動調整_高さ"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -154,39 +83,72 @@ Function セル高さ調整()
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
-  
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
   Call Ctl_ProgressBar.showStart
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
-  Cells.EntireRow.AutoFit
-  
-  If Selection.Rows.count <= 1 Then
-    startLine = 1
-    endLine = Range("A1").SpecialCells(xlLastCell).Row
-  Else
-    startLine = SelectionCell.Row
-    endLine = Range("A1").SpecialCells(xlLastCell).Row
-  End If
-  Selection.EntireRow.AutoFit
-  
-  
+  Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
   For line = startLine To endLine
-    Call Ctl_ProgressBar.showBar(thisAppName, PrgP_Cnt, PrgP_Max, line, endLine, "高さ設定")
+    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
     
-    If Rows(line & ":" & line).Hidden = False Then
-      If Rows(line & ":" & line).Height < Int(dicVal("rowHeight")) Then
-        Rows(line & ":" & line).rowHeight = dicVal("rowHeight")
+    If Rows(line).Hidden = False Then
+      '高さの自動調整
+      Rows(line).EntireRow.AutoFit
       
-      ElseIf Rows(line & ":" & line).Height > 200 Then
-        Rows(line & ":" & line).rowHeight = 200
+      If Rows(line).Height > maxRowHeight Then
+        Rows(line).rowHeight = maxRowHeight
       End If
     End If
   Next
   
   
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function セル自動調整_両方()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
+  
+  Const funcName As String = "Ctl_Cells.セル自動調整_両方"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg      ", runFlg, "debug")
+
+  Call Ctl_ProgressBar.showStart
+  PrgP_Max = 2
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Call Ctl_Cells.セル自動調整_高さ
+  Call Ctl_Cells.セル自動調整_幅
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
@@ -207,13 +169,283 @@ catchError:
 End Function
 
 
+'==================================================================================================
+Function セル固定設定_幅()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
+  
+  Const funcName As String = "Ctl_Cells.セル固定設定_幅"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
+  Columns(Library.getColumnName(startColLine) & ":" & Library.getColumnName(endColLine)).EntireColumn.AutoFit
+  
+  '最大値確認------------------------------------
+  For colLine = startLine To endColLine
+    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, colLine, endColLine, "")
+    
+    If Columns(colLine).Hidden = False Then
+      Columns(colLine).ColumnWidth = dicVal("ColumnWidth")
+    End If
+  Next
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
 
 
 '==================================================================================================
-Function 前後のスペース削除()
+Function セル固定設定_高さ()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
+  
+  Const funcName As String = "Ctl_Cells.セル固定設定_高さ"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
+  For line = startLine To endLine
+    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
+    If Rows(line).Hidden = False Then
+      Rows(line).rowHeight = dicVal("rowHeight")
+    End If
+  Next
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function セル固定設定_両方()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
+  
+  Const funcName As String = "Ctl_Cells.セル固定設定_両方"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
+  PrgP_Max = 2
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+  
+  Ctl_Cells.セル固定設定_高さ
+  Ctl_Cells.セル固定設定_幅
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function セル固定設定_高さ15()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
+  
+  Const funcName As String = "Ctl_Cells.セル固定設定_高さ"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  '選択範囲がある場合----------------------------
+  If Selection.CountLarge > 1 Then
+    Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
+  Else
+    startLine = Selection(1).Row
+    endLine = startLine
+  End If
+  
+  For line = startLine To endLine
+    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
+    
+    If Rows(line).Hidden = False Then
+      Rows(line).rowHeight = 15
+    End If
+  Next
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+'==================================================================================================
+Function セル固定設定_高さ30()
+  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
+  Dim line As Long, colLine As Long
+  
+  Const funcName As String = "Ctl_Cells.セル固定設定_高さ30"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  '選択範囲がある場合----------------------------
+  If Selection.CountLarge > 1 Then
+    Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
+  Else
+    startLine = Selection(1).Row
+    endLine = startLine
+  End If
+  
+  For line = startLine To endLine
+    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
+    
+    If Rows(line).Hidden = False Then
+      Rows(line).rowHeight = 30
+    End If
+  Next
+  
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'**************************************************************************************************
+' * セル編集
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+'==================================================================================================
+Function 削除_前後のスペース()
   Dim slctCells As Range
   
-  Const funcName As String = "Ctl_Cells.前後のスペース削除"
+  Const funcName As String = "Ctl_Cells.削除_前後のスペース"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -257,11 +489,11 @@ End Function
 
 
 '==================================================================================================
-Function 全空白削除()
+Function 削除_全スペース()
   Dim slctCells As Range
   Dim resVal As String
   
-  Const funcName As String = "Ctl_Cells.Trim01"
+  Const funcName As String = "Ctl_Cells.削除_全スペース"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -312,12 +544,12 @@ End Function
 
 
 '==================================================================================================
-Function 中黒点付与()
+Function 追加_文頭に中黒点()
   Dim line As Long, endLine As Long
   Dim Reg As Object
   Dim slctCells
   
-  Const funcName As String = "Ctl_Cells.中黒点付与"
+  Const funcName As String = "Ctl_Cells.追加_文頭に中黒点"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -367,72 +599,12 @@ catchError:
   Call Library.errorHandle
 End Function
 
-
 '==================================================================================================
-Function 連番設定()
-  Dim line As Long, endLine As Long
-  Dim slctCells As Range
-  Dim i As Long
-  Dim slctCellsCnt As Long
-  Const funcName As String = "Ctl_Cells.連番設定"
-  
-  '処理開始--------------------------------------
-  Call init.setting
-  If runFlg = False Then
-    Call Library.showDebugForm(funcName, , "start")
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
-  Call Library.startScript
-  Call Ctl_ProgressBar.showStart
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  line = 1
-  
-  If Selection.Item(1).Value = "" Then
-    line = 1
-  Else
-    line = Selection.Item(1).Value
-  End If
-  
-  Selection.HorizontalAlignment = xlCenter
-  For Each slctCells In Selection
-    Call Ctl_ProgressBar.showCount(funcName, PrgP_Cnt, PrgP_Max, PbarCnt, Selection.count, slctCells.Text)
-
-    Call Library.showDebugForm("設定前セル値", slctCells.Value, "debug")
-    slctCells.Value = line
-    line = line + 1
-  Next
-
-  '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.resetGlobalVal
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-  End If
-  Exit Function
-  '----------------------------------------------
-
-  'エラー発生時------------------------------------------------------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
-
-
-'==================================================================================================
-Function 連番追加()
+Function 追加_文頭に連番()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
   Dim Reg As Object
-  Const funcName As String = "Ctl_Cells.連番追加"
+  Const funcName As String = "Ctl_Cells.追加_文頭に連番"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -490,12 +662,74 @@ End Function
 
 
 '==================================================================================================
-Function 英数字全⇒半角変換()
+Function 上書_文頭に連番()
+  Dim line As Long, endLine As Long
+  Dim slctCells As Range
+  Dim i As Long
+  Dim slctCellsCnt As Long
+  Const funcName As String = "Ctl_Cells.上書_文頭に連番"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  line = 1
+  
+  If Selection.Item(1).Value = "" Then
+    line = 1
+  Else
+    line = Selection.Item(1).Value
+  End If
+  
+  Selection.HorizontalAlignment = xlCenter
+  For Each slctCells In Selection
+    Call Ctl_ProgressBar.showCount(funcName, PrgP_Cnt, PrgP_Max, PbarCnt, Selection.count, slctCells.Text)
+
+    Call Library.showDebugForm("設定前セル値", slctCells.Value, "debug")
+    slctCells.Value = line
+    line = line + 1
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+
+
+
+'==================================================================================================
+Function 変換_全角⇒半角()
   Dim line As Long, endLine As Long
   Dim slctCellsCnt As Long
   Dim i As Long
   Dim arrCells
-  Const funcName As String = "Ctl_Cells.英数字全⇒半角変換"
+  Const funcName As String = "Ctl_Cells.変換_全角⇒半角"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -544,12 +778,12 @@ End Function
 
 
 '==================================================================================================
-Function 英数字半⇒全角変換()
+Function 変換_半角⇒全角()
   Dim line As Long, endLine As Long
   Dim slctCellsCnt As Long
   Dim i As Long
   Dim arrCells
-  Const funcName As String = "Ctl_Cells.英数字半⇒全角変換"
+  Const funcName As String = "Ctl_Cells.変換_半角⇒全角"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -598,10 +832,10 @@ End Function
 
 
 '==================================================================================================
-Function 取り消し線設定()
+Function 設定_取り消し線()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.取り消し線設定"
+  Const funcName As String = "Ctl_Cells.設定_取り消し線"
     
   '処理開始--------------------------------------
   Call init.setting
@@ -650,11 +884,11 @@ End Function
 
 
 '==================================================================================================
-Function コメント挿入()
+Function 追加_コメント()
   Dim commentVal As String, commentBgColor As Long, CommentFontColor As Long
   Dim CommentFont As String, CommentFontSize As String
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.コメント挿入"
+  Const funcName As String = "Ctl_Cells.追加_コメント"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -695,7 +929,6 @@ Function コメント挿入()
       
     With Frm_InsComment
       .TextBox = commentVal
-      
       If commentVal <> "" Then
         .CommentColor.BackColor = commentBgColor
         .CommentFont = CommentFont
@@ -706,7 +939,6 @@ Function コメント挿入()
       .Show
     End With
     DoEvents
-    
 
 LBl_nextFor:
   Next
@@ -731,9 +963,9 @@ End Function
 
 
 '==================================================================================================
-Function コメント削除()
+Function 削除_コメント()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.コメント削除"
+  Const funcName As String = "Ctl_Cells.削除_コメント"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -783,9 +1015,9 @@ End Function
 
 
 '==================================================================================================
-Function 行例を入れ替えて貼付け()
+Function 貼付_行例入れ替え()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.行例を入れ替えて貼付け"
+  Const funcName As String = "Ctl_Cells.貼付_行例入れ替え"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -826,9 +1058,9 @@ End Function
 
 
 '==================================================================================================
-Function ゼロ埋め()
+Function 上書_ゼロ()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.ゼロ埋め"
+  Const funcName As String = "Ctl_Cells.上書_ゼロ"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -848,14 +1080,12 @@ Function ゼロ埋め()
 
   For Each slctCells In Selection
     Call Ctl_ProgressBar.showCount(funcName, PrgP_Cnt, PrgP_Max, PbarCnt, Selection.count, slctCells.Text)
-
-
+    
     If slctCells.Text = "" Then
       slctCells.Value = 0
       DoEvents
     End If
   Next
-  
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
@@ -877,12 +1107,12 @@ End Function
 
 
 '==================================================================================================
-Function 改行削除()
+Function 削除_改行()
   Dim slctCells As Range
   Dim resVal As String
   Dim i As Long
   
-  Const funcName As String = "Ctl_Cells.改行削除"
+  Const funcName As String = "Ctl_Cells.削除_改行"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -930,9 +1160,9 @@ End Function
 
 
 '==================================================================================================
-Function 行挿入()
+Function 挿入_行()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.行挿入"
+  Const funcName As String = "Ctl_Cells.挿入_行"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -974,9 +1204,9 @@ End Function
 
 
 '==================================================================================================
-Function 列挿入()
+Function 挿入_列()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.列挿入"
+  Const funcName As String = "Ctl_Cells.挿入_列"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1018,10 +1248,10 @@ End Function
 
 
 '==================================================================================================
-Function 定数削除()
+Function 削除_定数()
   Dim slctCells As Range
   Dim resVal As String
-  Const funcName As String = "Ctl_Cells.定数削除"
+  Const funcName As String = "Ctl_Cells.削除_定数"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1068,12 +1298,12 @@ End Function
 
 
 '==================================================================================================
-Function 大⇒小変変換()
+Function 変換_大文字⇒小文字()
   Dim line As Long, endLine As Long
   Dim slctCellsCnt As Long
   Dim arrCells
   
-  Const funcName As String = "Ctl_Cells.大⇒小変変換"
+  Const funcName As String = "Ctl_Cells.変換_大文字⇒小文字"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1122,12 +1352,12 @@ End Function
 
 
 '==================================================================================================
-Function 小⇒大変変換()
+Function 変換_小文字⇒大文字()
   Dim line As Long, endLine As Long
   Dim slctCellsCnt As Long
   Dim arrCells
   
-  Const funcName As String = "Ctl_Cells.小⇒大変変換"
+  Const funcName As String = "Ctl_Cells.変換_小文字⇒大文字"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1176,11 +1406,11 @@ End Function
 
 
 '==================================================================================================
-Function 丸数字⇒数値()
+Function 変換_丸数字⇒数値()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
   Dim slctCellsCnt As Long
-  Const funcName As String = "Ctl_Cells.丸数字⇒数値"
+  Const funcName As String = "Ctl_Cells.変換_丸数字⇒数値"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1246,11 +1476,11 @@ End Function
 
 
 '==================================================================================================
-Function 数値⇒丸数字()
+Function 変換_数値⇒丸数字()
   Dim line As Long, endLine As Long
   Dim slctCells As Range
 
-  Const funcName As String = "Ctl_Cells.数値⇒丸数字"
+  Const funcName As String = "Ctl_Cells.変換_数値⇒丸数字"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -1304,9 +1534,9 @@ catchError:
 End Function
 
 '==================================================================================================
-Function URLエンコード()
+Function 変換_URLエンコード()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.URLエンコード"
+  Const funcName As String = "Ctl_Cells.変換_URLエンコード"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1349,9 +1579,9 @@ End Function
 
 
 '==================================================================================================
-Function URLデコード()
+Function 変換_URLデコード()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.URLデコード"
+  Const funcName As String = "Ctl_Cells.変換_URLデコード"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1394,9 +1624,9 @@ End Function
 
 
 '==================================================================================================
-Function Unicodeエスケープ()
+Function 変換_Unicodeエスケープ()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.Unicodeエスケープ"
+  Const funcName As String = "Ctl_Cells.変換_Unicodeエスケープ"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1440,9 +1670,9 @@ catchError:
 End Function
 
 '==================================================================================================
-Function Unicodeアンエスケープ()
+Function 変換_Unicodeアンエスケープ()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.Unicodeアンエスケープ"
+  Const funcName As String = "Ctl_Cells.変換_Unicodeアンエスケープ"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -1485,3 +1715,13 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
+'==================================================================================================
+Function 変換_Base64エンコード()
+End Function
+
+
+'==================================================================================================
+Function 変換_Base64デコード()
+End Function
+

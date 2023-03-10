@@ -14,7 +14,7 @@ Public targetRange          As Range
 
 'グローバル変数----------------------------------
 Public Const thisAppName    As String = "Ladex"
-Public Const thisAppVersion As String = "1.4.4.0"
+Public Const thisAppVersion As String = "2.0.0.0"
 Public Const RelaxTools     As String = "Relaxtools.xlam"
 Public Const thisAppPasswd  As String = "Ladex"
 
@@ -76,7 +76,9 @@ Public defaultZoomInVal     As String
 'お気に入り関連----------------------------------
 Public Const favoriteDebug  As Boolean = False
 
-
+'セル関連----------------------------------------
+Public Const maxColumnWidth As Long = 60
+Public Const maxRowHeight   As Long = 200
 
 '**************************************************************************************************
 ' * 設定解除
@@ -183,6 +185,7 @@ Function setting(Optional reCheckFlg As Boolean)
   LadexDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex"
   logFile = LadexDir & "\log\ExcelMacro.log"
   Set wsh = Nothing
+  Call Library.showDebugForm(funcName, , "function")
   
   If Library.Bookの状態確認 = True Then
     '設定値読み込み--------------------------------

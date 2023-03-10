@@ -25,6 +25,8 @@ Private Const WS_THICKFRAME = &H40000
   Dim rc As Long
     
 #End If
+
+
 '**************************************************************************************************
 ' * サイズを可変化する
 ' *
@@ -55,11 +57,11 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
-Function 表示位置(T, L)
+Function 表示位置(T, l)
   Dim topPosition As Long, leftPosition As Long
   
   topPosition = CLng(T)
-  leftPosition = CLng(L)
+  leftPosition = CLng(l)
   
   Call Library.getMachineInfo
   
@@ -83,11 +85,11 @@ Function 表示位置(T, L)
   End If
   
   If leftPosition > MachineInfo("appWidth") Then
-    L = CInt(MachineInfo("appWidth") / 4)
+    l = CInt(MachineInfo("appWidth") / 4)
   ElseIf leftPosition = 0 Then
-    L = CInt(MachineInfo("appWidth") / 4)
+    l = CInt(MachineInfo("appWidth") / 4)
   Else
-    L = leftPosition
+    l = leftPosition
   End If
   
 '  Call Library.showDebugForm("t               ：" & t)

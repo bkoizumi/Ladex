@@ -35,10 +35,10 @@ Private Sub UserForm_Resize()
   If Height > 100 Then
     TextBox.Height = Me.Height - 100
     
-    Label1.Top = Me.Height - 75
-    Label2.Top = Me.Height - 60
-    OK_Button.Top = Me.Height - 75
-    CancelButton.Top = Me.Height - 75
+    Label1.top = Me.Height - 75
+    Label2.top = Me.Height - 60
+    OK_Button.top = Me.Height - 75
+    CancelButton.top = Me.Height - 75
   End If
   
 End Sub
@@ -48,7 +48,7 @@ End Sub
 '==================================================================================================
 Private Sub UserForm_Initialize()
   StartUpPosition = 0
-  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
+  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
   
   Caption = "ÉYÅ[ÉÄ |  " & thisAppName

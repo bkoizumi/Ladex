@@ -1133,9 +1133,15 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function delVisibleNames()
+Function セルの名称設定削除()
   Dim Name As Object
 
+  Const funcName As String = "Library.セルの名称設定削除"
+  
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  '----------------------------------------------
   On Error Resume Next
   For Each Name In Names
     If Name.Visible = False Then
@@ -1143,9 +1149,21 @@ Function delVisibleNames()
     End If
     If Not Name.Name Like "*!Print_Area" And Not Name.Name Like "*!Print_Titles" Then
       Name.delete
+      Call Library.showDebugForm("Name", Name.Name, "debug")
     End If
   Next
+  
+  '処理終了--------------------------------------
+  Call Library.showDebugForm(funcName, , "end1")
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
+
 
 '**************************************************************************************************
 ' * テーブルデータ削除
@@ -1505,7 +1523,7 @@ Function getMachineInfo() As Object
 
   MachineInfo.add "displayVirtualX", GetSystemMetrics(78)
   MachineInfo.add "displayVirtualY", GetSystemMetrics(79)
-  MachineInfo.add "appTop", ActiveWindow.Top
+  MachineInfo.add "appTop", ActiveWindow.top
   MachineInfo.add "appLeft", ActiveWindow.Left
   MachineInfo.add "appWidth", ActiveWindow.Width
   MachineInfo.add "appHeight", ActiveWindow.Height
@@ -1561,7 +1579,7 @@ Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long
 '  ActvCellTop = ((R1C1Top * DPI / PPI) * (ActiveWindow.Zoom / 100)) + Rng.Top
 '  ActvCellLeft = ((R1C1Left * DPI / PPI) * (ActiveWindow.Zoom / 100)) + Rng.Left
 
-  ActvCellTop = (((Rng.Top * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Top) * (PPI / DPI)
+  ActvCellTop = (((Rng.top * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Top) * (PPI / DPI)
   ActvCellLeft = (((Rng.Left * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Left) * (PPI / DPI)
 
 '  If ActvCellLeft <= 0 Then
@@ -1575,6 +1593,58 @@ Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long
   Call Library.showDebugForm("Rng.Address ：" & Rng.Address)
   Call Library.showDebugForm("ActvCellTop ：" & ActvCellTop)
   Call Library.showDebugForm("ActvCellLeft：" & ActvCellLeft)
+End Function
+
+'**************************************************************************************************
+' * セルの選択範囲取得
+' *
+' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+'**************************************************************************************************
+Function getCellSelectArea(Optional startLine As Long, Optional endLine As Long, Optional startColLine As Long, Optional endColLine As Long)
+
+  Const funcName As String = "Library.getCellSelectArea"
+
+  '処理開始--------------------------------------
+  On Error GoTo catchError
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("Selection   ", Selection.CountLarge, "debug")
+  '----------------------------------------------
+
+  '選択範囲がある場合----------------------------
+  If Selection.CountLarge > 1 Then
+    startLine = Selection(1).Row
+    endLine = Selection(Selection.count).Row
+    
+    startColLine = Selection.Column
+    endColLine = Selection.Column + Selection.Columns.count - 1
+  
+  '選択範囲がない場合----------------------------
+  Else
+    startLine = 1
+    endLine = Range("A1").SpecialCells(xlLastCell).Row
+    
+    startColLine = 1
+    endColLine = Range("A1").SpecialCells(xlLastCell).Column
+  End If
+  
+  If endLine = 0 Then
+    endLine = startLine
+  End If
+  
+  Call Library.showDebugForm("startLine   ", startLine, "debug")
+  Call Library.showDebugForm("endLine     ", endLine, "debug")
+  Call Library.showDebugForm("startColLine", startColLine, "debug")
+  Call Library.showDebugForm("endColLine  ", endColLine, "debug")
+
+  '処理終了--------------------------------------
+  Call Library.showDebugForm(funcName, , "end1")
+  Exit Function
+  '----------------------------------------------
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 '**************************************************************************************************
@@ -1957,7 +2027,7 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
                 LinkToFile:=False, _
                 SaveWithDocument:=True, _
                 Left:=0, _
-                Top:=0, _
+                top:=0, _
                 Width:=0, _
                 Height:=0 _
                 )
@@ -2146,7 +2216,7 @@ End Function
 Function showExpansionForm(Text As String, SetSelectTargetRows As String)
   With Frm_Zoom
     .StartUpPosition = 0
-    .Top = Application.Top + (ActiveWindow.Width / 10)
+    .top = Application.top + (ActiveWindow.Width / 10)
     .Left = Application.Left + (ActiveWindow.Height / 5)
     .TextBox = Text
     .TextBox.MultiLine = True
@@ -2173,43 +2243,44 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
   Select Case LogLevel
     
     Case "Error"
-      meg1 = "  [Error]    " & Replace(meg1, vbNewLine, " ")
       LogLevel = 1
+      meg1 = "  [Error   ]    " & Replace(meg1, vbNewLine, " ")
 
     Case "warning"
-      meg1 = "  [Warning]  " & Replace(meg1, vbNewLine, " ")
       LogLevel = 2
-
+      meg1 = "  [Warning ]  " & Replace(meg1, vbNewLine, " ")
+    
     Case "info"
-      meg1 = "  [Info    ] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 4
+      meg1 = "  [Info    ] " & Replace(meg1, vbNewLine, " ")
 
     Case "debug"
-      meg1 = "  [Debug   ] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 5
-
+      meg1 = "  [Debug   ] " & Replace(meg1, vbNewLine, " ")
+    
     Case "start"
+      LogLevel = 0
       meg1 = Library.convFixedLength(meg1, 62, "=")
-      LogLevel = 0
+    
     Case "end"
-      meg1 = Library.convFixedLength("", 62, "=")
       LogLevel = 0
+      meg1 = Library.convFixedLength("", 62, "=")
       
     Case "start1"
+      LogLevel = 0
       meg1 = Library.convFixedLength("  " & meg1 & " ", 62, "-")
-      LogLevel = 0
-    Case "end1"
-      meg1 = Library.convFixedLength("  ", 62, "-")
-      LogLevel = 0
-      
     
-    Case "function", "function1"
-      meg1 = "  [Function] " & meg1
+    Case "end1"
       LogLevel = 0
+      meg1 = Library.convFixedLength("  ", 62, "-")
+      
+    Case "function", "function1"
+      LogLevel = 0
+      meg1 = "  [Function] " & meg1
       
     Case Else
-      meg1 = "  [XXXXXXXX] " & Replace(meg1, vbNewLine, " ")
       LogLevel = 6
+      meg1 = "  [XXXXXXXX] " & Replace(meg1, vbNewLine, " ")
   End Select
 
   If IsMissing(meg2) = False Then
@@ -3019,6 +3090,33 @@ Function 罫線_クリア(Optional SetArea As Range)
     End With
   End If
 End Function
+
+'==================================================================================================
+Function 罫線_クリア_中央線_横(Optional SetArea As Range)
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideHorizontal).LineStyle = xlNone
+    End With
+  End If
+End Function
+
+'==================================================================================================
+Function 罫線_クリア_中央線_縦(Optional SetArea As Range)
+  If TypeName(SetArea) = "Range" Then
+    With SetArea
+      .Borders(xlInsideVertical).LineStyle = xlNone
+    End With
+  Else
+    With Selection
+      .Borders(xlInsideVertical).LineStyle = xlNone
+    End With
+  End If
+End Function
+
 
 '==================================================================================================
 Function 罫線_表(Optional SetArea As Range, Optional LineColor As Variant)
@@ -4055,31 +4153,6 @@ Function 罫線_破線_逆L字(Optional SetArea As Range, Optional LineColor As Varian
   End If
 End Function
 
-'==================================================================================================
-Function 罫線_中央線削除_横(Optional SetArea As Range)
-  If TypeName(SetArea) = "Range" Then
-    With SetArea
-      .Borders(xlInsideHorizontal).LineStyle = xlNone
-    End With
-  Else
-    With Selection
-      .Borders(xlInsideHorizontal).LineStyle = xlNone
-    End With
-  End If
-End Function
-
-'==================================================================================================
-Function 罫線_中央線削除_縦(Optional SetArea As Range)
-  If TypeName(SetArea) = "Range" Then
-    With SetArea
-      .Borders(xlInsideVertical).LineStyle = xlNone
-    End With
-  Else
-    With Selection
-      .Borders(xlInsideVertical).LineStyle = xlNone
-    End With
-  End If
-End Function
 
 '**************************************************************************************************
 ' * カラム幅設定 / 取得

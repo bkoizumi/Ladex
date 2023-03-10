@@ -8,6 +8,7 @@ Private Ctl_Event As New Ctl_Event
 #Else
   Private Declare Sub MoveMemory Lib "kernel32" Alias "RtlMoveMemory" (pDest As Any, pSrc As Any, ByVal cbLen As Long)
 #End If
+
 '**************************************************************************************************
 ' * リボンメニュー初期設定
 ' *
@@ -299,7 +300,7 @@ End Function
 
 '==================================================================================================
 'お気に入りファイル追加
-Function FavoriteAddFile(control As IRibbonControl, ByRef returnedVal)
+Function FavoriteAddFile(control As IRibbonControl)
   Dim fileNamePath As String
   Dim line As Long
   Dim setCategory As Long
@@ -405,6 +406,7 @@ Function FavoritesToAdd(control As IRibbonControl, ByRef returnedVal)
   Else
     Call Library.Sort_QuickSort(tmp, LBound(tmp), UBound(tmp), 0)
     oldCategoryName = ""
+    line = 1
     
     For i = 0 To UBound(tmp)
       categoryName = Split(tmp(i, 0), "<L|>")(0)
@@ -430,15 +432,15 @@ Function FavoritesToAdd(control As IRibbonControl, ByRef returnedVal)
   
   DOMDoc.appendChild Menu
   returnedVal = DOMDoc.XML
-  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+  'Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
   
   Set CategoryMenu = Nothing
   Set Menu = Nothing
   Set DOMDoc = Nothing
   
   '処理終了--------------------------------------
-  Call Library.showDebugForm(funcName, , "end")
   Call init.resetGlobalVal
+  Call Library.showDebugForm(funcName, , "end")
   Exit Function
   '----------------------------------------------
 
@@ -464,7 +466,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
 
   '処理開始--------------------------------------
   runFlg = True
-'  On Error GoTo catchError
+  On Error GoTo catchError
   Call init.setting
   Call Library.showDebugForm(funcName, , "start1")
   '----------------------------------------------
@@ -542,7 +544,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
             
             Case Else
               .setAttribute "imageMso", "FileNewContext"
-              Call Library.showDebugForm("お気に入りアイコン", objFso.GetExtensionName(tmp(line, 1)), "Error")
+              Call Library.showDebugForm("お気に入りアイコン", objFso.GetExtensionName(tmp(line, 1)), "warning")
           End Select
           
           
@@ -1132,361 +1134,8 @@ Function Ctl_Function(control As IRibbonControl)
   Call Library.showDebugForm("control.ID", control.ID, "debug")
   '----------------------------------------------
   
-  Select Case control.ID
-    Case "Favorite_detail"
-      Call Ctl_Favorite.詳細表示
-      
-    Case "お気に入り追加"
-      Call Ctl_Favorite.追加
-    
-    'Option--------------------------------------
-    Case "Option"
-      Call Ctl_Option.showOption
-      
-    Case "スタイル出力"
-      Call Ctl_Style.Export
-    Case "スタイル取込"
-      Call Ctl_Style.Import
-    
-    Case "OptionHighLight"
-      Ctl_Option.HighLight
-    
-    Case "OptionComment"
-      Ctl_Option.Comment
-    
-    Case "Version"
-      Call Ctl_Option.showVersion
-    
-    Case "Help"
-      Call Ctl_Option.showHelp
-    
-    Case "OptionAddin解除"
-      Workbooks(ThisWorkbook.Name).IsAddin = False
-    
-    Case "OptionAddin化"
-      Workbooks(ThisWorkbook.Name).IsAddin = True
-      ThisWorkbook.Save
-    
-    'ブック管理----------------------------------
-    Case "Notation_R1C1"
-      Call Ctl_Book.R1C1表記
-    
-    Case "resetStyle"
-      Call Ctl_Style.スタイル初期化
-    Case "delStyle"
-      Call Ctl_Style.スタイル削除
-    Case "setStyle"
-      Call Ctl_Style.スタイル設定
-    Case "del_CellNames"
-      Call Ctl_Book.名前定義削除
-    Case "disp_SVGA12"
-      Call Ctl_Window.画面サイズ変更(612, 432)
-    Case "disp_HD15_6"
-      Call Ctl_Window.画面サイズ変更(1920, 1080)
-    Case "シート一覧取得"
-      Call Ctl_Book.シートリスト取得
-    
-    Case "印刷範囲表示"
-      Call Ctl_Book.印刷範囲の点線を表示
-    Case "印刷範囲非表示"
-      Call Ctl_Book.印刷範囲の点線を非表示
-    
-    
-    Case "セルとシート選択"
-      Call Ctl_Book.A1セル選択
-    Case "セルとシート_保存"
-      Call Ctl_Book.A1セル選択
-    Case "標準画面"
-      Call Ctl_Book.標準画面
-    Case "連続シート追加"
-      Call Ctl_Book.連続シート追加
-    
-    
-    'シート管理----------------------------------
-    Case "セル選択"
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Case "セル選択_保存"
-      Application.GoTo Reference:=Range("A1"), Scroll:=True
-      ActiveWorkbook.Save
-    Case "全セル表示"
-      Call Ctl_Sheet.すべて表示
-      ActiveWorkbook.Save
-    Case "シート管理"
-      Call Ctl_Sheet.シート管理_フォーム表示
-    Case "幅設定"
-      Call Ctl_Sheet.幅設定
-    Case "高さ設定"
-      Call Ctl_Sheet.高さ設定
-    Case "幅と高さ両方"
-      Call Ctl_Sheet.幅設定
-      Call Ctl_Sheet.高さ設定
-    Case "体裁一括変更"
-      Call Ctl_Sheet.体裁一括変更
-    Case "フォント一括変更"
-      Call Ctl_Sheet.指定フォントに設定
-    
-    
-    'その他管理--------------------------------
-    Case "ファイル管理_情報取得"
-      Call Ctl_File.ファイルパス情報
-    
-    Case "ファイル管理_フォルダ生成"
-      Call Ctl_File.フォルダ生成
-    
-    Case "ファイル管理_画像貼付け"
-      Call Ctl_File.画像貼付け
-    
-    Case "QRコード生成"
-      Call Ctl_shap.QRコード生成
-    
-    
-    Case "カスタム01"
-      Call Ctl_カスタム.カスタム01
-    Case "カスタム02"
-      Call Ctl_カスタム.カスタム02
-    Case "カスタム03"
-      Call Ctl_カスタム.カスタム03
-    Case "カスタム04"
-      Call Ctl_カスタム.カスタム04
-    Case "カスタム05"
-      Call Ctl_カスタム.カスタム05
-    
-    Case "はんこ_確認印"
-      Call Ctl_Stamp.確認印
-    Case "はんこ_名前"
-      Call Ctl_Stamp.名前
-    Case "はんこ_済"
-      Call Ctl_Stamp.済印
-      
-    Case "パスワード生成"
-      Frm_mkPasswd.Show vbModeless
-      
-    
-    'ズーム--------------------------------------
-    Case "全画面表示"
-      Call Ctl_Zoom.全画面表示
-      
-    Case "指定倍率"
-      Call Ctl_Zoom.指定倍率
-      
-      
-      
-      
-    'セル調整------------------------------------
-    Case "セル調整_幅"
-      Call Ctl_Cells.セル幅調整
-    Case "セル調整_高さ"
-      Call Ctl_Cells.セル高さ調整
-    Case "セル調整_両方"
-      Call Ctl_Cells.セル幅調整
-      Call Ctl_Cells.セル高さ調整
-    Case "セル幅取得"
-      Call Library.getColumnWidth
-    
-    Case "高さ固定設定_15"
-      Call Ctl_Cells.セル高さ固定設定(15)
-      
-    Case "高さ固定設定_30"
-      Call Ctl_Cells.セル高さ固定設定(30)
-    
-    
-    
-    'セル編集------------------------------------
-    Case "Trim01"
-        Call Ctl_Cells.前後のスペース削除
-    Case "Trim02"
-        Call Ctl_Cells.全空白削除
-    Case "中黒点付与"
-      Call Ctl_Cells.中黒点付与
-    Case "連番追加"
-      Call Ctl_Cells.連番追加
-    Case "全半角変換"
-      Call Ctl_Cells.英数字全⇒半角変換
-      
-    Case "半全角変換"
-      Call Ctl_Cells.英数字半⇒全角変換
-    
-    Case "小大変換"
-      Call Ctl_Cells.小⇒大変変換
-    Case "大小変換"
-      Call Ctl_Cells.大⇒小変変換
-    
-    Case "丸数値を数値に変換"
-      Call Ctl_Cells.丸数字⇒数値
-      
-    Case "数値を丸数字に変換"
-      Call Ctl_Cells.数値⇒丸数字
-      
-    Case "URLエンコード"
-      Call Ctl_Cells.URLエンコード
-    Case "URLデコード"
-      Call Ctl_Cells.URLデコード
-      
-    Case "Unicodeエスケープ"
-      Call Ctl_Cells.Unicodeエスケープ
-    Case "Unicodeアンエスケープ"
-      Call Ctl_Cells.Unicodeアンエスケープ
-      
-      
-    Case "delLinefeed"
-      Call Ctl_Cells.改行削除
-    Case "定数削除"
-      Call Ctl_Cells.定数削除
-      
-      
-    Case "取り消し線"
-      Call Ctl_Cells.取り消し線設定
-    Case "コメント挿入"
-      Call Ctl_Cells.コメント挿入
-    Case "コメント削除"
-      Call Ctl_Cells.コメント削除
-    Case "コメント整形"
-      Call Ctl_format.コメント整形
-    
-    Case "行例入れ替えて貼付け"
-      Call Ctl_Cells.行例を入れ替えて貼付け
-    Case "ゼロ埋め"
-      Call Ctl_Cells.ゼロ埋め
-    
-    
-    '数式編集------------------------------------
-    Case "数式追加_エラー防止_空白"
-      Call Ctl_Formula.エラー防止_空白
-    Case "数式追加_エラー防止_ゼロ"
-      Call Ctl_Formula.エラー防止_ゼロ
-      
-    Case "数式追加_ゼロ非表示"
-      Call Ctl_Formula.ゼロ非表示
-    
-    Case "数式追加_row-XX追加"
-      Call Ctl_Formula.行番号追加
-      
-    Case "数式追加_シート名追加"
-      Call Ctl_Formula.数式挿入("SheetName")
-      
-    
-    '整形------------------------------------
-    Case "整形_1"
-      Call Ctl_format.移動やサイズ変更をする
-    Case "整形_2"
-      Call Ctl_format.移動する
-    Case "整形_3"
-      Call Ctl_format.移動やサイズ変更をしない
-    Case "上下余白ゼロ"
-      Call Ctl_format.上下余白ゼロ
-    Case "左右余白ゼロ"
-      Call Ctl_format.左右余白ゼロ
-    Case "文字サイズをぴったり"
-      Call Ctl_shap.文字サイズをぴったり
-    Case "セル内の中央に配置"
-      Call Ctl_shap.セルの中央に配置
-    
-    '画像保存------------------------------------
-    Case "saveImage"
-      Call Ctl_Image.saveSelectArea2Image
-    
-    '罫線[クリア]--------------------------------
-    Case "罫線_クリア"
-      Call Library.罫線_クリア
-    Case "罫線_クリア_中央線_横"
-      Call Library.罫線_中央線削除_横
-    Case "罫線_クリア_中央線_縦"
-      Call Library.罫線_中央線削除_縦
-    
-    '罫線[表]------------------------------------
-    Case "罫線_表_実線"
-      Call Library.罫線_実線_格子
-    Case "罫線_表_破線B"
-      Call Library.罫線_表
-    Case "罫線_表_破線C"
-      Call Library.罫線_破線_格子
-      Call Library.罫線_実線_水平
-      Call Library.罫線_実線_囲み
-    
-    '罫線[破線]----------------------------------
-    Case "罫線_破線_水平"
-      Call Library.罫線_破線_水平
-    Case "罫線_破線_垂直"
-      Call Library.罫線_破線_垂直
-    Case "罫線_破線_左"
-      Call Library.罫線_破線_左
-    Case "罫線_破線_右"
-      Call Library.罫線_破線_右
-    Case "罫線_破線_左右"
-      Call Library.罫線_破線_左右
-    Case "罫線_破線_上"
-      Call Library.罫線_破線_上
-    Case "罫線_破線_下"
-      Call Library.罫線_破線_下
-    Case "罫線_破線_上下"
-      Call Library.罫線_破線_上下
-    Case "罫線_破線_囲み"
-      Call Library.罫線_破線_囲み
-    Case "罫線_破線_格子"
-      Call Library.罫線_破線_格子
-    
-    '罫線[実線]----------------------------------
-    Case "罫線_実線_水平"
-      Call Library.罫線_実線_水平
-    Case "罫線_実線_垂直"
-      Call Library.罫線_実線_垂直
-    Case "罫線_実線_左右"
-      Call Library.罫線_実線_左右
-    Case "罫線_実線_上下"
-      Call Library.罫線_実線_上下
-    Case "罫線_実線_囲み"
-      Call Library.罫線_実線_囲み
-    Case "罫線_実線_格子"
-      Call Library.罫線_実線_格子
-    
-    '罫線[二重線]----------------------------------
-    Case "罫線_二重線_左"
-      Call Library.罫線_二重線_左
-    Case "罫線_二重線_右"
-      Call Library.罫線_二重線_右
-    
-    Case "罫線_二重線_左右"
-      Call Library.罫線_二重線_左右
-    Case "罫線_二重線_上"
-      Call Library.罫線_二重線_上
-    Case "罫線_二重線_下"
-      Call Library.罫線_二重線_下
-    Case "罫線_二重線_上下"
-      Call Library.罫線_二重線_上下
-    Case "罫線_二重線_囲み"
-      Call Library.罫線_二重線_囲み
-      
-    'データ生成-----------------------------------
-    Case "連番設定"
-      Call Ctl_Cells.連番設定
-    Case "連番生成"
-      Call Ctl_Cells.連番追加
-    Case "桁数固定数値"
-      Call Ctl_sampleData.数値_桁数固定(Selection.Rows.count)
-    Case "範囲指定数値"
-      Call Ctl_sampleData.数値_範囲
-    Case "姓"
-      Call Ctl_sampleData.名前_姓(Selection.Rows.count)
-    Case "名"
-      Call Ctl_sampleData.名前_名(Selection.Rows.count)
-    Case "氏名"
-      Call Ctl_sampleData.名前_フルネーム(Selection.Rows.count)
-    Case "日付"
-      Call Ctl_sampleData.日付_日(Selection.Rows.count)
-    Case "時間"
-      Call Ctl_sampleData.日付_時間(Selection.Rows.count)
-    Case "日時"
-      Call Ctl_sampleData.日時(Selection.Rows.count)
-    Case "文字"
-      Call Ctl_sampleData.その他_文字(25)
-    Case "パターン選択"
-      Call Ctl_sampleData.パターン選択(Selection.Rows.count)
-    
+  Call Menu.各機能呼び出し(control.ID)
 
-    Case Else
-      Call Library.showDebugForm("リボンメニューなし", control.ID, "Error")
-      Call Library.showNotice(406, "リボンメニューなし：" & control.ID, True)
-  End Select
   
   '処理終了--------------------------------------
   Call Library.endScript

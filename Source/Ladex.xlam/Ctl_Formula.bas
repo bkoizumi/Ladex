@@ -87,7 +87,7 @@ Function 範囲選択(formulaVals As Variant, confirmFormulaName As String)
   End If
 
   With ActiveSheet.Range(formulaVals.Address(external:=False))
-    ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, Top:=.Top, Width:=.Width, Height:=.Height).Select
+    ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, top:=.top, Width:=.Width, Height:=.Height).Select
   End With
   
   Selection.Name = confirmFormulaName
@@ -439,11 +439,11 @@ End Function
 
 
 '==================================================================================================
-Function 行番号追加()
+Function 数式設定_行番号()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim slctCells As Range
   
-  Const funcName As String = "Ctl_Formula.行番号追加"
+  Const funcName As String = "Ctl_Formula.数式設定_行番号"
 
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -481,7 +481,13 @@ catchError:
 End Function
 
 '==================================================================================================
-Function 数式挿入(formulaType As String)
+Function 数式設定_シート名()
+  Call Ctl_Formula.数式挿入("SheetName")
+End Function
+
+
+'==================================================================================================
+Function 数式挿入(Optional formulaType As String = "SheetName")
   Dim confirmFormulaName As String
   Dim count As Long
   Dim formulaVals As Variant

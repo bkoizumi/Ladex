@@ -2,9 +2,9 @@ Attribute VB_Name = "Ctl_Stamp"
 Option Explicit
 
 '==================================================================================================
-Function 済印()
+Function はんこ_済印()
   
-  Const funcName As String = "Ctl_Stamp.済印"
+  Const funcName As String = "Ctl_Stamp.はんこ_済印"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -59,9 +59,9 @@ End Function
 
 
 '==================================================================================================
-Function 確認印(Optional StampName As String, Optional StampVal As String, Optional StampFont As String, Optional imgName As String)
+Function はんこ_確認印(Optional StampName As String, Optional StampVal As String, Optional StampFont As String, Optional imgName As String)
   
-  Const funcName As String = "Ctl_Stamp.確認印"
+  Const funcName As String = "Ctl_Stamp.はんこ_確認印"
   
   '処理開始--------------------------------------
   If runFlg = False Then
@@ -156,9 +156,9 @@ End Function
 
 
 '==================================================================================================
-Function 名前()
+Function はんこ_名前()
   Dim StampName As String, StampFont As String
-  Const funcName As String = "Ctl_Stamp.名前"
+  Const funcName As String = "Ctl_Stamp.はんこ_名前"
   
   '処理開始--------------------------------------
   If runFlg = False Then

@@ -33,7 +33,7 @@ Public Function showStart()
       .BorderStyle = fmBorderStyleSingle
       .SpecialEffect = fmSpecialEffectSunken
       .Caption = ""
-      .Top = 15
+      .top = 15
       .Left = 12
       .Height = 15
       .Width = 250
@@ -44,7 +44,7 @@ Public Function showStart()
       .BackColor = RGB(90, 248, 82)
       .SpecialEffect = fmSpecialEffectRaised
       .Caption = ""
-      .Top = 16
+      .top = 16
       .Left = 13
       .Height = 13
       .Width = 0
@@ -56,7 +56,7 @@ Public Function showStart()
       .Caption = "0%"
       .BackStyle = 0
       .Caption = ""
-      .Top = 17
+      .top = 17
       .Left = 12
       .Height = 14
       .Width = 250
@@ -70,7 +70,7 @@ Public Function showStart()
       .BorderStyle = fmBorderStyleSingle
       .SpecialEffect = fmSpecialEffectSunken
       .Caption = ""
-      .Top = 45
+      .top = 45
       .Left = 12
       .Height = 15
       .Width = 250
@@ -81,7 +81,7 @@ Public Function showStart()
       .BackColor = RGB(90, 248, 82)
       .SpecialEffect = fmSpecialEffectRaised
       .Caption = ""
-      .Top = 46
+      .top = 46
       .Left = 13
       .Height = 13
       .Width = 0
@@ -92,7 +92,7 @@ Public Function showStart()
       .TextAlign = fmTextAlignCenter
       .Caption = "0%"
       .BackStyle = 0
-      .Top = 47
+      .top = 47
       .Left = 12
       .Height = 14
       .Width = 250
@@ -104,7 +104,7 @@ Public Function showStart()
     'メッセージ表示の部分
     With .Prg_Message
       .Caption = "待機中"
-      .Top = 70
+      .top = 70
       .Left = 12
       .Height = 30
       .Width = 270
