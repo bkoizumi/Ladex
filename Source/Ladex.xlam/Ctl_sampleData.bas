@@ -156,7 +156,7 @@ Function データ生成_パターン選択()
   If sampleDataList Is Nothing Then
     End
   End If
-  maxCount = dicVal("maxCount")
+  maxCount = FrmVal("maxCount")
 
   Call Library.delSheetData(LadexSh_InputData)
   LadexSh_InputData.Cells.NumberFormatLocal = "@"

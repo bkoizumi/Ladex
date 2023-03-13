@@ -72,6 +72,8 @@ End Sub
 '==================================================================================================
 Private Sub OKButton_Click()
   
+  Set FrmVal = Nothing
+  Set FrmVal = CreateObject("Scripting.Dictionary")
   FrmVal.add "CellAddress", CellAddress.Text
   FrmVal.add "codeSize", codeSize.Text
   FrmVal.add "onReSize", onReSize.Value

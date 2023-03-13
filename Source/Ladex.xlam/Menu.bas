@@ -200,7 +200,6 @@ Function 各機能呼び出し(shortcutName As String)
 
 
   '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")

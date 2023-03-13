@@ -4,7 +4,7 @@ Public Sub setLisence01(control As IRibbonControl, ByRef Screentip)
   Dim strBuf As String
   
   
-  strBuf = strBuf & thisAppName & " Ver. " & thisAppVersion & vbCrLf
+  strBuf = strBuf & "Ladex Addin For Excel Library Ver. " & thisAppVersion & vbCrLf
   strBuf = strBuf & "" & vbCrLf
   strBuf = strBuf & " Copyright (c) 2021 Bunpei.Koizumi" & vbCrLf
   strBuf = strBuf & " author:bunpei.koizumi@gmail.com" & vbCrLf

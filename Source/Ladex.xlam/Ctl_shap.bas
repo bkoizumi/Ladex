@@ -107,17 +107,18 @@ Function QRコード生成()
   
   
   '処理開始--------------------------------------
+  Call init.setting
   If runFlg = False Then
-    Call init.setting
     Call Library.showDebugForm(funcName, , "start")
-    Call Library.startScript
-    Call Ctl_ProgressBar.showStart
     PrgP_Max = 2
   Else
     On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
+  
   Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
 
@@ -173,24 +174,24 @@ Function QRコード生成()
   Next
   
 
+
   '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
-    Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
-    Call init.unsetting
+    Call init.resetGlobalVal
   Else
     Call Library.showDebugForm(funcName, , "end1")
   End If
-  '----------------------------------------------
   Exit Function
+  '----------------------------------------------
 
-'エラー発生時------------------------------------
+  'エラー発生時------------------------------------------------------------------------------------
 catchError:
-  Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
-
 
 
 

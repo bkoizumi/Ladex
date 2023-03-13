@@ -173,7 +173,7 @@
 
       <menu id="セル編集" label="セル編集"  itemSize="large" imageMso="TableInsertDialog" >
         <menuSeparator id="セル編集_文字列編集" title="文字列編集" />
-        <menu id="セル編集_削除" label="削除"  itemSize="normal" imageMso="EditItem" >
+        <menu id="セル編集_削除" label="削除"  itemSize="large" imageMso="EditItem" >
           <menuSeparator id="セル編集削除_SP1" title="スペース" />
           <button id="削除_前後のスペース_________" label="前後のスペース削除"  imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="文頭、文末にあるスペースを取り除きます&#13;"  />
           <button id="削除_全スペース_____________" label="全スペース削除"      imageMso="CalculatedText"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="すべてのスペースを取り除きます&#13;"  />
@@ -191,7 +191,7 @@
           <button id="追加_文頭に連番_____________" label="文頭に連番を追加"  imageMso="Numbering"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="文頭に「1.」から始まる連番を追加&#13;"  />
         </menu>
 
-        <menu id="セル編集_文字変換" label="文字変換"  itemSize="normal" imageMso="EditItem" >
+        <menu id="セル編集_文字変換" label="文字変換"  itemSize="large" imageMso="EditItem" >
           <menuSeparator id="セル編集_SP3" title="全角/半角に変換" />
           <button id="変換_全半角_________________" label="全角⇒半角"  imageMso="MessageFormatHtml" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="全角を半角に変換 &#13;"  />
           <button id="変換_半全角_________________" label="半角⇒全角"  image="Conv_aA"              onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="半角を全角に変換 &#13;"  />

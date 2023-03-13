@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Version
    ClientHeight    =   5130
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   6030
+   ClientWidth     =   10515
    OleObjectBlob   =   "Frm_Version.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End

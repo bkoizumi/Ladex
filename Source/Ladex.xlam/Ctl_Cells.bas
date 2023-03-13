@@ -207,7 +207,6 @@ Function セル固定設定_幅()
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
-    Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.resetGlobalVal
   Else
@@ -1717,11 +1716,143 @@ catchError:
 End Function
 
 '==================================================================================================
+'@link   https://calmdays.net/vbatips/base64encode/
 Function 変換_Base64エンコード()
+  Dim slctCells As Range
+  Dim oXmlNode  As Object
+  
+  Const funcName As String = "Ctl_Cells.変換_Base64エンコード"
+  
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  For Each slctCells In Selection
+    Set oXmlNode = CreateObject("Msxml2.DOMDocument.3.0").createElement("base64")
+    oXmlNode.dataType = "bin.base64"
+    oXmlNode.nodeTypedValue = convStringToBinary(slctCells.Value)
+    slctCells.Value = Replace(oXmlNode.Text, "77u/", "")
+    Set oXmlNode = Nothing
+  Next
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
 
 '==================================================================================================
+'@link   https://calmdays.net/vbatips/base64decode/
 Function 変換_Base64デコード()
+  Dim slctCells As Range
+  Dim oXmlNode  As Object
+  
+  Const funcName As String = "Ctl_Cells.変換_Base64デコード"
+
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  
+  For Each slctCells In Selection
+    Set oXmlNode = CreateObject("Msxml2.DOMDocument.3.0").createElement("base64")
+    
+    oXmlNode.dataType = "bin.base64"
+    oXmlNode.Text = slctCells.Value
+    slctCells.Value = convBinaryToString(oXmlNode.nodeTypedValue)
+    
+    Set oXmlNode = Nothing
+  Next
+
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Function
 
+
+'******************************************************************************
+'　バイナリを文字列に変換
+'@link   https://calmdays.net/vbatips/base64decode/
+'******************************************************************************
+Function convBinaryToString(getBinary As Variant) As Variant
+  Dim oAdoStm As Object
+  Set oAdoStm = CreateObject("ADODB.Stream")
+
+  oAdoStm.Type = 1
+  oAdoStm.Open
+  oAdoStm.Write getBinary
+  oAdoStm.Position = 0
+  oAdoStm.Type = 2
+  oAdoStm.Charset = "utf-8" 'or "shift_jis"
+  convBinaryToString = oAdoStm.ReadText
+  
+  Set oAdoStm = Nothing
+End Function
+
+
+'******************************************************************************
+'　文字列をバイナリに変換
+'@link   https://calmdays.net/vbatips/base64encode/
+'******************************************************************************
+Function convStringToBinary(getText As String) As Variant
+  Dim oAdoStm As Object
+  Set oAdoStm = CreateObject("ADODB.Stream")
+  
+  oAdoStm.Type = 2
+  oAdoStm.Charset = "utf-8" 'or "shift_jis"
+  oAdoStm.Open
+  oAdoStm.WriteText getText
+  oAdoStm.Position = 0
+  oAdoStm.Type = 1
+  convStringToBinary = oAdoStm.Read
+  
+  Set oAdoStm = Nothing
+End Function

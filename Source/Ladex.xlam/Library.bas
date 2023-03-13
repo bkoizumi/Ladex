@@ -1601,7 +1601,8 @@ End Function
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 Function getCellSelectArea(Optional startLine As Long, Optional endLine As Long, Optional startColLine As Long, Optional endColLine As Long)
-
+  Dim tmpLine As Long
+  
   Const funcName As String = "Library.getCellSelectArea"
 
   'ˆ—ŠJn--------------------------------------
@@ -1614,9 +1615,20 @@ Function getCellSelectArea(Optional startLine As Long, Optional endLine As Long,
   If Selection.CountLarge > 1 Then
     startLine = Selection(1).Row
     endLine = Selection(Selection.count).Row
+    tmpLine = Range("A1").SpecialCells(xlLastCell).Row
+    If endLine > tmpLine Then
+      endLine = tmpLine
+    End If
+    
     
     startColLine = Selection.Column
     endColLine = Selection.Column + Selection.Columns.count - 1
+    tmpLine = Range("A1").SpecialCells(xlLastCell).Column
+    If endColLine > tmpLine Then
+      endColLine = tmpLine
+    End If
+    
+    
   
   '‘I‘ğ”ÍˆÍ‚ª‚È‚¢ê‡----------------------------
   Else
