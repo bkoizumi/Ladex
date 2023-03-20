@@ -883,11 +883,11 @@ End Function
 
 
 '==================================================================================================
-Function 追加_コメント()
+Function コメント_追加()
   Dim commentVal As String, commentBgColor As Long, CommentFontColor As Long
   Dim CommentFont As String, CommentFontSize As String
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.追加_コメント"
+  Const funcName As String = "Ctl_Cells.コメント_追加"
 
   '処理開始--------------------------------------
   Call init.setting
@@ -962,9 +962,69 @@ End Function
 
 
 '==================================================================================================
-Function 削除_コメント()
+Function コメント_画像追加()
+  Dim insImgPath As String
+  
+  Const funcName As String = "Ctl_Cells.コメント_画像追加"
+
+  '処理開始--------------------------------------
+  Call init.setting
+  If runFlg = False Then
+    Call Library.showDebugForm(funcName, , "start")
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  insImgPath = Library.getFilePath(ActiveWorkbook.path, "", "コメントに画像挿入", "img")
+  If insImgPath = "" Then
+    GoTo Lb_exitFunction
+  End If
+
+  With ActiveCell
+    If TypeName(.Comment) = "Comment" Then
+      .ClearComments
+    End If
+
+    With .AddComment
+      .Shape.Fill.UserPicture insImgPath
+'      .Shape.Height = 500
+'      .Shape.Width = 500
+    End With
+  End With
+
+
+  
+  '処理終了--------------------------------------
+Lb_exitFunction:
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function コメント_削除()
   Dim slctCells As Range
-  Const funcName As String = "Ctl_Cells.削除_コメント"
+  Const funcName As String = "Ctl_Cells.コメント_削除"
   
   '処理開始--------------------------------------
   Call init.setting

@@ -99,12 +99,13 @@ Function 各機能呼び出し(shortcutName As String)
     Case "削除_全スペース_____________": Call Ctl_Cells.削除_全スペース
     Case "削除_改行___________________": Call Ctl_Cells.削除_改行
     Case "削除_定数___________________": Call Ctl_Cells.削除_定数
-    Case "削除_コメント_______________": Call Ctl_Cells.削除_コメント
     Case "追加_文頭に中黒点___________": Call Ctl_Cells.追加_文頭に中黒点
     Case "追加_文頭に連番_____________": Call Ctl_Cells.追加_文頭に連番
-    Case "追加_コメント_______________": Call Ctl_Cells.追加_コメント
     Case "上書_文頭に連番_____________": Call Ctl_Cells.上書_文頭に連番
     Case "上書_ゼロ___________________": Call Ctl_Cells.上書_ゼロ
+    Case "コメント_追加_______________": Call Ctl_Cells.コメント_追加
+    Case "コメント_画像追加___________": Call Ctl_Cells.コメント_画像追加
+    Case "コメント_削除_______________": Call Ctl_Cells.コメント_削除
     Case "変換_全半角_________________": Call Ctl_Cells.変換_全角⇒半角
     Case "変換_半全角_________________": Call Ctl_Cells.変換_半角⇒全角
     Case "変換_大小___________________": Call Ctl_Cells.変換_大文字⇒小文字
@@ -119,6 +120,7 @@ Function 各機能呼び出し(shortcutName As String)
     Case "変換_丸数字を数値___________": Call Ctl_Cells.変換_丸数字⇒数値
     Case "設定_取り消し線_____________": Call Ctl_Cells.設定_取り消し線
     Case "貼付_行例入れ替え__________": Call Ctl_Cells.貼付_行例入れ替え
+
 
     '数式編集------------------------------------
     Case "数式確認________________": Call Ctl_Formula.数式確認

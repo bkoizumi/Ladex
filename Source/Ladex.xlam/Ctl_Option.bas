@@ -313,7 +313,7 @@ Function Addinâèú()
 '  End If
 '  Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
-
+  LadexSh_Function.Activate
   Workbooks(ThisWorkbook.Name).IsAddin = False
 
 

@@ -693,7 +693,7 @@ Private Sub setShortcutKey_Click()
 
   selectLine = funcList.SelectedItem.SubItems(4)
 
-  LadexSh_Function.Range("E" & selectLine + 1, "F" & selectLine + 1) = ""
+  LadexSh_Function.Range("I" & selectLine + 1) = ""
 
   keyVal = ""
   If onCtrl.Value = True Then
