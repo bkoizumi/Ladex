@@ -173,90 +173,104 @@ Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
   Dim macroPath As String
   Const funcName As String = "Ctl_Event.xlApp_WorkbookOpen"
   
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckBook(wb) Then Exit Sub
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
+  
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.startScript
+  '----------------------------------------------
 
   macroPath = ""
   Call init.setting
   If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
     If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
       macroPath = LadexDir & "\WBS.xlam"
-    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam") = True Then
-      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam"
     End If
   
   ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
     If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
       macroPath = LadexDir & "\TestCase.xlam"
-    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam") = True Then
-      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam"
     End If
-    
   End If
   
   If macroPath <> "" Then
-    runFlg = True
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
     Call Library.showDebugForm("macroPath", macroPath, "debug")
     Workbooks.Open macroPath
-    Call Library.endScript
   End If
 
-  Exit Sub
   
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Call init.resetGlobalVal
+  Call Library.showDebugForm(funcName, , "end1")
+  '----------------------------------------------
+  Exit Sub
+
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
-
 
 '==================================================================================================
 'ブックが閉じられる直前に発生
 Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   Dim macroPath  As String
+  Dim chkOpenFile As Variant, chkOpenFileCnt As Integer
   
   Const funcName As String = "Ctl_Event.xlApp_WorkbookBeforeClose"
   
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckBook(wb) Then Exit Sub
-
-  Call init.setting
-  If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
-    If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
-      macroPath = "\WBS.xlam"
-    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam") = True Then
-      macroPath = "\WBS.xlam"
-    End If
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
   
-  ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
-    If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
-      macroPath = "TestCase.xlam"
-    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam") = True Then
-      macroPath = "TestCase.xlam"
-    End If
-    
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.startScript
+  '----------------------------------------------
+
+  If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = True Then
+    macroPath = "WBS.xlam"
+    chkOpenFile = Library.chkIsOpen("*WBS*", chkOpenFileCnt)
+  
+  ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = True Then
+    macroPath = "TestCase.xlam"
+    chkOpenFile = Library.chkIsOpen("*テスト仕様書兼結果報告書*", chkOpenFileCnt)
+
   End If
   
-  If macroPath <> "" Then
-    runFlg = True
-    Call init.setting
-    Call Library.showDebugForm(funcName, , "start")
+  If macroPath <> "" And chkOpenFileCnt = 1 Then
     Call Library.showDebugForm("macroPath", macroPath, "debug")
     
-    Workbooks(macroPath).Close
-    
-    Call Library.endScript
+    Select Case MsgBox("'" & wb.Name & "' の変更内容を保存しますか？", vbYesNoCancel + vbQuestion + vbDefaultButton3, "")
+      Case vbYes
+        ActiveWorkbook.Close SaveChanges:=True
+        Workbooks(macroPath).Close
+      Case vbNo
+        ActiveWorkbook.Close SaveChanges:=False
+        Workbooks(macroPath).Close
+      Case vbCancel
+        Cancel = True
+      Case Else
+    End Select
   End If
   
   
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Call init.resetGlobalVal
+  Call Library.showDebugForm(funcName, , "end1")
+  '----------------------------------------------
   Exit Sub
-  
+
 'エラー発生時------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
 
 

@@ -379,10 +379,13 @@ Function chkIsOpen(targetBookName As String, Optional fileCnt As Integer = 0) As
   Const funcName As String = "Library.chkIsOpen"
 
   Call Library.showDebugForm(funcName, , "start1")
+  Call Library.showDebugForm("targetBookName", targetBookName, "debug")
   
   chkFlg = False
   fileCnt = 0
   For Each openWorkbook In Workbooks
+    Call Library.showDebugForm("openWorkbook  ", openWorkbook.Name, "debug")
+    
     If InStr(targetBookName, "*") > 0 Then
       If openWorkbook.Name Like targetBookName Then
         fileCnt = fileCnt + 1
@@ -396,7 +399,7 @@ Function chkIsOpen(targetBookName As String, Optional fileCnt As Integer = 0) As
     End If
   Next
   
-  Call Library.showDebugForm("targetBookName", targetBookName, "debug")
+  
   Call Library.showDebugForm("fileCnt", fileCnt, "debug")
   Call Library.showDebugForm("isOpen ", chkFlg, "debug")
   
