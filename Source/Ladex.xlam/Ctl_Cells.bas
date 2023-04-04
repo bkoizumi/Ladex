@@ -60,7 +60,7 @@ Function セル自動調整_幅()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -117,7 +117,7 @@ Function セル自動調整_高さ()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -162,7 +162,7 @@ Function セル自動調整_両方()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -215,7 +215,7 @@ Function セル固定設定_幅()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -266,7 +266,7 @@ Function セル固定設定_高さ()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -311,7 +311,7 @@ Function セル固定設定_両方()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -370,7 +370,7 @@ Function セル固定設定_高さ15()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -428,7 +428,7 @@ Function セル固定設定_高さ30()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -480,7 +480,7 @@ Function 削除_前後のスペース()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -535,7 +535,7 @@ Function 削除_全スペース()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -592,7 +592,7 @@ Function 追加_文頭に中黒点()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -653,7 +653,7 @@ Function 追加_文頭に連番()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -712,7 +712,7 @@ Function 上書_文頭に連番()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -769,7 +769,7 @@ Function 変換_全角⇒半角()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -823,7 +823,7 @@ Function 変換_半角⇒全角()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -875,7 +875,7 @@ Function 設定_取り消し線()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -954,7 +954,7 @@ LBl_nextFor:
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1014,7 +1014,7 @@ Lb_exitFunction:
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1066,7 +1066,7 @@ Function コメント_削除()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1109,7 +1109,7 @@ Function 貼付_行例入れ替え()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1158,7 +1158,7 @@ Function 上書_ゼロ()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1211,7 +1211,7 @@ Function 削除_改行()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1255,7 +1255,7 @@ Function 挿入_行()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1299,7 +1299,7 @@ Function 挿入_列()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1347,7 +1347,7 @@ Function 削除_定数()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1403,7 +1403,7 @@ Function 変換_大文字⇒小文字()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1457,7 +1457,7 @@ Function 変換_小文字⇒大文字()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1527,7 +1527,7 @@ Function 変換_丸数字⇒数値()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1586,7 +1586,7 @@ Function 変換_数値⇒丸数字()
   '----------------------------------------------
   Exit Function
   
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
   Call Library.errorHandle
@@ -1630,7 +1630,7 @@ Function 変換_URLエンコード()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1675,7 +1675,7 @@ Function 変換_URLデコード()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1722,7 +1722,7 @@ Function 変換_Unicodeエスケープ()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1769,7 +1769,7 @@ Function 変換_Unicodeアンエスケープ()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1818,7 +1818,7 @@ Function 変換_Base64エンコード()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -1871,7 +1871,7 @@ Function 変換_Base64デコード()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

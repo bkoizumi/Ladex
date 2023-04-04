@@ -43,7 +43,7 @@ Function スタイル出力()
   '----------------------------------------------
 
   Exit Function
-'エラー発生時----------------------------------------------------------------------------------------------------------------------------------------
+'エラー発生時-------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -104,7 +104,7 @@ Function スタイル取込()
   '----------------------------------------------
 
   Exit Function
-'エラー発生時----------------------------------------------------------------------------------------------------------------------------------------
+'エラー発生時-------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -169,7 +169,7 @@ Function スタイル削除()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -235,7 +235,7 @@ Function スタイル_全削除()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -395,7 +395,7 @@ Function スタイル設定()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -463,7 +463,7 @@ Function スタイル初期化()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -557,7 +557,7 @@ Function 標準スタイルの見た目変更()
   '----------------------------------------------
   Exit Function
 
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

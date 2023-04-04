@@ -443,7 +443,7 @@ Function doCommentPreview()
 '  Set LadexSh_HiLight = ActiveWorkbook.Worksheets("HighLight")
   
   LadexSh_HiLight.Activate
-  LadexSh_HiLight.Range("N7").Activate
+  LadexSh_HiLight.Range("N7").Select
   
   commentBgColor = Me.CommentColor.BackColor
   CommentFontColor = Me.CommentFontColor.BackColor

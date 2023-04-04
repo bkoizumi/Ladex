@@ -52,7 +52,7 @@ Function はんこ_済印()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -149,7 +149,7 @@ Function はんこ_確認印(Optional StampName As String, Optional StampVal As String
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -222,7 +222,7 @@ Function はんこ_名前()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function

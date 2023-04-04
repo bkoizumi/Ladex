@@ -10,6 +10,7 @@ Option Explicit
 Function シート管理()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim addSheetName As String
+  
   Const funcName As String = "Ctl_Book.シート管理"
   
   '処理開始--------------------------------------
@@ -24,9 +25,8 @@ Function シート管理()
   
   '処理終了--------------------------------------
   Call Library.endScript
-  '----------------------------------------------
-  
   Exit Function
+  '----------------------------------------------
 
 'エラー発生時------------------------------------
 catchError:
@@ -70,7 +70,7 @@ Function R1C1表記()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -115,8 +115,6 @@ Function 標準画面()
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
     If Worksheets(sheetName).Visible = True Then
-      'Call Library.showDebugForm("SheetName", sheetName, "debug")
-      
       Worksheets(sheetName).Select
       
       '標準画面に設定
@@ -187,7 +185,7 @@ Function 標準画面()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -225,7 +223,7 @@ Function 名前定義削除()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -277,7 +275,7 @@ Function シート一覧取得()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -320,7 +318,7 @@ Function 印刷範囲表示()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -363,7 +361,7 @@ Function 印刷範囲非表示()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -431,7 +429,7 @@ Function 連続シート追加()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -497,7 +495,7 @@ Function A1セル選択()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -564,7 +562,7 @@ Function A1セル選択_保存()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

@@ -1161,7 +1161,7 @@ Function ƒZƒ‹‚Ì–¼Ìİ’èíœ()
   Exit Function
   '----------------------------------------------
 
-  'ƒGƒ‰[”­¶------------------------------------------------------------------------------------
+'ƒGƒ‰[”­¶------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -4144,30 +4144,6 @@ Function Œrü_“ñdü_ã‰º(Optional SetArea As Range, Optional LineColor As Varia
     End With
   End If
 End Function
-
-'==================================================================================================
-Function Œrü_”jü_‹tLš(Optional SetArea As Range, Optional LineColor As Variant, Optional WeightVal = xlThin)
-  Dim Red As Long, Green As Long, Blue As Long
-
-  If IsMissing(LineColor) = True Then
-    LineColor = dicVal("LineColor")
-  End If
-  Call Library.getRGB(CLng(LineColor), Red, Green, Blue)
-  
-  Call Œrü_”jü_ˆÍ‚İ(SetArea, LineColor, WeightVal)
-
-  If TypeName(SetArea) = "Range" Then
-    Set SetArea = SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1)
-    Call Œrü_”jü_…•½(SetArea, LineColor, WeightVal)
-    Call Œrü_”jü_ˆÍ‚İ(SetArea, LineColor, WeightVal)
-  Else
-    SetArea.Offset(1, 1).Resize(SetArea.Rows.count - 1, SetArea.Columns.count - 1).Select
-    Call Œrü_”jü_…•½(SetArea, LineColor, WeightVal)
-    Call Œrü_”jü_ˆÍ‚İ(SetArea, LineColor, WeightVal)
-
-  End If
-End Function
-
 
 '**************************************************************************************************
 ' * ƒJƒ‰ƒ€•İ’è / æ“¾

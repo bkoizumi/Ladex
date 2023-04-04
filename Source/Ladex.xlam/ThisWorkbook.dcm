@@ -34,6 +34,5 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
     ThisWorkbook.Save
     Cancel = True
   End If
-  Call Ctl_Ribbon.RefreshRibbon
 End Sub
 

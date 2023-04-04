@@ -151,6 +151,7 @@ Function Še‹@”\ŒÄ‚Ño‚µ(shortcutName As String)
     Case "Œrü_•\_Àü_": Call Ctl_Line.Œrü_•\_Àü
     Case "Œrü_•\_”jüA": Call Ctl_Line.Œrü_•\_”jüA
     Case "Œrü_•\_”jüB": Call Ctl_Line.Œrü_•\_”jüB
+    Case "Œrü_•\_‹tLš": Call Ctl_Line.Œrü_•\_‹tLš
 
     'Œrü[”jü]----------------------------------
     Case "Œrü_”jü_…•½": Call Library.Œrü_”jü_…•½
@@ -167,7 +168,11 @@ Function Še‹@”\ŒÄ‚Ño‚µ(shortcutName As String)
     'Œrü[Àü]----------------------------------
     Case "Œrü_Àü_…•½": Call Library.Œrü_Àü_…•½
     Case "Œrü_Àü_‚’¼": Call Library.Œrü_Àü_‚’¼
+    Case "Œrü_Àü_¶__": Call Library.Œrü_Àü_¶
+    Case "Œrü_Àü_‰E__": Call Library.Œrü_Àü_‰E
     Case "Œrü_Àü_¶‰E": Call Library.Œrü_Àü_¶‰E
+    Case "Œrü_Àü_ã__": Call Library.Œrü_Àü_ã
+    Case "Œrü_Àü_‰º__": Call Library.Œrü_Àü_‰º
     Case "Œrü_Àü_ã‰º": Call Library.Œrü_Àü_ã‰º
     Case "Œrü_Àü_ˆÍ‚İ": Call Library.Œrü_Àü_ˆÍ‚İ
     Case "Œrü_Àü_Šiq": Call Library.Œrü_Àü_Šiq
@@ -212,7 +217,7 @@ Function Še‹@”\ŒÄ‚Ño‚µ(shortcutName As String)
   Exit Function
   '----------------------------------------------
 
-  'ƒGƒ‰[”­¶------------------------------------------------------------------------------------
+'ƒGƒ‰[”­¶------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
