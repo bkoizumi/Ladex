@@ -48,6 +48,7 @@ Public resetVal             As String
 'ファイル/ディレクトリ関連-----------------------
 Public logFile              As String
 Public LadexDir             As String
+Public AddInDir             As String
 
 
 '処理時間計測用----------------------------------
@@ -184,6 +185,9 @@ Function setting(Optional reCheckFlg As Boolean)
   Set wsh = CreateObject("WScript.Shell")
   LadexDir = wsh.SpecialFolders("AppData") & "\Bkoizumi\Ladex"
   logFile = LadexDir & "\log\ExcelMacro.log"
+  AddInDir = wsh.SpecialFolders("AppData") & "\Microsoft\AddIns"
+
+  
   Set wsh = Nothing
   Call Library.showDebugForm(funcName, , "function")
   

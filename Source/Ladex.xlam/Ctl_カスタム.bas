@@ -40,7 +40,7 @@ Function カスタム関数01()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -85,7 +85,7 @@ Function カスタム関数02()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -131,7 +131,7 @@ Function カスタム関数03()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -177,7 +177,7 @@ Function カスタム関数04()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function
@@ -223,7 +223,7 @@ Function カスタム関数05()
   '----------------------------------------------
   Exit Function
 
-  'エラー発生時------------------------------------
+'エラー発生時------------------------------------
 catchError:
     Call Library.showNotice(400, "<" & funcName & "[" & Err.Number & "]" & Err.Description & ">", True)
 End Function

@@ -187,7 +187,7 @@ Function QRコード生成()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -228,7 +228,7 @@ Function パスワード生成()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

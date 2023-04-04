@@ -186,13 +186,13 @@ Private Sub xlApp_WorkbookOpen(ByVal wb As Workbook)
   macroPath = ""
   Call init.setting
   If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
-    If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
-      macroPath = LadexDir & "\WBS.xlam"
+    If Library.chkFileExists(AddInDir & "\WBS.xlam") = True Then
+      macroPath = AddInDir & "\WBS.xlam"
     End If
   
   ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
-    If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
-      macroPath = LadexDir & "\TestCase.xlam"
+    If Library.chkFileExists(AddInDir & "\TestCase.xlam") = True Then
+      macroPath = AddInDir & "\TestCase.xlam"
     End If
   End If
   
@@ -264,8 +264,8 @@ Private Sub xlApp_WorkbookBeforeClose(ByVal wb As Workbook, Cancel As Boolean)
   Call Library.endScript
   Call init.resetGlobalVal
   Call Library.showDebugForm(funcName, , "end1")
-  '----------------------------------------------
   Exit Sub
+  '----------------------------------------------
 
 'エラー発生時------------------------------------
 catchError:
@@ -331,25 +331,27 @@ Private Sub xlApp_SheetActivate(ByVal Sh As Object)
   
   Const funcName As String = "Ctl_Event.xlApp_SheetActivate"
   
-  Set wb = ActiveWorkbook
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckBook(wb) Then Exit Sub
-
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
+  
+  Call init.setting
+  Call Library.showDebugForm(funcName, , "start1")
+  Call Library.startScript
+  '----------------------------------------------
+  
+  Set wb = ActiveWorkbook
   macroPath = ""
   Call init.setting
   If wb.Name Like "*WBS*.xlsm" And Library.chkBookOpened("WBS.xlam") = False Then
-    If Library.chkFileExists(LadexDir & "\WBS.xlam") = True Then
-      macroPath = LadexDir & "\WBS.xlam"
-    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam") = True Then
-      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\WBS.xlam"
+    If Library.chkFileExists(AddInDir & "\WBS.xlam") = True Then
+      macroPath = AddInDir & "\WBS.xlam"
     End If
   
   ElseIf wb.Name Like "*テスト仕様書兼結果報告書*.xlsx" And Library.chkBookOpened("TestCase.xlam") = False Then
-    If Library.chkFileExists(LadexDir & "\TestCase.xlam") = True Then
-      macroPath = LadexDir & "\TestCase.xlam"
-    ElseIf Library.chkFileExists("C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam") = True Then
-      macroPath = "C:\WorkSpace\000.myProject\ExcelMacro\Ladex\TestCase.xlam"
+    If Library.chkFileExists(AddInDir & "\TestCase.xlam") = True Then
+      macroPath = AddInDir & "\TestCase.xlam"
     End If
     
   End If
@@ -360,14 +362,19 @@ Private Sub xlApp_SheetActivate(ByVal Sh As Object)
     Call Library.showDebugForm(funcName, , "start")
     Call Library.showDebugForm("macroPath", macroPath, "debug")
     Workbooks.Open macroPath
-    Call Library.endScript
   End If
   
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Call init.resetGlobalVal
+  Call Library.showDebugForm(funcName, , "end1")
   Exit Sub
-  
+  '----------------------------------------------
+
 'エラー発生時------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
 
 '==================================================================================================
@@ -375,32 +382,38 @@ End Sub
 Private Sub xlApp_SheetChange(ByVal Sh As Object, ByVal Target As Range)
   Const funcName As String = "Ctl_Event.xlApp_SheetChange"
     
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
-
-'  Call init.setting
-'  Call Library.showDebugForm(funcName, , "start")
-'  Call Library.showDebugForm(funcName, , "end")
-
-  Exit Sub
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
   
+'  Call init.setting
+'  Call Library.showDebugForm(funcName, , "start1")
+'  Call Library.startScript
+  '----------------------------------------------
+
+
+  '処理終了--------------------------------------
+'  Call Library.endScript
+'  Call init.resetGlobalVal
+'  Call Library.showDebugForm(funcName, , "end1")
+  Exit Sub
+  '----------------------------------------------
+
 'エラー発生時------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
-
 
 '==================================================================================================
 'ワークシートが変更されたとき
 Private Sub xlApp_SheetDeactivate(ByVal Sh As Object)
   Const funcName As String = "Ctl_Event.xlApp_SheetDeactivate"
   
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
-  
-  
+  '----------------------------------------------
   
   'ハイライト機能--------------------------------
   If BKh_rbPressed = True Then
@@ -422,11 +435,14 @@ Private Sub xlApp_SheetDeactivate(ByVal Sh As Object)
   End If
   
   
+  '処理終了--------------------------------------
   Exit Sub
-  
+  '----------------------------------------------
+
 'エラー発生時------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
 
 '==================================================================================================
@@ -435,13 +451,12 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   Dim slctCells As Range
   
   Const funcName As String = "Ctl_Event.xlApp_SheetSelectionChange"
- 
   
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
-  
-  
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
+  '----------------------------------------------
   
   'ハイライト機能--------------------------------
   If BKh_rbPressed = True Then
@@ -472,12 +487,15 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
       Call Ctl_Formula.数式確認
     End If
   End If
-  Exit Sub
   
+  '処理終了--------------------------------------
+  Exit Sub
+  '----------------------------------------------
+
 'エラー発生時------------------------------------
 catchError:
-  Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
-   Call Library.endScript
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
 
 
@@ -486,9 +504,11 @@ End Sub
 Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Range, Cancel As Boolean)
   Const funcName As String = "Ctl_Event.xlApp_SheetBeforeDoubleClick"
 
+  '処理開始--------------------------------------
   On Error GoTo catchError
-  If Me.StopEvent Then Exit Sub
-  If Not CheckSheet(Sh) Then Exit Sub
+'  If Me.StopEvent Then Exit Sub
+'  If Not CheckBook(wb) Then Exit Sub
+  '----------------------------------------------
 
   
   'ズーム機能------------------------------------
@@ -503,12 +523,16 @@ Private Sub xlApp_SheetBeforeDoubleClick(ByVal Sh As Object, ByVal Target As Ran
     Call Library.showDebugForm(funcName, , "end")
   End If
   
+  '処理終了--------------------------------------
   Exit Sub
-  
+  '----------------------------------------------
+
 'エラー発生時------------------------------------
 catchError:
-  'Debug.Print Format(Now(), "yyyy-mm-dd hh:nn:ss") & "  [ERROR]" & funcName & "  " & Err.Description
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
 End Sub
+
 
 '==================================================================================================
 '右クリックされたとき

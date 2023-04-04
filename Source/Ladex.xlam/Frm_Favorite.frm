@@ -166,10 +166,11 @@ Private Sub Lst_Favorite_Click()
   Set FSO = Nothing
   
   Exit Sub
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
 
 End Sub
+
 '==================================================================================================
 'リストボックス
 Private Sub Lst_Favorite_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
@@ -198,7 +199,7 @@ Private Sub Lst_Favorite_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
   End If
   
   Exit Sub
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
 
 End Sub
@@ -210,8 +211,9 @@ Private Sub Lst_FavCategory_Click()
   Dim DetailMeg As String
   Dim line As Long, y As Long
   Dim FilePath As String
+  Dim fileInfo As Object
+  Dim objFso As New FileSystemObject
   
-  Dim FSO As Object, fileInfo As Object
   On Error GoTo catchError
   
   Call init.setting
@@ -221,7 +223,7 @@ Private Sub Lst_FavCategory_Click()
   
   For y = LBound(arrFavCategory, 2) + 1 To UBound(arrFavCategory, 2)
     If arrFavCategory(line, y) <> "" Then
-      Frm_Favorite.Lst_Favorite.AddItem Library.getFileInfo(CStr(arrFavCategory(line, y)), , "fileName")
+      Frm_Favorite.Lst_Favorite.AddItem objFso.getFileName(CStr(arrFavCategory(line, y)))
     End If
   Next
   
@@ -231,10 +233,8 @@ Private Sub Lst_FavCategory_Click()
     Frm_Favorite.DetailMeg.Value = "ダブルクリックでカテゴリー名変更が可能"
   End If
   
-
-  
   Exit Sub
-'エラー発生時--------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
 
 End Sub
@@ -244,7 +244,6 @@ End Sub
 Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
   Dim line As Long
   Dim newCategoryName As String
-  
   
   line = Lst_FavCategory.ListIndex
   If line = -1 Then
@@ -259,8 +258,6 @@ Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     Set targetSheet = ThisWorkbook.Worksheets("Favorite")
   End If
     
-    
-  
   If newCategoryName <> "" Then
     '重複チェック
     endLine = targetSheet.Cells(Rows.count, 1).End(xlUp).Row
@@ -281,12 +278,12 @@ Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
 End Sub
 
 
-
 '==================================================================================================
 Function RefreshListBox()
   Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim line2 As Long, oldEndLine As Long
   Dim categoryName As String, FilePath As String
+  Dim objFso As New FileSystemObject
   
   Const funcName As String = "Ctl_Favorite.RefreshListBox"
   
@@ -317,7 +314,6 @@ Function RefreshListBox()
     Frm_Favorite.Lst_FavCategory.AddItem categoryName
   Next
   
-  
   '配列の要素数確認------------------------------
   endColLine = targetSheet.Cells(1, Columns.count).End(xlToLeft).Column
   oldEndLine = 1
@@ -336,7 +332,7 @@ Function RefreshListBox()
     endLine = targetSheet.Cells(Rows.count, colLine).End(xlUp).Row
     For line = 2 To endLine
       arrFavCategory(colLine, line - 1) = targetSheet.Cells(line, colLine).Value
-      Frm_Favorite.Lst_Favorite.AddItem Library.getFileInfo(targetSheet.Cells(line, colLine), , "fileName")
+      Frm_Favorite.Lst_Favorite.AddItem objFso.getFileName(targetSheet.Cells(line, colLine))
     Next
   Next
 
@@ -344,12 +340,12 @@ Function RefreshListBox()
   Frm_Favorite.Lst_FavCategory.AddItem addCategoryVal
   
   '処理終了--------------------------------------
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end1")
+  Call Library.endScript
+  Call Library.showDebugForm(funcName, , "end1")
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

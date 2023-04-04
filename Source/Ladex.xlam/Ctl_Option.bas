@@ -380,7 +380,7 @@ Function 初期化()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -463,7 +463,7 @@ Function バックアップ()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
@@ -506,7 +506,7 @@ Function リストア()
   Exit Function
   '----------------------------------------------
 
-  'エラー発生時------------------------------------------------------------------------------------
+'エラー発生時------------------------------------
 catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle

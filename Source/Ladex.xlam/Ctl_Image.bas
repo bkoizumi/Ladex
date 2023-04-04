@@ -20,7 +20,7 @@ Function ‰æ‘œ•Û‘¶(Optional defSlctArea As Variant, Optional imageName As Variant
     Call Library.showDebugForm(funcName, , "start1")
     Call Library.startScript
   Else
-'    On Error GoTo catchError
+    On Error GoTo catchError
     Call Library.showDebugForm(funcName, , "start1")
   End If
   Call Library.showDebugForm("runFlg", runFlg, "debug")

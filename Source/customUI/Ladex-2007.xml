@@ -215,8 +215,8 @@
 
           <menuSeparator id="セル編集_SP99" title="その他" />
           <button id="設定_取り消し線_____________" label="取り消し線"   imageMso="Strikethrough"     onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="取り消し線を設定・解除します &#13;"  />
-          <button id="変換_数値を丸数字___________" label="数値⇒丸数字"  imageMso="AppointmentBusy"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="数値を丸数値に変換します &#13;"  />
-          <button id="変換_丸数字を数値___________" label="丸数値⇒数値"  imageMso="AppointmentBusy"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="丸数値を数値に変換します &#13;"  />
+          <button id="変換_数値を丸数字___________" label="数値⇒丸数字"  imageMso="CalculatedNumber"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="数値を丸数値に変換します &#13;"  />
+          <button id="変換_丸数字を数値___________" label="丸数値⇒数値"  imageMso="CalculatedNumber"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="丸数値を数値に変換します &#13;"  />
         </menu>
 
         <menu id="セル編集_コメント挿入削除" label="コメント挿入/削除"  itemSize="large" imageMso="EditItem" >
@@ -277,8 +277,9 @@
         <menu id="罫線_TableMenuN" label="表形式の罫線"  itemSize="large" imageMso="BorderDrawLine" description="表形式の罫線を設定&#13;" >
           <menuSeparator id="罫線_表形式MS02" title="表形式の罫線を設定&#13;" />
           <button id="罫線_表_実線_"  label="実線"  imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="表形式の罫線を実線で設定&#13;" />
-          <button id="罫線_表_破線A" label="破線A" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は実線、水平方向は破線で表形式の罫線を設定&#13;" />
-          <button id="罫線_表_破線B" label="破線B" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は破線、水平方向は実線で表形式の罫線を設定&#13;" />
+          <button id="罫線_表_破線A"  label="破線A" image="BordersTypeA"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は実線、水平方向は破線で表形式の罫線を設定&#13;" />
+          <button id="罫線_表_破線B"  label="破線B" image="BordersTypeB"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は破線、水平方向は実線で表形式の罫線を設定&#13;" />
+          <button id="罫線_表_逆L字"  label="逆L字" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="逆L字型の表を設定&#13;" />
         </menu>
 
         <menuSeparator id="罫線_破線MS01" title="破線で罫線を設定&#13;" />
@@ -299,12 +300,16 @@
         <menuSeparator id="罫線_実線MS01" title="実線で罫線を設定&#13;" />
         <menu id="罫線_実線Menu" label="実線で罫線" itemSize="large" imageMso="BorderDrawGrid" description="実線で罫線を設定&#13;" >
           <menuSeparator id="罫線_実線MS02" title="実線で罫線を設定&#13;" />
-          <button id="罫線_実線_水平" label="水平" imageMso="BorderInsideHorizontal"    onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で水平方向に罫線を設定&#13;" />
-          <button id="罫線_実線_垂直" label="垂直" imageMso="BorderInsideVertical"      onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で垂直方向に罫線を設定&#13;" />
-          <button id="罫線_実線_左右" label="左右" image="BorderLeftAndRight"           onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で左右方向に罫線を設定&#13;" />
-          <button id="罫線_実線_上下" label="上下" imageMso="BordersAndShadingInfoPath" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で上下方向に罫線を設定&#13;" />
-          <button id="罫線_実線_囲み" label="囲み" imageMso="BorderOutside"             onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で囲みに罫線を設定&#13;" />
-          <button id="罫線_実線_格子" label="格子" imageMso="BordersAll"                onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で格子に罫線を設定&#13;" />
+          <button id="罫線_実線_水平" label="水平"  imageMso="BorderInsideHorizontal"     onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で水平方向に罫線を設定&#13;" />
+          <button id="罫線_実線_垂直" label="垂直"  imageMso="BorderInsideVertical"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で垂直方向に罫線を設定&#13;" />
+          <button id="罫線_実線_左__" label="左"    imageMso="BorderLeft"                 onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で左方向に罫線を設定&#13;" />
+          <button id="罫線_実線_右__" label="右"    imageMso="BorderRight"                onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で右方向に罫線を設定&#13;" />
+          <button id="罫線_実線_左右" label="左右"  image="BorderLeftAndRight"            onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で左右方向に罫線を設定&#13;" />
+          <button id="罫線_実線_上__" label="上"    imageMso="BorderTop"                  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で上方向に罫線を設定&#13;" />
+          <button id="罫線_実線_下__" label="下"    imageMso="BorderBottom"               onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で下方向に罫線を設定&#13;" />
+          <button id="罫線_実線_上下" label="上下"  imageMso="BordersAndShadingInfoPath"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で上下方向に罫線を設定&#13;" />
+          <button id="罫線_実線_囲み" label="囲み"  imageMso="BorderOutside"              onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で囲みに罫線を設定&#13;" />
+          <button id="罫線_実線_格子" label="格子"  imageMso="BordersAll"                 onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="実線で格子に罫線を設定&#13;" />
         </menu>
 
         <menuSeparator id="罫線_二重線MS01" title="二重線で罫線を設定&#13;" />
