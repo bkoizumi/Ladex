@@ -17,7 +17,7 @@ Function TextToFitShape(targetShape As Excel.Shape, Optional chkFlg As Boolean =
   Dim h(1) As Double: h(0) = targetShape.Height
   Dim w(1) As Double: w(0) = targetShape.Width
   Dim l As Double: l = targetShape.Left
-  Dim T As Double: T = targetShape.top
+  Dim T As Double: T = targetShape.Top
   
   ' オートシェイプを一旦、文字サイズに合わせてサイズ変更。
   targetShape.TextFrame2.AutoSize = msoAutoSizeShapeToFitText
@@ -74,7 +74,7 @@ Function TextToFitShape(targetShape As Excel.Shape, Optional chkFlg As Boolean =
   targetShape.Width = w(0)
   
   targetShape.Left = l
-  targetShape.top = T
+  targetShape.Top = T
   
   ' フォントサイズを最終値に変更。
   targetShape.TextFrame2.TextRange.Font.Size = FontSize
@@ -155,10 +155,10 @@ Function QRコード生成()
     
     With ActiveSheet.Pictures.Insert(chartAPIURL)
       If FrmVal("onReSize") = True Then
-        .ShapeRange.top = targetCells.top + (targetCells.Height - .ShapeRange.Height) / 2
+        .ShapeRange.Top = targetCells.Top + (targetCells.Height - .ShapeRange.Height) / 2
         .ShapeRange.Left = targetCells.Left + (targetCells.Width - .ShapeRange.Width) / 2
       Else
-        .ShapeRange.top = targetCells.top
+        .ShapeRange.Top = targetCells.Top
         .ShapeRange.Left = targetCells.Left
       End If
       

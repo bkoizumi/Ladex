@@ -375,7 +375,7 @@ Function ƒZƒ‹“à‚Ì’†‰›‚É”z’u()
         Call Library.showDebugForm("slctCells.Height", slctCells.Height, "debug")
         
         With ShapeImg
-          .top = slctCells.top + (slctCells.Height - ShapeImg.Height) / 2
+          .Top = slctCells.Top + (slctCells.Height - ShapeImg.Height) / 2
           .Left = slctCells.Left + (slctCells.Width - ShapeImg.Width) / 2
         End With
         

@@ -39,7 +39,7 @@ Attribute VB_Exposed = False
 '==================================================================================================
 Private Sub UserForm_Initialize()
   StartUpPosition = 0
-  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
   Caption = "ProGressBar |  " & thisAppName
 

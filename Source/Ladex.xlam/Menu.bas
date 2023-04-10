@@ -42,6 +42,7 @@ Function 各機能呼び出し(shortcutName As String)
     Case "スタイル初期化___": Call Ctl_Style.スタイル初期化
     Case "スタイル削除_____": Call Ctl_Style.スタイル削除
     Case "スタイル設定_____": Call Ctl_Style.スタイル設定
+    Case "スタイル確認_____": Call Ctl_Style.スタイル確認
     Case "名前定義削除_____": Call Ctl_Book.名前定義削除
     Case "B_A1セル選択_____": Call Ctl_Book.A1セル選択
     Case "B_A1セル選択_保存": Call Ctl_Book.A1セル選択_保存
@@ -52,7 +53,7 @@ Function 各機能呼び出し(shortcutName As String)
     Case "指定倍率_________": Call Ctl_Zoom.指定倍率
     Case "標準画面_________": Call Ctl_Book.標準画面
     Case "シート管理_______": Call Ctl_Book.シート管理
-
+    
     'シート管理----------------------------------
     Case "S_A1セル選択______": Call Ctl_Sheet.A1セル選択
     Case "S_A1セル選択_保存_": Call Ctl_Sheet.A1セル選択_保存

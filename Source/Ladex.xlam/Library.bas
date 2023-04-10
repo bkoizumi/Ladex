@@ -78,7 +78,7 @@ Public ThisBook As Workbook
 
 
 'スタイル関連------------------------------------
-Public useStyle()           As Variant
+'Public useStyle()           As Variant
 
 
 
@@ -1526,7 +1526,7 @@ Function getMachineInfo() As Object
 
   MachineInfo.add "displayVirtualX", GetSystemMetrics(78)
   MachineInfo.add "displayVirtualY", GetSystemMetrics(79)
-  MachineInfo.add "appTop", ActiveWindow.top
+  MachineInfo.add "appTop", ActiveWindow.Top
   MachineInfo.add "appLeft", ActiveWindow.Left
   MachineInfo.add "appWidth", ActiveWindow.Width
   MachineInfo.add "appHeight", ActiveWindow.Height
@@ -1582,7 +1582,7 @@ Function getCellPosition(Rng As Range, ActvCellTop As Long, ActvCellLeft As Long
 '  ActvCellTop = ((R1C1Top * DPI / PPI) * (ActiveWindow.Zoom / 100)) + Rng.Top
 '  ActvCellLeft = ((R1C1Left * DPI / PPI) * (ActiveWindow.Zoom / 100)) + Rng.Left
 
-  ActvCellTop = (((Rng.top * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Top) * (PPI / DPI)
+  ActvCellTop = (((Rng.Top * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Top) * (PPI / DPI)
   ActvCellLeft = (((Rng.Left * (DPI / PPI)) * (ActiveWindow.Zoom / 100)) + R1C1Left) * (PPI / DPI)
 
 '  If ActvCellLeft <= 0 Then
@@ -2042,7 +2042,7 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
                 LinkToFile:=False, _
                 SaveWithDocument:=True, _
                 Left:=0, _
-                top:=0, _
+                Top:=0, _
                 Width:=0, _
                 Height:=0 _
                 )
@@ -2231,7 +2231,7 @@ End Function
 Function showExpansionForm(Text As String, SetSelectTargetRows As String)
   With Frm_Zoom
     .StartUpPosition = 0
-    .top = Application.top + (ActiveWindow.Width / 10)
+    .Top = Application.Top + (ActiveWindow.Width / 10)
     .Left = Application.Left + (ActiveWindow.Height / 5)
     .TextBox = Text
     .TextBox.MultiLine = True
@@ -2302,9 +2302,9 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
     meg1 = meg1 & " : " & Application.WorksheetFunction.Trim(CStr(meg2))
   End If
 
-  If CLng(LogLevel) <= G_LogLevel Then
-    Call outputLog(runTime, meg1)
-  End If
+'  If CLng(LogLevel) <= G_LogLevel Then
+'    Call outputLog(runTime, meg1)
+'  End If
 
   If dicVal("debugMode") = "develop" Then
     Debug.Print runTime & "  " & meg1
@@ -2387,7 +2387,7 @@ Function showNotice(Code As Long, Optional process As String, Optional runEndflg
   End If
 
   If dicVal("debugMode") = "speak" Or dicVal("debugMode") = "develop" Or dicVal("debugMode") = "all" Then
-    Application.Speech.Speak Text:=speakerMeg, SpeakAsync:=True, SpeakXML:=True
+'    Application.Speech.Speak Text:=speakerMeg, SpeakAsync:=True, SpeakXML:=True
   End If
 
   message = Replace(message, "<", "[")
@@ -4797,7 +4797,7 @@ End Function
 '==================================================================================================
 Function スタイル利用確認()
   Dim count As Long, endCount As Long
-  Dim i As Long
+  Dim i As Long, RangeCnt As Long
   Dim objSheet As Variant
   Dim sheetName As String, styleName As String
   Dim slctRange As Range
@@ -4814,9 +4814,9 @@ Function スタイル利用確認()
   useStyle(0) = "標準"
   
   i = 1
+  RangeCnt = 1
   For Each objSheet In ActiveWorkbook.Sheets
     sheetName = objSheet.Name
-    Call Ctl_ProgressBar.showBar("スタイル利用確認", PrgP_Cnt, PrgP_Max, 1, 2, "シート：" & sheetName)
     
     For Each slctRange In Worksheets(sheetName).UsedRange
       styleName = slctRange.style.NameLocal
@@ -4825,8 +4825,13 @@ Function スタイル利用確認()
         ReDim Preserve useStyle(i)
         useStyle(i) = styleName
         i = i + 1
+        DoEvents
       End If
+      
+      'Call Ctl_ProgressBar.showBar("スタイル利用確認", PrgP_Cnt, PrgP_Max, RangeCnt, Worksheets(sheetName).UsedRange.count, "シート：" & sheetName)
+      RangeCnt = RangeCnt + 1
     Next
+    DoEvents
   Next
 
 
@@ -4855,14 +4860,13 @@ Function スタイル削除()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   '----------------------------------------------
   
-  
   count = 1
   endCount = ActiveWorkbook.Styles.count
-  
   
   For Each objStyle In ActiveWorkbook.Styles
     Call Ctl_ProgressBar.showBar("定義済スタイル削除", PrgP_Cnt, PrgP_Max, count, endCount, "シート：" & objStyle.Name)
     
+    Call Library.showDebugForm("スタイル      ", objStyle.Name, "debug")
     If Library.chkArrayVal(useStyle, objStyle.Name) = False Then
       Call Library.showDebugForm("削除スタイル  ", objStyle.Name, "debug")
       Select Case objStyle.Name
@@ -4874,9 +4878,6 @@ Function スタイル削除()
     count = count + 1
   Next
   
-
-
-
   '処理終了--------------------------------------
   Call Library.showDebugForm(funcName, , "end1")
   Exit Function

@@ -87,7 +87,7 @@ Function ”ÍˆÍ‘I‘ð(formulaVals As Variant, confirmFormulaName As String)
   End If
 
   With ActiveSheet.Range(formulaVals.Address(external:=False))
-    ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, top:=.top, Width:=.Width, Height:=.Height).Select
+    ActiveSheet.Shapes.AddShape(Type:=msoShapeRectangle, Left:=.Left, Top:=.Top, Width:=.Width, Height:=.Height).Select
   End With
   
   Selection.Name = confirmFormulaName

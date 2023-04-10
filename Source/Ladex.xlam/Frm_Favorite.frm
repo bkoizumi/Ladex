@@ -30,7 +30,7 @@ Private Sub UserForm_Initialize()
   
   
   StartUpPosition = 0
-  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
   Caption = "[" & thisAppName & "] お気に入り"
   
@@ -88,6 +88,13 @@ End Sub
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+'バツボタンで閉じる
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+  Call Library.delSheetData(targetSheet)
+  Unload Me
+End Sub
+
 '==================================================================================================
 '閉じる
 Private Sub Submit_Click()

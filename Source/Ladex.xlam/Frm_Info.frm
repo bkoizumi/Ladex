@@ -26,7 +26,7 @@ Private Sub UserForm_Initialize()
   Dim cBox As CommandBarComboBox
   
   StartUpPosition = 0
-  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
   Caption = "èÓïÒ |  " & thisAppName
   

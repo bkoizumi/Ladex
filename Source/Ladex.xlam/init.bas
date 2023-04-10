@@ -81,6 +81,15 @@ Public Const favoriteDebug  As Boolean = False
 Public Const maxColumnWidth As Long = 60
 Public Const maxRowHeight   As Long = 200
 
+
+'スタイル関連------------------------------------
+Public useStyle()           As Variant
+Public useStyleVal          As Object
+
+
+
+
+
 '**************************************************************************************************
 ' * 設定解除
 ' *
@@ -103,6 +112,7 @@ Function unsetting(Optional flg As Boolean = True)
   '設定値読み込み
   Set dicVal = Nothing
   Set FrmVal = Nothing
+  Set useStyleVal = Nothing
   
   Set targetSheet = Nothing
   Set targetRange = Nothing
@@ -137,6 +147,10 @@ Function resetGlobalVal()
   Call Library.showDebugForm(funcName, , "function")
   '----------------------------------------------
 
+  '設定値読み込み
+  Set dicVal = Nothing
+
+  
   PrgP_Max = 2
   PrgP_Cnt = 0
   PbarCnt = 1

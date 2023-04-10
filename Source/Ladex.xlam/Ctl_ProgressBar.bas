@@ -16,7 +16,7 @@ Public PrgC_Meg As String
 Public PrgMeg   As String
 
 '==================================================================================================
-Public Function showStart()
+Public Function showStart(Optional titleStr As String = "待機中")
   Const funcName As String = "Ctl_ProgressBar.showStart"
   
   '処理開始--------------------------------------
@@ -33,7 +33,7 @@ Public Function showStart()
       .BorderStyle = fmBorderStyleSingle
       .SpecialEffect = fmSpecialEffectSunken
       .Caption = ""
-      .top = 15
+      .Top = 15
       .Left = 12
       .Height = 15
       .Width = 250
@@ -44,7 +44,7 @@ Public Function showStart()
       .BackColor = RGB(90, 248, 82)
       .SpecialEffect = fmSpecialEffectRaised
       .Caption = ""
-      .top = 16
+      .Top = 16
       .Left = 13
       .Height = 13
       .Width = 0
@@ -53,10 +53,10 @@ Public Function showStart()
     '進捗状況表示の部分 ( % )
     With .PrgP_Progress
       .TextAlign = fmTextAlignCenter
-      .Caption = "0%"
+      .Caption = ""
       .BackStyle = 0
       .Caption = ""
-      .top = 17
+      .Top = 17
       .Left = 12
       .Height = 14
       .Width = 250
@@ -70,7 +70,7 @@ Public Function showStart()
       .BorderStyle = fmBorderStyleSingle
       .SpecialEffect = fmSpecialEffectSunken
       .Caption = ""
-      .top = 45
+      .Top = 45
       .Left = 12
       .Height = 15
       .Width = 250
@@ -81,7 +81,7 @@ Public Function showStart()
       .BackColor = RGB(90, 248, 82)
       .SpecialEffect = fmSpecialEffectRaised
       .Caption = ""
-      .top = 46
+      .Top = 46
       .Left = 13
       .Height = 13
       .Width = 0
@@ -90,9 +90,9 @@ Public Function showStart()
     '進捗状況表示の部分 ( % )
     With .PrgC_Progress
       .TextAlign = fmTextAlignCenter
-      .Caption = "0%"
+      .Caption = ""
       .BackStyle = 0
-      .top = 47
+      .Top = 47
       .Left = 12
       .Height = 14
       .Width = 250
@@ -103,8 +103,8 @@ Public Function showStart()
     
     'メッセージ表示の部分
     With .Prg_Message
-      .Caption = "待機中"
-      .top = 70
+      .Caption = titleStr
+      .Top = 70
       .Left = 12
       .Height = 30
       .Width = 270
@@ -154,28 +154,28 @@ Public Function showBar( _
   End If
   If L_PrgP_Cnt = 0 Then
     PrgP_Prg = 0
-    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    PrgP_Meg = Format(L_PrgP_Cnt, "#,###,###") & "/" & Format(PrgP_Max, "#,###,###") & " (" & PrgP_Prg & "%)"
     
   ElseIf L_PrgC_Cnt = 0 Then
     PrgC_Prg = 0
-    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+    PrgC_Meg = Format(L_PrgC_Cnt, "#,###,###") & "/" & Format(PrgC_Max, "#,###,###") & " (" & PrgC_Prg & "%)"
   
   
   ElseIf L_PrgP_Cnt <= 0 And L_PrgC_Cnt > 0 Then
     PrgP_Prg = 0
-    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    PrgP_Meg = Format(L_PrgP_Cnt, "#,###,###") & "/" & Format(PrgP_Max, "#,###,###") & " (" & PrgP_Prg & "%)"
     
     PrgC_Prg = Int((L_PrgC_Cnt) / PrgC_Max * 100)
-    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+    PrgC_Meg = Format(L_PrgC_Cnt, "#,###,###") & "/" & Format(PrgC_Max, "#,###,###") & " (" & PrgC_Prg & "%)"
   
   
   
   ElseIf L_PrgP_Cnt > 0 And L_PrgC_Cnt > 0 Then
     PrgP_Prg = Int((L_PrgP_Cnt) / PrgP_Max * 100)
-    PrgP_Meg = L_PrgP_Cnt & "/" & PrgP_Max & " (" & PrgP_Prg & "%)"
+    PrgP_Meg = Format(L_PrgP_Cnt, "#,###,###") & "/" & Format(PrgP_Max, "#,###,###") & " (" & PrgP_Prg & "%)"
     
     PrgC_Prg = Int((L_PrgC_Cnt) / PrgC_Max * 100)
-    PrgC_Meg = L_PrgC_Cnt & "/" & PrgC_Max & " (" & PrgC_Prg & "%)"
+    PrgC_Meg = Format(L_PrgC_Cnt, "#,###,###") & "/" & Format(PrgC_Max, "#,###,###") & " (" & PrgC_Prg & "%)"
   
   End If
   

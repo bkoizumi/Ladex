@@ -257,7 +257,7 @@ Function ‰æ‘œ“\•t‚¯()
   chfkFlg = False
   '----------------------------------------------
   
-  topPosition = ActiveCell.top
+  topPosition = ActiveCell.Top
   leftPosition = ActiveCell.Left
   
   For Each imgFile In Library.getFilesPath(ActiveWorkbook.path, "‰æ‘œ", "img", "pasteImgPath")
@@ -271,7 +271,7 @@ Function ‰æ‘œ“\•t‚¯()
         LinkToFile:=False, _
         SaveWithDocument:=True, _
         Left:=leftPosition, _
-        top:=topPosition, _
+        Top:=topPosition, _
         Width:=0, _
         Height:=0)
       

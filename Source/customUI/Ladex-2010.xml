@@ -50,6 +50,7 @@
           <button id="スタイル初期化___" label="初期化"  imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの初期化&#13;"  supertip="新規Book作成時の状態にします。&#13;ただし、利用中のスタイルは削除しません" />
           <button id="スタイル削除_____" label="削除"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの削除&#13;"    supertip="設定中のスタイルを削除します。&#13;ただし、利用中のスタイルは削除しません" />
           <button id="スタイル設定_____" label="設定"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの設定&#13;"    supertip="設定中のスタイルを削除後、スタイル情報.xlsxで設定したスタイルを適応します。&#13;ただし、利用中のスタイルは削除しません" />
+          <button id="スタイル確認_____" label="確認"    imageMso="AppointmentColorDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="スタイルの確認&#13;"    supertip="スタイルが利用されているセルを調査します" />
         </menu>
         <menuSeparator id="ブック管理_MS02" title="設定を削除" />
         <button id="名前定義削除_____"  label="名前定義削除"  image="del_CellNames" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="名前定義を削除&#13;"  supertip="設定されている名前の定義をすべて削除します" />

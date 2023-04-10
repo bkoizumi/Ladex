@@ -135,7 +135,7 @@ Function スタイル削除()
   
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
-  Call Ctl_ProgressBar.showStart
+  Call Ctl_ProgressBar.showStart("スタイル利用確認")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
@@ -197,7 +197,7 @@ Function スタイル_全削除()
   
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
-  Call Ctl_ProgressBar.showStart
+  Call Ctl_ProgressBar.showStart("スタイル利用確認")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
@@ -265,7 +265,7 @@ Function スタイル設定()
   
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
-  Call Ctl_ProgressBar.showStart
+  Call Ctl_ProgressBar.showStart("スタイル利用確認")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
@@ -422,7 +422,7 @@ Function スタイル初期化()
   
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   Call Library.startScript
-  Call Ctl_ProgressBar.showStart
+  Call Ctl_ProgressBar.showStart("スタイル利用確認")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
   
@@ -537,13 +537,6 @@ Function 標準スタイルの見た目変更()
     .Interior.Color = ""
    End With
   
-
-
-
-
-
-
-
   '処理終了--------------------------------------
   If runFlg = False Then
     Application.GoTo Reference:=Range("A1"), Scroll:=True
@@ -563,3 +556,124 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
+
+
+'==================================================================================================
+Function スタイル確認()
+  Dim styleCnt As Long
+  Dim objSheet As Variant
+  Dim objStyle As Variant
+  Dim sheetName As String, styleName As String
+  Dim slctRange As Range
+  Dim RangeCnt As Long, RangeAllCnt As Long
+  Dim chkNewSheetFlg As Boolean
+  
+  
+  Const funcName As String = "Ctl_Style.スタイル確認"
+  Const AbortCnt As Long = 10000
+     
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.startScript
+  Call Ctl_ProgressBar.showStart("スタイル利用確認")
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+  styleCnt = 1
+  chkNewSheetFlg = False
+  Set useStyleVal = Nothing
+  Set useStyleVal = CreateObject("Scripting.Dictionary")
+  
+  '利用スタイルの取得---------------------------
+  Call Library.スタイル利用確認
+  
+  For Each objStyle In ActiveWorkbook.Styles
+    styleName = objStyle.Name
+    Call Library.showDebugForm("スタイル名", styleName, "debug")
+    
+    If Library.chkArrayVal(useStyle(), styleName) = True Then
+      Select Case styleName
+        Case "Normal", "Percent", "Comma [0]", "Currency [0]", "Currency", "Comma"
+        Case Else
+          For Each objSheet In ActiveWorkbook.Sheets
+            sheetName = objSheet.Name
+            If Worksheets(sheetName).Visible = xlSheetVisible Then
+              Worksheets(sheetName).Select
+              Cells(Rows.count, Columns.count).Select
+            
+              chkNewSheetFlg = True
+              RangeCnt = 1
+              RangeAllCnt = Worksheets(sheetName).UsedRange.count
+              
+              For Each slctRange In Worksheets(sheetName).UsedRange
+                If styleName = slctRange.style Then
+                  If chkNewSheetFlg = True Then
+                    slctRange.Select
+                    chkNewSheetFlg = False
+                  Else
+                    Application.Union(Selection, slctRange).Select
+                  End If
+                End If
+                'Call Library.showDebugForm("利用スタイル", slctRange.style, "debug")
+                Call Ctl_ProgressBar.showBar("スタイル確認", styleCnt, ActiveWorkbook.Styles.count, RangeCnt, RangeAllCnt, styleName)
+                If RangeCnt >= AbortCnt Then
+                  Exit For
+                End If
+                RangeCnt = RangeCnt + 1
+              Next
+              
+              If Selection.Address <> Cells(Rows.count, Columns.count).Address Then
+                If useStyleVal.Exists(styleName) Then
+                  useStyleVal(styleName) = useStyleVal(styleName) & "<|>" & sheetName & "!" & Selection.Address
+                Else
+                  useStyleVal.add styleName, sheetName & "!" & Selection.Address
+                End If
+                If RangeCnt >= AbortCnt Then
+                  useStyleVal(styleName) = useStyleVal(styleName) & "<|>Abort" & "!" & sheetName & "シートでの設定数が多数存在するため、調査を中断"
+                End If
+              ElseIf Selection.Address = Cells(Rows.count, Columns.count).Address Then
+              Else
+                If useStyleVal.Exists(styleName) Then
+                  useStyleVal(styleName) = useStyleVal(styleName) & "<|>Abort" & "!" & sheetName & "シートでの設定数が多数存在するため、調査を中断"
+                Else
+                  useStyleVal.add styleName, "Abort" & "!" & sheetName & "シートでの設定数が多数存在するため、調査を中断"
+                End If
+              End If
+            End If
+          Next
+      End Select
+      styleCnt = styleCnt + 1
+    End If
+  Next
+  
+  Call Ctl_ProgressBar.showEnd
+  If useStyleVal.count > 0 Then
+    Frm_Style.Show vbModeless
+  Else
+    Call Library.showNotice(10, "利用されているスタイルが見つかりませんでした")
+  End If
+  
+  Call Ctl_Book.A1セル選択
+
+  '処理終了--------------------------------------
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end1")
+'    Call init.resetGlobalVal
+  End If
+  Exit Function
+  '----------------------------------------------
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

@@ -38,7 +38,7 @@ Private Sub UserForm_Initialize()
   
   '表示位置指定----------------------------------
   StartUpPosition = 0
-  top = ActiveWindow.top + ((ActiveWindow.Height - Me.Height) / 2)
+  Top = ActiveWindow.Top + ((ActiveWindow.Height - Me.Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
     
   InitializeFlg = True
@@ -109,7 +109,7 @@ End Sub
 '==================================================================================================
 Private Sub SheetList_Click()
   Dim sheetName As String, meg As String
-  Const funcName As String = "Frm_Sheet.edit_Click"
+  Const funcName As String = "Frm_Sheet.SheetList_Click"
 
   '処理開始--------------------------------------
   On Error GoTo catchError
