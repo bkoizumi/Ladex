@@ -333,6 +333,7 @@ Private Sub xlApp_SheetActivate(ByVal Sh As Object)
   
   '処理開始--------------------------------------
   On Error GoTo catchError
+  If Application.CutCopyMode Then Exit Sub
 '  If Me.StopEvent Then Exit Sub
 '  If Not CheckBook(wb) Then Exit Sub
   
@@ -384,6 +385,7 @@ Private Sub xlApp_SheetChange(ByVal Sh As Object, ByVal Target As Range)
     
   '処理開始--------------------------------------
   On Error GoTo catchError
+  If Application.CutCopyMode Then Exit Sub
 '  If Me.StopEvent Then Exit Sub
 '  If Not CheckBook(wb) Then Exit Sub
   
@@ -413,6 +415,7 @@ Private Sub xlApp_SheetDeactivate(ByVal Sh As Object)
   
   '処理開始--------------------------------------
   On Error GoTo catchError
+  If Application.CutCopyMode Then Exit Sub
   '----------------------------------------------
   
   'ハイライト機能--------------------------------
@@ -454,6 +457,7 @@ Private Sub xlApp_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range
   
   '処理開始--------------------------------------
   On Error GoTo catchError
+  If Application.CutCopyMode Then Exit Sub
 '  If Me.StopEvent Then Exit Sub
 '  If Not CheckBook(wb) Then Exit Sub
   '----------------------------------------------

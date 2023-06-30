@@ -1,7 +1,7 @@
 Attribute VB_Name = "Ctl_Favorite"
 Option Explicit
 
-
+Public Const favoriteDebug  As Boolean = False
 '**************************************************************************************************
 ' * ‚¨‹C‚É“ü‚è
 ' *
@@ -53,8 +53,7 @@ Function ƒŠƒXƒgŽæ“¾()
       categoryName = Split(tmp(i, 0), "<L|>")(0)
       FilePath = tmp(i, 1)
       
-      Call Library.showDebugForm("categoryName", categoryName, "debug")
-      Call Library.showDebugForm("FilePath    ", FilePath, "debug")
+      Call Library.showDebugForm("FavoriteList", "[" & categoryName & "]" & FilePath, "debug")
       
       If oldCategoryName <> categoryName And oldCategoryName <> "" Then
         colLine = colLine + 1

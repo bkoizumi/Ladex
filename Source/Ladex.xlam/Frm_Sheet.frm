@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Sheet 
    Caption         =   "シート管理"
-   ClientHeight    =   6420
+   ClientHeight    =   7035
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9675.001
+   ClientWidth     =   9840.001
    OleObjectBlob   =   "Frm_Sheet.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -55,7 +55,7 @@ Private Sub UserForm_Initialize()
       .Gridlines = True
       .ColumnHeaders.add , "_ID", "#", 30
       .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
-      .ColumnHeaders.add , "_SheetName", "シート名", 140
+      .ColumnHeaders.add , "_SheetName", "シート名", 340
       
       For line = 1 To ActiveWorkbook.Worksheets.count
         With .ListItems.add
@@ -422,7 +422,7 @@ Function reLoadList()
     .Gridlines = True
     .ColumnHeaders.add , "_ID", "#", 30
     .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
-    .ColumnHeaders.add , "_SheetName", "シート名", 140
+    .ColumnHeaders.add , "_SheetName", "シート名", 340
     
     For line = 1 To ActiveWorkbook.Worksheets.count
       With .ListItems.add

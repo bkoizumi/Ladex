@@ -268,7 +268,7 @@ Function FavoriteFileOpen(control As IRibbonControl)
   Call Library.showDebugForm("control.ID", control.ID, "debug")
   '----------------------------------------------
   
-  fileNamePath = Library.getRegistry("FavoriteList", Replace(control.ID, ".-.", "<L|>"))
+  fileNamePath = control.Tag
   
   If Library.chkFileExists(fileNamePath) Then
     If Library.chkBookOpened(fileNamePath) = True Then
@@ -346,7 +346,7 @@ Function FavoritesToAdd(control As IRibbonControl, ByRef returnedVal)
   Dim MenuSepa, tmp, Category
   Dim categoryName As String, oldCategoryName As String
   
-  Const funcName As String = "Ctl_Ribbon.AddToFavorites"
+  Const funcName As String = "Ctl_Ribbon.FavoritesToAdd"
 
   '処理開始--------------------------------------
   runFlg = True
@@ -461,6 +461,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   Dim line As Long, endLine As Long
   Dim objFso As New FileSystemObject
   Dim MenuSepa, tmp, Category
+  Dim FvrtCtgyCnt As Long, FvrtFileCnt As Long
   
   Const funcName As String = "Ctl_Ribbon.FavoriteMenu"
 
@@ -491,11 +492,13 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   
   Set MenuSepa = DOMDoc.createElement("menuSeparator")
   With MenuSepa
-    .setAttribute "id", "MS_カテゴリー一覧"
+    .setAttribute "id", "FvrtCtgyList"
     .setAttribute "title", "カテゴリー一覧"
   End With
   Menu.appendChild MenuSepa
   Set MenuSepa = Nothing
+  FvrtCtgyCnt = 1
+  FvrtFileCnt = 1
   
   If Not IsEmpty(tmp) Then
     For line = 0 To UBound(tmp)
@@ -508,22 +511,30 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
         
         Set CategoryMenu = DOMDoc.createElement("menu")
         With CategoryMenu
-          .setAttribute "id", "M_FavoriteCategory" & Category(0)
+          .setAttribute "id", "FvrtCtgy_" & FvrtCtgyCnt
           .setAttribute "label", Category(0)
           .setAttribute "imageMso", "AddFolderToFavorites"
         End With
+        FvrtCtgyCnt = FvrtCtgyCnt + 1
+        FvrtFileCnt = 1
       End If
     
       If tmp(line, 1) <> "" Then
         Set Button = DOMDoc.createElement("button")
         With Button
-          .setAttribute "id", Replace(tmp(line, 0), "<L|>", ".-.")
+          '.setAttribute "id", Replace(tmp(line, 0), "<L|>", "_")
+          .setAttribute "id", "FvrtCtgy_" & FvrtCtgyCnt - 1 & "_" & FvrtFileCnt
           .setAttribute "label", objFso.getFileName(tmp(line, 1))
+          .setAttribute "tag", tmp(line, 1)
           
           'アイコンの設定
           Select Case objFso.GetExtensionName(tmp(line, 1))
-            Case "xlsm", "xlsx", "xlam"
+            Case "xlsm", "xlsx"
               .setAttribute "imageMso", "MicrosoftExcel"
+              
+            Case "xlam"
+              .setAttribute "imageMso", "FileSaveAsExcelXlsxMacro"
+            
             Case "xls"
               .setAttribute "imageMso", "FileSaveAsExcel97_2003"
             
@@ -553,6 +564,8 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
         End With
         CategoryMenu.appendChild Button
         Set Button = Nothing
+        
+        FvrtFileCnt = FvrtFileCnt + 1
       End If
     Next
     Menu.appendChild CategoryMenu
@@ -569,7 +582,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
   End If
   DOMDoc.appendChild Menu
   returnedVal = DOMDoc.XML
-'  Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
+  'Call Library.showDebugForm("DOMDoc.XML", DOMDoc.XML, "debug")
     
   Set CategoryMenu = Nothing
   Set Menu = Nothing

@@ -372,7 +372,9 @@
 
     </group >
 
-    <group idQ="nsShared:grpShared"></group>
+    <group idQ="nsShared:grpShared_01"></group>
+    <group idQ="nsShared:grpShared_02"></group>
+    <group idQ="nsShared:grpShared_03"></group>
 
       <group id="Group2" label="標準機能">
         <menu id="def貼付" label="貼付"  imageMso="Paste" >

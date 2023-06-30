@@ -7,6 +7,45 @@ Option Explicit
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
 '==================================================================================================
+Function 倍率100に設定()
+  Dim rowOutlineLevel As Long, colOutlineLevel As Long
+  
+  Const funcName As String = "Ctl_Sheet.倍率100に設定"
+
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm("" & funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  Call Ctl_ProgressBar.showStart
+  '----------------------------------------------
+
+  ActiveWindow.Zoom = 100
+  
+  '処理終了--------------------------------------
+  Call Ctl_ProgressBar.showEnd
+  If runFlg = False Then
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.unsetting
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  '----------------------------------------------
+
+  Exit Function
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showNotice(400, "<" & funcName & " [" & Err.Number & "]" & Err.Description & ">", True)
+End Function
+
+
+'==================================================================================================
 Function すべて表示()
   Dim rowOutlineLevel As Long, colOutlineLevel As Long
   
@@ -275,10 +314,10 @@ Function フォント一括変更()
       .TextRange.Font.NameFarEast = dicVal("BaseFont")
       .TextRange.Font.Name = dicVal("BaseFont")
       .TextRange.Font.Size = dicVal("BaseFontSize")
-      If .TextRange.Text <> "" Then
-        .AutoSize = msoAutoSizeShapeToFitText
-        .AutoSize = msoAutoSizeNone
-      End If
+'      If .TextRange.Text <> "" Then
+'        .AutoSize = msoAutoSizeShapeToFitText
+'        .AutoSize = msoAutoSizeNone
+'      End If
 
     End With
   

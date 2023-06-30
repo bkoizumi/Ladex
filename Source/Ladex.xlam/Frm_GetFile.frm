@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_GetFile 
    Caption         =   "ƒtƒ@ƒCƒ‹ŠÇ—"
-   ClientHeight    =   4690
+   ClientHeight    =   4695
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   8235.001

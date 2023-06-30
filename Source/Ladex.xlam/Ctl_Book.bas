@@ -258,7 +258,7 @@ Function シート一覧取得()
     End If
   Next
   
-  With Frm_Info
+  With Frm_SheetCopy
     .Caption = "シート一覧"
     .TextBox.Value = sheetNameLists
     .Show
@@ -303,7 +303,7 @@ Function 印刷範囲表示()
   '----------------------------------------------
   
   For Each tempSheet In Sheets
-    tempSheet.DisplayAutomaticPageBreaks = False
+    tempSheet.DisplayAutomaticPageBreaks = True
   Next
   
 
@@ -346,7 +346,7 @@ Function 印刷範囲非表示()
   '----------------------------------------------
   
   For Each tempSheet In Sheets
-    tempSheet.DisplayAutomaticPageBreaks = True
+    tempSheet.DisplayAutomaticPageBreaks = False
   Next
   
 
@@ -389,7 +389,7 @@ Function 連続シート追加()
   
   Set FrmVal = Nothing
   Set FrmVal = CreateObject("Scripting.Dictionary")
-  With Frm_Info
+  With Frm_SheetCopy
     .Caption = "連続シート生成"
     .TextBox.Value = ""
     .copySheet.Visible = True
@@ -568,3 +568,31 @@ catchError:
   Call Library.errorHandle
 End Function
 
+
+'==================================================================================================
+Function 情報取得()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim addSheetName As String
+  
+  Const funcName As String = "Ctl_Book.情報取得"
+  
+  '処理開始--------------------------------------
+  Application.Cursor = xlWait
+  On Error GoTo catchError
+  Call init.setting
+  Call Library.startScript
+  Call Library.showDebugForm(funcName, , "function")
+  '----------------------------------------------
+  
+  Frm_FileInfo.Show vbModeless
+  
+  '処理終了--------------------------------------
+  Call Library.endScript
+  Exit Function
+  '----------------------------------------------
+
+'エラー発生時------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
+  Call Library.errorHandle
+End Function

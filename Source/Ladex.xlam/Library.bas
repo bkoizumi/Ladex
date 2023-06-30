@@ -33,7 +33,7 @@ Option Explicit
   Private Declare Function Sleep Lib "kernel32" (ByVal ms As Long)
 
   'クリップボード関連
-  Declare Function OpenClipboard Lib "user32" (ByVal hWnd As Long) As Long
+  Declare Function OpenClipboard Lib "user32" (ByVal hwnd As Long) As Long
   Declare Function CloseClipboard Lib "user32" () As Long
   Declare Function EmptyClipboard Lib "user32" () As Long
 
@@ -1997,7 +1997,7 @@ End Function
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
-Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Optional getType As String)
+Function getFileInfo(targetFilePath As String, Optional FileInfo As Object, Optional getType As String)
   Dim FSO As Object
   Dim fileObject As Object
   Dim sp As Shape
@@ -2008,30 +2008,30 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
   End If
   
   Set FSO = CreateObject("Scripting.FileSystemObject")
-  Set fileInfo = Nothing
-  Set fileInfo = CreateObject("Scripting.Dictionary")
+  Set FileInfo = Nothing
+  Set FileInfo = CreateObject("Scripting.Dictionary")
   
 
   '作成日時
-  fileInfo.add "createAt", Format(FSO.GetFile(targetFilePath).DateCreated, "yyyy/mm/dd hh:nn:ss")
+  FileInfo.add "createAt", Format(FSO.GetFile(targetFilePath).DateCreated, "yyyy/mm/dd hh:nn:ss")
 
   '更新日時
-  fileInfo.add "updateAt", Format(FSO.GetFile(targetFilePath).DateLastModified, "yyyy/mm/dd hh:nn:ss")
+  FileInfo.add "updateAt", Format(FSO.GetFile(targetFilePath).DateLastModified, "yyyy/mm/dd hh:nn:ss")
 
   'ファイルサイズ
-  fileInfo.add "size", FSO.GetFile(targetFilePath).Size
+  FileInfo.add "size", FSO.GetFile(targetFilePath).Size
 
   'ファイルの種類
-  fileInfo.add "type", FSO.GetFile(targetFilePath).Type
+  FileInfo.add "type", FSO.GetFile(targetFilePath).Type
 
   '拡張子
-  fileInfo.add "extension", FSO.GetExtensionName(targetFilePath)
+  FileInfo.add "extension", FSO.GetExtensionName(targetFilePath)
 
   'ファイル名
-  fileInfo.add "fileName", FSO.GetFile(targetFilePath).Name
+  FileInfo.add "fileName", FSO.GetFile(targetFilePath).Name
 
   'ファイルが存在するフォルダ
-  fileInfo.add "CurrentDir", FSO.GetFile(targetFilePath).ParentFolder
+  FileInfo.add "CurrentDir", FSO.GetFile(targetFilePath).ParentFolder
 
   Select Case FSO.GetExtensionName(targetFilePath)
     Case "mp4"
@@ -2051,15 +2051,15 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
         .ScaleHeight 1, msoTrue
         .ScaleWidth 1, msoTrue
 
-          fileInfo.add "width", CLng(.Width * 4 / 3)
-          fileInfo.add "height", CLng(.Height * 4 / 3)
+          FileInfo.add "width", CLng(.Width * 4 / 3)
+          FileInfo.add "height", CLng(.Height * 4 / 3)
           .delete
       End With
 
     Case "bmp", "jpg", "jpeg", "gif", "emf", "ico", "rle", "wmf"
       Set fileObject = LoadPicture(targetFilePath)
-      fileInfo.add "width", fileObject.Width
-      fileInfo.add "height", fileObject.Height
+      FileInfo.add "width", fileObject.Width
+      FileInfo.add "height", fileObject.Height
       Set fileObject = Nothing
 
     Case Else
@@ -2067,8 +2067,8 @@ Function getFileInfo(targetFilePath As String, Optional fileInfo As Object, Opti
 
   Set FSO = Nothing
   If getType <> "" Then
-    getFileInfo = fileInfo(getType)
-    Set fileInfo = Nothing
+    getFileInfo = FileInfo(getType)
+    Set FileInfo = Nothing
   End If
 End Function
 
@@ -2259,19 +2259,19 @@ Function showDebugForm(ByVal meg1 As String, Optional meg2 As Variant, Optional 
     
     Case "Error"
       LogLevel = 1
-      meg1 = "  [Error   ]    " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  Error   ：" & Replace(meg1, vbNewLine, " ")
 
     Case "warning"
       LogLevel = 2
-      meg1 = "  [Warning ]  " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  Warning ：" & Replace(meg1, vbNewLine, " ")
     
     Case "info"
       LogLevel = 4
-      meg1 = "  [Info    ] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  Info    ：" & Replace(meg1, vbNewLine, " ")
 
     Case "debug"
       LogLevel = 5
-      meg1 = "  [Debug   ] " & Replace(meg1, vbNewLine, " ")
+      meg1 = "  Debug   ：" & Replace(meg1, vbNewLine, " ")
     
     Case "start"
       LogLevel = 0

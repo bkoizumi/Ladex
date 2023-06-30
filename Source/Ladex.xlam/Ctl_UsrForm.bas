@@ -17,8 +17,8 @@ Private Const WS_THICKFRAME = &H40000
 
 #Else
   Declare Function GetActiveWindow Lib "user32" () As Long
-  Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA"(ByVal hwnd As Long, ByVal nIndex As Long) As Long
-  Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA"(ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+  Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+  Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
   Declare Function DrawMenuBar Lib "user32" (ByVal hwnd As Long) As Long
   
   Dim hwnd As Long

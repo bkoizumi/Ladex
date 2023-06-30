@@ -75,7 +75,7 @@ Public arryHollyday()       As Date
 Public defaultZoomInVal     As String
 
 'お気に入り関連----------------------------------
-Public Const favoriteDebug  As Boolean = False
+
 
 'セル関連----------------------------------------
 Public Const maxColumnWidth As Long = 60

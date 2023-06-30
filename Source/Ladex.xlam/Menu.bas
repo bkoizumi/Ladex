@@ -53,6 +53,8 @@ Function 各機能呼び出し(shortcutName As String)
     Case "指定倍率_________": Call Ctl_Zoom.指定倍率
     Case "標準画面_________": Call Ctl_Book.標準画面
     Case "シート管理_______": Call Ctl_Book.シート管理
+    Case "情報取得_________": Call Ctl_Book.情報取得
+
     
     'シート管理----------------------------------
     Case "S_A1セル選択______": Call Ctl_Sheet.A1セル選択
@@ -61,6 +63,7 @@ Function 各機能呼び出し(shortcutName As String)
     Case "不要データ削除____": Call Ctl_Sheet.不要データ削除
     Case "体裁一括変更______": Call Ctl_Sheet.体裁一括変更
     Case "フォント一括変更__": Call Ctl_Sheet.フォント一括変更
+    Case "倍率100に設定_____": Call Ctl_Sheet.倍率100に設定
 
     'その他管理--------------------------------
     Case "ファイル情報取得": Call Ctl_File.ファイル情報取得
@@ -92,8 +95,9 @@ Function 各機能呼び出し(shortcutName As String)
     Case "セル固定設定_幅____": Call Ctl_Cells.セル固定設定_幅
     Case "セル固定設定_高さ__": Call Ctl_Cells.セル固定設定_高さ
     Case "セル固定設定_両方__": Call Ctl_Cells.セル固定設定_両方
-    Case "セル固定設定_高さ15": Call Ctl_Cells.セル固定設定_高さ15
-    Case "セル固定設定_高さ30": Call Ctl_Cells.セル固定設定_高さ30
+    Case "セル固定設定_高さ15": Call Ctl_Cells.セル固定設定_高さ指定(15)
+    Case "セル固定設定_高さ20": Call Ctl_Cells.セル固定設定_高さ指定(20)
+    Case "セル固定設定_高さ30": Call Ctl_Cells.セル固定設定_高さ指定(30)
 
     'セル編集------------------------------------
     Case "削除_前後のスペース_________": Call Ctl_Cells.削除_前後のスペース

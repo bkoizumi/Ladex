@@ -77,6 +77,10 @@
           <button id="シート管理_______" label="シート管理"      imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="名前の変更、表示。非表示の切替、移動等を行います&#13;" supertip="名前の変更、表示。非表示の切替、移動等を行います" />
         </menu>
 
+        <menuSeparator id="ブック管理_MS06" title="その他管理" />
+        <menu id="ブック管理_M06" label="その他管理"  imageMso="HelpLaunch" >
+          <button id="情報取得_________" label="情報取得"  imageMso="AdvancedFind"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="bookの情報を取得します"     supertip="bookの情報を取得します" />
+        </menu>
       </menu>
 
       <menu id="シート管理_Menu" label="シート管理"  itemSize="large" imageMso="HeaderFooterSheetNameInsert">
@@ -168,6 +172,7 @@
           <menu id="セル調整_5subM1" label="高さ固定設定"  itemSize="large" imageMso="SizeToControlHeight">
             <menuSeparator id="セル調整_SP5subS1" title="高さ固定設定" />
             <button id="セル固定設定_高さ15"  label="15ポイント"  image="SizeToControlHeight_15" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さを15ポイントに設定します &#13;"  supertip="セル高さを15ポイントに設定します&#13;" />
+            <button id="セル固定設定_高さ20"  label="20ポイント"  image="SizeToControlHeight_20" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さを20ポイントに設定します &#13;"  supertip="セル高さを20ポイントに設定します&#13;" />
             <button id="セル固定設定_高さ30"  label="30ポイント"  image="SizeToControlHeight_30" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル高さを30ポイントに設定します &#13;"  supertip="セル高さを30ポイントに設定します&#13;" />
           </menu>
       </menu>
@@ -373,7 +378,10 @@
 
     </group >
 
-    <group idQ="nsShared:grpShared"></group>
+    <group idQ="nsShared:grpShared_01"></group>
+    <group idQ="nsShared:grpShared_02"></group>
+    <group idQ="nsShared:grpShared_03"></group>
+    <group idQ="nsShared:grpShared_04"></group>
 
       <group id="Group2" label="標準機能">
         <menu id="def貼付" label="貼付"  imageMso="Paste" >

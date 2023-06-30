@@ -319,11 +319,11 @@ End Function
 
 
 '==================================================================================================
-Function セル固定設定_高さ15()
+Function セル固定設定_高さ指定(heightVal As Integer)
   Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
   Dim line As Long, colLine As Long
   
-  Const funcName As String = "Ctl_Cells.セル固定設定_高さ"
+  Const funcName As String = "Ctl_Cells.セル固定設定_高さ指定"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -342,20 +342,20 @@ Function セル固定設定_高さ15()
   '----------------------------------------------
   
   '選択範囲がある場合----------------------------
-  If Selection.CountLarge > 1 Then
-    Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
-  Else
+  If Selection.Rows.count > 1 Then
     startLine = Selection(1).Row
-    endLine = startLine
+    endLine = Selection(Selection.count).Row
+    For line = startLine To endLine
+      Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
+      
+      If Rows(line).Hidden = False Then
+        Rows(line).rowHeight = heightVal
+      End If
+    Next
+  Else
+    Cells.rowHeight = heightVal
   End If
   
-  For line = startLine To endLine
-    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
-    
-    If Rows(line).Hidden = False Then
-      Rows(line).rowHeight = 15
-    End If
-  Next
   
   
   '処理終了--------------------------------------
@@ -376,63 +376,6 @@ catchError:
   Call Library.errorHandle
 End Function
 
-'==================================================================================================
-Function セル固定設定_高さ30()
-  Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
-  Dim line As Long, colLine As Long
-  
-  Const funcName As String = "Ctl_Cells.セル固定設定_高さ30"
-  
-  '処理開始--------------------------------------
-  Call init.setting
-  If runFlg = False Then
-    Call Library.showDebugForm(funcName, , "start")
-    PrgP_Max = 2
-  Else
-    On Error GoTo catchError
-    Call Library.showDebugForm(funcName, , "start1")
-  End If
-  Call Library.startScript
-  Call Library.showDebugForm("runFlg", runFlg, "debug")
-
-  Call Ctl_ProgressBar.showStart
-  PrgP_Cnt = PrgP_Cnt + 1
-  '----------------------------------------------
-  
-  '選択範囲がある場合----------------------------
-  If Selection.CountLarge > 1 Then
-    Call Library.getCellSelectArea(startLine, endLine, startColLine, endColLine)
-  Else
-    startLine = Selection(1).Row
-    endLine = startLine
-  End If
-  
-  For line = startLine To endLine
-    Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
-    
-    If Rows(line).Hidden = False Then
-      Rows(line).rowHeight = 30
-    End If
-  Next
-  
-  
-  '処理終了--------------------------------------
-  Call Ctl_ProgressBar.showEnd
-  If runFlg = False Then
-    Call Library.endScript
-    Call Library.showDebugForm(funcName, , "end")
-    Call init.resetGlobalVal
-  Else
-    Call Library.showDebugForm(funcName, , "end1")
-  End If
-  Exit Function
-  '----------------------------------------------
-
-'エラー発生時------------------------------------
-catchError:
-  Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
-  Call Library.errorHandle
-End Function
 
 
 '**************************************************************************************************

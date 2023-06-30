@@ -29,6 +29,8 @@ Function Œrü_•\_‹tLš()
   Set startCell = Selection(1)
   Set endCell = Selection(Selection.count)
   
+  Call Library.Œrü_ƒNƒŠƒA_’†‰›ü_‰¡(Selection)
+  
   Range(startCell.Offset(1, 1), endCell).Select
   Call Library.Œrü_”jü_ˆÍ‚İ
   Call Library.Œrü_”jü_…•½

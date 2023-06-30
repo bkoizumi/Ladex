@@ -139,7 +139,7 @@ Private Sub Lst_Favorite_Click()
   Dim favLine As Long, catLine As Long
   Dim FilePath As String
   
-  Dim FSO As Object, fileInfo As Object
+  Dim FSO As Object, FileInfo As Object
   On Error GoTo catchError
   
   Call init.setting
@@ -153,16 +153,16 @@ Private Sub Lst_Favorite_Click()
   
   If Library.chkFileExists(FilePath) Then
     Set FSO = CreateObject("Scripting.FileSystemObject")
-    Set fileInfo = FSO.GetFile(FilePath)
+    Set FileInfo = FSO.GetFile(FilePath)
     
   
     DetailMeg = "<<ファイル情報>>" & vbNewLine
     DetailMeg = DetailMeg & "パ　ス：" & FilePath & vbNewLine
-    DetailMeg = DetailMeg & "作成日：" & Format(fileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
-    DetailMeg = DetailMeg & "更新日：" & Format(fileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
-    DetailMeg = DetailMeg & "サイズ：" & Library.convscale(fileInfo.Size) & " [" & Format(fileInfo.Size, "#,##0") & " Byte" & "]" & vbNewLine
+    DetailMeg = DetailMeg & "作成日：" & Format(FileInfo.DateCreated, "yyyy/mm/dd hh:nn:ss") & vbNewLine
+    DetailMeg = DetailMeg & "更新日：" & Format(FileInfo.DateLastModified, "yyyy/mm/dd hh:nn:ss") & vbNewLine
+    DetailMeg = DetailMeg & "サイズ：" & Library.convscale(FileInfo.Size) & " [" & Format(FileInfo.Size, "#,##0") & " Byte" & "]" & vbNewLine
     
-    DetailMeg = DetailMeg & "種　類：" & fileInfo.Type
+    DetailMeg = DetailMeg & "種　類：" & FileInfo.Type
   Else
     DetailMeg = "<<ファイル情報>>" & vbNewLine
     DetailMeg = DetailMeg & "ファイルが存在しません"
@@ -218,7 +218,7 @@ Private Sub Lst_FavCategory_Click()
   Dim DetailMeg As String
   Dim line As Long, y As Long
   Dim FilePath As String
-  Dim fileInfo As Object
+  Dim FileInfo As Object
   Dim objFso As New FileSystemObject
   
   On Error GoTo catchError
@@ -249,11 +249,12 @@ End Sub
 '==================================================================================================
 'カテゴリー用リストボックス
 Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-  Dim line As Long
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
   Dim newCategoryName As String
   
+LB_restart:
   line = Lst_FavCategory.ListIndex
-  If line = -1 Then
+  If Lst_FavCategory.list(Lst_FavCategory.ListIndex) = "≪カテゴリー追加≫" Then
     newCategoryName = InputBox("カテゴリー名を入力してください", "カテゴリー名入力", "")
   Else
     newCategoryName = InputBox("カテゴリー名を入力してください", "カテゴリー名入力", Lst_FavCategory.list(line))
@@ -265,19 +266,27 @@ Private Sub Lst_FavCategory_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
     Set targetSheet = ThisWorkbook.Worksheets("Favorite")
   End If
     
-  If newCategoryName <> "" Then
+  If newCategoryName = "≪カテゴリー追加≫" Then
+    GoTo LB_restart
+    
+  ElseIf newCategoryName <> "" Then
+    endColLine = Cells(1, Columns.count).End(xlToLeft).Column
+    
     '重複チェック
-    endLine = targetSheet.Cells(Rows.count, 1).End(xlUp).Row
-    If WorksheetFunction.CountIf(targetSheet.Range("A1:A" & endLine), newCategoryName) > 1 Then
+    targetSheet.Activate
+    If WorksheetFunction.CountIf(Range(Cells(1, 1), Cells(1, endColLine)), newCategoryName) > 1 Then
       Frm_Favorite.DetailMeg.Value = "登録するカテゴリーが重複しています"
       MsgBox "登録するカテゴリーが重複しています", vbExclamation
     
     Else
-      If line <> -1 Then
+      If Lst_FavCategory.list(Lst_FavCategory.ListIndex) = "≪カテゴリー追加≫" Then
+        endLine = endColLine + 1
+      Else
         endLine = line + 1
       End If
       
-      targetSheet.Range("A" & endLine) = newCategoryName
+      'targetSheet.Cells(1, endLine).Select
+      targetSheet.Cells(1, endLine) = newCategoryName
     End If
     
   End If

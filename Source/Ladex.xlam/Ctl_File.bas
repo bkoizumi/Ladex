@@ -233,7 +233,7 @@ Function ‰æ‘œ“\•t‚¯()
   Dim line As Long, endLine As Long
   Dim imgFile As Variant
   Dim fileShape As Shape
-  Dim fileInfo As Object
+  Dim FileInfo As Object
   Dim chfkFlg As Boolean
   Dim topPosition As Long, leftPosition As Long
   
@@ -264,7 +264,7 @@ Function ‰æ‘œ“\•t‚¯()
     If imgFile <> "" Then
       chfkFlg = True
       Call Library.showDebugForm("imgFile", imgFile, "debug")
-      Call Library.getFileInfo(CStr(imgFile), fileInfo)
+      Call Library.getFileInfo(CStr(imgFile), FileInfo)
       
       Set fileShape = ActiveSheet.Shapes.AddPicture( _
         fileName:=imgFile, _
@@ -275,7 +275,7 @@ Function ‰æ‘œ“\•t‚¯()
         Width:=0, _
         Height:=0)
       
-      fileShape.Name = "Ladex_" & fileInfo("fileName")
+      fileShape.Name = "Ladex_" & FileInfo("fileName")
       fileShape.LockAspectRatio = msoTrue
       
       '“™”{‚Å•\Ž¦
