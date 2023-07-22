@@ -17,9 +17,7 @@ Option Explicit
 
 '==================================================================================================
 Private Sub UserForm_Activate()
- 
-    Call Ctl_UsrForm.ResizeForm
-    
+  Call Ctl_UsrForm.ResizeForm
 End Sub
 
 
@@ -27,22 +25,22 @@ End Sub
 Private Sub UserForm_Resize()
   Dim setWidth As Long, setHeight As Long
   
-  If Width > 100 Then
+  If Width > 365 Then
     TextBox.Width = Me.Width - 40
-    
+  Else
+    Width = 365
   End If
   
-  If Height > 100 Then
+  If Height > 215 Then
     TextBox.Height = Me.Height - 100
-    
     Label1.Top = Me.Height - 75
     Label2.Top = Me.Height - 60
     OK_Button.Top = Me.Height - 75
     CancelButton.Top = Me.Height - 75
+  Else
+    Height = 215
   End If
-  
 End Sub
-
 
 
 '==================================================================================================
@@ -52,19 +50,21 @@ Private Sub UserForm_Initialize()
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Me.Width) / 2)
   
   Caption = "ÉYÅ[ÉÄ |  " & thisAppName
-  
 End Sub
+
 
 '==================================================================================================
 Private Sub CancelButton_Click()
   Unload Me
 End Sub
 
+
 '==================================================================================================
 Private Sub OK_Button_Click()
   Call Ctl_Zoom.ZoomOut(TextBox, Frm_Zoom.Label1.Caption)
   Unload Me
 End Sub
+
 
 '==================================================================================================
 Private Sub TextBox_Change()

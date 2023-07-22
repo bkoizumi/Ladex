@@ -97,7 +97,7 @@ Private Sub Submit_Click()
   FrmVal("getFileNameOnly01") = getFileNameOnly01.Value
   FrmVal("getFullPath01") = getFullPath01.Value
   FrmVal("getSubDir01") = getSubDir01.Value
-
+  FrmVal("getTableList") = getTableList.Value
   
   Unload Me
 End Sub

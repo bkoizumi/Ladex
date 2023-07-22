@@ -49,7 +49,7 @@ Public resetVal             As String
 Public logFile              As String
 Public LadexDir             As String
 Public AddInDir             As String
-
+Public FilePathInfo()       As Variant
 
 'ˆ—ŠÔŒv‘ª—p----------------------------------
 Public StartTime            As Date

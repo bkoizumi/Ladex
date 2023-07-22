@@ -233,3 +233,205 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
+
+
+
+
+'==================================================================================================
+Function サイズ合わせ_間隔設定()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim baseHeight As Long, baseWidth As Long, baseTop As Long
+  Dim baseShape As Shape, shp As Shape, beforeShape As Shape
+  Dim shCnt As Long
+
+  Const funcName As String = "Ctl_Shap.サイズ合わせ_間隔設定"
+  Const interval As Long = 10
+  
+  
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+  If VarType(Selection) <> vbObject Then
+    GoTo LB_ExitFunction
+  End If
+
+  Set baseShape = Selection.ShapeRange.Item(1)
+  baseHeight = CLng(baseShape.Height)
+  baseWidth = CLng(baseShape.Width)
+  baseTop = CLng(baseShape.Top)
+
+  baseWidth = 236
+
+  For shCnt = 1 To Selection.ShapeRange.count
+    Set shp = Selection.ShapeRange.Item(shCnt)
+  
+    shp.Height = baseHeight
+    shp.Width = baseWidth
+    shp.Top = baseTop
+    
+    If shCnt > 1 Then
+      Set beforeShape = Selection.ShapeRange.Item(shCnt - 1)
+      shp.Left = beforeShape.Left + beforeShape.Width + interval
+    End If
+  Next
+
+  '処理終了--------------------------------------
+LB_ExitFunction:
+  If runFlg = False Then
+    
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+
+'==================================================================================================
+Function サイズ合わせ_幅()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim baseHeight As Long, baseWidth As Long, baseTop As Long
+  Dim baseShape As Shape, shp As Shape, beforeShape As Shape
+  Dim shCnt As Long
+
+  Const funcName As String = "Ctl_Shap.サイズ合わせ_幅"
+  Const interval As Long = 10
+  
+  
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+  If VarType(Selection) <> vbObject Then
+    GoTo LB_ExitFunction
+  End If
+
+  Set baseShape = Selection.ShapeRange.Item(1)
+  baseHeight = CLng(baseShape.Height)
+  baseWidth = CLng(baseShape.Width)
+  
+  For shCnt = 1 To Selection.ShapeRange.count
+    Set shp = Selection.ShapeRange.Item(shCnt)
+  
+    'shp.Height = baseHeight
+    shp.Width = baseWidth
+  Next
+
+  '処理終了--------------------------------------
+LB_ExitFunction:
+  If runFlg = False Then
+    
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+
+
+'==================================================================================================
+Function サイズ合わせ_高さ()
+  Dim line As Long, endLine As Long, colLine As Long, endColLine As Long
+  Dim baseHeight As Long, baseWidth As Long, baseTop As Long
+  Dim baseShape As Shape, shp As Shape, beforeShape As Shape
+  Dim shCnt As Long
+
+  Const funcName As String = "Ctl_Shap.サイズ合わせ_高さ"
+  Const interval As Long = 10
+  
+  
+  
+  '処理開始--------------------------------------
+  If runFlg = False Then
+    Call init.setting
+    Call Library.showDebugForm(funcName, , "start")
+    Call Library.startScript
+    Call Ctl_ProgressBar.showStart
+    PrgP_Max = 2
+  Else
+    On Error GoTo catchError
+    Call Library.showDebugForm(funcName, , "start1")
+  End If
+  Call Library.showDebugForm("runFlg", runFlg, "debug")
+  PrgP_Cnt = PrgP_Cnt + 1
+  '----------------------------------------------
+
+  If VarType(Selection) <> vbObject Then
+    GoTo LB_ExitFunction
+  End If
+
+  Set baseShape = Selection.ShapeRange.Item(1)
+  baseHeight = CLng(baseShape.Height)
+  baseWidth = CLng(baseShape.Width)
+  
+  For shCnt = 1 To Selection.ShapeRange.count
+    Set shp = Selection.ShapeRange.Item(shCnt)
+  
+    shp.Height = baseHeight
+    'shp.Width = baseWidth
+  Next
+
+  '処理終了--------------------------------------
+LB_ExitFunction:
+  If runFlg = False Then
+    
+    Call Ctl_ProgressBar.showEnd
+    Call Library.endScript
+    Call Library.showDebugForm(funcName, , "end")
+    Call init.resetGlobalVal
+  Else
+    Call Library.showDebugForm(funcName, , "end1")
+  End If
+  Exit Function
+  '----------------------------------------------
+
+  'エラー発生時------------------------------------------------------------------------------------
+catchError:
+  Call Library.showDebugForm(funcName, Err.Description, "Error")
+  Call Library.errorHandle
+End Function
+

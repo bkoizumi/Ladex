@@ -128,7 +128,7 @@ Function ショートカットキー設定()
     End If
   Next
   
-'  Call Application.OnKey("{F1}", "Ctl_Option.showVersion")
+  Call Application.OnKey("{F1}", "Ctl_Zoom.ZoomIn")
 
 
   '処理終了--------------------------------------

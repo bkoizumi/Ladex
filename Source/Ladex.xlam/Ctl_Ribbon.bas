@@ -194,10 +194,10 @@ Function Zoom(control As IRibbonControl, pressed As Boolean)
   
   BKz_rbPressed = pressed
   If pressed = False Then
-    Call Application.OnKey("{F2}")
+'    Call Application.OnKey("{F2}")
     Call Library.delRegistry("Main", "ZoomFlg")
   Else
-    Call Application.OnKey("{F2}", "Ctl_Zoom.ZoomIn")
+'    Call Application.OnKey("{F2}", "Ctl_Zoom.ZoomIn")
   End If
   
   Exit Function
@@ -559,7 +559,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
           End Select
           
           
-          .setAttribute "supertip", tmp(line, 1)
+          '.setAttribute "supertip", tmp(line, 1)
           .setAttribute "onAction", "Ladex.xlam!Ctl_Ribbon.FavoriteFileOpen"
         End With
         CategoryMenu.appendChild Button
@@ -576,7 +576,7 @@ Function FavoriteMenu(control As IRibbonControl, ByRef returnedVal)
       .setAttribute "id", "ñ¢ìoò^"
       .setAttribute "label", "ñ¢ìoò^"
       .setAttribute "imageMso", "FileNewContext"
-      .setAttribute "supertip", "ñ¢ìoò^"
+      '.setAttribute "supertip", "ñ¢ìoò^"
     End With
     Menu.appendChild Button
   End If
@@ -1151,7 +1151,6 @@ Function Ctl_Function(control As IRibbonControl)
 
   
   'èàóùèIóπ--------------------------------------
-  Call Library.endScript
   Call init.resetGlobalVal
   Call Library.showDebugForm(funcName, , "end")
   '----------------------------------------------

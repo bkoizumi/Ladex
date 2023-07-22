@@ -46,10 +46,11 @@ Private Sub UserForm_Initialize()
   'ファイル情報取得------------------------------
   Call Library.getFileInfo(ActiveWorkbook.path & "\" & ActiveWorkbook.Name, objFileInfo)
   infoVal = ""
-  infoVal = infoVal & "シート数： " & Worksheets.count & vbNewLine
-  infoVal = infoVal & "作成日時： " & objFileInfo("createAt") & vbNewLine
-  infoVal = infoVal & "更新日時： " & objFileInfo("updateAt") & vbNewLine
-  infoVal = infoVal & "サイズ　： " & Library.convscale(objFileInfo("size")) & " [" & Format(objFileInfo("size"), "#,##0") & " Byte" & "]" & vbNewLine
+  infoVal = infoVal & "ファイル名： " & ActiveWorkbook.Name & vbNewLine
+  infoVal = infoVal & "シート数　： " & Worksheets.count & vbNewLine
+  infoVal = infoVal & "作成日時　： " & objFileInfo("createAt") & vbNewLine
+  infoVal = infoVal & "更新日時　： " & objFileInfo("updateAt") & vbNewLine
+  infoVal = infoVal & "サイズ　　： " & Library.convscale(objFileInfo("size")) & " [" & Format(objFileInfo("size"), "#,##0") & " Byte" & "]" & vbNewLine
   
   
   With Me

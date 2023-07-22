@@ -55,26 +55,24 @@
         <menuSeparator id="ブック管理_MS02" title="設定を削除" />
         <button id="名前定義削除_____"  label="名前定義削除"  image="del_CellNames" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="名前定義を削除&#13;"  supertip="設定されている名前の定義をすべて削除します" />
 
-        <menuSeparator id="ブック管理_MS03" title="A1セルへ移動" />
-        <menu id="全シートA1セルへ移動_Menu" label="A1セルへ移動"  itemSize="large" image="dspDefaultCellSelect">
-          <menuSeparator id="ブック管理_MS03sub1" title="A1セルへ移動" />
-          <button id="B_A1セル選択_____" label="全シートA1セルへ移動"        image="dspDefaultCellSelect"                onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させます&#13;"       supertip="全シートのセルの選択位置をA1へ移動させます" />
-          <button id="B_A1セル選択_保存" label="全シートA1セルへ移動＆保存"  image="dspDefaultCellSelectAllSheet2Save"   onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="全シートのセルの選択位置をA1へ移動させ保存します&#13;" supertip="全シートのセルの選択位置をA1へ移動させ保存します" />
-        </menu>
-
         <menuSeparator id="ブック管理_MS04" title="印刷範囲" />
         <menu id="ブック管理_M04" label="印刷範囲"  imageMso="PrintSetupDialog" >
           <button id="印刷範囲枠表示___"   label="印刷範囲表示"    imageMso="PrintSetupDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="印刷範囲の破線を表示&#13;"    supertip="改ページプレビュー後に現れる印刷範囲の枠線を表示します" />
           <button id="印刷範囲枠非表示_" label="印刷範囲非表示"  imageMso="PrintSetupDialog" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="印刷範囲の破線を非表示&#13;"  supertip="改ページプレビュー後に現れる印刷範囲の枠線を非表示にします" />
         </menu>
 
-        <menuSeparator id="ブック管理_MS05" title="シート管理" />
-        <menu id="ブック管理_M05" label="シート管理"  imageMso="HeaderFooterSheetNameInsert" >
-          <button id="シート一覧取得___" label="シート一覧取得"  imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="シート名のコピーを行いやすく一覧に表示します&#13;"     supertip="シート名のコピーを行いやすく一覧に表示します" />
-          <button id="連続シート追加___" label="連続シート追加"  imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="複数のシートを新規作成します&#13;"                     supertip="複数のシートを新規作成します&#13;コピー元のシートを指定することも可能です" />
-          <button id="指定倍率_________" label="指定倍率"        imageMso="ZoomToContents"               onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="指定倍率に変更します&#13;"                             supertip="指定倍率に変更&#13;" />
-          <button id="標準画面_________" label="標準画面"        imageMso="BlogHomePage"                 onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="オプション設定の基本で設定した内容を反映させます&#13;" supertip="オプション設定の基本で設定した内容を反映させます&#13;"  />
-          <button id="シート管理_______" label="シート管理"      imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="名前の変更、表示。非表示の切替、移動等を行います&#13;" supertip="名前の変更、表示。非表示の切替、移動等を行います" />
+        <menuSeparator id="ブック管理_シート管理" title="シート管理" />
+        <menu id="ブック管理_A1セルへ移動_Menu" label="シート管理"  itemSize="large" image="dspDefaultCellSelect">
+          <button id="標準画面_________" label="標準画面" imageMso="BlogHomePage" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="オプション設定の基本で設定した内容を反映させます&#13;" supertip="オプション設定の基本で設定した内容を反映させます&#13;"  />
+
+          <menuSeparator id="ブック管理_A1セルへ移動MS" title="A1セルへ移動" />
+          <button id="B_A1セル選択_____" label="全シートA1セルへ移動"         image="dspDefaultCellSelect"              onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="全シートのセルの選択位置をA1へ移動させます&#13;"       supertip="全シートのセルの選択位置をA1へ移動させます" />
+          <button id="B_A1セル選択_保存" label="全シートA1セルへ移動＆保存"   image="dspDefaultCellSelectAllSheet2Save" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="全シートのセルの選択位置をA1へ移動させ保存します&#13;" supertip="全シートのセルの選択位置をA1へ移動させ保存します" />
+
+          <menuSeparator id="ブック管理_シート管理MS" title="シート管理" />
+          <button id="シート一覧取得___" label="シート一覧取得"   imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="シート名のコピーを行いやすく一覧に表示します&#13;"     supertip="シート名のコピーを行いやすく一覧に表示します" />
+          <button id="連続シート追加___" label="連続シート追加"   imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="複数のシートを新規作成します&#13;"                     supertip="複数のシートを新規作成します&#13;コピー元のシートを指定することも可能です" />
+          <button id="シート管理_______" label="シート管理"       imageMso="HeaderFooterSheetNameInsert"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"   description="名前の変更、表示。非表示の切替、移動等を行います&#13;" supertip="名前の変更、表示。非表示の切替、移動等を行います" />
         </menu>
 
         <menuSeparator id="ブック管理_MS06" title="その他管理" />
@@ -146,6 +144,8 @@
           <menu id="ZoomIn_Menu"  screentip="ズームメニュー"  supertip="ズームメニュー" itemSize="large">
             <menuSeparator id="ZoomIn_SP1" title="ズーム" />
             <button id="全画面表示" label="全画面表示"  imageMso="ZoomFitToWindowVisio" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="画面を最大化します。 &#13; Escキーで元に戻ります&#13;" supertip="画面を最大化します。 &#13; Escキーで元に戻ります&#13;" />
+            <button id="指定倍率__" label="指定倍率"    imageMso="ZoomToContents"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="指定倍率に変更します&#13;"                             supertip="指定倍率に変更&#13;" />
+            <button id="倍率100___" label="倍率を100%"  imageMso="ZoomToContents"       onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="倍率を100%に変更します&#13;"                             supertip="100%倍率に変更&#13;" />
           </menu>
       </splitButton>
 
@@ -233,8 +233,8 @@
 
         <menu id="セル編集_その他" label="その他"  itemSize="large" imageMso="EditItem" >
           <menuSeparator id="セル編集_SP9" title="その他" />
-          <button id="行例入れ替えて貼付け__" label="行例入れ替えて貼付け"  imageMso="PasteTranspose" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="行例入れ替えて値を貼付けます &#13;"  />
-          <button id="ゼロ埋め______________" label="ゼロ埋め"              imageMso="_0"             onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="選択セルの空白をゼロ埋めします &#13;"  />
+          <button id="行例入れ替えて貼付け________" label="行例入れ替えて貼付け"  imageMso="PasteTranspose" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="行例入れ替えて値を貼付けます &#13;"  />
+          <button id="ゼロ埋め____________________" label="ゼロ埋め"              imageMso="_0"             onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="選択セルの空白をゼロ埋めします &#13;"  />
         </menu>
 
       </menu>
@@ -252,17 +252,29 @@
         <button id="数式設定_シート名_______" label="シート名追加"  imageMso="Numbering"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="シート名取得の関数を追加します&#13;"  />
       </menu>
 
-      <menu id="整形" label="整形"  itemSize="large" imageMso="GroupChartShapes" >
-        <menuSeparator id="整形_SP1" title="移動・サイズ変更" />
-        <button id="移動やサイズ変更をする____" label="移動やサイズ変更をする"    imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をする&#13;"  />
-        <button id="移動する__________________" label="移動する"                  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動するがサイズ変更はしない&#13;"  />
-        <button id="移動やサイズ変更をしない__" label="移動やサイズ変更をしない"  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をしない&#13;"  />
+      <menu id="画像整形" label="画像整形"  itemSize="large" imageMso="GroupChartShapes" >
+        <menuSeparator id="画像整形_SP1" title="画像整形" />
+        <menu id="画像整形_移動" label="移動・サイズ変更"  itemSize="large" imageMso="EntityViewOperations" >
+          <menuSeparator id="整形_SP1_1" title="移動・サイズ変更" />
+          <button id="移動やサイズ変更をする____" label="移動やサイズ変更をする"    imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をする&#13;"  />
+          <button id="移動する__________________" label="移動する"                  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動するがサイズ変更はしない&#13;"  />
+          <button id="移動やサイズ変更をしない__" label="移動やサイズ変更をしない"  imageMso="EntityViewOperations" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セルに合わせて移動やサイズ変更をしない&#13;"  />
+        </menu>
+        <menu id="画像整形_サイズ調整" label="画像整形"  itemSize="large" imageMso="AutomaticResize" >
+          <menuSeparator id="整形_SP1_2" title="サイズ調整" />
+          <button id="サイズ調整_間隔設定_____" label="間隔設定"       imageMso="AutomaticResize"     onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="画像のサイズ合わせ&#13;" />
+          <button id="サイズ調整_高さ_________" label="高さ"           image="AutomaticResize_height" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="画像のサイズ（高さ）合わせ&#13;" />
+          <button id="サイズ調整_幅___________" label="幅"             image="AutomaticResize_width"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="画像のサイズ合わせ（幅）&#13;" />
+        </menu>
 
-        <menuSeparator id="整形_SP3" title="その他" />
-        <button id="上下の余白をゼロにする____" label="上下の余白をゼロにする"      imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="テキストボックスの上下の余白をゼロにする&#13;" />
-        <button id="左右の余白をゼロにする____" label="左右の余白をゼロにする"      imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="テキストボックスの左右の余白をゼロにする&#13;" />
-        <button id="文字サイズをぴったりにする" label="文字サイズをぴったりにする"  imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="文字サイズをぴったりに調整します&#13;" />
-        <button id="セル内の中央に配置________" label="セル内の中央に配置"          imageMso="AutomaticResize"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル内の中央に画像などを配置します&#13;" />
+        <menuSeparator id="整形_その他_SP3" title="その他" />
+          <menu id="整形_その他" label="その他"  itemSize="large" imageMso="ContainerMargins" >
+            <menuSeparator id="整形_SP3_1" title="その他" />
+            <button id="上下の余白をゼロにする____" label="上下の余白をゼロにする"      imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="テキストボックスの上下の余白をゼロにする&#13;" />
+            <button id="左右の余白をゼロにする____" label="左右の余白をゼロにする"      imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="テキストボックスの左右の余白をゼロにする&#13;" />
+            <button id="文字サイズをぴったりにする" label="文字サイズをぴったりにする"  imageMso="ContainerMargins" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="文字サイズをぴったりに調整します&#13;" />
+            <button id="セル内の中央に配置________" label="セル内の中央に配置"          imageMso="AutomaticResize"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="セル内の中央に画像などを配置します&#13;" />
+          </menu>
 
         <menuSeparator id="コメント整形_SP1" title="コメント整形 書式設定" />
         <button id="コメント整形______________"  label="コメント整形"  imageMso="NewComment" screentip="コメント整形" supertip="コメント整形" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" />
@@ -282,10 +294,11 @@
         <menuSeparator id="罫線_表形式MS01" title="表形式の罫線を設定&#13;" />
         <menu id="罫線_TableMenuN" label="表形式の罫線"  itemSize="large" imageMso="BorderDrawLine" description="表形式の罫線を設定&#13;" >
           <menuSeparator id="罫線_表形式MS02" title="表形式の罫線を設定&#13;" />
-          <button id="罫線_表_実線_"  label="実線"  imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="表形式の罫線を実線で設定&#13;" />
-          <button id="罫線_表_破線A"  label="破線A" image="BordersTypeA"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は実線、水平方向は破線で表形式の罫線を設定&#13;" />
-          <button id="罫線_表_破線B"  label="破線B" image="BordersTypeB"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は破線、水平方向は実線で表形式の罫線を設定&#13;" />
-          <button id="罫線_表_逆L字"  label="逆L字" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="逆L字型の表を設定&#13;" />
+          <button id="罫線_表_実線___"  label="実線"  imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="表形式の罫線を実線で設定&#13;" />
+          <button id="罫線_表_破線A__"  label="破線A" image="BordersTypeA"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は実線、水平方向は破線で表形式の罫線を設定&#13;" />
+          <button id="罫線_表_破線B__"  label="破線B" image="BordersTypeB"          onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="垂直方向は破線、水平方向は実線で表形式の罫線を設定&#13;" />
+          <button id="罫線_表_逆L字A_"  label="逆L字" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="逆L字型の表を設定&#13;" />
+          <button id="罫線_表_逆L字B_"  label="逆L字 破線" imageMso="BordersMoreDialog"  onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function"  description="逆L字型の表を破線で設定&#13;" />
         </menu>
 
         <menuSeparator id="罫線_破線MS01" title="破線で罫線を設定&#13;" />
@@ -382,6 +395,7 @@
     <group idQ="nsShared:grpShared_02"></group>
     <group idQ="nsShared:grpShared_03"></group>
     <group idQ="nsShared:grpShared_04"></group>
+    <group idQ="nsShared:grpShared_05"></group>
 
       <group id="Group2" label="標準機能">
         <menu id="def貼付" label="貼付"  imageMso="Paste" >

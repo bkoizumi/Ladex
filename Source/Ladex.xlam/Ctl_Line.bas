@@ -26,10 +26,12 @@ Function Œrü_•\_‹tLš()
   Call init.setting
   Dim startCell As Range, endCell As Range
   
+'  Call Library.startScript
   Set startCell = Selection(1)
   Set endCell = Selection(Selection.count)
   
-  Call Library.Œrü_ƒNƒŠƒA_’†‰›ü_‰¡(Selection)
+LBL_reStart:
+  Call Library.Œrü_ƒNƒŠƒA(Selection)
   
   Range(startCell.Offset(1, 1), endCell).Select
   Call Library.Œrü_”jü_ˆÍ‚İ
@@ -37,5 +39,27 @@ Function Œrü_•\_‹tLš()
   
   Range(startCell, endCell).Select
   Call Library.Œrü_Àü_ˆÍ‚İ
-  
 End Function
+
+
+'==================================================================================================
+Function Œrü_•\_‹tLš_”jü()
+  Call init.setting
+  Dim startCell As Range, endCell As Range
+  
+'  Call Library.startScript
+  Set startCell = Selection(1)
+  Set endCell = Selection(Selection.count)
+  
+LBL_reStart:
+  Call Library.Œrü_ƒNƒŠƒA(Selection)
+  
+  Range(startCell.Offset(1, 1), endCell).Select
+  Call Library.Œrü_”jü_ˆÍ‚İ
+  Call Library.Œrü_”jü_…•½
+  
+  Range(startCell, endCell).Select
+  Call Library.Œrü_”jü_ˆÍ‚İ
+  Call Library.Œrü_Àü_‰E
+End Function
+

@@ -50,7 +50,6 @@ Function 各機能呼び出し(shortcutName As String)
     Case "印刷範囲枠非表示_": Call Ctl_Book.印刷範囲非表示
     Case "シート一覧取得___": Call Ctl_Book.シート一覧取得
     Case "連続シート追加___": Call Ctl_Book.連続シート追加
-    Case "指定倍率_________": Call Ctl_Zoom.指定倍率
     Case "標準画面_________": Call Ctl_Book.標準画面
     Case "シート管理_______": Call Ctl_Book.シート管理
     Case "情報取得_________": Call Ctl_Book.情報取得
@@ -63,7 +62,9 @@ Function 各機能呼び出し(shortcutName As String)
     Case "不要データ削除____": Call Ctl_Sheet.不要データ削除
     Case "体裁一括変更______": Call Ctl_Sheet.体裁一括変更
     Case "フォント一括変更__": Call Ctl_Sheet.フォント一括変更
-    Case "倍率100に設定_____": Call Ctl_Sheet.倍率100に設定
+    
+
+
 
     'その他管理--------------------------------
     Case "ファイル情報取得": Call Ctl_File.ファイル情報取得
@@ -85,8 +86,11 @@ Function 各機能呼び出し(shortcutName As String)
 
     'ズーム--------------------------------------
     Case "全画面表示": Call Ctl_Zoom.全画面表示
-
-
+    Case "指定倍率__": Call Ctl_Zoom.指定倍率
+    Case "倍率100___": Call Ctl_Zoom.倍率100に設定
+    
+    
+    
 
     'セル調整------------------------------------
     Case "セル自動調整_幅____": Call Ctl_Cells.セル自動調整_幅
@@ -95,6 +99,7 @@ Function 各機能呼び出し(shortcutName As String)
     Case "セル固定設定_幅____": Call Ctl_Cells.セル固定設定_幅
     Case "セル固定設定_高さ__": Call Ctl_Cells.セル固定設定_高さ
     Case "セル固定設定_両方__": Call Ctl_Cells.セル固定設定_両方
+    
     Case "セル固定設定_高さ15": Call Ctl_Cells.セル固定設定_高さ指定(15)
     Case "セル固定設定_高さ20": Call Ctl_Cells.セル固定設定_高さ指定(20)
     Case "セル固定設定_高さ30": Call Ctl_Cells.セル固定設定_高さ指定(30)
@@ -124,7 +129,9 @@ Function 各機能呼び出し(shortcutName As String)
     Case "変換_数値を丸数字___________": Call Ctl_Cells.変換_数値⇒丸数字
     Case "変換_丸数字を数値___________": Call Ctl_Cells.変換_丸数字⇒数値
     Case "設定_取り消し線_____________": Call Ctl_Cells.設定_取り消し線
-    Case "貼付_行例入れ替え__________": Call Ctl_Cells.貼付_行例入れ替え
+    
+    Case "行例入れ替えて貼付け________": Call Ctl_Cells.貼付_行例入れ替え
+'    Case "ゼロ埋め____________________": Call Ctl_Cells.貼付_行例入れ替え
 
 
     '数式編集------------------------------------
@@ -143,6 +150,12 @@ Function 各機能呼び出し(shortcutName As String)
     Case "左右の余白をゼロにする____": Call Ctl_format.左右余白ゼロ
     Case "文字サイズをぴったりにする": Call Ctl_format.文字サイズをぴったりにする
     Case "セル内の中央に配置________": Call Ctl_format.セル内の中央に配置
+    
+    Case "サイズ調整_間隔設定_____": Call Ctl_shap.サイズ合わせ_間隔設定
+    Case "サイズ調整_高さ_________": Call Ctl_shap.サイズ合わせ_高さ
+    Case "サイズ調整_幅___________": Call Ctl_shap.サイズ合わせ_幅
+    
+    
 
     '画像保存------------------------------------
     Case "画像保存": Call Ctl_Image.画像保存
@@ -153,10 +166,11 @@ Function 各機能呼び出し(shortcutName As String)
     Case "罫線_クリア_中央線_縦": Call Library.罫線_クリア_中央線_縦
 
     '罫線[表]------------------------------------
-    Case "罫線_表_実線_": Call Ctl_Line.罫線_表_実線
-    Case "罫線_表_破線A": Call Ctl_Line.罫線_表_破線A
-    Case "罫線_表_破線B": Call Ctl_Line.罫線_表_破線B
-    Case "罫線_表_逆L字": Call Ctl_Line.罫線_表_逆L字
+    Case "罫線_表_実線___": Call Ctl_Line.罫線_表_実線
+    Case "罫線_表_破線A__": Call Ctl_Line.罫線_表_破線A
+    Case "罫線_表_破線B__": Call Ctl_Line.罫線_表_破線B
+    Case "罫線_表_逆L字A_": Call Ctl_Line.罫線_表_逆L字
+    Case "罫線_表_逆L字B_": Call Ctl_Line.罫線_表_逆L字_破線
 
     '罫線[破線]----------------------------------
     Case "罫線_破線_水平": Call Library.罫線_破線_水平
@@ -213,7 +227,6 @@ Function 各機能呼び出し(shortcutName As String)
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")
     Call init.resetGlobalVal
   Else

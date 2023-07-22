@@ -779,7 +779,7 @@ Function reLoadFuncList(categoryName As String)
 
     Next
   End With
-
+  
   
 End Function
 
@@ -824,17 +824,16 @@ Private Sub Del_ShortcutKey_Click()
   
   Call init.setting
   
-  
   Call Library.showDebugForm("funcList.Item    ", funcList.SelectedItem.Text, "debug")
   Call Library.showDebugForm("funcList.SubItem1", funcList.SelectedItem.SubItems(1), "debug")
   Call Library.showDebugForm("funcList.SubItem2", funcList.SelectedItem.SubItems(2), "debug")
   Call Library.showDebugForm("funcList.SubItem3", funcList.SelectedItem.SubItems(3), "debug")
   Call Library.showDebugForm("funcList.SubItem4", funcList.SelectedItem.SubItems(4), "debug")
   
-  'selectLine = funcList.SelectedItem.Text
-  selectLine = funcList.SelectedItem.SubItems(4)
   
-  LadexSh_Function.Range("I" & selectLine + 1) = ""
+  selectLine = funcList.SelectedItem.Text
+  
+  LadexSh_Function.Range("I" & funcList.SelectedItem.SubItems(4) + 1) = ""
   megLabel.Caption = ""
   
   Call reLoadFuncList(FuncCategory.Value)

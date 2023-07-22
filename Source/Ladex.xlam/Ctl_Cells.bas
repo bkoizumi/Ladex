@@ -323,7 +323,7 @@ Function セル固定設定_高さ指定(heightVal As Integer)
   Dim startLine As Long, endLine As Long, startColLine As Long, endColLine As Long
   Dim line As Long, colLine As Long
   
-  Const funcName As String = "Ctl_Cells.セル固定設定_高さ指定"
+  Const funcName As String = "Ctl_Cells.セル固定設定_高さ"
   
   '処理開始--------------------------------------
   Call init.setting
@@ -345,6 +345,7 @@ Function セル固定設定_高さ指定(heightVal As Integer)
   If Selection.Rows.count > 1 Then
     startLine = Selection(1).Row
     endLine = Selection(Selection.count).Row
+  
     For line = startLine To endLine
       Call Ctl_ProgressBar.showBar(funcName, PrgP_Cnt, PrgP_Max, line, endLine, "")
       
@@ -355,7 +356,6 @@ Function セル固定設定_高さ指定(heightVal As Integer)
   Else
     Cells.rowHeight = heightVal
   End If
-  
   
   
   '処理終了--------------------------------------
@@ -375,7 +375,6 @@ catchError:
   Call Library.showDebugForm(funcName, " [" & Err.Number & "]" & Err.Description, "Error")
   Call Library.errorHandle
 End Function
-
 
 
 '**************************************************************************************************
@@ -690,6 +689,7 @@ Function 変換_全角⇒半角()
   '----------------------------------------------
   slctCellsCnt = 0
   
+  
   For Each arrCells In Selection
     Call Ctl_ProgressBar.showCount(funcName, PrgP_Cnt, PrgP_Max, PbarCnt, Selection.count, arrCells.Text)
 
@@ -927,7 +927,7 @@ Function コメント_画像追加()
   '----------------------------------------------
   insImgPath = Library.getFilePath(ActiveWorkbook.path, "", "コメントに画像挿入", "img")
   If insImgPath = "" Then
-    GoTo Lb_exitFunction
+    GoTo LB_ExitFunction
   End If
 
   With ActiveCell
@@ -945,7 +945,7 @@ Function コメント_画像追加()
 
   
   '処理終了--------------------------------------
-Lb_exitFunction:
+LB_ExitFunction:
   Call Ctl_ProgressBar.showEnd
   If runFlg = False Then
     Call Library.endScript

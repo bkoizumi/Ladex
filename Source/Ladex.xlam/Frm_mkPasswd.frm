@@ -199,7 +199,7 @@ Function RandomCharPicker(Source, Optional passWordVal As String)
   Dim n As Integer, reRunCnt As Integer
   
   reRunCnt = 0
-LBL_restart:
+LBL_reStart:
   Randomize
   n = Int((Len(Source) - 1 + 1) * Rnd + 1)
   pickVal = Mid(Source, n, 1)
@@ -209,7 +209,7 @@ LBL_restart:
   Else
     reRunCnt = reRunCnt + 1
     If reRunCnt <= 2 Then
-      GoTo LBL_restart
+      GoTo LBL_reStart
     Else
       RandomCharPicker = pickVal
     End If

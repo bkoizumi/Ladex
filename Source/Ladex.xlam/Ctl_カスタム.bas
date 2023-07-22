@@ -20,11 +20,13 @@ Function カスタム関数01()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
-  endLine = Cells(Rows.count, 1).End(xlUp).Row
-
-  MsgBox (funcName)
-
-
+  
+  Dim SelectionSheetName As String
+  
+  SelectionSheetName = ActiveSheet.Previous.Name
+  ActiveSheet.Move After:=Sheets(ActiveWorkbook.Worksheets.count)
+  ActiveWorkbook.Worksheets(SelectionSheetName).Select
+  ActiveWorkbook.ActiveSheet.Next.Activate
 
 
   '処理終了--------------------------------------
@@ -64,17 +66,17 @@ Function カスタム関数02()
   Call Library.showDebugForm("runFlg", runFlg, "debug")
   PrgP_Cnt = PrgP_Cnt + 1
   '----------------------------------------------
-  endLine = Cells(Rows.count, 1).End(xlUp).Row
+  
+'  endLine = Cells(Rows.count, 1).End(xlUp).Row
+'  MsgBox (funcName)
 
-  MsgBox (funcName)
 
-
-
+  Selection.ShapeRange.Item(1).Width = 236
 
 
   '処理終了--------------------------------------
   If runFlg = False Then
-    Application.GoTo Reference:=Range("A1"), Scroll:=True
+    'Application.GoTo Reference:=Range("A1"), Scroll:=True
     Call Ctl_ProgressBar.showEnd
     Call Library.endScript
     Call Library.showDebugForm(funcName, , "end")

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_Sheet 
    Caption         =   "シート管理"
-   ClientHeight    =   7035
+   ClientHeight    =   8370.001
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   9840.001
+   ClientWidth     =   10725
    OleObjectBlob   =   "Frm_Sheet.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -53,9 +53,9 @@ Private Sub UserForm_Initialize()
       .AllowColumnReorder = True
       .FullRowSelect = True
       .Gridlines = True
-      .ColumnHeaders.add , "_ID", "#", 30
-      .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
-      .ColumnHeaders.add , "_SheetName", "シート名", 340
+    .ColumnHeaders.add , "_ID", "#", 30
+    .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
+    .ColumnHeaders.add , "_SheetName", "シート名", 400
       
       For line = 1 To ActiveWorkbook.Worksheets.count
         With .ListItems.add
@@ -63,12 +63,17 @@ Private Sub UserForm_Initialize()
           
           If ActiveWorkbook.Worksheets(line).Visible = True Then
             .SubItems(1) = "○"
-          
           Else
             .SubItems(1) = "－"
           End If
+          
           .SubItems(2) = ActiveWorkbook.Worksheets(line).Name
         End With
+        
+        If ActiveWorkbook.Worksheets(line).Visible <> True Then
+          SheetList.ListItems(line).ListSubItems(1).ForeColor = RGB(150, 150, 150)
+          SheetList.ListItems(line).ListSubItems(2).ForeColor = RGB(150, 150, 150)
+        End If
         
         If ActiveWorkbook.Worksheets(line).Name = ActiveSheet.Name Then
           selectLine = line
@@ -343,7 +348,9 @@ Private Sub del_Click()
   sheetName = SheetList.SelectedItem.SubItems(2)
   
   If MsgBox(sheetName & "を削除します(元にもどせません)", vbYesNo + vbExclamation) = vbYes Then
+    Call Library.startScript
     ActiveWorkbook.Sheets(sheetName).delete
+    Call Library.endScript
   End If
   
   Call reLoadList
@@ -373,6 +380,7 @@ Private Sub display_Click()
     ActiveWorkbook.Sheets(sheetName).Visible = False
   Else
     ActiveWorkbook.Sheets(sheetName).Visible = True
+    ActiveWorkbook.Sheets(sheetName).Select
   End If
   Call reLoadList
   
@@ -422,7 +430,7 @@ Function reLoadList()
     .Gridlines = True
     .ColumnHeaders.add , "_ID", "#", 30
     .ColumnHeaders.add , "_Display", "表示", 30, lvwColumnCenter
-    .ColumnHeaders.add , "_SheetName", "シート名", 340
+    .ColumnHeaders.add , "_SheetName", "シート名", 400
     
     For line = 1 To ActiveWorkbook.Worksheets.count
       With .ListItems.add
@@ -436,6 +444,12 @@ Function reLoadList()
         End If
         .SubItems(2) = ActiveWorkbook.Worksheets(line).Name
       End With
+      
+      If ActiveWorkbook.Worksheets(line).Visible <> True Then
+        SheetList.ListItems(line).ListSubItems(1).ForeColor = RGB(150, 150, 150)
+        SheetList.ListItems(line).ListSubItems(2).ForeColor = RGB(150, 150, 150)
+      End If
+    
       
       If ActiveWorkbook.Worksheets(line).Name = ActiveSheet.Name Then
         selectLine = line

@@ -170,7 +170,7 @@ Function 標準画面()
   Next
   
   Worksheets(SetActiveSheet).Select
-
+  
   
   '処理終了--------------------------------------
   Call Ctl_ProgressBar.showEnd
@@ -473,7 +473,7 @@ Function A1セル選択()
     If Worksheets(sheetName).Visible = True Then
       Call Library.showDebugForm("sheetName", sheetName, "debug")
       
-      ActiveWindow.Zoom = setZoomLevel
+      'ActiveWindow.Zoom = setZoomLevel
       Application.GoTo Reference:=Worksheets(sheetName).Range("A1"), Scroll:=True
     End If
     

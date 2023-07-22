@@ -96,7 +96,7 @@ Function errorHandle()
   Call Ctl_ProgressBar.showEnd
   Call Library.showDebugForm(funcName, , "end1")
   Call init.unsetting
-  
+  End
 End Function
 
 '**************************************************************************************************
@@ -4409,14 +4409,21 @@ End Function
 '**************************************************************************************************
 ' * 2ŽŸŒ³”z—ñ‚Ì1ŽŸŒ³–Ú‚ðRedim Preserve‚·‚é
 ' *
-' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
+' * Link https://vba-create.jp/vba-method-redim-preserve-two-dimensions-2022/
 '**************************************************************************************************
-Function RedimPreserve2D(ByVal orgArray, ByVal lengthTo)
-  Dim transedArray()
-
-  transedArray = WorksheetFunction.Transpose(orgArray)
-  ReDim Preserve transedArray(1 To UBound(transedArray, 1), 1 To lengthTo)
-  RedimPreserve2D = WorksheetFunction.Transpose(transedArray)
+Function RedimPreserve2D(orgArray As Variant, sLen As Long)
+  Dim tmp As Variant
+  Dim i As Long, j As Long
+  
+  ReDim tmp(LBound(orgArray, 1) To sLen, LBound(orgArray, 2) To UBound(orgArray, 2))
+  
+  For i = LBound(orgArray, 1) To UBound(orgArray, 1)
+    For j = LBound(orgArray, 2) To UBound(orgArray, 2)
+      tmp(i, j) = orgArray(i, j)
+    Next
+  Next
+  
+  RedimPreserve2D = tmp
 End Function
 
 

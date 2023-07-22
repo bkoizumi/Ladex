@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} Frm_InsComment 
    Caption         =   "ÉRÉÅÉìÉgê›íË"
-   ClientHeight    =   4836
+   ClientHeight    =   4830
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   7050
@@ -25,6 +25,36 @@ Public InitializeFlg   As Boolean
 ' *
 ' * @author Bunpei.Koizumi<bunpei.koizumi@gmail.com>
 '**************************************************************************************************
+'==================================================================================================
+Private Sub UserForm_Activate()
+  Call Ctl_UsrForm.ResizeForm
+End Sub
+
+'==================================================================================================
+Private Sub UserForm_Resize()
+  Dim setWidth As Long, setHeight As Long
+  
+  If Width > 360 Then
+    TextBox.Width = Me.Width - 40
+  Else
+    Width = 360
+  End If
+  
+  If Height > 270 Then
+    TextBox.Height = Me.Height - 150
+    
+    Label1.Top = Me.Height - 75
+    OK_Button.Top = Me.Height - 75
+    CancelButton.Top = Me.Height - 75
+  Else
+    Height = 270
+  End If
+  
+End Sub
+
+
+
+'==================================================================================================
 Private Sub UserForm_Initialize()
   Dim endLine As Long
   Dim indexCnt As Integer, i As Variant
@@ -35,7 +65,8 @@ Private Sub UserForm_Initialize()
   Call init.setting
   Application.Cursor = xlDefault
   indexCnt = 0
-  
+   
+    
   StartUpPosition = 0
   Top = ActiveWindow.Top + ((ActiveWindow.Height - Height) / 2)
   Left = ActiveWindow.Left + ((ActiveWindow.Width - Width) / 2)
