@@ -3,6 +3,7 @@
 *.log
 /Sorce/customUI/images/*.pdn
 /Sorce/customUI/images/pdn
+/Sorce/Ldx_*
 /Docs/pdn
 /スタイル情報.xlsx
 /Ladex-*.exe
