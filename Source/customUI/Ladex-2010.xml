@@ -227,8 +227,9 @@
 
         <menu id="セル編集_コメント挿入削除" label="コメント挿入/削除"  itemSize="large" imageMso="EditItem" >
           <menuSeparator id="セル編集_SP8" title="コメント挿入/削除" />
-          <button id="追加_コメント_______________" label="コメント追加"  imageMso="ReviewInkCommentNew" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントを追加します &#13;"  />
-          <button id="削除_コメント_______________" label="コメント削除"  imageMso="ReviewDeleteComment" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントを削除します &#13;"  />
+          <button id="コメント_追加_______________" label="コメント追加"      imageMso="ReviewInkCommentNew" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントを追加します &#13;"  />
+          <button id="コメント_画像追加___________" label="コメント画像追加"  imageMso="ReviewInkCommentNew" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントに画像を設定します &#13;"  />
+          <button id="コメント_削除_______________" label="コメント削除"      imageMso="ReviewDeleteComment" onAction="Ladex.xlam!Ctl_Ribbon.Ctl_Function" description="コメントを削除します &#13;"  />
         </menu>
 
         <menu id="セル編集_その他" label="その他"  itemSize="large" imageMso="EditItem" >

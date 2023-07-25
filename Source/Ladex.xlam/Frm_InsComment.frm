@@ -20,6 +20,8 @@ Dim old_BKh_rbPressed  As Boolean
 Public InitializeFlg   As Boolean
 
 
+
+
 '**************************************************************************************************
 ' * èâä˙ê›íË
 ' *
@@ -172,6 +174,18 @@ End Sub
 '==================================================================================================
 Private Sub CommentFontSize_Change()
   CommentFontColor.Caption = ""
+End Sub
+
+'==================================================================================================
+Private Sub Del_Button_Click()
+  Dim slctCells As Range
+  
+  On Error Resume Next
+  
+  Set slctCells = Range(Replace(Label1.Caption, "ëIëÉZÉãÅF", ""))
+  slctCells.ClearComments
+  
+  Unload Me
 End Sub
 
 '==================================================================================================
